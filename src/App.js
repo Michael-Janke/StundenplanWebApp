@@ -1,19 +1,24 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import {Provider} from "react-redux";
+import {PersistGate} from 'redux-persist/integration/react';
+import LogIn from './LogIn';
+
 import './App.css';
+import configStores from './configStores';
+
+const {store, persistor} = configStores();
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <MuiThemeProvider >
+            <LogIn></LogIn>
+          </MuiThemeProvider >
+        </PersistGate>
+      </Provider>
     );
   }
 }
