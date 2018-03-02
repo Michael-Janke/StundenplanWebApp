@@ -1,9 +1,10 @@
 
-export function login(bool = true) {
+export function login(username, password) {
   return {
-      type: "LOGIN",
+      type: "GET_TOKEN",
       payload: {
-        loggedIn: bool
+        email: username,
+        password
       }
     };
 }

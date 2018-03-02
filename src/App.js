@@ -3,6 +3,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Provider} from "react-redux";
 import {PersistGate} from 'redux-persist/integration/react';
 import LogIn from './LogIn';
+import Main from './Main';
 
 import './App.css';
 import configStores from './configStores';
@@ -15,7 +16,9 @@ class App extends Component {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <MuiThemeProvider >
-            <LogIn></LogIn>
+            <LogIn>
+              <Main />
+            </LogIn>
           </MuiThemeProvider >
         </PersistGate>
       </Provider>
