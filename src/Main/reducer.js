@@ -6,7 +6,7 @@ const initialState = {
   error: null
 };
 
-export function loginReducer(state = initialState, action = {}) {
+export function Reducer(state = initialState, action = {}) {
   switch (action.type) {
     case "persist/REHYDRATE":
       if(!action.payload || !action.payload.login) return {...state}
@@ -36,12 +36,6 @@ export function loginReducer(state = initialState, action = {}) {
         loading: false,
         token: null,
         error: action.payload
-      };
-    case "DELETE_TOKEN":
-      return {
-        ...state,
-        token: null,
-        id: null
       };
     default:
       return state;

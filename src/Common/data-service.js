@@ -2,9 +2,10 @@ import request from 'superagent'
 
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 
-const getApiGenerator = next => (route, name) => request
+const getApiGenerator = next => (route, name, token) => request
     .get(API_URL+route)
     .set('accept', 'json')
+    .set('Authorization', 'Bearer: ' + token)
 	.end((err, res) => {
 		if (err) {
 			return next({
@@ -39,18 +40,18 @@ const postApiGenerator = next => (route, name, data) => request
 	})
 
 const dataService = store => next => action => {   
-	next(action)
-	switch (action.type) {
-    case 'GET_TOKEN':
-        postApiGenerator(next)('token', 'GET_TOKEN', action.payload)
-        break;
+    next(action);
+    if(action.type === "GET_TOKEN") {
+        return postApiGenerator(next)('token', 'GET_TOKEN', action.payload);
+    }
+    const token = store.getState().login.token;
+    switch(action.type){
     case 'whatever':
-        const token = store.getState().login.token;
+        getApiGenerator(next)('token', 'GET_Whatever', token);
         break;
 	default:
 		break
 	}
-
 };
 
 export default dataService

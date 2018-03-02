@@ -4,12 +4,14 @@
   "private": true,
   "dependencies": {
     "material-ui": "^0.20.0",
+    "material-ui-responsive-drawer": "^1.19.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.7",
     "react-scripts": "1.1.1",
     "redux": "^3.7.2",
     "redux-persist": "^5.9.1",
+    "redux-responsive": "^4.3.5",
     "styled-components": "^3.1.6",
     "superagent": "^3.8.2"
   },

@@ -45,7 +45,7 @@ class LogInScreen extends Component {
                         </CardText>
                         <CardActions style={{ width: '100%', textAlign: 'right' }}>
                             <Error>
-                                {this.props.error && this.props.error.error || this.props.error}
+                                {(this.props.error && this.props.error.error) || this.props.error}
                             </Error>
                             <FlatButton
                                 label="Einloggen"
