@@ -2,6 +2,7 @@
   "name": "stundenplan-web-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://www.wolkenberg-gymnasium.de/app/",
   "dependencies": {
     "material-ui": "^0.20.0",
     "material-ui-responsive-drawer": "^1.19.4",
@@ -18,6 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": " scp -r build/* u45065@www.wolkenberg-gymnasium.de:~/wolkenberg-app/stundenplan-web-app",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

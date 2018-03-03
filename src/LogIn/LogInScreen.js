@@ -16,6 +16,7 @@ class LogInScreen extends Component {
             username: this.props.username || '',
             password: ''
         };
+        this.login = () => props.login(this.state.username, this.state.password);
     }
 
     render() {
@@ -40,7 +41,9 @@ class LogInScreen extends Component {
                                     floatingLabelText="Passwort"
                                     type="password"
                                     fullWidth={true}
-                                    onChange={(evt, password) => this.setState({password})}/>
+                                    onChange={(evt, password) => this.setState({password})}
+                                    onKeyDown={(e) => (e.keyCode == 13 && this.login())}
+                                    />
                             </ColumnLayout>
                         </CardText>
                         <CardActions style={{ width: '100%', textAlign: 'right' }}>
@@ -49,7 +52,7 @@ class LogInScreen extends Component {
                             </Error>
                             <FlatButton
                                 label="Einloggen"
-                                onClick={() => this.props.login(this.state.username, this.state.password)}/>
+                                onClick={this.login}/>
                         </CardActions>
                         {this.props.loading && <LinearProgressIndeterminate/>}
                     </Card>
@@ -63,6 +66,7 @@ const LinearProgressIndeterminate = () => (<LinearProgress mode="indeterminate"/
 
 const BackgroundContainer = styled.div `
     background-image: url(${background});
+    background-size: cover;
     display: flex;
     height: 100%;
     justify-content: space-around;
@@ -70,8 +74,10 @@ const BackgroundContainer = styled.div `
 `;
 
 const Centered = styled.div `
-    min-width: 500px;
     display: flex;
+    width: 100%;
+    max-width: 500px;
+    margin: 5px;
 `;
 
 const ColumnLayout = styled.div `

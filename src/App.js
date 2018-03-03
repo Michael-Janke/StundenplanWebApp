@@ -4,6 +4,7 @@ import {Provider} from "react-redux";
 import {PersistGate} from 'redux-persist/integration/react';
 import LogIn from './LogIn';
 import Main from './Main';
+import ResponsiveFontSize from './Common/ResponsiveFontSize';
 
 import './App.css';
 import configStores from './configStores';
@@ -16,9 +17,11 @@ class App extends Component {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <MuiThemeProvider >
-            <LogIn>
-              <Main />
-            </LogIn>
+            <ResponsiveFontSize>
+              <LogIn>
+                <Main/>
+              </LogIn>
+            </ResponsiveFontSize>
           </MuiThemeProvider >
         </PersistGate>
       </Provider>

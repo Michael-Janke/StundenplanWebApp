@@ -29,7 +29,7 @@ const postApiGenerator = next => (route, name, data) => request
 		if (err) {
 			return next({
 				type: name+'_ERROR',
-				payload: err.response.body
+				payload: (err.response && err.response.body) || err
 			})
 		}
 		const data = JSON.parse(res.text)

@@ -16,6 +16,7 @@ class Main extends Component {
         </ResponsiveDrawer>
         <BodyContainer>
           <ResponsiveAppBar
+            titleStyle={{fontSize: '145%'}}
             title={'Wolkenberg-Gymnasium'}
             iconElementRight={<FlatButton label="LogOut" onClick={() => this.props.logout()}/>}/>
           <div>
