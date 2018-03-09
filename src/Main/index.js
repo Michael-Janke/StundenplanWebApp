@@ -3,26 +3,40 @@ import {connect} from "react-redux";
 import styled from "styled-components";
 import {ResponsiveDrawer, BodyContainer, ResponsiveAppBar} from 'material-ui-responsive-drawer'
 import FlatButton from "material-ui/FlatButton"
-import {logout} from "./actions"
+import Snackbar from 'material-ui/Snackbar';
+import {loadMe, clearErrors} from "./actions"
+import TimeTable from "../TimeTable"
+import ProfilePicture from "./profilePicture"
 
 class Main extends Component {
+
+  constructor(props) {
+    super(props);
+    props.loadMe();
+  }
+  
   render() {
     return (
       <div>
         <ResponsiveDrawer>
-          <div>
-            //all your components you want to have in the drawer part
-          </div>
+          <ProfilePicture />
         </ResponsiveDrawer>
-        <BodyContainer>
+        <BodyContainer style={{display:'flex'}}>
           <ResponsiveAppBar
             titleStyle={{fontSize: '145%'}}
             title={'Wolkenberg-Gymnasium'}
             iconElementRight={<FlatButton label="LogOut" onClick={() => this.props.logout()}/>}/>
-          <div>
-            //all your components you want to have in the body part
+          <div style={{marginTop: 64, background: '#F0F0F0', flex:1}}>
+            <TimeTable/>
           </div>
         </BodyContainer>
+        <Snackbar
+          open={!!this.props.error}
+          message={"Error: " + this.props.error}
+          autoHideDuration={15000}
+          contentStyle={{color:'red'}}
+          onRequestClose={this.props.clearErrors}
+        />
       </div>
     );
   }
@@ -30,14 +44,20 @@ class Main extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-      logout: () => {
-          dispatch(logout());
-      }
+    loadMe: () => {
+          dispatch(loadMe());
+      },
+    clearErrors: () => {
+      dispatch(clearErrors());
+  },
   };
 };
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    loading: state.user.loading,
+    error: state.error.error,
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

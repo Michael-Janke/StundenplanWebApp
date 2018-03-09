@@ -1,43 +1,54 @@
 const initialState = {
-  loading: false,
-  token: null,
+  type: null,
   id: null,
-  username: '',
-  error: null
+  upn: null,
+  loading: false
 };
 
-export function Reducer(state = initialState, action = {}) {
+export function userReducer(state = initialState, action = {}) {
+  if (action.type.endsWith('_ERROR') || action.type === "persist/REHYDRATE") {
+    return {
+      ...state,
+      loading: false
+    };
+  }
+
   switch (action.type) {
-    case "persist/REHYDRATE":
-      if(!action.payload || !action.payload.login) return {...state}
+    case "GET_ME":
       return {
         ...state,
-        username: action.payload.login.username,
-        id: action.payload.login.id,
-        token: action.payload.login.token
-      };
-    case "GET_TOKEN":
-      return {
-        ...state,
-        username: action.payload.email,
         loading: true
       };
-    case "GET_TOKEN_RECEIVED":
+    case "GET_ME_RECEIVED":
       return {
         ...state,
         loading: false,
-        token: action.payload.token,
-        id: action.payload.id,
-        error: null
+        ...action.payload
       };
-    case "GET_TOKEN_ERROR":
+    case "PROFILE_PICTURE_RECEIVED":
       return {
         ...state,
-        loading: false,
-        token: null,
-        error: action.payload
+        profilePicture: action.payload.profilePicture
       };
     default:
       return state;
+  }
+}
+
+export function errorReducer(state = {
+  error: null
+}, action = {}) {
+  if (action.type.endsWith("_ERROR")) {
+    if (!action.payload) 
+      return {error: null};
+    var error = null;
+    if (action.payload.crossDomain) {
+      error = "Interner Serverfehler";
+    } else if (action.payload.response) {
+      error = action.payload.response.statusCode + ' | ' + action.payload.response.text;
+    };
+    return {error}
+  } else {
+    return state;
   }
 }

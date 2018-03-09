@@ -9,7 +9,7 @@ import {responsiveStoreEnhancer} from 'redux-responsive'
 const persistConfig = {
   key: 'root',
   storage,
-  blackList: ['browser','responsiveDrawer']
+  blackList: ['browser','responsiveDrawer', 'error']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

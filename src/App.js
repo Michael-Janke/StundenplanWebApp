@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Provider} from "react-redux";
 import {PersistGate} from 'redux-persist/integration/react';
-import LogIn from './LogIn';
 import Main from './Main';
 import ResponsiveFontSize from './Common/ResponsiveFontSize';
 
@@ -18,9 +17,7 @@ class App extends Component {
         <PersistGate loading={null} persistor={persistor}>
           <MuiThemeProvider >
             <ResponsiveFontSize>
-              <LogIn>
-                <Main/>
-              </LogIn>
+              <Main/>
             </ResponsiveFontSize>
           </MuiThemeProvider >
         </PersistGate>

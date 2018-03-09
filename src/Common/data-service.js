@@ -1,24 +1,53 @@
-import request from 'superagent'
+import request from 'superagent';
+import {adalGetToken} from 'react-adal';
+import {adalConfig, authContext} from '../adalConfig';
 
-export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
+export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api-2/';
+export const OUTLOOK_URL = 'https://outlook.office.com/';
 
-const getApiGenerator = next => (route, name, token) => request
-    .get(API_URL+route)
-    .set('accept', 'json')
-    .set('Authorization', 'Bearer: ' + token)
-	.end((err, res) => {
-		if (err) {
-			return next({
-				type: name+'_ERROR',
-				err
+const getApiGenerator = next => (endpoint, route, name) => {
+	adalGetToken(authContext, adalConfig.endpoints[endpoint]).then((token) =>
+		request
+		.get(endpoint+route)
+		.set('accept', 'Application/Json')
+		.set('Authorization', 'Bearer ' + token)
+		.then((res) => 
+			next({
+				type: name+'_RECEIVED',
+				payload: JSON.parse(res.text)
 			})
-		}
-		const data = JSON.parse(res.text)
-		next({
-			type: name+'_RECEIVED',
-			data
+		)
+		.catch((err) =>
+			next({
+				type: name+'_ERROR',
+				payload: err
+			})
+		)
+	)
+}
+
+const getImageGenerator = next => (endpoint, route, name) => {
+	adalGetToken(authContext, adalConfig.endpoints[endpoint]).then((token) =>
+		fetch(endpoint+route, {
+			headers: {
+			"Authorization": 'Bearer ' + token
+			}
 		})
-    })
+		.then(res => res.blob())
+		.then((blob) => 
+			next({
+				type: name+'_RECEIVED',
+				payload: {profilePicture: URL.createObjectURL(blob)}
+			})
+		)
+		.catch((err) =>
+			next({
+				type: name+'_ERROR',
+				payload: err
+			})
+		)
+	)
+}
     
 const postApiGenerator = next => (route, name, data) => request
     .post(API_URL+route)
@@ -29,7 +58,7 @@ const postApiGenerator = next => (route, name, data) => request
 		if (err) {
 			return next({
 				type: name+'_ERROR',
-				payload: (err.response && err.response.body) || err
+				payload: err
 			})
 		}
 		const data = JSON.parse(res.text)
@@ -40,15 +69,16 @@ const postApiGenerator = next => (route, name, data) => request
 	})
 
 const dataService = store => next => action => {   
-    next(action);
-    if(action.type === "GET_TOKEN") {
-        return postApiGenerator(next)('token', 'GET_TOKEN', action.payload);
-    }
-    const token = store.getState().login.token;
+	next(action);
     switch(action.type){
-    case 'whatever':
-        getApiGenerator(next)('token', 'GET_Whatever', token);
-        break;
+	case 'GET_ME':
+        return getApiGenerator(next)(API_URL, 'me', 'GET_ME');
+    case 'GET_MASTERDATA':
+        return getApiGenerator(next)(API_URL, 'all', 'GET_MASTERDATA');
+    case 'REFRESH_MASTERDATA':
+		return getApiGenerator(next)(API_URL, 'version', 'REFRESH_MASTERDATA');
+	case 'GET_PROFILE_PICTURE':
+		return getImageGenerator(next)(OUTLOOK_URL, 'api/v2.0/me/photo/$value', 'PROFILE_PICTURE');
 	default:
 		break
 	}
