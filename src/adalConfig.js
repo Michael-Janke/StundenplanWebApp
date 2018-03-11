@@ -5,7 +5,7 @@ export const adalConfig = {
   clientId: 'fb82e2a9-1efd-4a8e-9ac6-92413ab4b58b',
   endpoints: {
     "https://www.wolkenberg-gymnasium.de/wolkenberg-app/api-2/": 'cc7342c1-42a3-4fa7-8f42-08d39285cac9',
-    "https://outlook.office.com/": "https://outlook.office.com/"
+    "https://graph.microsoft.com/": "https://graph.microsoft.com/"
   },
   cacheLocation: 'localStorage',
 };

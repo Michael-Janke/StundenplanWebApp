@@ -28,7 +28,12 @@ export function userReducer(state = initialState, action = {}) {
     case "PROFILE_PICTURE_RECEIVED":
       return {
         ...state,
-        profilePicture: action.payload.profilePicture
+        profilePicture: URL.createObjectURL(action.payload.blob)
+      };
+    case "PROFILE_PICTURE_SMALL_RECEIVED":
+      return {
+        ...state,
+        profilePictureSmall: URL.createObjectURL(action.payload.blob)
       };
     default:
       return state;

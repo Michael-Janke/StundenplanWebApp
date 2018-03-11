@@ -1,6 +1,11 @@
 const initialState = {
   loadingMasterData: false,
-  masterdata: null
+  masterdata: {
+    Period_Time: [],
+    Teacher: [],
+    Rooms: [],
+    Students: []
+  }
 };
 
 export function timetableReducer(state = initialState, action = {}) {

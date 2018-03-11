@@ -6,6 +6,7 @@
   "dependencies": {
     "material-ui": "^0.20.0",
     "material-ui-responsive-drawer": "^1.19.4",
+    "material-ui-search-bar": "^0.4.1",
     "moment": "^2.21.0",
     "react": "^16.2.0",
     "react-adal": "^0.3.15",

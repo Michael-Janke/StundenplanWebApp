@@ -32,7 +32,6 @@ class TimeTable extends Component {
   render() {
     return (
       <ColumnLayout>
-        <Controller params onChange={(params) => this.setState({params})}/>
         <View params/>
       </ColumnLayout>
     );
@@ -44,7 +43,6 @@ const ColumnLayout = styled.div `
     flex: 1;
     flex-direction: column;
     width: 100%;
-    padding: 3vmin;
 `;
 
 const mapDispatchToProps = dispatch => {
