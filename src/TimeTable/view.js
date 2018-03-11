@@ -55,7 +55,7 @@ class View extends Component {
     }
 
     renderPeriod(period) {
-        return (<Cell key={period.PERIOD_TIME_ID}/>);
+        return (<Cell key={period.PERIOD_TIME_ID} />);
     }
 
     renderWeekDay(weekDay) {
@@ -80,13 +80,16 @@ class View extends Component {
             large: 800,
             infinity: 1000
         }[this.props.mediaType];
+        const drawerMargin = this.props.showDrawer ? undefined : '5vw';
         return (
             <Container>
                 <AppBar style={{ backgroundColor: this.props.muiTheme.palette.primary1Color }}>
                 </AppBar>
-                <ShadowContainer>
+                <ShadowContainer style={{ marginLeft: drawerMargin }}>
                     <ToolBar>
-                        <EmptyHeader/>
+                        <EmptyHeader>
+
+                        </EmptyHeader>
                         {WEEKDAY_NAMES.map((weekDay, i) => <WeekdayHeader key={i}>{weekDay}</WeekdayHeader>)}
                     </ToolBar>
                     <Grid>
@@ -114,7 +117,6 @@ const Container = styled.div`
     position: relative;
     color: ${grey600};
 `
-
 const ShadowContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -122,7 +124,8 @@ const ShadowContainer = styled.div`
     box-shadow: rgba(0,0,0,0.3) 0px 0px 10px;
     margin-top: auto;
     margin-left: ${DRAWER_WIDTH}px;
-    margin-right: 100px;
+    margin-right: 5vw;
+    max-width: 1200px;
 `
 
 const AppBar = styled.div`
@@ -141,7 +144,7 @@ const ToolBar = styled.div`
     background-color: ${grey200};
     align-items: center;
     justify-content: space-around;
-    z-index: 1102;
+    z-index: 1;
 `;
 
 
@@ -170,7 +173,6 @@ const Grid = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    z-index: 1103;
     background-color: white;
     min-height: 500px;
 `
@@ -185,7 +187,7 @@ const Times = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 5px;
+    padding: 1vmin;
     border-bottom: solid 1px ${grey200};
 `;
 const Time = styled.div`
@@ -235,6 +237,7 @@ const mapStateToProps = state => {
         masterdata: state.timetable.masterdata,
         periods: state.timetable.masterdata.Period_Time,
         showPeriods: state.browser.greaterThan.small,
+        showDrawer: state.browser.greaterThan.small,
         mediaType: state.browser.mediaType
     };
 };

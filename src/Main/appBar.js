@@ -9,6 +9,14 @@ import PersonIcon from 'material-ui/svg-icons/social/person';
 import SearchIcon from 'material-ui/svg-icons/action/search';
 import { DRAWER_WIDTH } from '../Common/const';
 import SearchBar from 'material-ui-search-bar';
+import IconButton from 'material-ui/IconButton';
+import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
+import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
+import PrintIcon from 'material-ui/svg-icons/action/print';
+import CalendarIcon from 'material-ui/svg-icons/action/event';
+
+import { grey100 } from 'material-ui/styles/colors';
+
 
 class WGAppBar extends Component {
     constructor(props) {
@@ -16,37 +24,52 @@ class WGAppBar extends Component {
     }
 
     componentWillMount() {
-        if(!this.props.profilePictureSmall) {
+        if (!this.props.profilePictureSmall) {
             this.props.loadProfilePictureSmall();
         }
     }
 
     render() {
         const titleStyle = {
-            width: DRAWER_WIDTH-64,
-            flex: 'none'
+            maxWidth: DRAWER_WIDTH - 64,
+            flex: 1
         };
+        const small = this.props.small;
         return (
             <AppBar
                 titleStyle={titleStyle}
                 title="Stundenplan"
                 style={{ boxShadow: 'none' }}>
                 <Flex>
-                <SearchBar
-                    onChange={() => console.log('onChange')}
-                    onRequestSearch={() => console.log('onRequestSearch')}
-                    hintText="Suche"
-                    style={{
-                        backgroundColor: '#C5CAE9',
-                        marginTop: 8,
-                        marginRight: 8,
-                        left: DRAWER_WIDTH,
-                        maxWidth: 800,
-                        color: 'white'
-                    }} />
+                    <SearchBar
+                        onChange={() => console.log('onChange')}
+                        onRequestSearch={() => console.log('onRequestSearch')}
+                        hintText="Suche"
+                        style={{
+                            backgroundColor: '#C5CAE9',
+                            marginTop: 8,
+                            marginRight: 8,
+                            left: DRAWER_WIDTH,
+                            maxWidth: 800,
+                            color: 'white'
+                        }} />
                 </Flex>
                 <Icons>
-                    <Avatar src={this.props.profilePictureSmall} size={48} icon={< PersonIcon />}/>
+                    {small || <IconButton tooltip="Voherige Woche">
+                        <BackIcon color={grey100} />
+                    </IconButton>}
+                    <IconButton tooltip="Kalendar öffnen">
+                        <CalendarIcon color={grey100} />
+                    </IconButton>
+                    {small || <IconButton tooltip="Nächste Woche">
+                        <NextIcon color={grey100} />
+                    </IconButton>}
+                    {small || <IconButton tooltip="Stundenplan drucken">
+                        <PrintIcon color={grey100} />
+                    </IconButton>}
+                    <IconButton tooltip="Benutzereinstellungen" style={{width: 48+8, height:48, paddingLeft: 8, padding: 0}}>
+                        <Avatar src={this.props.profilePictureSmall} size={48} icon={< PersonIcon /> } />
+                    </IconButton>
                 </Icons>
             </AppBar>
         )
@@ -62,7 +85,6 @@ const Icons = styled.div`
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    width: 100px;
 `
 
 const mapDispatchToProps = dispatch => {
@@ -75,7 +97,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        profilePictureSmall: state.user.profilePictureSmall
+        profilePictureSmall: state.user.profilePictureSmall,
+        small: state.browser.lessThan.medium,
     };
 };
 
