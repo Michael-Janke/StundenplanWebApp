@@ -8,7 +8,7 @@ import Avatar from 'material-ui/Avatar';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import SearchIcon from 'material-ui/svg-icons/action/search';
 import { DRAWER_WIDTH } from '../Common/const';
-import SearchBar from 'material-ui-search-bar';
+import SearchBar from './searchBar';
 import IconButton from 'material-ui/IconButton';
 import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
@@ -40,20 +40,7 @@ class WGAppBar extends Component {
                 titleStyle={titleStyle}
                 title="Stundenplan"
                 style={{ boxShadow: 'none' }}>
-                <Flex>
-                    <SearchBar
-                        onChange={() => console.log('onChange')}
-                        onRequestSearch={() => console.log('onRequestSearch')}
-                        hintText="Suche"
-                        style={{
-                            backgroundColor: '#C5CAE9',
-                            marginTop: 8,
-                            marginRight: 8,
-                            left: DRAWER_WIDTH,
-                            maxWidth: 800,
-                            color: 'white'
-                        }} />
-                </Flex>
+                <SearchBar />
                 <Icons>
                     {small || <IconButton tooltip="Voherige Woche">
                         <BackIcon color={grey100} />
@@ -75,12 +62,6 @@ class WGAppBar extends Component {
         )
     }
 }
-const Flex = styled.div`
-    flex: 1;
-    display:flex;
-    flex-direction: column;
-`
-
 const Icons = styled.div`
     display: flex;
     justify-content: flex-end;
@@ -98,6 +79,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
     return {
         profilePictureSmall: state.user.profilePictureSmall,
+        masterdata: state.timetable.masterdata,
         small: state.browser.lessThan.medium,
     };
 };
