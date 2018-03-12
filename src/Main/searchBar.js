@@ -34,27 +34,27 @@ class WGSearchBar extends Component {
             ? <Avatar src={"data:image/jpg;base64," + this.props.avatars[upn].img } size={30} /> 
             : < PersonIcon />;
         this.state.dataSource = [
-            ...Object.values(this.props.masterdata.Class).map((entry) => ({
+            ...Object.values(masterdata.Class).map((entry) => ({
                 text: "Klasse " + entry.NAME,
                 type: "class",
                 id: entry.CLASS_ID,
                 value: (<MenuItem leftIcon={<ClassIcon />} primaryText={entry.NAME} secondaryText="Klasse" />),
             })),
-            ...Object.values(this.props.masterdata.Teacher).map((entry) => ({
+            ...Object.values(masterdata.Teacher).map((entry) => ({
                 text: `Lehrer ${entry.FIRSTNAME} ${entry.LASTNAME}`,
                 upn: entry.UPN,
                 type: "teacher",
                 id: entry.TEACHER_ID,
                 value: (<MenuItem leftIcon={avatar(entry.UPN)} primaryText={entry.FIRSTNAME[0] + '. ' + entry.LASTNAME} secondaryText="Lehrer" />),
             })),  
-            ...Object.values(this.props.masterdata.Student).map((entry) => ({
+            ...Object.values(masterdata.Student).map((entry) => ({
                 text: `Schüler ${entry.FIRSTNAME} ${entry.LASTNAME}`,
                 upn: entry.UPN,
                 type: "student",
                 id: entry.STUDENT_ID,
                 value: (<MenuItem leftIcon={avatar(entry.UPN)} primaryText={`${entry.LASTNAME}, ${entry.FIRSTNAME}`} secondaryText="Schüler" />),
             })),  
-            ...Object.values(this.props.masterdata.Room).map((entry) => ({
+            ...Object.values(masterdata.Room).map((entry) => ({
                 text: "Raum " + entry.NAME,
                 type: "room",
                 id: entry.ROOM_ID,
@@ -70,7 +70,7 @@ class WGSearchBar extends Component {
         subset = subset.filter((value, i) => i < 10 
             && value.upn 
             && (this.props.avatars[value.upn]===undefined
-                || this.props.avatars[value.upn].lastUpdate.diff(moment(), 'days') > 7)        
+                || moment(this.props.avatars[value.upn].lastUpdate).diff(moment(), 'days') > 7)        
         );
         if(subset.length > 0) {
             this.props.loadAvatars(subset.map((a) => a.upn));
