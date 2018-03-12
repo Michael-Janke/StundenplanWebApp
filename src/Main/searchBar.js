@@ -9,6 +9,7 @@ import ClassIcon from 'material-ui/svg-icons/social/group';
 import RoomIcon from 'material-ui/svg-icons/action/room';
 import {loadAvatars, setTimeTable} from './actions';
 import AutoComplete from 'material-ui/AutoComplete';
+import moment from 'moment';
 
 class WGSearchBar extends Component {
 
@@ -66,7 +67,11 @@ class WGSearchBar extends Component {
     loadAvatars(searchText) {
         if(this.props.avatars.loading) return;
         var subset = this.state.dataSource.filter((value) => AutoComplete.fuzzyFilter(searchText, value.text));
-        subset = subset.filter((value, i) => i < 10 && value.upn && this.props.avatars[value.upn]===undefined);
+        subset = subset.filter((value, i) => i < 10 
+            && value.upn 
+            && (this.props.avatars[value.upn]===undefined
+                || this.props.avatars[value.upn].lastUpdate.diff(moment(), 'days') > 7)        
+        );
         if(subset.length > 0) {
             this.props.loadAvatars(subset.map((a) => a.upn));
         }

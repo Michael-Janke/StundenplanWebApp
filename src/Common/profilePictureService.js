@@ -1,6 +1,5 @@
-import request from 'superagent';
 import { adalGetToken } from 'react-adal';
-import { adalConfig, authContext } from '../adalConfig';
+import { authContext } from '../adalConfig';
 import moment from 'moment';
 
 export const GRAPH_URL = 'https://graph.microsoft.com/';

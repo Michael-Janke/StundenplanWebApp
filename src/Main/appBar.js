@@ -19,6 +19,7 @@ import IconMenu from 'material-ui/IconMenu';
 import { grey100 } from 'material-ui/styles/colors';
 import MenuItem from 'material-ui/MenuItem';
 import {purge} from '../configStores';
+import {unregister} from '../registerServiceWorker';
 
 class WGAppBar extends Component {
     constructor(props) {
@@ -38,8 +39,9 @@ class WGAppBar extends Component {
     }
 
     reset() {
-        purge().then(() => {
+        purge().finally(() => {
             localStorage.clear();
+            unregister();
             window.location.reload();
         })
     }
