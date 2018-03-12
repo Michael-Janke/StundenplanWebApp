@@ -2,9 +2,10 @@ const initialState = {
   loadingMasterData: false,
   masterdata: {
     Period_Time: [],
+    Class: [],
     Teacher: [],
-    Rooms: [],
-    Students: []
+    Room: [],
+    Student: []
   }
 };
 
@@ -38,6 +39,12 @@ export function timetableReducer(state = initialState, action = {}) {
         ...state,
         loadingMasterData: false,
         error: action.payload
+      };
+    case "SET_TIMETABLE":
+      return {
+        ...state,
+        currentTimeTableType: action.payload.type,
+        currentTimeTableId: action.payload.id,
       };
     default:
       return state;

@@ -13,7 +13,6 @@ import {
 import { grey200, grey600 } from 'material-ui/styles/colors'
 
 import muiThemeable from 'material-ui/styles/muiThemeable';
-import TimeTable from './index';
 
 class View extends Component {
 
@@ -66,20 +65,6 @@ class View extends Component {
     }
 
     render() {
-        const maxHeight = {
-            extraSmall: undefined,
-            small: undefined,
-            medium: 400,
-            large: 600,
-            infinity: 800
-        }[this.props.mediaType];
-        const maxWidth = {
-            extraSmall: undefined,
-            small: undefined,
-            medium: 600,
-            large: 800,
-            infinity: 1000
-        }[this.props.mediaType];
         const drawerMargin = this.props.showDrawer ? undefined : '5vw';
         return (
             <Container>
@@ -127,14 +112,12 @@ const ShadowContainer = styled.div`
     margin-right: 5vw;
     max-width: 1200px;
 `
-
 const AppBar = styled.div`
     display: flex;
     width: 100%;
     height: 64px;
     position: absolute;
 `
-
 const ToolBar = styled.div`
     flex:1;
     display:flex;
@@ -146,7 +129,6 @@ const ToolBar = styled.div`
     justify-content: space-around;
     z-index: 1;
 `;
-
 
 const WeekdayHeader = styled.div`
     font-size:85%;

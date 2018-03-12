@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage' // defaults to localStorage for 
 import { composeWithDevTools } from 'redux-devtools-extension'
 import rootReducer from './reducers'
 import dataService from './Common/data-service'
+import profilePictureService from './Common/profilePictureService'
 import {responsiveStoreEnhancer} from 'redux-responsive'
 
 const persistConfig = {
@@ -13,9 +14,13 @@ const persistConfig = {
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
+const store = createStore(persistedReducer, composeWithDevTools(applyMiddleware(dataService, profilePictureService), responsiveStoreEnhancer));
+const persistor = persistStore(store);
 
 export default () => {
-  let store = createStore(persistedReducer, composeWithDevTools(applyMiddleware(dataService), responsiveStoreEnhancer));
-  let persistor = persistStore(store);
   return { store, persistor }
 }
+
+export function purge() {
+  return persistor.purge();
+} 

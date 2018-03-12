@@ -16,7 +16,7 @@ class TimeTable extends Component {
         year: moment().year()
       }
     };
-    if (props.masterdata === null) {
+    if (!props.masterdata.version) {
       props.loadMasterData();
     } else {
       props.refreshMasterData();

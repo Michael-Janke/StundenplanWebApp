@@ -40,20 +40,36 @@ export function userReducer(state = initialState, action = {}) {
   }
 }
 
-export function errorReducer(state = {
-  error: null
-}, action = {}) {
+export function errorReducer(state = { error: null }, action = {}) {
   if (action.type.endsWith("_ERROR")) {
-    if (!action.payload) 
-      return {error: null};
+    if (!action.payload)
+      return { error: null };
     var error = null;
     if (action.payload.crossDomain) {
       error = "Interner Serverfehler";
     } else if (action.payload.response) {
       error = action.payload.response.statusCode + ' | ' + action.payload.response.text;
     };
-    return {error}
+    return { error }
   } else {
     return state;
+  }
+}
+
+export function avatarReducer(state = { loading: false }, action = {}) {
+  switch (action.type) {
+    case "GET_BATCH_AVATARS":
+      return {
+        ...state,
+        loading: true
+      };
+    case "BATCH_AVATARS_RECEIVED":
+      return {
+        ...state,
+        loading: false,
+        ...action.payload
+      };
+    default:
+      return state;
   }
 }

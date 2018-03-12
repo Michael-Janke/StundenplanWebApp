@@ -6,7 +6,6 @@ import { loadProfilePictureSmall } from './actions';
 import AppBar from 'material-ui/AppBar';
 import Avatar from 'material-ui/Avatar';
 import PersonIcon from 'material-ui/svg-icons/social/person';
-import SearchIcon from 'material-ui/svg-icons/action/search';
 import { DRAWER_WIDTH } from '../Common/const';
 import SearchBar from './searchBar';
 import IconButton from 'material-ui/IconButton';
@@ -14,9 +13,12 @@ import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
 import PrintIcon from 'material-ui/svg-icons/action/print';
 import CalendarIcon from 'material-ui/svg-icons/action/event';
-
+import ProfilePicIcon from 'material-ui/svg-icons/action/account-circle';
+import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
+import IconMenu from 'material-ui/IconMenu';
 import { grey100 } from 'material-ui/styles/colors';
-
+import MenuItem from 'material-ui/MenuItem';
+import {purge} from '../configStores';
 
 class WGAppBar extends Component {
     constructor(props) {
@@ -27,6 +29,19 @@ class WGAppBar extends Component {
         if (!this.props.profilePictureSmall) {
             this.props.loadProfilePictureSmall();
         }
+    }
+
+    profilePicChange() {
+        window.open("https://outlook.office365.com/ecp/PersonalSettings/EditAccount.aspx?chgPhoto=1&e" +
+            "xsvurl=1&realm=wgmail.de",
+            "popup", "width=600,height=400,status=yes,scrollbars=yes,resizable=yes");
+    }
+
+    reset() {
+        purge().then(() => {
+            localStorage.clear();
+            window.location.reload();
+        })
     }
 
     render() {
@@ -45,18 +60,26 @@ class WGAppBar extends Component {
                     {small || <IconButton tooltip="Voherige Woche">
                         <BackIcon color={grey100} />
                     </IconButton>}
-                    <IconButton tooltip="Kalendar öffnen">
+                    {small && <IconButton tooltip="Kalendar öffnen">
                         <CalendarIcon color={grey100} />
-                    </IconButton>
+                    </IconButton>}
                     {small || <IconButton tooltip="Nächste Woche">
                         <NextIcon color={grey100} />
                     </IconButton>}
                     {small || <IconButton tooltip="Stundenplan drucken">
                         <PrintIcon color={grey100} />
                     </IconButton>}
-                    <IconButton tooltip="Benutzereinstellungen" style={{width: 48+8, height:48, paddingLeft: 8, padding: 0}}>
-                        <Avatar src={this.props.profilePictureSmall} size={48} icon={< PersonIcon /> } />
-                    </IconButton>
+                    <IconMenu
+                        iconButtonElement={
+                            <IconButton tooltip="Benutzereinstellungen" style={{ width: 48 + 8, height: 48, paddingLeft: 8, padding: 0 }}>
+                                <Avatar src={this.props.profilePictureSmall} size={48} icon={< PersonIcon />} />
+                            </IconButton>}
+                        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+                        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    >
+                        <MenuItem primaryText="Profilbild ändern" rightIcon={<ProfilePicIcon />} onClick={() => this.profilePicChange()} />
+                        <MenuItem primaryText="Reset" rightIcon={<RefreshIcon />} onClick={() => this.reset()}/>
+                    </IconMenu>
                 </Icons>
             </AppBar>
         )
