@@ -5,7 +5,7 @@ const initialState = {
     Class: [],
     Teacher: [],
     Room: [],
-    Student: []
+    Student: [],
   }
 };
 
@@ -32,7 +32,7 @@ export function timetableReducer(state = initialState, action = {}) {
     case "REFRESH_MASTERDATA_RECEIVED":
       return {
         ...state,
-        masterdata: action.payload.version === state.masterdata.version ? state.masterdata : null
+        masterdata: action.payload.version.COUNTER  === state.masterdata.version.COUNTER ? state.masterdata : {}
       };
     case "GET_MASTERDATA_ERROR":
       return {

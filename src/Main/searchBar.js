@@ -7,7 +7,7 @@ import Avatar from 'material-ui/Avatar';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import ClassIcon from 'material-ui/svg-icons/social/group';
 import RoomIcon from 'material-ui/svg-icons/action/room';
-import {loadAvatars, setTimeTable} from './actions';
+import { loadAvatars, setTimeTable } from './actions';
 import AutoComplete from 'material-ui/AutoComplete';
 import moment from 'moment';
 
@@ -18,61 +18,80 @@ class WGSearchBar extends Component {
         this.state = {
             dataSource: null
         }
-        this.mergeDataSource(props.masterdata);
+        this.mergeDataSource(props);
     }
 
     componentWillUpdate(nextProps) {
-        if(nextProps.avatars !== this.props.avatars) {
+        if (nextProps.avatars !== this.props.avatars) {
             this.state.dataSource = null;
         }
-        this.mergeDataSource(nextProps.masterdata)
+        this.mergeDataSource(nextProps)
     }
 
-    mergeDataSource(masterdata) {
-        if(this.state.dataSource || !masterdata) return;
-        const avatar = (upn) => this.props.avatars[upn] && this.props.avatars[upn].img 
-            ? <Avatar src={"data:image/jpg;base64," + this.props.avatars[upn].img } size={30} /> 
-            : < PersonIcon />;
+    mergeDataSource(props) {
+        if (props.dataSource || !props.masterdata) return;
+        const avatar = (upn) => props.avatars[upn] && props.avatars[upn].img
+            ? <Avatar src={"data:image/jpg;base64," + props.avatars[upn].img} size={30} />
+            : <PersonIcon />;
         this.state.dataSource = [
-            ...Object.values(masterdata.Class).map((entry) => ({
+            ...Object.values(props.masterdata.Class).map((entry) => ({
                 text: "Klasse " + entry.NAME,
                 type: "class",
                 id: entry.CLASS_ID,
-                value: (<MenuItem leftIcon={<ClassIcon />} primaryText={entry.NAME} secondaryText="Klasse" />),
+                value: (
+                    <MenuItem
+                        leftIcon={<ClassIcon />}
+                        primaryText={entry.NAME}
+                        secondaryText="Klasse"
+                    />),
             })),
-            ...Object.values(masterdata.Teacher).map((entry) => ({
+            ...Object.values(props.masterdata.Teacher).map((entry) => ({
                 text: `Lehrer ${entry.FIRSTNAME} ${entry.LASTNAME}`,
                 upn: entry.UPN,
                 type: "teacher",
                 id: entry.TEACHER_ID,
-                value: (<MenuItem leftIcon={avatar(entry.UPN)} primaryText={entry.FIRSTNAME[0] + '. ' + entry.LASTNAME} secondaryText="Lehrer" />),
-            })),  
-            ...Object.values(masterdata.Student).map((entry) => ({
+                value: (
+                    <MenuItem
+                        leftIcon={avatar(entry.UPN)}
+                        primaryText={entry.FIRSTNAME[0] + '. ' + entry.LASTNAME}
+                        secondaryText="Lehrer" />
+                ),
+            })),
+            ...Object.values(props.masterdata.Student).map((entry) => ({
                 text: `Schüler ${entry.FIRSTNAME} ${entry.LASTNAME}`,
                 upn: entry.UPN,
                 type: "student",
                 id: entry.STUDENT_ID,
-                value: (<MenuItem leftIcon={avatar(entry.UPN)} primaryText={`${entry.LASTNAME}, ${entry.FIRSTNAME}`} secondaryText="Schüler" />),
-            })),  
-            ...Object.values(masterdata.Room).map((entry) => ({
+                value: (
+                    <MenuItem
+                        leftIcon={avatar(entry.UPN)}
+                        primaryText={`${entry.LASTNAME}, ${entry.FIRSTNAME}`}
+                        secondaryText="Schüler"
+                    />),
+            })),
+            ...Object.values(props.masterdata.Room).map((entry) => ({
                 text: "Raum " + entry.NAME,
                 type: "room",
                 id: entry.ROOM_ID,
-                value: (<MenuItem leftIcon={<RoomIcon />} primaryText={entry.NAME} secondaryText="Raum" />),
-            })),        
+                value: (<MenuItem
+                    leftIcon={<RoomIcon />}
+                    primaryText={entry.NAME}
+                    secondaryText="Raum"
+                />),
+            })),
         ]
 
     }
 
     loadAvatars(searchText) {
-        if(this.props.avatars.loading) return;
+        if (this.props.avatars.loading) return;
         var subset = this.state.dataSource.filter((value) => AutoComplete.fuzzyFilter(searchText, value.text));
-        subset = subset.filter((value, i) => i < 10 
-            && value.upn 
-            && (this.props.avatars[value.upn]===undefined
-                || moment(this.props.avatars[value.upn].lastUpdate).diff(moment(), 'days') > 7)        
+        subset = subset.filter((value, i) => i < 10
+            && value.upn
+            && (this.props.avatars[value.upn] === undefined
+                || moment(this.props.avatars[value.upn].lastUpdate).diff(moment(), 'days') > 7)
         );
-        if(subset.length > 0) {
+        if (subset.length > 0) {
             this.props.loadAvatars(subset.map((a) => a.upn));
         }
     }
@@ -96,7 +115,7 @@ class WGSearchBar extends Component {
                         color: 'white'
                     }} />
             </Flex>
-        )
+        );
     }
 }
 const Flex = styled.div`
@@ -121,6 +140,7 @@ const mapStateToProps = state => {
     return {
         masterdata: state.timetable.masterdata,
         avatars: state.avatars,
+        showAsModal: state.browser.greaterThan.small,
     };
 };
 

@@ -24,7 +24,7 @@ class TimeTable extends Component {
   }
 
   componentWillUpdate(nextProps) {
-    if(nextProps.masterdata === null) {
+    if(!nextProps.masterdata.version) {
       nextProps.loadMasterData();
     }
   }
