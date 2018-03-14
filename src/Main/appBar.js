@@ -75,7 +75,7 @@ class WGAppBar extends Component {
                     <IconMenu
                         iconButtonElement={
                             <IconButton tooltip="Benutzereinstellungen" style={{ width: 48 + 8, height: 48, paddingLeft: 8, padding: 0 }}>
-                                <Avatar src={this.props.avatar && ("data:image/jpg;base64," + this.props.avatar.img)} size={48} icon={< PersonIcon />} />
+                                <Avatar src={this.props.avatar && this.props.avatar.img && ("data:image/jpg;base64," + this.props.avatar.img)} size={48} icon={< PersonIcon />} />
                             </IconButton>}
                         anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
                         targetOrigin={{ horizontal: 'right', vertical: 'top' }}

@@ -79,6 +79,7 @@ export function errorReducer(state = { error: null }, action = {}) {
 export function avatarReducer(state = { loading: false }, action = {}) {
   switch (action.type) {
     case "persist/REHYDRATE":
+     if(!action.payload) return state;
      return {
        ...state,
        ...action.payload.avatars,
