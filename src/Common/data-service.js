@@ -2,7 +2,7 @@ import request from 'superagent';
 import {adalGetToken} from 'react-adal';
 import {adalConfig, authContext} from '../adalConfig';
 
-export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api-2/';
+export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
 
 const getApiGenerator = next => (endpoint, route, name) => {
@@ -56,8 +56,8 @@ const dataService = store => next => action => {
         return getApiGenerator(next)(API_URL, 'me', 'GET_ME');
     case 'GET_MASTERDATA':
         return getApiGenerator(next)(API_URL, 'all', 'GET_MASTERDATA');
-    case 'REFRESH_MASTERDATA':
-		return getApiGenerator(next)(API_URL, 'counter', 'REFRESH_MASTERDATA');
+    case 'GET_COUNTER':
+		return getApiGenerator(next)(API_URL, 'counter', 'COUNTER');
 	case 'GET_PROFILE_PICTURE':
 		return getImageGenerator(next)(GRAPH_URL, '/beta/me/photo/$value', 'PROFILE_PICTURE');
 	case 'GET_PROFILE_PICTURE_SMALL':

@@ -29,16 +29,17 @@ export function timetableReducer(state = initialState, action = {}) {
         loadingMasterData: false,
         masterdata: action.payload
       };
-    case "REFRESH_MASTERDATA_RECEIVED":
-      return {
-        ...state,
-        masterdata: action.payload.version.COUNTER  === state.masterdata.version.COUNTER ? state.masterdata : {}
-      };
     case "GET_MASTERDATA_ERROR":
       return {
         ...state,
         loadingMasterData: false,
         error: action.payload
+      };
+    case "GET_ME_RECEIVED":
+      return {
+        ...state,
+        currentTimeTableType: action.payload.type,
+        currentTimeTableId: action.payload.id,
       };
     case "SET_TIMETABLE":
       return {

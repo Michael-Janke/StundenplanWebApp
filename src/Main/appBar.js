@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 
-import { loadProfilePictureSmall } from './actions';
+import { loadAvatars } from './actions';
 import AppBar from 'material-ui/AppBar';
 import Avatar from 'material-ui/Avatar';
 import PersonIcon from 'material-ui/svg-icons/social/person';
@@ -26,9 +26,9 @@ class WGAppBar extends Component {
         super(props);
     }
 
-    componentWillMount() {
-        if (!this.props.profilePictureSmall) {
-            this.props.loadProfilePictureSmall();
+    checkAvatar(props) {
+        if (this.props.upn && this.props.avatars && !this.props.avatars.loading && !this.props.avatars[this.props.upn]) {
+            this.props.loadAvatars([this.props.upn]);
         }
     }
 
@@ -47,6 +47,7 @@ class WGAppBar extends Component {
     }
 
     render() {
+        this.checkAvatar();
         const titleStyle = {
             maxWidth: DRAWER_WIDTH - 64,
             flex: 1
@@ -74,7 +75,7 @@ class WGAppBar extends Component {
                     <IconMenu
                         iconButtonElement={
                             <IconButton tooltip="Benutzereinstellungen" style={{ width: 48 + 8, height: 48, paddingLeft: 8, padding: 0 }}>
-                                <Avatar src={this.props.profilePictureSmall} size={48} icon={< PersonIcon />} />
+                                <Avatar src={this.props.avatar && ("data:image/jpg;base64," + this.props.avatar.img)} size={48} icon={< PersonIcon />} />
                             </IconButton>}
                         anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
                         targetOrigin={{ horizontal: 'right', vertical: 'top' }}
@@ -95,15 +96,17 @@ const Icons = styled.div`
 
 const mapDispatchToProps = dispatch => {
     return {
-        loadProfilePictureSmall: () => {
-            dispatch(loadProfilePictureSmall());
+        loadAvatars: (upns) => {
+            dispatch(loadAvatars(upns));
         }
     };
 };
 
 const mapStateToProps = state => {
     return {
-        profilePictureSmall: state.user.profilePictureSmall,
+        avatars: state.avatars,
+        upn: state.user.upn,
+        avatar: state.avatars[state.user.upn],
         masterdata: state.timetable.masterdata,
         small: state.browser.lessThan.medium,
     };

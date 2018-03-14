@@ -2,6 +2,10 @@ export function loadMe() {
     return {type: "GET_ME"};
 }
 
+export function checkCounter() {
+    return {type: "GET_COUNTER"};
+}
+
 export function loadProfilePicture() {
     return {type: "GET_PROFILE_PICTURE"};
 }

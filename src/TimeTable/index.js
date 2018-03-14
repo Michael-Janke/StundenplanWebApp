@@ -1,7 +1,7 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import styled from "styled-components";
-import {loadMasterData, refreshMasterData} from "./actions";
+import { loadMasterData, refreshMasterData } from "./actions";
 import View from './view';
 import Controller from './controller';
 import moment from 'moment';
@@ -16,15 +16,11 @@ class TimeTable extends Component {
         year: moment().year()
       }
     };
-    if (!props.masterdata.version) {
-      props.loadMasterData();
-    } else {
-      props.refreshMasterData();
-    }
+    props.needsUpdate && props.loadMasterData();
   }
 
   componentWillUpdate(nextProps) {
-    if(!nextProps.masterdata.version) {
+    if (!this.props.needsUpdate && nextProps.needsUpdate) {
       nextProps.loadMasterData();
     }
   }
@@ -32,13 +28,13 @@ class TimeTable extends Component {
   render() {
     return (
       <ColumnLayout>
-        <View params/>
+        <View params />
       </ColumnLayout>
     );
   }
 }
 
-const ColumnLayout = styled.div `
+const ColumnLayout = styled.div`
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -49,15 +45,15 @@ const mapDispatchToProps = dispatch => {
   return {
     loadMasterData: () => {
       dispatch(loadMasterData());
-    },
-    refreshMasterData: () => {
-      dispatch(refreshMasterData());
     }
   };
 };
 
 const mapStateToProps = state => {
-  return {initialParams: undefined, masterdata: state.timetable.masterdata};
+  return {
+    masterdata: state.timetable.masterdata,
+    needsUpdate: state.user.counterChanged,
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TimeTable);

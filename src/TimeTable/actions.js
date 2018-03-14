@@ -11,9 +11,3 @@ export function setParams(params) {
       };
   }
   
-  export function refreshMasterData() {
-    return {
-        type: "REFRESH_MASTERDATA"
-      };
-  }
-  

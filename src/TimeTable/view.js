@@ -1,18 +1,14 @@
-import React, {
-    Component
-} from "react";
-import {
-    connect
-} from "react-redux";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import styled from "styled-components";
 import { } from "./actions";
-import {
-    WEEKDAY_NAMES,
-    DRAWER_WIDTH
-} from "../Common/const";
-import { grey200, grey600 } from 'material-ui/styles/colors'
-
+import { WEEKDAY_NAMES, DRAWER_WIDTH } from "../Common/const";
+import { grey200, grey600, orange500 } from 'material-ui/styles/colors';
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import WarningIcon from 'material-ui/svg-icons/alert/warning';
+import moment from 'moment';
+import 'moment/locale/de';
+moment.locale('de');
 
 class View extends Component {
 
@@ -69,6 +65,11 @@ class View extends Component {
         return (
             <Container>
                 <AppBar style={{ backgroundColor: this.props.muiTheme.palette.primary1Color }}>
+                    <ShadowContainerEmu />
+                    <WarningText>
+                        {this.props.warning && <WarningIcon color={orange500} style={{ width: 32, height: 32 }} />}
+                        <span>Letzte Aktualisierung {moment(this.props.lastCheck).fromNow()}</span>
+                    </WarningText>
                 </AppBar>
                 <ShadowContainer style={{ marginLeft: drawerMargin }}>
                     <ToolBar>
@@ -95,6 +96,15 @@ class View extends Component {
     }
 }
 
+const WarningText = styled.div`
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: ${grey200};    
+    font-size: 70%;
+`
+
 const Container = styled.div`
     display: flex;
     width: 100%;
@@ -111,9 +121,19 @@ const ShadowContainer = styled.div`
     margin-left: ${DRAWER_WIDTH}px;
     margin-right: 5vw;
     max-width: 1200px;
+    z-index: 1;
+`
+const ShadowContainerEmu = styled.div`
+    margin-left: ${DRAWER_WIDTH}px;
+    margin-right: 1vw;
+    max-width: 1200px;
+    width:100%;
+    height: 1px;
 `
 const AppBar = styled.div`
     display: flex;
+    flex-direction: row;
+    align-items: center;
     width: 100%;
     height: 64px;
     position: absolute;
@@ -220,7 +240,9 @@ const mapStateToProps = state => {
         periods: state.timetable.masterdata.Period_Time,
         showPeriods: state.browser.greaterThan.small,
         showDrawer: state.browser.greaterThan.small,
-        mediaType: state.browser.mediaType
+        mediaType: state.browser.mediaType,
+        warning: state.user.warning,
+        lastCheck: state.user.lastCheck
     };
 };
 
