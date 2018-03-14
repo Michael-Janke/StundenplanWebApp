@@ -15,6 +15,7 @@ import PrintIcon from 'material-ui/svg-icons/action/print';
 import CalendarIcon from 'material-ui/svg-icons/action/event';
 import ProfilePicIcon from 'material-ui/svg-icons/action/account-circle';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
+import KeyIcon from 'material-ui/svg-icons/communication/vpn-key';
 import IconMenu from 'material-ui/IconMenu';
 import { grey100 } from 'material-ui/styles/colors';
 import MenuItem from 'material-ui/MenuItem';
@@ -36,6 +37,11 @@ class WGAppBar extends Component {
         window.open("https://outlook.office365.com/ecp/PersonalSettings/EditAccount.aspx?chgPhoto=1&e" +
             "xsvurl=1&realm=wgmail.de",
             "popup", "width=600,height=400,status=yes,scrollbars=yes,resizable=yes");
+    }
+
+    passwordChange() {
+        window.open("https://login.wgmail.de/adfs/portal/updatepassword?username="+this.props.upn,
+            "popup", "width=400,height=600,status=yes,scrollbars=yes,resizable=yes");
     }
 
     reset() {
@@ -77,10 +83,11 @@ class WGAppBar extends Component {
                             <IconButton tooltip="Benutzereinstellungen" style={{ width: 48 + 8, height: 48, paddingLeft: 8, padding: 0 }}>
                                 <Avatar src={this.props.avatar && this.props.avatar.img && ("data:image/jpg;base64," + this.props.avatar.img)} size={48} icon={< PersonIcon />} />
                             </IconButton>}
-                        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                         targetOrigin={{ horizontal: 'right', vertical: 'top' }}
                     >
                         <MenuItem primaryText="Profilbild ändern" rightIcon={<ProfilePicIcon />} onClick={() => this.profilePicChange()} />
+                        <MenuItem primaryText="Passwort ändern" rightIcon={<KeyIcon />} onClick={() => this.passwordChange()} />
                         <MenuItem primaryText="Reset" rightIcon={<RefreshIcon />} onClick={() => this.reset()}/>
                     </IconMenu>
                 </Icons>
