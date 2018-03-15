@@ -31,8 +31,8 @@ class WGSearchBar extends Component {
     mergeDataSource(props) {
         if (props.dataSource || !props.masterdata) return;
         const avatar = (upn) => props.avatars[upn] && props.avatars[upn].img
-            ? <Avatar src={"data:image/jpg;base64," + props.avatars[upn].img} size={30} />
-            : <PersonIcon />;
+            ? {leftAvatar: <Avatar src={"data:image/jpg;base64," + props.avatars[upn].img} size={32} />, insetChildren: true}
+            : {leftIcon: <PersonIcon />};
         this.state.dataSource = [
             ...Object.values(props.masterdata.Class).map((entry) => ({
                 text: "Klasse " + entry.NAME,
@@ -52,7 +52,7 @@ class WGSearchBar extends Component {
                 id: entry.TEACHER_ID,
                 value: (
                     <MenuItem
-                        leftIcon={avatar(entry.UPN)}
+                        {...avatar(entry.UPN)}
                         primaryText={entry.FIRSTNAME[0] + '. ' + entry.LASTNAME}
                         secondaryText="Lehrer" />
                 ),
@@ -64,7 +64,7 @@ class WGSearchBar extends Component {
                 id: entry.STUDENT_ID,
                 value: (
                     <MenuItem
-                        leftIcon={avatar(entry.UPN)}
+                        {...avatar(entry.UPN)}
                         primaryText={`${entry.LASTNAME}, ${entry.FIRSTNAME}`}
                         secondaryText="Schüler"
                     />),
