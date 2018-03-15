@@ -107,6 +107,7 @@ class WGSearchBar extends Component {
                     hintText="Suche"
                     maxSearchResults={10}
                     filter={AutoComplete.fuzzyFilter}
+                    popoverProps={ this.props.showAsModal ? {anchorEl: null, canAutoPosition:false, style:{width:'100%', marginTop:64, marginLeft:'3vw', width:'94vw'}} : {}}
                     style={{
                         backgroundColor: '#C5CAE9',
                         marginTop: 8,
@@ -140,7 +141,7 @@ const mapStateToProps = state => {
     return {
         masterdata: state.timetable.masterdata,
         avatars: state.avatars,
-        showAsModal: state.browser.greaterThan.small,
+        showAsModal: state.browser.lessThan.medium,
     };
 };
 

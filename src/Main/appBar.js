@@ -55,16 +55,16 @@ class WGAppBar extends Component {
     render() {
         this.checkAvatar();
         const titleStyle = {
-            maxWidth: DRAWER_WIDTH - 64,
+            maxWidth: this.props.small ? 0 : DRAWER_WIDTH - 64,
             flex: 1
         };
         const small = this.props.small;
         return (
             <AppBar
                 titleStyle={titleStyle}
-                title="Stundenplan"
+                title={this.props.small ? "" : "Stundenplan"}
                 style={{ boxShadow: 'none' }}>
-                <SearchBar />
+                <SearchBar anchorIfSmall={this}/>
                 <Icons>
                     {small || <IconButton tooltip="Voherige Woche">
                         <BackIcon color={grey100} />
