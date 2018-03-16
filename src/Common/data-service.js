@@ -1,69 +1,76 @@
 import request from 'superagent';
-import {adalGetToken} from 'react-adal';
-import {adalConfig, authContext} from '../adalConfig';
+import { adalGetToken } from 'react-adal';
+import { adalConfig, authContext } from '../adalConfig';
 
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
 
-const getApiGenerator = next => (endpoint, route, name) => {
+const requestApiGenerator = next => (endpoint, route, name, METHOD = "GET", body) => {
 	adalGetToken(authContext, adalConfig.endpoints[endpoint]).then((token) =>
-		request
-		.get(endpoint+route)
-		.set('accept', 'Application/Json')
-		.set('Authorization', 'Bearer ' + token)
-		.then((res) => 
-			next({
-				type: name+'_RECEIVED',
-				payload: JSON.parse(res.text)
-			})
-		)
-		.catch((err) =>
-			next({
-				type: name+'_ERROR',
-				payload: err
-			})
-		)
+		fetch(endpoint + route, {
+			method: METHOD,
+			body,
+			headers: {
+				"Authorization": 'Bearer ' + token,
+				"Content-Type": "Application/Json"
+			}
+		})
+			.then(res => res.json())
+			.then((res) =>
+				next({
+					type: name + '_RECEIVED',
+					payload: res
+				}))
+			.catch((err) =>
+				next({
+					type: name + '_ERROR',
+					payload: err
+				})
+			)
 	)
 }
 
 const getImageGenerator = next => (endpoint, route, name) => {
 	adalGetToken(authContext, adalConfig.endpoints[endpoint]).then((token) =>
-		fetch(endpoint+route, {
+		fetch(endpoint + route, {
 			headers: {
-			"Authorization": 'Bearer ' + token
+				"Authorization": 'Bearer ' + token
 			}
 		})
-		.then(res => res.blob())
-		.then((blob) => 
-			next({
-				type: name+'_RECEIVED',
-				payload: {blob}
-			})
-		)
-		.catch((err) =>
-			next({
-				type: name+'_ERROR',
-				payload: err
-			})
-		)
+			.then(res => res.blob())
+			.then((blob) =>
+				next({
+					type: name + '_RECEIVED',
+					payload: { blob }
+				})
+			)
+			.catch((err) =>
+				next({
+					type: name + '_ERROR',
+					payload: err
+				})
+			)
 	)
 }
 
-const dataService = store => next => action => {   
+const dataService = store => next => action => {
 	next(action);
-    switch(action.type){
-	case 'GET_ME':
-        return getApiGenerator(next)(API_URL, 'me', 'GET_ME');
-    case 'GET_MASTERDATA':
-        return getApiGenerator(next)(API_URL, 'all', 'GET_MASTERDATA');
-    case 'GET_COUNTER':
-		return getApiGenerator(next)(API_URL, 'counter', 'COUNTER');
-	case 'GET_PROFILE_PICTURE':
-		return getImageGenerator(next)(GRAPH_URL, '/beta/me/photo/$value', 'PROFILE_PICTURE');
-	case 'GET_PROFILE_PICTURE_SMALL':
-		return getImageGenerator(next)(GRAPH_URL, '/beta/me/photos/48x48/$value', 'PROFILE_PICTURE_SMALL');
-	default:
-		break
+	switch (action.type) {
+		case 'GET_ME':
+			return requestApiGenerator(next)(API_URL, 'me', 'GET_ME');
+		case 'GET_MASTERDATA':
+			return requestApiGenerator(next)(API_URL, 'all', 'GET_MASTERDATA');
+		case 'GET_COUNTER':
+			return requestApiGenerator(next)(API_URL, 'counter', 'COUNTER');
+		case 'SET_NOTIFICATION':
+			return requestApiGenerator(next)(API_URL, 'notifications', 'SET_NOTIFICATION',
+				'POST', JSON.stringify({ newToken: action.payload }));
+		case 'GET_PROFILE_PICTURE':
+			return getImageGenerator(next)(GRAPH_URL, '/beta/me/photo/$value', 'PROFILE_PICTURE');
+		case 'GET_PROFILE_PICTURE_SMALL':
+			return getImageGenerator(next)(GRAPH_URL, '/beta/me/photos/48x48/$value', 'PROFILE_PICTURE_SMALL');
+		default:
+			break
 	}
 };
 

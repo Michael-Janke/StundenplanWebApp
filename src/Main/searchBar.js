@@ -28,7 +28,7 @@ class WGSearchBar extends Component {
     }
 
     mergeDataSource(masterdata, avatars = {}) {
-        if (masterdata) return [];
+        if (!masterdata) return [];
         const avatar = (upn) => avatars[upn] && avatars[upn].img
             ? {leftAvatar: <Avatar src={"data:image/jpg;base64," + avatars[upn].img} size={32} />, insetChildren: true}
             : {leftIcon: <PersonIcon />};
