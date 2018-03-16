@@ -40,7 +40,7 @@ class Main extends Component {
                     <TimeTable />
                     <Snackbar
                         open={!!this.props.error}
-                        message={"Error: " + this.props.error}
+                        message={"Fehler: " + this.props.error}
                         autoHideDuration={15000}
                         contentStyle={{
                             color: 'red'

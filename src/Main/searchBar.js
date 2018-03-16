@@ -16,25 +16,24 @@ class WGSearchBar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataSource: null
+            dataSource: this.mergeDataSource(props.masterdata, props.avatars)
         }
-        this.mergeDataSource(props);
     }
 
-    componentWillUpdate(nextProps) {
-        if (nextProps.avatars !== this.props.avatars) {
-            this.state.dataSource = null;
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.avatars !== this.props.avatars
+            || nextProps.masterdata !== this.props.masterdata) {
+            this.setState({dataSource: this.mergeDataSource(nextProps.masterdata, nextProps.avatars)});
         }
-        this.mergeDataSource(nextProps)
     }
 
-    mergeDataSource(props) {
-        if (props.dataSource || !props.masterdata) return;
-        const avatar = (upn) => props.avatars[upn] && props.avatars[upn].img
-            ? {leftAvatar: <Avatar src={"data:image/jpg;base64," + props.avatars[upn].img} size={32} />, insetChildren: true}
+    mergeDataSource(masterdata, avatars = {}) {
+        if (masterdata) return [];
+        const avatar = (upn) => avatars[upn] && avatars[upn].img
+            ? {leftAvatar: <Avatar src={"data:image/jpg;base64," + avatars[upn].img} size={32} />, insetChildren: true}
             : {leftIcon: <PersonIcon />};
-        this.state.dataSource = [
-            ...Object.values(props.masterdata.Class).map((entry) => ({
+        return [
+            ...Object.values(masterdata.Class).map((entry) => ({
                 text: "Klasse " + entry.NAME,
                 type: "class",
                 id: entry.CLASS_ID,
@@ -45,7 +44,7 @@ class WGSearchBar extends Component {
                         secondaryText="Klasse"
                     />),
             })),
-            ...Object.values(props.masterdata.Teacher).map((entry) => ({
+            ...Object.values(masterdata.Teacher).map((entry) => ({
                 text: `Lehrer ${entry.FIRSTNAME} ${entry.LASTNAME}`,
                 upn: entry.UPN,
                 type: "teacher",
@@ -57,7 +56,7 @@ class WGSearchBar extends Component {
                         secondaryText="Lehrer" />
                 ),
             })),
-            ...Object.values(props.masterdata.Student).map((entry) => ({
+            ...Object.values(masterdata.Student).map((entry) => ({
                 text: `Schüler ${entry.FIRSTNAME} ${entry.LASTNAME}`,
                 upn: entry.UPN,
                 type: "student",
@@ -69,7 +68,7 @@ class WGSearchBar extends Component {
                         secondaryText="Schüler"
                     />),
             })),
-            ...Object.values(props.masterdata.Room).map((entry) => ({
+            ...Object.values(masterdata.Room).map((entry) => ({
                 text: "Raum " + entry.NAME,
                 type: "room",
                 id: entry.ROOM_ID,
@@ -107,7 +106,7 @@ class WGSearchBar extends Component {
                     hintText="Suche"
                     maxSearchResults={10}
                     filter={AutoComplete.fuzzyFilter}
-                    popoverProps={ this.props.showAsModal ? {anchorEl: null, canAutoPosition:false, style:{width:'100%', marginTop:64, marginLeft:'3vw', width:'94vw'}} : {}}
+                    popoverProps={ this.props.showAsModal ? {anchorEl: null, canAutoPosition:false, style:{marginTop:64, marginLeft:'3vw', width:'94vw'}} : {}}
                     style={{
                         backgroundColor: '#C5CAE9',
                         marginTop: 8,

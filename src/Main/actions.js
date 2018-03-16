@@ -1,27 +1,36 @@
+
 export function loadMe() {
-    return {type: "GET_ME"};
+    return { type: "GET_ME" };
 }
 
 export function checkCounter() {
-    return {type: "GET_COUNTER"};
+    return { type: "GET_COUNTER" };
 }
 
 export function loadProfilePicture() {
-    return {type: "GET_PROFILE_PICTURE"};
+    return { type: "GET_PROFILE_PICTURE" };
 }
 
 export function loadProfilePictureSmall() {
-    return {type: "GET_PROFILE_PICTURE_SMALL"};
+    return { type: "GET_PROFILE_PICTURE_SMALL" };
 }
 
 export function loadAvatars(upns) {
-    return {type: "GET_BATCH_AVATARS", payload: upns};
+    return { type: "GET_BATCH_AVATARS", payload: upns };
+}
+
+export function showError(text) {
+    return { type: "_ERROR", payload: {text} };
 }
 
 export function clearErrors() {
-    return {type: "CLEAR_ERROR", payload: null};
+    return { type: "CLEAR_ERROR", payload: null };
 }
 
 export function setTimeTable(type, id) {
-    return {type: "SET_TIMETABLE", payload: {type, id}};
+    return { type: "SET_TIMETABLE", payload: { type, id } };
+}
+
+export function setNotification(id) {
+    return { type: "SET_NOTIFICATION", payload: id };
 }

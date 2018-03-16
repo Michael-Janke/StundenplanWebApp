@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { loadMasterData, refreshMasterData } from "./actions";
+import { loadMasterData } from "./actions";
 import View from './view';
-import Controller from './controller';
 import moment from 'moment';
 
 class TimeTable extends Component {

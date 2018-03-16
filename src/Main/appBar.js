@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 
-import { loadAvatars } from './actions';
+import { loadAvatars, setNotification, showError } from './actions';
 import AppBar from 'material-ui/AppBar';
 import Avatar from 'material-ui/Avatar';
 import PersonIcon from 'material-ui/svg-icons/social/person';
@@ -16,16 +16,16 @@ import CalendarIcon from 'material-ui/svg-icons/action/event';
 import ProfilePicIcon from 'material-ui/svg-icons/action/account-circle';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import KeyIcon from 'material-ui/svg-icons/communication/vpn-key';
+import NotificationsOn from 'material-ui/svg-icons/social/notifications-active';
+import NotificationsOff from 'material-ui/svg-icons/social/notifications-off';
 import IconMenu from 'material-ui/IconMenu';
 import { grey100 } from 'material-ui/styles/colors';
 import MenuItem from 'material-ui/MenuItem';
-import {purge} from '../configStores';
-import {unregister} from '../registerServiceWorker';
+import { purge } from '../configStores';
+import { unregister, subscribeNotifications } from '../registerServiceWorker';
+
 
 class WGAppBar extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     checkAvatar(props) {
         if (this.props.upn && this.props.avatars && !this.props.avatars.loading && !this.props.avatars[this.props.upn]) {
@@ -40,7 +40,7 @@ class WGAppBar extends Component {
     }
 
     passwordChange() {
-        window.open("https://login.wgmail.de/adfs/portal/updatepassword?username="+this.props.upn,
+        window.open("https://login.wgmail.de/adfs/portal/updatepassword?username=" + this.props.upn,
             "popup", "width=400,height=600,status=yes,scrollbars=yes,resizable=yes");
     }
 
@@ -50,6 +50,17 @@ class WGAppBar extends Component {
             unregister();
             window.location.reload();
         })
+    }
+
+    setNotification(event) {
+        if (this.props.notifications) {
+            this.props.setNotification(undefined)
+        } else {
+            subscribeNotifications(
+                (token) => this.props.setNotification(),
+                (error) => this.props.showError(error)
+            );
+        }
     }
 
     render() {
@@ -64,7 +75,7 @@ class WGAppBar extends Component {
                 titleStyle={titleStyle}
                 title={this.props.small ? "" : "Stundenplan"}
                 style={{ boxShadow: 'none' }}>
-                <SearchBar anchorIfSmall={this}/>
+                <SearchBar anchorIfSmall={this} />
                 <Icons>
                     {small || <IconButton tooltip="Voherige Woche">
                         <BackIcon color={grey100} />
@@ -88,7 +99,12 @@ class WGAppBar extends Component {
                     >
                         <MenuItem primaryText="Profilbild ändern" rightIcon={<ProfilePicIcon />} onClick={() => this.profilePicChange()} />
                         <MenuItem primaryText="Passwort ändern" rightIcon={<KeyIcon />} onClick={() => this.passwordChange()} />
-                        <MenuItem primaryText="Reset" rightIcon={<RefreshIcon />} onClick={() => this.reset()}/>
+                        <MenuItem primaryText="Reset" rightIcon={<RefreshIcon />} onClick={() => this.reset()} />
+                        <MenuItem
+                            primaryText={"Benachrichtigungen " + (this.props.notifications ? "ausschalten" : "anschalten")}
+                            rightIcon={this.props.notifications ? <NotificationsOff /> : <NotificationsOn />}
+                            onClick={this.setNotification.bind(this)}
+                        />
                     </IconMenu>
                 </Icons>
             </AppBar>
@@ -103,9 +119,9 @@ const Icons = styled.div`
 
 const mapDispatchToProps = dispatch => {
     return {
-        loadAvatars: (upns) => {
-            dispatch(loadAvatars(upns));
-        }
+        loadAvatars: (upns) => { dispatch(loadAvatars(upns)); },
+        setNotification: (bool) => { dispatch(setNotification(bool)); },
+        showError: (text) => { dispatch(showError(text)); },
     };
 };
 
@@ -116,6 +132,7 @@ const mapStateToProps = state => {
         avatar: state.avatars[state.user.upn],
         masterdata: state.timetable.masterdata,
         small: state.browser.lessThan.medium,
+        notifications: state.user.notifications
     };
 };
 

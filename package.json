@@ -2,8 +2,9 @@
   "name": "stundenplan-web-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://www.wolkenberg-gymnasium.de/app/",
+  "homepage": "https://www.wolkenberg-gymnasium.de/wolkenberg-app/stundenplan-web-app/",
   "dependencies": {
+    "firebase": "^4.11.0",
     "material-ui": "^0.20.0",
     "material-ui-responsive-drawer": "^1.19.4",
     "material-ui-search-bar": "^0.4.1",
@@ -15,9 +16,11 @@
     "react-interval": "^2.0.2",
     "react-redux": "^5.0.7",
     "react-scripts": "1.1.1",
+    "react-tap-event-plugin": "^3.0.2",
     "redux": "^3.7.2",
     "redux-persist": "^5.9.1",
     "redux-responsive": "^4.3.5",
+    "redux-thunk": "^2.2.0",
     "styled-components": "^3.1.6",
     "superagent": "^3.8.2"
   },

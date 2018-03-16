@@ -10,6 +10,7 @@ const initialState = {
   lastUpdate: null,
   lastCheck: null,
   warning: true,
+  notifications: false,
 };
 
 export function userReducer(state = initialState, action = {}) {
@@ -55,6 +56,11 @@ export function userReducer(state = initialState, action = {}) {
         ...state,
         profilePictureSmall: URL.createObjectURL(action.payload.blob)
       };
+    case "SET_NOTIFICATION":
+      return {
+        ...state,
+        notifications: action.payload
+      };
     default:
       return state;
   }
@@ -65,7 +71,9 @@ export function errorReducer(state = { error: null }, action = {}) {
     if (!action.payload)
       return { error: null };
     var error = null;
-    if (action.payload.crossDomain) {
+    if (action.payload.text) {
+      error = action.payload.text;
+    } else if (action.payload.crossDomain) {
       error = "Interner Serverfehler";
     } else if (action.payload.response) {
       error = action.payload.response.statusCode + ' | ' + action.payload.response.text;
