@@ -22,7 +22,7 @@ import IconMenu from 'material-ui/IconMenu';
 import { grey100 } from 'material-ui/styles/colors';
 import MenuItem from 'material-ui/MenuItem';
 import { purge } from '../configStores';
-import { unregister, subscribeNotifications } from '../registerServiceWorker';
+import { unregister, subscribeNotifications, onTokenChange } from '../registerServiceWorker';
 
 
 class WGAppBar extends Component {
@@ -53,11 +53,14 @@ class WGAppBar extends Component {
     }
 
     setNotification(event) {
-        if (this.props.notifications) {
+        if (this.props.notificationToken) {
             this.props.setNotification(undefined)
         } else {
             subscribeNotifications(
-                (token) => this.props.setNotification(),
+                (token) => {
+                    this.props.setNotification(token);
+                    onTokenChange((token) => this.props.setNotification(token, this.props.notificationToken));
+                },
                 (error) => this.props.showError(error)
             );
         }
@@ -101,8 +104,8 @@ class WGAppBar extends Component {
                         <MenuItem primaryText="Passwort ändern" rightIcon={<KeyIcon />} onClick={() => this.passwordChange()} />
                         <MenuItem primaryText="Reset" rightIcon={<RefreshIcon />} onClick={() => this.reset()} />
                         <MenuItem
-                            primaryText={"Benachrichtigungen " + (this.props.notifications ? "ausschalten" : "anschalten")}
-                            rightIcon={this.props.notifications ? <NotificationsOff /> : <NotificationsOn />}
+                            primaryText={"Benachrichtigungen " + (this.props.notificationToken ? "ausschalten" : "anschalten")}
+                            rightIcon={this.props.notificationToken ? <NotificationsOff /> : <NotificationsOn />}
                             onClick={this.setNotification.bind(this)}
                         />
                     </IconMenu>
@@ -120,7 +123,7 @@ const Icons = styled.div`
 const mapDispatchToProps = dispatch => {
     return {
         loadAvatars: (upns) => { dispatch(loadAvatars(upns)); },
-        setNotification: (bool) => { dispatch(setNotification(bool)); },
+        setNotification: (newToken, oldToken) => { dispatch(setNotification(newToken, oldToken)); },
         showError: (text) => { dispatch(showError(text)); },
     };
 };
@@ -132,7 +135,7 @@ const mapStateToProps = state => {
         avatar: state.avatars[state.user.upn],
         masterdata: state.timetable.masterdata,
         small: state.browser.lessThan.medium,
-        notifications: state.user.notifications
+        notificationToken: state.user.notificationToken
     };
 };
 

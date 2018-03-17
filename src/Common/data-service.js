@@ -1,4 +1,3 @@
-import request from 'superagent';
 import { adalGetToken } from 'react-adal';
 import { adalConfig, authContext } from '../adalConfig';
 
@@ -64,7 +63,7 @@ const dataService = store => next => action => {
 			return requestApiGenerator(next)(API_URL, 'counter', 'COUNTER');
 		case 'SET_NOTIFICATION':
 			return requestApiGenerator(next)(API_URL, 'notifications', 'SET_NOTIFICATION',
-				'POST', JSON.stringify({ newToken: action.payload }));
+				'POST', JSON.stringify(action.payload));
 		case 'GET_PROFILE_PICTURE':
 			return getImageGenerator(next)(GRAPH_URL, '/beta/me/photo/$value', 'PROFILE_PICTURE');
 		case 'GET_PROFILE_PICTURE_SMALL':
