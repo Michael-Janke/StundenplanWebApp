@@ -50,7 +50,6 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    masterdata: state.timetable.masterdata,
     needsUpdate: state.user.counterChanged,
   };
 };

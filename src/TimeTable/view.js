@@ -7,6 +7,7 @@ import { grey200, grey600, orange500 } from 'material-ui/styles/colors';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import WarningIcon from 'material-ui/svg-icons/alert/warning';
 import moment from 'moment';
+import TimeTableGrid from './timeTableGrid';
 import 'moment/locale/de';
 moment.locale('de');
 
@@ -67,29 +68,14 @@ class View extends Component {
                 <AppBar style={{ backgroundColor: this.props.muiTheme.palette.primary1Color }}>
                     <ShadowContainerEmu />
                     <WarningText>
-                        {this.props.warning && <WarningIcon color={orange500} style={{ width: 32, height: 32 }} />}
+                        {this.props.warning &&
+                            <WarningIcon color={orange500} style={{ width: 32, height: 32 }} />
+                        }
                         <span>Letzte Aktualisierung {moment(this.props.lastCheck).fromNow()}</span>
                     </WarningText>
                 </AppBar>
                 <ShadowContainer style={{ marginLeft: drawerMargin }}>
-                    <ToolBar>
-                        <EmptyHeader>
-
-                        </EmptyHeader>
-                        {WEEKDAY_NAMES.map((weekDay, i) => <WeekdayHeader key={i}>{weekDay}</WeekdayHeader>)}
-                    </ToolBar>
-                    <Grid>
-                        {this.renderPeriodTimesColumn()}
-                        {this.renderHeaderColumn()}
-                        <Ancor>
-                            <TimeTableGrid>
-                                {WEEKDAY_NAMES.map(this.renderWeekDay, this)}
-                            </TimeTableGrid>
-                            <TimeTableContainer>
-                                {this.props.children}
-                            </TimeTableContainer>
-                        </Ancor>
-                    </Grid>
+                    <TimeTableGrid/>
                 </ShadowContainer>
             </Container>
         );
@@ -117,7 +103,7 @@ const ShadowContainer = styled.div`
     flex-direction: column;
     width: 100%;
     box-shadow: rgba(0,0,0,0.3) 0px 0px 10px;
-    margin-top: auto;
+    margin-top: 6px;
     margin-left: ${DRAWER_WIDTH}px;
     margin-right: 5vw;
     max-width: 1200px;
@@ -213,18 +199,18 @@ const Ancor = styled.div`
     flex:10;
     width:100%;
 `
-const TimeTableGrid = styled.div`
-    position:absolute;
-    top:0;
-    height: 100%;
-    width: 100%;
-    display:flex;
-    flex-direction: row;    
-`
-const TimeTableContainer = styled.div`
-    min-height: 100%;
-    width: 100%;  
-`
+// const TimeTableGrid = styled.div`
+//     position:absolute;
+//     top:0;
+//     height: 100%;
+//     width: 100%;
+//     display:flex;
+//     flex-direction: row;    
+// `
+// const TimeTableContainer = styled.div`
+//     min-height: 100%;
+//     width: 100%;  
+// `
 
 const mapDispatchToProps = dispatch => {
     return {

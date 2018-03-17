@@ -11,6 +11,9 @@ const initialState = {
   lastCheck: null,
   warning: true,
   notifications: false,
+  subjectColors: {
+    
+  }
 };
 
 export function userReducer(state = initialState, action = {}) {
@@ -24,7 +27,7 @@ export function userReducer(state = initialState, action = {}) {
         lastCheck: moment(),
         warning: false
       };
-      case "COUNTER_ERROR":
+    case "COUNTER_ERROR":
       return {
         ...state,
         warning: true
@@ -87,12 +90,12 @@ export function errorReducer(state = { error: null }, action = {}) {
 export function avatarReducer(state = { loading: false }, action = {}) {
   switch (action.type) {
     case "persist/REHYDRATE":
-     if(!action.payload) return state;
-     return {
-       ...state,
-       ...action.payload.avatars,
-       loading: false
-     }
+      if (!action.payload) return state;
+      return {
+        ...state,
+        ...action.payload.avatars,
+        loading: false
+      }
     case "GET_BATCH_AVATARS":
       return {
         ...state,

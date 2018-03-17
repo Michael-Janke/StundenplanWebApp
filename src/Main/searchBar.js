@@ -130,7 +130,7 @@ const mapDispatchToProps = dispatch => {
             dispatch(loadAvatars(upns));
         },
         setTimeTable: (type, id) => {
-            dispatch(setTimeTable(type.id));
+            dispatch(setTimeTable(type,id));
         }
     };
 };

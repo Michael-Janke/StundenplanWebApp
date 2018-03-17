@@ -4,6 +4,13 @@ import { adalConfig, authContext } from '../adalConfig';
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
 
+const handleErrors = (response) => {
+	if (!response.ok) {
+		throw response;
+	}
+	return response;
+}
+
 const requestApiGenerator = next => (endpoint, route, name, METHOD = "GET", body) => {
 	adalGetToken(authContext, adalConfig.endpoints[endpoint]).then((token) =>
 		fetch(endpoint + route, {
@@ -14,6 +21,7 @@ const requestApiGenerator = next => (endpoint, route, name, METHOD = "GET", body
 				"Content-Type": "Application/Json"
 			}
 		})
+			.then(handleErrors)
 			.then(res => res.json())
 			.then((res) =>
 				next({
@@ -23,7 +31,7 @@ const requestApiGenerator = next => (endpoint, route, name, METHOD = "GET", body
 			.catch((err) =>
 				next({
 					type: name + '_ERROR',
-					payload: err
+					payload: err.message ? { text: err.message } : err
 				})
 			)
 	)
@@ -59,6 +67,9 @@ const dataService = store => next => action => {
 			return requestApiGenerator(next)(API_URL, 'me', 'GET_ME');
 		case 'GET_MASTERDATA':
 			return requestApiGenerator(next)(API_URL, 'all', 'GET_MASTERDATA');
+		case "SET_TIMETABLE":
+		case 'GET_TIMETABLE':
+			return requestApiGenerator(next)(API_URL, 'timetable/' + action.payload.type + '/' + action.payload.id, 'GET_TIMETABLE');
 		case 'GET_COUNTER':
 			return requestApiGenerator(next)(API_URL, 'counter', 'COUNTER');
 		case 'SET_NOTIFICATION':

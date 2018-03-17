@@ -47,6 +47,24 @@ export function timetableReducer(state = initialState, action = {}) {
         currentTimeTableType: action.payload.type,
         currentTimeTableId: action.payload.id,
       };
+    case "GET_TIMETABLE":
+      return {
+        ...state,
+      };
+    case "GET_TIMETABLE_RECEIVED":
+      return {
+        ...state,
+        timetable: action.payload,
+      }  
+    case "GET_SUBSITUTIONS":
+      return {
+        ...state,
+      };
+    case "GET_SUBSITUTIONS_RECEIVED":
+      return {
+        ...state,
+        substitutions: action.payload,
+      }  
     default:
       return state;
   }

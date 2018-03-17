@@ -10,4 +10,12 @@ export function setParams(params) {
         type: "GET_MASTERDATA"
       };
   }
+  export function getTimetable(id, type) {
+    return {
+        type: "GET_TIMETABLE",
+        payload: {
+            id, type
+        }
+      };
+  }
   
