@@ -17,9 +17,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from './appBar';
 import Theme from '../Common/theme';
 import ReactInterval from 'react-interval';
-import onTokenChange from '../registerServiceWorker';
-
-
+import {connectToServiceWorker} from '../Common/firebase';
 
 class Main extends Component {
 
@@ -27,6 +25,9 @@ class Main extends Component {
         super(props);
         props.checkCounter();
         props.needsUpdate && props.loadMe();
+        if(this.props.notificationToken) {
+            connectToServiceWorker(this.props.setNotification, this.props.notificationToken);
+        }
     }
 
     componentWillUpdate(nextProps) {
@@ -37,12 +38,9 @@ class Main extends Component {
 
     componentWillMount() {
         if (this.props.notificationToken && navigator.serviceWorker) {
-            onTokenChange(
-                (token) => this.props.setNotification(token),
-                (error) => this.props.showError(error)
-            );
         }
     }
+
 
     render() {
         return (

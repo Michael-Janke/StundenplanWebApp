@@ -22,8 +22,10 @@ import IconMenu from 'material-ui/IconMenu';
 import { grey100 } from 'material-ui/styles/colors';
 import MenuItem from 'material-ui/MenuItem';
 import { purge } from '../configStores';
-import { unregister, subscribeNotifications, onTokenChange } from '../registerServiceWorker';
-
+import { unregister } from '../registerServiceWorker';
+import firebase from 'firebase';
+import {connectToServiceWorker} from '../Common/firebase';
+var messaging;
 
 class WGAppBar extends Component {
 
@@ -52,17 +54,36 @@ class WGAppBar extends Component {
         })
     }
 
-    setNotification(event) {
+    requestPermission() {
+        const that = this;
+        console.log('Requesting permission...');
+        const messaging = firebase.messaging();
+        // [START request_permission]
+        return messaging.requestPermission().then(function () {
+            console.log('Notification permission granted.');
+        }).catch(function (err) {
+            console.log('Unable to get permission to notify.', err);
+            that.props.showError("Browser gab keine Erlaubnis für Benachrichtungen");
+        });
+    }
+
+    setNotification() {
         if (this.props.notificationToken) {
-            this.props.setNotification(undefined)
+            this.props.setNotification({
+                oldToken: this.props.notificationToken,
+                newToken: null
+            });
         } else {
-            subscribeNotifications(
-                (token) => {
-                    this.props.setNotification(token);
-                    onTokenChange((token) => this.props.setNotification(token, this.props.notificationToken));
-                },
-                (error) => this.props.showError(error)
-            );
+            const messaging = firebase.messaging();
+            const that = this;
+            this.requestPermission()
+                .then(() => { return messaging.getToken() })
+                .then((token) => that.props.setNotification({
+                    oldToken: that.props.notificationToken,
+                    newToken: token
+                }))
+                .catch((error) => { this.props.showError(error); debugger});
+            connectToServiceWorker(this.props.setNotification, this.props.notificationToken);
         }
     }
 
@@ -94,7 +115,7 @@ class WGAppBar extends Component {
                     </IconButton>}
                     <IconMenu
                         iconButtonElement={
-                            <IconButton tooltip="Benutzereinstellungen" style={{ width: 48 + 8, height: 48, paddingLeft: 8, padding: 0 }}>
+                            <IconButton tooltipPosition="bottom-left" tooltip="Benutzereinstellungen" style={{ width: 48 + 8, height: 48, paddingLeft: 8, padding: 0 }}>
                                 <Avatar src={this.props.avatar && this.props.avatar.img && ("data:image/jpg;base64," + this.props.avatar.img)} size={48} icon={< PersonIcon />} />
                             </IconButton>}
                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
@@ -106,7 +127,7 @@ class WGAppBar extends Component {
                         <MenuItem
                             primaryText={"Benachrichtigungen " + (this.props.notificationToken ? "ausschalten" : "anschalten")}
                             rightIcon={this.props.notificationToken ? <NotificationsOff /> : <NotificationsOn />}
-                            onClick={this.setNotification.bind(this)}
+                            onClick={() => this.setNotification()}
                         />
                     </IconMenu>
                 </Icons>

@@ -59,10 +59,10 @@ export function userReducer(state = initialState, action = {}) {
         ...state,
         profilePictureSmall: URL.createObjectURL(action.payload.blob)
       };
-    case "SET_NOTIFICATION":
+    case "SET_NOTIFICATION_RECEIVED":
       return {
         ...state,
-        notificationToken: action.payload.newToken
+        notificationToken: action.payload.newToken && action.payload.newToken.TOKEN
       };
     default:
       return state;

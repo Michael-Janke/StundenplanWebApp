@@ -1,5 +1,3 @@
-import * as firebase from 'firebase/app';
-import 'firebase/messaging';
 // In production, we register a service worker to serve assets from local cache.
 
 // This lets the app load faster on subsequent visits in production, and gives
@@ -21,7 +19,7 @@ const isLocalhost = Boolean(
 );
 
 export default function register() {
-  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator || true) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location);
     if (publicUrl.origin !== window.location.origin) {
@@ -58,9 +56,6 @@ function registerValidSW(swUrl) {
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
-
-      messaging.useServiceWorker(registration);
-
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         installingWorker.onstatechange = () => {
@@ -121,37 +116,9 @@ export function unregister() {
   }
 }
 
-var config = {
-  messagingSenderId: "1089330166521"
-};
-firebase.initializeApp(config);
-const messaging = firebase.messaging();
-messaging.usePublicVapidKey("BFM3t4WACinSsfYyZfnlLtYmDsEk8Uk-TXHh-fNnKcrb9avPfJ-rDLdiMJvVLLyQRywcbE3nC0LEZ2L3OEKsn4w");
-
-export function subscribeNotifications(onTokenReceive, onError) {
-  messaging.requestPermission()
-    .then(function () {
-      messaging.getToken()
-        .then(function (currentToken) {
-          if (currentToken) {
-            onTokenReceive(currentToken);
-          } else { onError('Fehler bei der Benachrichtigungsanmeldung'); }
-        })
-        .catch(function (err) { onError('Fehler bei der Benachrichtigungsanmeldung', err); });
-    })
-    .catch(function (err) { onError('Benachrichtigungsfunktion vom Browser nicht erlaubt', err); });
-}
-
-export function onTokenChange(callback, onError) {
-  messaging.onTokenRefresh(function () {
-    messaging.getToken()
-      .then(function (refreshedToken) {
-        callback(refreshedToken);
-      })
-      .catch(function (err) { onError('Benachrichtungen könnten nicht mehr funktionieren', err); });
-  });
-}
-
-export function unsubscribeNotifications() {
-
+export function registration() {
+  if ('serviceWorker' in navigator) {
+    return navigator.serviceWorker.ready;
+  }
+  return false;
 }
