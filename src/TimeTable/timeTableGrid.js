@@ -250,7 +250,7 @@ class TimeTableGrid extends Component {
             return null;
         }
         const periodColumnStyle = {
-            width: this.props.periodsWidth,
+            width: this.props.small ? 20 : 70,
             fontSize: '100%',
             padding: 2,
         };
@@ -258,7 +258,7 @@ class TimeTableGrid extends Component {
             <TableRow key={i}>
                 <TableRowColumn style={periodColumnStyle}>
                     <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
-                        {this.props.showPeriods && this.renderPeriodTimes(period)}
+                        {!this.props.small && this.renderPeriodTimes(period)}
                         {this.renderPeriodHeader(period)}
                     </div>
                 </TableRowColumn>
@@ -268,7 +268,7 @@ class TimeTableGrid extends Component {
     }
 
     render() {
-        const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center' };
+        const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center', paddingLeft: 0, paddingRight:0, };
         return (
             <Table selectable={false}>
                 <TableHeader
@@ -276,7 +276,7 @@ class TimeTableGrid extends Component {
                     displaySelectAll={false}
                     adjustForCheckbox={false}>
                     <TableRow>
-                        <TableHeaderColumn style={{ boxSizing: 'border-box', width: this.props.periodsWidth }} />
+                        <TableHeaderColumn style={{ boxSizing: 'border-box', width: this.props.small ? 20 : 70,  paddingLeft: 0, paddingRight:0 }} />
                         {WEEKDAY_NAMES.map((weekday, i) => (
                             <TableHeaderColumn
                                 key={i}
@@ -328,7 +328,7 @@ const mapStateToProps = state => {
         id: state.timetable.currentTimeTableId,
         type: state.timetable.currentTimeTableType,
         periods: state.timetable.masterdata.Period_Time,
-        showPeriods: state.browser.greaterThan.small,
+        small: state.browser.greaterThan.small,
         showDrawer: state.browser.greaterThan.small,
         small: state.browser.is.extraSmall || state.browser.is.medium,
         periodsWidth: state.browser.greaterThan.small ? 70 : 20,

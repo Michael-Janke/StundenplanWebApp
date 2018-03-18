@@ -23,9 +23,9 @@ const StudentView = (props) => {
             <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', overflow: 'hidden', paddingTop: '0.5vmin',
         paddingBottom: '0.5vmin' }}>
                 <Subject>{props.subject.NAME}</Subject>
-                <div style={{ display: 'flex', flex:1, flexDirection: 'column', alignItems: 'flex-end', justifyContent:'center' }}>
+                <div style={{ display: 'flex', flex:1, flexDirection: 'column', alignItems: 'flex-end', justifyContent:'center', overflow: 'hidden' }}>
                     <Room>{props.room.NAME}</Room>
-                    {props.teacher.map((teacher, i) => <Teacher key={i}>{(teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME}</Teacher>)}
+                    {props.teacher.map((teacher, i) => <Teacher style={{textAlign: 'right'}} key={i}>{(teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME}</Teacher>)}
                 </div>
             </div>
         </LessonContainer>
@@ -86,7 +86,7 @@ class Period extends Component {
 }
 
 const ColorBar = styled.div`
-    width: 0.5vmin;
+    width: 3%;
     margin-right:5px;
     height:100%;
 `;
@@ -115,6 +115,7 @@ const Teacher = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    width: 100%;
 `;
 
 const LessonContainer = styled.div`
