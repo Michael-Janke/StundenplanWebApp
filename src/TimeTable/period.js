@@ -8,28 +8,28 @@ import RoomIcon from 'material-ui/svg-icons/action/room';
 
 
 const StudentView = (props) => {
-    const upn = props.teacher.UPN;
-    const { size, color } = props;
-    return (
-        <LessonContainer>
+    const { size, color, small } = props;
+    if(!small) return (
+        <LessonContainer style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <SubjectSpan>{props.subject.NAME}</SubjectSpan>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', alignContent: 'center'}}>
-                <Block>
-                    <RoomSpan>{props.room.NAME}</RoomSpan>
-                    <RoomIcon style={{ width: size, height: size }} fontSize={size} color={color} />
-                </Block>
-                <Block>
-                    <TeacherSpan>{(props.teacher.FIRSTNAME || "")[0] + ". " + props.teacher.LASTNAME}</TeacherSpan>
-                    {props.avatars[upn]
-                        && props.avatars[upn].img
-                        ? <Avatar src={"data:image/jpg;base64," + props.avatars[upn].img} size={size} />
-                        : <PersonIcon style={{ width: size, height: size }} fontSize={size} color={color} />
-                    }
-                </Block>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', overflow: 'hidden' }}>
+                <Room>{props.room.NAME}</Room>
+                <Teacher>{(props.teacher.FIRSTNAME || "")[0] + ". " + props.teacher.LASTNAME}</Teacher>
+            </div>
+        </LessonContainer>
+    );
+
+    if(small) return (
+        <LessonContainer style={{ flexDirection: 'column' }}>
+            <SubjectSpan>{props.subject.NAME}</SubjectSpan>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <Teacher>{props.teacher.LASTNAME}</Teacher>
+                <Room>{props.room.NAME}</Room>
             </div>
         </LessonContainer>
     );
 };
+
 const TeacherView = StudentView;
 const ClassView = StudentView;
 const RoomView = StudentView;
@@ -58,7 +58,7 @@ class Period extends Component {
                         room: RoomView,
                         class: ClassView
                     }[this.props.type];
-                    const { avatars } = this.props;
+                    const { avatars, small } = this.props;
                     return (
                         <Container
                             key={i}
@@ -66,6 +66,7 @@ class Period extends Component {
                             avatars={avatars}
                             size={10}
                             color={color}
+                            small={small}
                         />
                     );
                 })}
@@ -81,6 +82,7 @@ const Block = styled.div`
     justify-content: space-around;
     align-items: center;
     align-content: center;
+    overflow: hidden;
 `;
 
 const PeriodContainer = styled.div`
@@ -96,24 +98,26 @@ const PeriodContainer = styled.div`
 const SubjectSpan = styled.span`
     font-size: 100%;
     font-weight: bold;
+    margin-right: 1vmin;
 `;
 
-const RoomSpan = styled.span`
+const Room = styled.div`
     font-size: 70%;
 `;
 
-const TeacherSpan = styled.span`
-    font-size: 60%;
+const Teacher = styled.div`
+    font-size: 70%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width:100%;
 `;
 
 const LessonContainer = styled.div`
     flex: 1;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    align-content: center;
     overflow: hidden;
-    flex-wrap: wrap;
+    text-align: left;
+    
 `;
 
 export default Period;

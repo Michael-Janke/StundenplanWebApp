@@ -269,7 +269,7 @@ const mapStateToProps = state => {
         periods: state.timetable.masterdata.Period_Time,
         showPeriods: state.browser.greaterThan.small,
         showDrawer: state.browser.greaterThan.small,
-        small: state.browser.greaterThan.small,
+        small: state.browser.is.extraSmall || state.browser.is.medium,
         periodsWidth: state.browser.greaterThan.small ? 70 : 20,
         avatars: state.avatars,
     };
