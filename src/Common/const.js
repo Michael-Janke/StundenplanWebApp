@@ -15,3 +15,52 @@ export const SUBJECT_COLORS_MAP = {};
 SUBJECTS.forEach((subject, i) => {
     SUBJECT_COLORS_MAP[subject] = SUBJECT_COLORS[i % SUBJECT_COLORS.length];
 });
+
+
+export const SUBSTITUTION_MAP = {
+    SUBSTITUTION: {
+        color: "red",
+        name: "Vertretung",
+        targets: ['room', 'subject', 'teacher'],
+    },
+    ASSIGNMENT: {
+        color: "yellow",
+        name: "Aufgaben"
+    },
+    ELIMINATION: {
+        color: "lime",
+        name: "Entfall"
+    },
+    CLASS_SUBSTITUTION: {
+        color: "#a7bef7",
+        name: "Klasse absent",
+        targets: [],
+    },
+    ROOM_SUBSTITUTION: {
+        color: "blue600",
+        backgroundColor: "blue100",
+        name: "Raumvertretung",
+        targets: ['room']
+    },
+    INFORMATION: {
+        color: "purple",
+        name: "Hinweis",
+    },
+    SWAP: {
+        color: "gold",
+        name: "Tausch"
+    },
+    EXTRA_LESSON: {
+        color: "fuchsia",
+        name: "Zusatzstunde"
+    },
+    SUPERVISION: {
+        color: "grey",
+        name: "Mitbetreuung",
+        targets: ['teacher']
+    },
+    REDUNDANCY: {
+        color: "lime",
+        name: "Freistellung"
+    }
+};

@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const initialState = {
   loadingMasterData: false,
   masterdata: {
@@ -6,7 +8,8 @@ const initialState = {
     Teacher: [],
     Room: [],
     Student: [],
-  }
+  },
+  timetableDate: moment()
 };
 
 export function timetableReducer(state = initialState, action = {}) {
@@ -16,7 +19,9 @@ export function timetableReducer(state = initialState, action = {}) {
       return {
         ...state,
         ...action.payload.timetable,
-        loadingMasterData: false
+        loadingMasterData: false,
+        loadingTimetable: false,
+        loadingSubstitutions: false,
       };
     case "GET_MASTERDATA":
       return {
@@ -47,23 +52,37 @@ export function timetableReducer(state = initialState, action = {}) {
         currentTimeTableType: action.payload.type,
         currentTimeTableId: action.payload.id,
       };
+    case "CHANGE_WEEK":
+      return {
+        ...state, 
+        timetableDate: moment(state.timetableDate).add(action.payload.direction, 'week'),
+      };
+    case "SET_DATE":
+      return {
+        ...state,
+        timetableDate: action.payload
+      }  
     case "GET_TIMETABLE":
       return {
         ...state,
+        loadingTimetable: true,
       };
     case "GET_TIMETABLE_RECEIVED":
       return {
         ...state,
         timetable: action.payload,
-      }  
-    case "GET_SUBSITUTIONS":
+        loadingTimetable: false,
+      };
+    case "GET_SUBSTITUTIONS":
       return {
         ...state,
+        loadingSubstitutions: true,
       };
-    case "GET_SUBSITUTIONS_RECEIVED":
+    case "GET_SUBSTITUTIONS_RECEIVED":
       return {
         ...state,
         substitutions: action.payload,
+        loadingSubstitutions: false,
       }  
     default:
       return state;

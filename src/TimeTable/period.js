@@ -11,6 +11,7 @@ const extractSubject = (name) => {
     return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
 }
 
+
 const StudentView = (props) => {
     const { size, color, small } = props;
     const backgroundColor = SUBJECT_COLORS_MAP[extractSubject(props.subject.NAME)];
@@ -88,16 +89,6 @@ const ColorBar = styled.div`
     width: 0.5vmin;
     margin-right:5px;
     height:100%;
-`;
-
-const Block = styled.div`
-    display: flex;
-    flex-direction: row;
-    flex: 1;
-    justify-content: space-around;
-    align-items: center;
-    align-content: center;
-    overflow: hidden;
 `;
 
 const PeriodContainer = styled.div`

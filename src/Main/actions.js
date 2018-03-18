@@ -20,7 +20,7 @@ export function loadAvatars(upns) {
 }
 
 export function showError(text) {
-    return { type: "_ERROR", payload: {text} };
+    return { type: "_ERROR", payload: { text } };
 }
 
 export function clearErrors() {
@@ -31,6 +31,10 @@ export function setTimeTable(type, id) {
     return { type: "SET_TIMETABLE", payload: { type, id } };
 }
 
-export function setNotification({newToken, oldToken}) {
-    return { type: "SET_NOTIFICATION", payload: {newToken, oldToken} };
+export function setNotification({ newToken, oldToken }) {
+    return { type: "SET_NOTIFICATION", payload: { newToken, oldToken } };
+}
+
+export function changeWeek(direction) {
+    return { type: "CHANGE_WEEK", payload: { direction } };
 }

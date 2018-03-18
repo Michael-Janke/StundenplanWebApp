@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 
-import { loadAvatars, setNotification, showError } from './actions';
+import { loadAvatars, setNotification, showError, changeWeek } from './actions';
 import AppBar from 'material-ui/AppBar';
 import Avatar from 'material-ui/Avatar';
 import PersonIcon from 'material-ui/svg-icons/social/person';
@@ -24,7 +24,7 @@ import MenuItem from 'material-ui/MenuItem';
 import { purge } from '../configStores';
 import { unregister } from '../registerServiceWorker';
 import firebase from 'firebase';
-import {connectToServiceWorker} from '../Common/firebase';
+import { connectToServiceWorker } from '../Common/firebase';
 var messaging;
 
 class WGAppBar extends Component {
@@ -82,7 +82,7 @@ class WGAppBar extends Component {
                     oldToken: that.props.notificationToken,
                     newToken: token
                 }))
-                .catch((error) => { this.props.showError(error); debugger});
+                .catch((error) => { this.props.showError(error); debugger });
             connectToServiceWorker(this.props.setNotification, this.props.notificationToken);
         }
     }
@@ -101,13 +101,13 @@ class WGAppBar extends Component {
                 style={{ boxShadow: 'none' }}>
                 <SearchBar anchorIfSmall={this} />
                 <Icons>
-                    {small || <IconButton tooltip="Voherige Woche">
+                    {small || <IconButton tooltip="Voherige Woche" onClick={() => this.props.setPreviousWeek()}>
                         <BackIcon color={grey100} />
                     </IconButton>}
                     {small && <IconButton tooltip="Kalendar öffnen">
                         <CalendarIcon color={grey100} />
                     </IconButton>}
-                    {small || <IconButton tooltip="Nächste Woche">
+                    {small || <IconButton tooltip="Nächste Woche" onClick={() => this.props.setNextWeek()}>
                         <NextIcon color={grey100} />
                     </IconButton>}
                     {small || <IconButton tooltip="Stundenplan drucken">
@@ -146,6 +146,8 @@ const mapDispatchToProps = dispatch => {
         loadAvatars: (upns) => { dispatch(loadAvatars(upns)); },
         setNotification: (newToken, oldToken) => { dispatch(setNotification(newToken, oldToken)); },
         showError: (text) => { dispatch(showError(text)); },
+        setNextWeek: () => dispatch(changeWeek(1)),
+        setPreviousWeek: () => dispatch(changeWeek(-1)),
     };
 };
 

@@ -21,30 +21,91 @@ class TimeTableGrid extends Component {
         this.state = {
 
         };
-        if (props.timetable) {
-            this.parse(props.masterdata, props.timetable, props.periods);
+        if (props.timetable && props.substitutions) {
+            this.parse(props);
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.timetable !== nextProps.timetable) {
-            this.parse(nextProps.masterdata, nextProps.timetable, nextProps.periods);
+        if (this.props.timetable !== nextProps.timetable
+            || this.props.substitutions !== nextProps.substitutions) {
+            this.parse(nextProps);
         }
     }
 
-    parse(masterdata, timetable, periods) {
+    parse(props) {
+        let { masterdata, timetable, substitutions, periods } = props;
         periods = Object.values(periods);
         let data = [];
         for (let x = 0; x < WEEKDAY_NAMES.length; x++) {
             let day = this.readTimetable(timetable, x, periods);
-            // if (props.substitutions) {
-            //     this.joinSubstitutions(day, props.substitutions.substitutions[x]);
-            // }
+            if (substitutions) {
+                this.joinSubstitutions(day, substitutions.substitutions[x]);
+            }
             this.skipDuplications(day, periods);
             this.translatePeriods(masterdata, day, periods);
             data[x] = day;
         }
         this.state.data = data;
+    }
+
+    joinSubstitutions(day, subOnDay) {
+        if (!subOnDay) return;
+        if (subOnDay.holiday) {
+            day.holiday = subOnDay.holiday;
+            day.periods = undefined;
+        } else if (subOnDay.substitutions && day.periods) {
+
+            subOnDay.substitutions.forEach((substitution) => {
+                let period = day.periods[substitution.PERIOD - 1];
+                if (!period) return;
+                let lessons = period.lessons;
+                if (lessons) {
+                    for (let i = 0; i < lessons.length; i++) {
+                        let lesson = lessons[i];
+                        if (parseInt(lesson.TIMETABLE_ID) === substitution.TIMETABLE_ID) {
+                            let remove = !!['ROOM', 'TEACHER'].find((key) =>
+                                this.props.type === key.toLowerCase()
+                                && substitution[key + "_ID"] === lesson[key + "_ID"]
+                                && substitution[key + "_ID_NEW"]
+                                && lesson[key + "_ID"] !== substitution[key + "_ID_NEW"]
+                            );
+
+                            lessons[i] = {
+                                substitutionRemove: remove,
+                                substitutionType: substitution.TYPE,
+                                substitutionText: substitution.TEXT,
+                                // specificSubstitutionType: getSpecificType(substitution),
+                                CLASS_IDS: substitution.CLASS_IDS_NEW.length
+                                    ? substitution.CLASS_IDS_NEW : substitution.CLASS_IDS,
+                                CLASS_IDS_ABSENT: substitution.CLASS_IDS_ABSENT,
+                                TEACHER_ID: substitution.TEACHER_ID_NEW || lesson.TEACHER_ID,
+                                SUBJECT_ID: substitution.SUBJECT_ID_NEW || lesson.SUBJECT_ID,
+                                ROOM_ID: substitution.ROOM_ID_NEW || lesson.ROOM_ID,
+
+                            };
+                            return;
+                        }
+                    }
+                }
+                if (!lessons) {
+                    period.lessons = lessons = [];
+                }
+                lessons.push({
+                    substitutionText: substitution.TEXT,
+                    substitutionRemove:
+                        substitution.TEACHER_ID === this.props.id
+                        && substitution.TEACHER_ID !== this.props.id,
+                    substitutionType: substitution.TYPE,
+                    CLASS_IDS: substitution.CLASS_IDS_NEW,
+                    TEACHER_ID: substitution.TEACHER_ID_NEW,
+                    SUBJECT_ID: substitution.SUBJECT_ID_NEW,
+                    ROOM_ID: substitution.ROOM_ID_NEW,
+                    // specificSubstitutionType: getSpecificType(substitution),
+                });
+            });
+        }
+
     }
 
     comparePeriod(current, next) {
@@ -171,19 +232,23 @@ class TimeTableGrid extends Component {
         return (
             <TableRowColumn
                 key={day}
-                style={{ textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
-             }}
+                style={{
+                    textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
+                }}
                 rowSpan={lessons ? lessons.skip + 1 : 0}>
                 <PeriodColumn
                     lessons={lessons.lessons}
                     type={this.props.type}
                     avatars={this.props.avatars}
-                    small={this.props.small}/>
+                    small={this.props.small} />
             </TableRowColumn>
         );
     }
 
     renderRows() {
+        if (!this.props.id || !this.props.type || this.props.loading) {
+            return null;
+        }
         const periodColumnStyle = {
             width: this.props.periodsWidth,
             fontSize: '100%',
@@ -267,6 +332,7 @@ const mapStateToProps = state => {
         showDrawer: state.browser.greaterThan.small,
         small: state.browser.is.extraSmall || state.browser.is.medium,
         periodsWidth: state.browser.greaterThan.small ? 70 : 20,
+        loading: state.timetable.loadingTimetable || state.timetable.loadingSubstitutions,
         avatars: state.avatars,
     };
 };
