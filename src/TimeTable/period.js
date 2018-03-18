@@ -5,25 +5,38 @@ import chroma from 'chroma-js';
 import { Paper, Avatar } from 'material-ui';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import RoomIcon from 'material-ui/svg-icons/action/room';
+import {indigo50} from 'material-ui/styles/colors';
 
+const extractSubject = (name) => {
+    return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
+}
 
 const StudentView = (props) => {
     const { size, color, small } = props;
+    const backgroundColor = SUBJECT_COLORS_MAP[extractSubject(props.subject.NAME)];
+    let colorT = chroma.contrast(backgroundColor || 'white', 'white') > 3 ? 'white' : 'black';
     if(!small) return (
-        <LessonContainer style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <SubjectSpan>{props.subject.NAME}</SubjectSpan>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', overflow: 'hidden' }}>
-                <Room>{props.room.NAME}</Room>
-                <Teacher>{(props.teacher.FIRSTNAME || "")[0] + ". " + props.teacher.LASTNAME}</Teacher>
+        <LessonContainer>
+            <ColorBar style={{backgroundColor}} />
+            
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', overflow: 'hidden', paddingTop: '0.5vmin',
+        paddingBottom: '0.5vmin' }}>
+                <Subject>{props.subject.NAME}</Subject>
+                <div style={{ display: 'flex', flex:1, flexDirection: 'column', alignItems: 'flex-end', justifyContent:'center' }}>
+                    <Room>{props.room.NAME}</Room>
+                    {props.teacher.map((teacher, i) => <Teacher key={i}>{(teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME}</Teacher>)}
+                </div>
             </div>
         </LessonContainer>
     );
 
     if(small) return (
-        <LessonContainer style={{ flexDirection: 'column' }}>
-            <SubjectSpan>{props.subject.NAME}</SubjectSpan>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <Teacher>{props.teacher.LASTNAME}</Teacher>
+        <LessonContainer>
+            <ColorBar style={{backgroundColor}} />
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column',  overflow: 'hidden', paddingTop: '0.25vmin',
+        paddingBottom: '0.25vmin' }}>
+                <Subject>{props.subject.NAME}</Subject>
+                {props.teacher.map((teacher, i) => <Teacher key={i}>{teacher.LASTNAME}</Teacher>)}
                 <Room>{props.room.NAME}</Room>
             </div>
         </LessonContainer>
@@ -40,11 +53,7 @@ class Period extends Component {
         if (!this.props.lessons) {
             return null;
         }
-        let backgroundColors = this.props.lessons.map((lesson) => SUBJECT_COLORS_MAP[lesson.subject.NAME.replace(/[0-9]/g, "").substring(0, 3).toLowerCase()]);
-        let lastColor = backgroundColors[0];
-        for (let i = 1; i < backgroundColors.length; i++) {
-            lastColor = chroma.mix(lastColor, backgroundColors[i]);
-        }
+        let lastColor = indigo50;
         let color = chroma.contrast(lastColor || 'white', 'white') > 3 ? 'white' : 'black';
         return (
             <PeriodContainer style={{
@@ -75,6 +84,12 @@ class Period extends Component {
     }
 }
 
+const ColorBar = styled.div`
+    width: 0.5vmin;
+    margin-right:5px;
+    height:100%;
+`;
+
 const Block = styled.div`
     display: flex;
     flex-direction: row;
@@ -91,13 +106,12 @@ const PeriodContainer = styled.div`
     box-sizing: border-box;
     display: flex;
     border-radius: 0px;
-    padding: 1vmin;
     flex-direction: column;
 `;
 
-const SubjectSpan = styled.span`
-    font-size: 100%;
-    font-weight: bold;
+const Subject = styled.div`
+    font-size: 75%;
+    font-weight: 600;
     margin-right: 1vmin;
 `;
 
@@ -109,7 +123,7 @@ const Teacher = styled.div`
     font-size: 70%;
     text-overflow: ellipsis;
     overflow: hidden;
-    width:100%;
+    white-space: nowrap;
 `;
 
 const LessonContainer = styled.div`
@@ -117,7 +131,8 @@ const LessonContainer = styled.div`
     display: flex;
     overflow: hidden;
     text-align: left;
-    
+    padding-right: 1vmin;
+    flex-direction: row;
 `;
 
 export default Period;

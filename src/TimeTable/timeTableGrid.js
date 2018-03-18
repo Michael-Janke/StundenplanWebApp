@@ -89,17 +89,14 @@ class TimeTableGrid extends Component {
             }
             if (current.lessons) {
                 for (let i = 0; i < current.lessons.length; i++) {
-                    let last = current.lessons[i];
+                    let last = current.lessons[i] = {...current.lessons[i]};
+                    last.TEACHER_IDS = [last.TEACHER_ID];
+                    delete last.TEACHER_ID;
                     for (let j = i + 1; j < current.lessons.length; j++) {
                         let lesson = current.lessons[j];
                         if (lesson.ROOM_ID === last.ROOM_ID
                             && lesson.SUBJECT_ID === last.SUBJECT_ID
                             && lesson.substitutionType === last.substitutionType) {
-                            if (!last.TEACHER_IDS) {
-                                last = current.lessons[i] = { ...last };
-                                last.TEACHER_IDS = [last.TEACHER_ID];
-                                last.TEACHER_ID = undefined;
-                            }
                             last.TEACHER_IDS.push(lesson.TEACHER_ID);
                             current.lessons.splice(j);
                         }
@@ -138,8 +135,7 @@ class TimeTableGrid extends Component {
             substitutionType: period.substitutionType,
             specificSubstitutionType: period.specificSubstitutionType,
             substitutionRemove: period.substitutionRemove,
-            teacher: masterdata.Teacher[period.TEACHER_ID]
-                || period.TEACHER_IDS && period.TEACHER_IDS.map((t) => masterdata.Teacher[t]),
+            teacher: period.TEACHER_IDS.map((t) => masterdata.Teacher[t]),
             absentTeacher: [],
             subject: masterdata.Subject[period.SUBJECT_ID],
             room: masterdata.Room[period.ROOM_ID],
