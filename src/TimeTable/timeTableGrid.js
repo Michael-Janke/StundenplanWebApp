@@ -175,9 +175,14 @@ class TimeTableGrid extends Component {
         return (
             <TableRowColumn
                 key={day}
-                style={{ textAlign: 'center', padding: 2, }}
-                rowSpan={lessons ? lessons.skip+1 : 0}>
-                <PeriodColumn lessons={lessons.lessons}/>
+                style={{ textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
+             }}
+                rowSpan={lessons ? lessons.skip + 1 : 0}>
+                <PeriodColumn
+                    lessons={lessons.lessons}
+                    type={this.props.type}
+                    avatars={this.props.avatars}
+                    small={this.props.small}/>
             </TableRowColumn>
         );
     }
@@ -204,12 +209,11 @@ class TimeTableGrid extends Component {
     render() {
         const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center' };
         return (
-            <Table>
+            <Table selectable={false}>
                 <TableHeader
                     style={{ backgroundColor: grey200 }}
                     displaySelectAll={false}
-                    adjustForCheckbox={false}
-                    enableSelectAll={false}>
+                    adjustForCheckbox={false}>
                     <TableRow>
                         <TableHeaderColumn style={{ boxSizing: 'border-box', width: this.props.periodsWidth }} />
                         {WEEKDAY_NAMES.map((weekday, i) => (
@@ -265,8 +269,9 @@ const mapStateToProps = state => {
         periods: state.timetable.masterdata.Period_Time,
         showPeriods: state.browser.greaterThan.small,
         showDrawer: state.browser.greaterThan.small,
+        small: state.browser.greaterThan.small,
         periodsWidth: state.browser.greaterThan.small ? 70 : 20,
-
+        avatars: state.avatars,
     };
 };
 
