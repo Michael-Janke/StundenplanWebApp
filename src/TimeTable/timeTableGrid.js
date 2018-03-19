@@ -8,11 +8,13 @@ import {
     TableRow,
     TableRowColumn,
 } from 'material-ui/Table';
-import { grey200, grey600 } from 'material-ui/styles/colors';
+import { grey200, grey600, orange500  } from 'material-ui/styles/colors';
 import { green100 } from 'material-ui/styles/colors';
 import styled from 'styled-components';
 import PeriodColumn from './period';
 import { WEEKDAY_NAMES, getSpecificSubstitutionType } from '../Common/const';
+import WarningIcon from 'material-ui/svg-icons/alert/warning';
+import moment from 'moment';
 
 class TimeTableGrid extends Component {
 
@@ -21,7 +23,7 @@ class TimeTableGrid extends Component {
         this.state = {
 
         };
-        if (props.timetable && props.substitutions) {
+        if (props.timetable) {
             this.parse(props);
         }
     }
@@ -151,7 +153,7 @@ class TimeTableGrid extends Component {
             }
             if (current.lessons) {
                 for (let i = 0; i < current.lessons.length; i++) {
-                    let last = current.lessons[i] = {...current.lessons[i]};
+                    let last = current.lessons[i] = { ...current.lessons[i] };
                     last.TEACHER_IDS = [last.TEACHER_ID];
                     delete last.TEACHER_ID;
                     for (let j = i + 1; j < current.lessons.length; j++) {
@@ -225,7 +227,7 @@ class TimeTableGrid extends Component {
     }
 
     renderPeriodsRow(day, period) {
-        if (!this.state.data) { return null; }
+        if (!this.state.data) { return <TableRowColumn key={day} />; }
         let dayObject = this.state.data[day];
         if (dayObject.holiday) {
             return (
@@ -260,7 +262,7 @@ class TimeTableGrid extends Component {
             return null;
         }
         const periodColumnStyle = {
-            width: this.props.small ? 20 : 70,
+            width: this.props.periodsWidth,
             fontSize: '100%',
             padding: 2,
         };
@@ -278,15 +280,15 @@ class TimeTableGrid extends Component {
     }
 
     render() {
-        const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center', paddingLeft: 0, paddingRight:0, };
+        const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center', padding: 0 };
         return (
-            <Table selectable={false}>
+            <Table selectable={false} fixedHeader={true} >
                 <TableHeader
-                    style={{ backgroundColor: grey200 }}
+                    style={{ backgroundColor: grey200, fontSize:'100%'  }}
                     displaySelectAll={false}
                     adjustForCheckbox={false}>
                     <TableRow>
-                        <TableHeaderColumn style={{ boxSizing: 'border-box', width: this.props.small ? 20 : 70,  paddingLeft: 0, paddingRight:0 }} />
+                        <TableHeaderColumn style={{width: this.props.periodsWidth, paddingLeft: 0, paddingRight: 0}}/>
                         {WEEKDAY_NAMES.map((weekday, i) => (
                             <TableHeaderColumn
                                 key={i}
@@ -304,6 +306,14 @@ class TimeTableGrid extends Component {
         );
     }
 }
+
+const WarningText = styled.div`
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 70%;
+`
 
 const Times = styled.div`
     font-size:50%;
@@ -342,9 +352,11 @@ const mapStateToProps = state => {
         small: state.browser.greaterThan.small,
         showDrawer: state.browser.greaterThan.small,
         small: state.browser.is.extraSmall || state.browser.is.medium,
-        periodsWidth: state.browser.greaterThan.small ? 70 : 20,
+        periodsWidth: (state.browser.is.extraSmall || state.browser.is.medium) ? 20 : 70,
         loading: state.timetable.loadingTimetable || state.timetable.loadingSubstitutions,
         avatars: state.avatars,
+        warning: state.user.warning,
+        lastCheck: state.user.lastCheck
     };
 };
 

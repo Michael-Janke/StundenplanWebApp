@@ -8,6 +8,7 @@ export const adalConfig = {
     "https://graph.microsoft.com/": "https://graph.microsoft.com/"
   },
   cacheLocation: 'localStorage',
+  popup:true
 };
 
 export const authContext = new AuthenticationContext(adalConfig);

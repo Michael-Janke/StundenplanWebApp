@@ -3,3 +3,14 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.customDateSelector div div div div div button div[style*="scale(1)"] {
+  width: 1400% !important;
+  border-radius: 34px !important;
+  left: -700% !important;
+  z-index: -1;
+}
+
+div[style*="margin: auto 16px;"] {
+  margin-right: 0px !important;
+}

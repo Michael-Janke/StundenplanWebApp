@@ -3,13 +3,9 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import { } from "./actions";
 import { WEEKDAY_NAMES, DRAWER_WIDTH } from "../Common/const";
-import { grey200, grey600, orange500 } from 'material-ui/styles/colors';
+import { grey200, grey600} from 'material-ui/styles/colors';
 import muiThemeable from 'material-ui/styles/muiThemeable';
-import WarningIcon from 'material-ui/svg-icons/alert/warning';
-import moment from 'moment';
 import TimeTableGrid from './timeTableGrid';
-import 'moment/locale/de';
-moment.locale('de');
 
 class View extends Component {
 
@@ -62,34 +58,22 @@ class View extends Component {
     }
 
     render() {
-        const drawerMargin = this.props.showDrawer ? undefined : '5vw';
+        const drawerMargin = this.props.showDrawer ? undefined : '1vw';
         return (
             <Container>
                 <AppBar style={{ backgroundColor: this.props.muiTheme.palette.primary1Color }}>
                     <ShadowContainerEmu />
-                    <WarningText>
-                        {this.props.warning &&
-                            <WarningIcon color={orange500} style={{ width: 32, height: 32 }} />
-                        }
-                        <span>Letzte Aktualisierung {moment(this.props.lastCheck).fromNow()}</span>
-                    </WarningText>
                 </AppBar>
-                <ShadowContainer style={{ marginLeft: drawerMargin }}>
+                {this.props.showDrawer && <Drawer>
+                    test
+                </Drawer>}
+                <ShadowContainer style={{marginLeft: drawerMargin, marginRight: drawerMargin}}>
                     <TimeTableGrid/>
                 </ShadowContainer>
             </Container>
         );
     }
 }
-
-const WarningText = styled.div`
-    width: 200px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    color: ${grey200};    
-    font-size: 70%;
-`
 
 const Container = styled.div`
     display: flex;
@@ -98,14 +82,19 @@ const Container = styled.div`
     position: relative;
     color: ${grey600};
 `
+
+const Drawer = styled.div`
+    width: ${DRAWER_WIDTH}px;
+    min-width: ${DRAWER_WIDTH}px;
+`
+
 const ShadowContainer = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
     box-shadow: rgba(0,0,0,0.3) 0px 0px 10px;
     margin-top: 6px;
-    margin-left: ${DRAWER_WIDTH}px;
-    margin-right: 5vw;
+    margin-right: 1vw;
     max-width: 1200px;
     z-index: 1;
 `
@@ -121,7 +110,7 @@ const AppBar = styled.div`
     flex-direction: row;
     align-items: center;
     width: 100%;
-    height: 64px;
+    height: 104px;
     position: absolute;
 `
 const ToolBar = styled.div`
@@ -227,8 +216,6 @@ const mapStateToProps = state => {
         showPeriods: state.browser.greaterThan.small,
         showDrawer: state.browser.greaterThan.small,
         mediaType: state.browser.mediaType,
-        warning: state.user.warning,
-        lastCheck: state.user.lastCheck
     };
 };
 
