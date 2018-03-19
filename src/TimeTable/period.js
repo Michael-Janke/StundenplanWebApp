@@ -5,42 +5,38 @@ import chroma from 'chroma-js';
 import { Paper, Avatar } from 'material-ui';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import RoomIcon from 'material-ui/svg-icons/action/room';
-import {indigo50} from 'material-ui/styles/colors';
+import { indigo50 } from 'material-ui/styles/colors';
 
 const extractSubject = (name) => {
     return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
 }
 
 
-const StudentView = (props) => {
-    const { size, color, small } = props;
-    const backgroundColor = SUBJECT_COLORS_MAP[extractSubject(props.subject.NAME)];
-    let colorT = chroma.contrast(backgroundColor || 'white', 'white') > 3 ? 'white' : 'black';
-    if(!small) return (
-        <LessonContainer>
-            <ColorBar style={{backgroundColor}} />
-            
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', overflow: 'hidden', paddingTop: '0.5vmin',
-        paddingBottom: '0.5vmin' }}>
-                <Subject>{props.subject.NAME}</Subject>
-                <div style={{ display: 'flex', flex:1, flexDirection: 'column', alignItems: 'flex-end', justifyContent:'center', overflow: 'hidden' }}>
-                    <Room>{props.room.NAME}</Room>
-                    {props.teacher.map((teacher, i) => <Teacher style={{textAlign: 'right'}} key={i}>{(teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME}</Teacher>)}
-                </div>
-            </div>
-        </LessonContainer>
-    );
+const StudentView = ({ size, color, small, specificSubstitutionType, subject, room, teacher }) => {
+    const lineColor = SUBJECT_COLORS_MAP[extractSubject(subject.NAME)];
+    let textLineColor = chroma.contrast(lineColor || 'white', 'white') > 3 ? 'white' : 'black';
 
-    if(small) return (
-        <LessonContainer>
-            <ColorBar style={{backgroundColor}} />
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column',  overflow: 'hidden', paddingTop: '0.25vmin',
-        paddingBottom: '0.25vmin' }}>
-                <Subject>{props.subject.NAME}</Subject>
-                {props.teacher.map((teacher, i) => <Teacher key={i}>{teacher.LASTNAME}</Teacher>)}
-                <Room>{props.room.NAME}</Room>
-            </div>
-        </LessonContainer>
+    if (!small) return (
+        <PeriodContainer color={(specificSubstitutionType || {}).backgroundColor}>
+            <ColorBar lineColor={lineColor} />
+            <LessonContainer>
+                <Subject>{subject.NAME}</Subject>
+                <div style={{ display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden' }}>
+                    <Room>{room.NAME}</Room>
+                    {teacher.map((teacher, i) => <Teacher style={{ textAlign: 'right' }} key={i}>{(teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME}</Teacher>)}
+                </div>
+            </LessonContainer>
+        </PeriodContainer>
+    );
+    if (small) return (
+        <PeriodContainer color={(specificSubstitutionType || {}).backgroundColor}>
+            <ColorBar lineColor={lineColor} />
+            <LessonContainer small>
+                <Subject>{subject.NAME}</Subject>
+                {teacher.map((teacher, i) => <Teacher key={i}>{teacher.LASTNAME}</Teacher>)}
+                <Room>{room.NAME}</Room>
+            </LessonContainer>
+        </PeriodContainer>
     );
 };
 
@@ -54,13 +50,9 @@ class Period extends Component {
         if (!this.props.lessons) {
             return null;
         }
-        let lastColor = indigo50;
-        let color = chroma.contrast(lastColor || 'white', 'white') > 3 ? 'white' : 'black';
+
         return (
-            <PeriodContainer style={{
-                backgroundColor: lastColor,
-                color
-            }}>
+            <PeriodsContainer>
                 {this.props.lessons.map((lesson, i) => {
                     let Container = {
                         student: StudentView,
@@ -75,12 +67,11 @@ class Period extends Component {
                             {...lesson}
                             avatars={avatars}
                             size={10}
-                            color={color}
                             small={small}
                         />
                     );
                 })}
-            </PeriodContainer>
+            </PeriodsContainer>
         );
     }
 }
@@ -89,9 +80,10 @@ const ColorBar = styled.div`
     width: 3%;
     margin-right:5px;
     height:100%;
+    background-color: ${props => props.lineColor};
 `;
 
-const PeriodContainer = styled.div`
+const PeriodsContainer = styled.div`
     flex: 1;
     height: 100%;
     box-sizing: border-box;
@@ -122,9 +114,26 @@ const LessonContainer = styled.div`
     flex: 1;
     display: flex;
     overflow: hidden;
+    ${props => (props.small ? `
+        flex-direction: column;  
+        padding-top: 0.25vmin;
+        padding-bottom: 0.25vmin;
+    `: `
+        flex-direction: row;
+        align-items: center; 
+        padding-top: 0.5vmin;
+        padding-bottom: 0.5vmin 
+    `)}
+`;
+
+const PeriodContainer = styled.div`
+    flex: 1;
+    display: flex;
+    overflow: hidden;
     text-align: left;
     padding-right: 1vmin;
     flex-direction: row;
+    background-color: ${props => props.color || indigo50};
 `;
 
 export default Period;

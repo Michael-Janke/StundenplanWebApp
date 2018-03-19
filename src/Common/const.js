@@ -16,20 +16,30 @@ SUBJECTS.forEach((subject, i) => {
     SUBJECT_COLORS_MAP[subject] = SUBJECT_COLORS[i % SUBJECT_COLORS.length];
 });
 
+export function getSpecificSubstitutionType(substitution) {
+    let substitutionType = SUBSTITUTION_MAP[substitution.TYPE];
+
+
+    return substitutionType;
+};
 
 export const SUBSTITUTION_MAP = {
     SUBSTITUTION: {
-        color: "red",
+        color: colors.red600,
+        backgroundColor: colors.red50,
         name: "Vertretung",
         targets: ['room', 'subject', 'teacher'],
     },
     ASSIGNMENT: {
-        color: "yellow",
-        name: "Aufgaben"
+        color: colors.yellow600,
+        backgroundColor: colors.yellow50,
+        name: "Aufgaben",
     },
     ELIMINATION: {
+        color: colors.green600,
+        backgroundColor: colors.green100,
         color: "lime",
-        name: "Entfall"
+        name: "Entfall",
     },
     CLASS_SUBSTITUTION: {
         color: "#a7bef7",
@@ -37,8 +47,8 @@ export const SUBSTITUTION_MAP = {
         targets: [],
     },
     ROOM_SUBSTITUTION: {
-        color: "blue600",
-        backgroundColor: "blue100",
+        color: colors.blue600,
+        backgroundColor: colors.lightBlue50,
         name: "Raumvertretung",
         targets: ['room']
     },
@@ -47,11 +57,13 @@ export const SUBSTITUTION_MAP = {
         name: "Hinweis",
     },
     SWAP: {
-        color: "gold",
+        color: colors.lime600,
+        backgroundColor: colors.lime50,
         name: "Tausch"
     },
     EXTRA_LESSON: {
-        color: "fuchsia",
+        colors: colors.purple600,
+        backgroundColor: colors.purple50,
         name: "Zusatzstunde"
     },
     SUPERVISION: {
@@ -60,6 +72,8 @@ export const SUBSTITUTION_MAP = {
         targets: ['teacher']
     },
     REDUNDANCY: {
+        color: colors.green600,
+        backgroundColor: colors.green100,
         color: "lime",
         name: "Freistellung"
     }

@@ -12,7 +12,7 @@ import { grey200, grey600 } from 'material-ui/styles/colors';
 import { green100 } from 'material-ui/styles/colors';
 import styled from 'styled-components';
 import PeriodColumn from './period';
-import { WEEKDAY_NAMES } from '../Common/const';
+import { WEEKDAY_NAMES, getSpecificSubstitutionType } from '../Common/const';
 
 class TimeTableGrid extends Component {
 
@@ -25,6 +25,7 @@ class TimeTableGrid extends Component {
             this.parse(props);
         }
     }
+
 
     componentWillReceiveProps(nextProps) {
         if (this.props.timetable !== nextProps.timetable
@@ -75,7 +76,7 @@ class TimeTableGrid extends Component {
                                 substitutionRemove: remove,
                                 substitutionType: substitution.TYPE,
                                 substitutionText: substitution.TEXT,
-                                // specificSubstitutionType: getSpecificType(substitution),
+                                specificSubstitutionType: getSpecificSubstitutionType(substitution),
                                 CLASS_IDS: substitution.CLASS_IDS_NEW.length
                                     ? substitution.CLASS_IDS_NEW : substitution.CLASS_IDS,
                                 CLASS_IDS_ABSENT: substitution.CLASS_IDS_ABSENT,
@@ -101,7 +102,7 @@ class TimeTableGrid extends Component {
                     TEACHER_ID: substitution.TEACHER_ID_NEW,
                     SUBJECT_ID: substitution.SUBJECT_ID_NEW,
                     ROOM_ID: substitution.ROOM_ID_NEW,
-                    // specificSubstitutionType: getSpecificType(substitution),
+                    specificSubstitutionType: getSpecificSubstitutionType(substitution),
                 });
             });
         }
@@ -225,24 +226,33 @@ class TimeTableGrid extends Component {
 
     renderPeriodsRow(day, period) {
         if (!this.state.data) { return null; }
-        let lessons = this.state.data[day].periods[period - 1];
-        if (!lessons) {
-            return null;
+        let dayObject = this.state.data[day];
+        if (dayObject.holiday) {
+            return (
+                <TableRowColumn key={day}>
+                    {dayObject.holiday}
+                </TableRowColumn>
+            );
+        } else {
+            let lessons = dayObject.periods[period - 1];
+            if (!lessons) {
+                return null;
+            }
+            return (
+                <TableRowColumn
+                    key={day}
+                    style={{
+                        textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
+                    }}
+                    rowSpan={lessons ? lessons.skip + 1 : 0}>
+                    <PeriodColumn
+                        lessons={lessons.lessons}
+                        type={this.props.type}
+                        avatars={this.props.avatars}
+                        small={this.props.small} />
+                </TableRowColumn>
+            );
         }
-        return (
-            <TableRowColumn
-                key={day}
-                style={{
-                    textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
-                }}
-                rowSpan={lessons ? lessons.skip + 1 : 0}>
-                <PeriodColumn
-                    lessons={lessons.lessons}
-                    type={this.props.type}
-                    avatars={this.props.avatars}
-                    small={this.props.small} />
-            </TableRowColumn>
-        );
     }
 
     renderRows() {
@@ -325,6 +335,7 @@ const mapStateToProps = state => {
     return {
         masterdata: state.timetable.masterdata,
         timetable: state.timetable.timetable,
+        substitutions: state.timetable.substitutions,
         id: state.timetable.currentTimeTableId,
         type: state.timetable.currentTimeTableType,
         periods: state.timetable.masterdata.Period_Time,
