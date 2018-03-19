@@ -83,12 +83,11 @@ class WGSearchBar extends Component {
     }
 
     loadAvatars(searchText) {
-        if (this.props.avatars.loading) return;
         var subset = this.state.dataSource.filter((value) => AutoComplete.fuzzyFilter(searchText, value.text));
         subset = subset.filter((value, i) => i < 10
             && value.upn
             && (this.props.avatars[value.upn] === undefined
-                || moment(this.props.avatars[value.upn].lastUpdate).diff(moment(), 'days') > 7)
+                || moment(this.props.avatars[value.upn].expires).isBefore(moment()))
         );
         if (subset.length > 0) {
             this.props.loadAvatars(subset.map((a) => a.upn));

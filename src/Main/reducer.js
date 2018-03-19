@@ -42,7 +42,6 @@ export function userReducer(state = initialState, action = {}) {
         ...state,
         loading: false
       };
-
     case "GET_ME_RECEIVED":
       return {
         ...state,
@@ -89,28 +88,21 @@ export function errorReducer(state = { error: null }, action = {}) {
 
 export function avatarReducer(state = { loading: false }, action = {}) {
   switch (action.type) {
-    case "persist/REHYDRATE":
-      if (!action.payload) return state;
-      return {
-        ...state,
-        ...action.payload.avatars,
-        loading: false
-      }
     case "GET_BATCH_AVATARS":
-      return {
-        ...state,
-        loading: true
-      };
+      return action.payload.reduce((state, upn) => (
+          {...state, 
+            [upn]: {
+              expires: moment().add('30', 'seconds')
+            }
+          }), state);
     case "BATCH_AVATARS_RECEIVED":
       return {
         ...state,
-        loading: false,
         ...action.payload
       };
     case "BATCH_AVATARS_ERROR":
       return {
-        ...state,
-        loading: false
+        ...state
       };
     default:
       return state;
