@@ -7,14 +7,19 @@ import {
     TableHeaderColumn,
     TableRow,
     TableRowColumn,
+    TableFooter
 } from 'material-ui/Table';
-import { grey200, grey600, orange500  } from 'material-ui/styles/colors';
+import { grey100, grey200, grey600, orange500  } from 'material-ui/styles/colors';
 import { green100 } from 'material-ui/styles/colors';
 import styled from 'styled-components';
 import PeriodColumn from './period';
 import { WEEKDAY_NAMES, getSpecificSubstitutionType } from '../Common/const';
 import WarningIcon from 'material-ui/svg-icons/alert/warning';
 import moment from 'moment';
+import IconButton from 'material-ui/IconButton';
+import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
+import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
+import {changeWeek} from '../Main/actions';
 
 class TimeTableGrid extends Component {
 
@@ -288,7 +293,7 @@ class TimeTableGrid extends Component {
                     displaySelectAll={false}
                     adjustForCheckbox={false}>
                     <TableRow>
-                        <TableHeaderColumn style={{width: this.props.periodsWidth, paddingLeft: 0, paddingRight: 0}}/>
+                        <TableHeaderColumn style={{width: this.props.periodsWidth, padding: 2}}/>
                         {WEEKDAY_NAMES.map((weekday, i) => (
                             <TableHeaderColumn
                                 key={i}
@@ -302,6 +307,19 @@ class TimeTableGrid extends Component {
                     displayRowCheckbox={false}>
                     {this.renderRows()}
                 </TableBody>
+                <TableFooter
+            adjustForCheckbox={false}>
+                <TableRow>
+                <TableRowColumn colSpan="6" >
+                    <IconButton primary={true} tooltip="Voherige Woche" onClick={() => this.props.setPreviousWeek()}>
+                        <BackIcon/>
+                    </IconButton>
+                    <IconButton primary={true} tooltip="Nächste Woche" onClick={() => this.props.setNextWeek()}>
+                        <NextIcon/>
+                    </IconButton>
+                </TableRowColumn>
+                </TableRow>
+            </TableFooter>
             </Table>
         );
     }
@@ -338,8 +356,12 @@ const Period = styled.div`
         
 `;
 
-
-
+const mapDispatchToProps = dispatch => {
+    return {
+        setNextWeek: () => dispatch(changeWeek(1)),
+        setPreviousWeek: () => dispatch(changeWeek(-1)),
+    };
+};
 
 const mapStateToProps = state => {
     return {
@@ -360,4 +382,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps)(TimeTableGrid);
+export default connect(mapStateToProps, mapDispatchToProps)(TimeTableGrid);

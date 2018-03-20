@@ -6,6 +6,7 @@ import { WEEKDAY_NAMES, DRAWER_WIDTH } from "../Common/const";
 import { grey200, grey600} from 'material-ui/styles/colors';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import TimeTableGrid from './timeTableGrid';
+import WeekCalendar from './weekCalendar';
 
 class View extends Component {
 
@@ -65,7 +66,7 @@ class View extends Component {
                     <ShadowContainerEmu />
                 </AppBar>
                 {this.props.showDrawer && <Drawer>
-                    test
+                    <WeekCalendar />
                 </Drawer>}
                 <ShadowContainer style={{marginLeft: drawerMargin, marginRight: drawerMargin}}>
                     <TimeTableGrid/>

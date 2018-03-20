@@ -5,22 +5,24 @@ import chroma from 'chroma-js';
 import { Paper, Avatar } from 'material-ui';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import RoomIcon from 'material-ui/svg-icons/action/room';
-import { indigo50 } from 'material-ui/styles/colors';
+import { indigo50, indigo100 } from 'material-ui/styles/colors';
 
 const extractSubject = (name) => {
     return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
 }
 
-
 const StudentView = ({ size, color, small, specificSubstitutionType, subject, room, teacher }) => {
-    const lineColor = SUBJECT_COLORS_MAP[extractSubject(subject.NAME)];
+
+    const lineColor = subject 
+        ? SUBJECT_COLORS_MAP[extractSubject(subject.NAME)]
+        : indigo100;
     let textLineColor = chroma.contrast(lineColor || 'white', 'white') > 3 ? 'white' : 'black';
 
     if (!small) return (
         <PeriodContainer color={(specificSubstitutionType || {}).backgroundColor}>
             <ColorBar lineColor={lineColor} />
             <LessonContainer>
-                <Subject>{subject.NAME}</Subject>
+                <Subject>{subject ? subject.NAME : '-'}</Subject>
                 <div style={{ display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden' }}>
                     <Room>{room.NAME}</Room>
                     {teacher.map((teacher, i) => <Teacher style={{ textAlign: 'right' }} key={i}>{(teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME}</Teacher>)}
@@ -47,10 +49,9 @@ const RoomView = StudentView;
 
 class Period extends Component {
     render() {
-        if (!this.props.lessons) {
+        if (!this.props.lessons || !this.props.type) {
             return null;
         }
-
         return (
             <PeriodsContainer>
                 {this.props.lessons.map((lesson, i) => {
@@ -59,7 +60,7 @@ class Period extends Component {
                         teacher: TeacherView,
                         room: RoomView,
                         class: ClassView
-                    }[this.props.type];
+                    }[this.props.type.toLowerCase()];
                     const { avatars, small } = this.props;
                     return (
                         <Container
