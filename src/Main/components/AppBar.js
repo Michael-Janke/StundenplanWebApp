@@ -55,7 +55,7 @@ class WGAppBar extends Component {
                     {small || <IconButton tooltip="Nächste Woche" onClick={() => this.props.setNextWeek()}>
                         <NextIcon color={grey100} />
                     </IconButton>}
-                    {small || <IconButton tooltip="Stundenplan drucken">
+                    {small || <IconButton tooltip="Stundenplan drucken" onClick={() => window.setTimeout(window.print, 0)}>
                         <PrintIcon color={grey100} />
                     </IconButton>}
                     <UserSettingsMenu />

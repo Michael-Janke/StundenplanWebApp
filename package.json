@@ -12,6 +12,7 @@
     "moment": "^2.21.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-easy-print": "^0.5.4",
     "react-icons": "^2.2.7",
     "react-interval": "^2.0.2",
     "react-redux": "^5.0.7",

@@ -20,6 +20,7 @@ import IconButton from 'material-ui/IconButton';
 import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
 import { changeWeek } from '../Main/actions';
+import { NoPrint, Print } from 'react-easy-print';
 
 class TimeTableGrid extends Component {
 
@@ -285,7 +286,7 @@ class TimeTableGrid extends Component {
     render() {
         const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
         return (
-            <div style={{flexDirection: 'column', display: 'flex', height: '100%', maxHeight: 'calc(100vh - 82px)'}}>
+            <div style={{ flexDirection: 'column', display: 'flex', height: '100%', maxHeight: 'calc(100vh - 82px)' }}>
                 {!this.props.showDrawer ? <TableToolBar>
                     <IconButton primary={true} onClick={() => this.props.setPreviousWeek()}>
                         <BackIcon />
@@ -294,41 +295,45 @@ class TimeTableGrid extends Component {
                         <NextIcon />
                     </IconButton>
                 </TableToolBar> : null}
-                <Table selectable={false} wrapperStyle={{flexDirection: 'column', display: 'flex', height: '100%', flex:1}} >
-                    <TableHeader
-                        style={{ backgroundColor: grey200, fontSize: '100%' }}
-                        displaySelectAll={false}
-                        adjustForCheckbox={false}>
-                        <TableRow>
-                            <TableHeaderColumn style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
-                            {WEEKDAY_NAMES.map((weekday, i) => (
-                                <TableHeaderColumn
-                                    key={i}
-                                    style={tableHeaderStyle}>
-                                    {weekday}
-                                </TableHeaderColumn>
-                            ))}
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody
-                        displayRowCheckbox={false}>
-                        {this.renderRows()}
-                    </TableBody>
-                    <TableFooter
-                        adjustForCheckbox={false}
-                    >
-                        <TableRow>
-                            <TableRowColumn colSpan="6" style={{ textAlign: 'right' }} >
-                                <IconButton primary={true} onClick={() => this.props.setPreviousWeek()}>
-                                    <BackIcon />
-                                </IconButton>
-                                <IconButton primary={true} onClick={() => this.props.setNextWeek()}>
-                                    <NextIcon />
-                                </IconButton>
-                            </TableRowColumn>
-                        </TableRow>
-                    </TableFooter>
-                </Table>
+                <Print main name="TimeTable">
+                    <Table selectable={false} wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1 }} >
+                        <TableHeader
+                            style={{ backgroundColor: grey200, fontSize: '100%' }}
+                            displaySelectAll={false}
+                            adjustForCheckbox={false}>
+                            <TableRow>
+                                <TableHeaderColumn style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
+                                {WEEKDAY_NAMES.map((weekday, i) => (
+                                    <TableHeaderColumn
+                                        key={i}
+                                        style={tableHeaderStyle}>
+                                        {weekday}
+                                    </TableHeaderColumn>
+                                ))}
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody
+                            displayRowCheckbox={false}>
+                            {this.renderRows()}
+                        </TableBody>
+                        <NoPrint>
+                            <TableFooter
+                                adjustForCheckbox={false}
+                            >
+                                <TableRow>
+                                    <TableRowColumn colSpan="6" style={{ textAlign: 'right' }} >
+                                        <IconButton primary={true} onClick={() => this.props.setPreviousWeek()}>
+                                            <BackIcon />
+                                        </IconButton>
+                                        <IconButton primary={true} onClick={() => this.props.setNextWeek()}>
+                                            <NextIcon />
+                                        </IconButton>
+                                    </TableRowColumn>
+                                </TableRow>
+                            </TableFooter>
+                        </NoPrint>
+                    </Table>
+                </Print>
             </div>
         );
     }
