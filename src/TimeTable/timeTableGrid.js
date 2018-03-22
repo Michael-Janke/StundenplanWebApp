@@ -316,10 +316,11 @@ class TimeTableGrid extends Component {
                             displayRowCheckbox={false}>
                             {this.renderRows()}
                         </TableBody>
-                        <NoPrint>
-                            <TableFooter
-                                adjustForCheckbox={false}
-                            >
+
+                        <TableFooter
+                            adjustForCheckbox={false}
+                        >
+                            <NoPrint>
                                 <TableRow>
                                     <TableRowColumn colSpan="6" style={{ textAlign: 'right' }} >
                                         <IconButton primary={true} onClick={() => this.props.setPreviousWeek()}>
@@ -330,8 +331,9 @@ class TimeTableGrid extends Component {
                                         </IconButton>
                                     </TableRowColumn>
                                 </TableRow>
-                            </TableFooter>
-                        </NoPrint>
+                            </NoPrint>
+                        </TableFooter>
+
                     </Table>
                 </Print>
             </div>
