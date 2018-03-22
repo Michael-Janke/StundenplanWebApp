@@ -14,10 +14,10 @@ import {
 } from "./actions"
 import TimeTable from "../TimeTable"
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from './appBar';
+import AppBar from './components/AppBar';
 import Theme from '../Common/theme';
 import ReactInterval from 'react-interval';
-import {connectToServiceWorker} from '../Common/firebase';
+import { connectToServiceWorker } from '../Common/firebase';
 
 class Main extends Component {
 
@@ -25,7 +25,7 @@ class Main extends Component {
         super(props);
         props.checkCounter();
         props.needsUpdate && props.loadMe();
-        if(this.props.notificationToken) {
+        if (this.props.notificationToken) {
             connectToServiceWorker(this.props.setNotification, this.props.notificationToken);
         }
     }

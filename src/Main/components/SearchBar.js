@@ -7,7 +7,7 @@ import Avatar from 'material-ui/Avatar';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import ClassIcon from 'material-ui/svg-icons/social/group';
 import RoomIcon from 'material-ui/svg-icons/action/room';
-import { loadAvatars, setTimeTable } from './actions';
+import { loadAvatars, setTimeTable } from '../actions';
 import AutoComplete from 'material-ui/AutoComplete';
 import moment from 'moment';
 
@@ -23,15 +23,15 @@ class WGSearchBar extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.avatars !== this.props.avatars
             || nextProps.masterdata !== this.props.masterdata) {
-            this.setState({dataSource: this.mergeDataSource(nextProps.masterdata, nextProps.avatars)});
+            this.setState({ dataSource: this.mergeDataSource(nextProps.masterdata, nextProps.avatars) });
         }
     }
 
     mergeDataSource(masterdata, avatars = {}) {
         if (!masterdata) return [];
         const avatar = (upn) => avatars[upn] && avatars[upn].img
-            ? {leftAvatar: <Avatar src={"data:image/jpg;base64," + avatars[upn].img} size={32} />, insetChildren: true}
-            : {leftIcon: <PersonIcon />};
+            ? { leftAvatar: <Avatar src={"data:image/jpg;base64," + avatars[upn].img} size={32} />, insetChildren: true }
+            : { leftIcon: <PersonIcon /> };
         return [
             ...Object.values(masterdata.Class).map((entry) => ({
                 text: "Klasse " + entry.NAME,
@@ -105,7 +105,7 @@ class WGSearchBar extends Component {
                     hintText="Suche"
                     maxSearchResults={10}
                     filter={AutoComplete.fuzzyFilter}
-                    popoverProps={ this.props.showAsModal ? {anchorEl: null, canAutoPosition:false, style:{marginTop:64, marginLeft:'3vw', width:'94vw'}} : {}}
+                    popoverProps={this.props.showAsModal ? { anchorEl: null, canAutoPosition: false, style: { marginTop: 64, marginLeft: '3vw', width: '94vw' } } : {}}
                     style={{
                         backgroundColor: '#C5CAE9',
                         marginTop: 8,
@@ -129,7 +129,7 @@ const mapDispatchToProps = dispatch => {
             dispatch(loadAvatars(upns));
         },
         setTimeTable: (type, id) => {
-            dispatch(setTimeTable(type,id));
+            dispatch(setTimeTable(type, id));
         }
     };
 };

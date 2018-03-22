@@ -12,10 +12,10 @@ const initialState = {
   timetableDate: moment()
 };
 
-export function timetableReducer(state = initialState, action = {}) {
+export default function timetableReducer(state = initialState, action = {}) {
   switch (action.type) {
     case "persist/REHYDRATE":
-      if(!action.payload || !action.payload.timetable) return {...state}
+      if (!action.payload || !action.payload.timetable) return { ...state }
       return {
         ...state,
         ...action.payload.timetable,
@@ -54,14 +54,14 @@ export function timetableReducer(state = initialState, action = {}) {
       };
     case "CHANGE_WEEK":
       return {
-        ...state, 
+        ...state,
         timetableDate: moment(state.timetableDate).add(action.payload.direction, 'week'),
       };
     case "SET_DATE":
       return {
         ...state,
         timetableDate: action.payload
-      }  
+      }
     case "GET_TIMETABLE":
       return {
         ...state,
@@ -83,7 +83,7 @@ export function timetableReducer(state = initialState, action = {}) {
         ...state,
         substitutions: action.payload,
         loadingSubstitutions: false,
-      }  
+      }
     default:
       return state;
   }

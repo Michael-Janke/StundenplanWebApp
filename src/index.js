@@ -4,6 +4,6 @@ import { authContext } from './Common/Adal/adalConfig';
 runWithAdal(authContext, () => {
 
   // eslint-disable-next-line
-  require('./indexApp.js');
+  require('./indexReact.js');
 
 });

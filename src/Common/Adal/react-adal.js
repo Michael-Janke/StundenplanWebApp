@@ -1,3 +1,4 @@
+/* eslint-disable */
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30,8 +31,10 @@ function adalGetToken(authContext, resourceGuiId) {
 function runWithAdal(authContext, app) {
   //it must run in iframe to for refreshToken (parsing hash and get token)
   authContext.handleWindowCallback();
+  //progressive web apps do not handle a window.location same origin change as reload, but as simple hash change
+  //so we have to reload the page if the hash changes and react is not already loaded or we have a blank white page, 
+  //if adal redirects back the new token via the new hash url
   window.addEventListener("hashchange", () => {
-    console.log("hash changed to: " + window.location.hash);
     authContext.handleWindowCallback.bind(authContext)();
     window.setTimeout(() => {
       if(window.document.getElementById("root").childElementCount == 0) {
@@ -40,9 +43,7 @@ function runWithAdal(authContext, app) {
     }, 100);
   }, false);
   //prevent iframe double app !!!
-  (window !== window.parent) && console.log("prevented double app");
   if (window === window.parent) {
-    console.log(window.location.hash);
     if (!authContext.isCallback(window.location.hash)) {
       if (!authContext.getCachedToken(authContext.config.clientId) || !authContext.getCachedUser()) {
         authContext.login();

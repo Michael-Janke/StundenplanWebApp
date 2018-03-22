@@ -6,9 +6,9 @@ import Main from './Main';
 import ResponsiveFontSize from './Common/ResponsiveFontSize';
 
 import './App.css';
-import configStores from './configStores';
+import createStore from './store';
 
-const {store, persistor} = configStores();
+const {store, persistor} = createStore();
 
 class App extends Component {
   render() {
