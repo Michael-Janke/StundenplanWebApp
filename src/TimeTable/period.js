@@ -40,16 +40,16 @@ const joinClasses = (classes) => {
     return outcome;
 }
 
-const AbstractLesson = ({ colorBar, small, last, specificSubstitutionType, field1, field2, fields3 }) => {
+const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionType, field1, field2, fields3 }) => {
 
     if (!small) return (
-        <Lesson color={(specificSubstitutionType || {}).backgroundColor} flex>
+        <Lesson color={(specificSubstitutionType || {}).backgroundColor} flex={!specificSubstitutionType || !multiple}>
             <ColorBar lineColor={colorBar} />
 
             <LessonContainer>
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden' }}>
-                    {specificSubstitutionType && <Substitution color={specificSubstitutionType.color}>{specificSubstitutionType.name}</Substitution>}
-                    <Subject>{field1}</Subject>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden' }}>
+                {specificSubstitutionType && <Substitution color={specificSubstitutionType.color}>{specificSubstitutionType.name}</Substitution>}
+                <Subject>{field1}</Subject>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden', paddingLeft: 5 }}>
                     <Room>{field2}</Room>
@@ -139,7 +139,8 @@ class Period extends Component {
                         <AbstractLesson
                             key={i}
                             {...lesson}
-                            last={this.props.lessons.length - 1 === i}
+                            last={this.props.lessons.length -1 === i}
+                            multiple={this.props.lessons.length > 1}
                             small={small}
                             {...fields}
                         />
