@@ -1,5 +1,5 @@
-import { adalGetToken } from 'react-adal';
-import { adalConfig, authContext } from '../adalConfig';
+import { adalGetToken } from './Adal/react-adal';
+import { adalConfig, authContext } from './Adal/adalConfig';
 import moment from 'moment';
 
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';

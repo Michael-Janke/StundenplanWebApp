@@ -1,4 +1,4 @@
-import { AuthenticationContext, adalFetch } from 'react-adal';
+import { AuthenticationContext, adalFetch } from './react-adal';
 
 export const adalConfig = {
   tenant: '778d176d-0f75-472a-afcc-a85553ab06dd',
@@ -8,7 +8,7 @@ export const adalConfig = {
     "https://graph.microsoft.com/": "https://graph.microsoft.com/"
   },
   cacheLocation: 'localStorage',
-  popup:true
+  popUp: false
 };
 
 export const authContext = new AuthenticationContext(adalConfig);

@@ -1,5 +1,5 @@
-import { runWithAdal } from 'react-adal';
-import { authContext } from './adalConfig';
+import { runWithAdal } from './Common/Adal/react-adal';
+import { authContext } from './Common/Adal/adalConfig';
 
 runWithAdal(authContext, () => {
 

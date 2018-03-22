@@ -1,5 +1,5 @@
-import { adalGetToken } from 'react-adal';
-import { authContext } from '../adalConfig';
+import { adalGetToken } from './Adal/react-adal';
+import { authContext } from './Adal/adalConfig';
 import moment from 'moment';
 
 export const GRAPH_URL = 'https://graph.microsoft.com/';
