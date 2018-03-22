@@ -286,7 +286,7 @@ class TimeTableGrid extends Component {
     render() {
         const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
         return (
-            <div style={{ flexDirection: 'column', display: 'flex', height: '100%', maxHeight: 'calc(100vh - 82px)' }}>
+            <div style={{ flexDirection: 'column', display: 'flex', height: '100%'}}>
                 {!this.props.showDrawer ? <TableToolBar>
                     <IconButton primary={true} onClick={() => this.props.setPreviousWeek()}>
                         <BackIcon />
@@ -296,7 +296,7 @@ class TimeTableGrid extends Component {
                     </IconButton>
                 </TableToolBar> : null}
                 <Print main name="TimeTable">
-                    <Table selectable={false} wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1 }} >
+                    <Table selectable={false} wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1,  maxHeight: 'calc(100vh - 82px)' }} >
                         <TableHeader
                             style={{ backgroundColor: grey200, fontSize: '100%' }}
                             displaySelectAll={false}
