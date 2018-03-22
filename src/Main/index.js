@@ -45,7 +45,7 @@ class Main extends Component {
     render() {
         return (
             <MuiThemeProvider muiTheme={Theme}>
-                <div>
+                <div style={{flexDirection: 'column', display: 'flex', height: '100%'}}>
                     <AppBar />
                     <TimeTable />
                     <Snackbar

@@ -69,7 +69,9 @@ class View extends Component {
                     <WeekCalendar />
                 </Drawer>}
                 <ShadowContainer style={{marginLeft: drawerMargin, marginRight: drawerMargin}}>
-                    <TimeTableGrid/>
+                    <ShadowBox>
+                        <TimeTableGrid/>
+                    </ShadowBox>
                 </ShadowContainer>
             </Container>
         );
@@ -78,6 +80,7 @@ class View extends Component {
 
 const Container = styled.div`
     display: flex;
+    align-items: stretch;
     width: 100%;
     height: 100%;
     position: relative;
@@ -93,11 +96,15 @@ const ShadowContainer = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    box-shadow: rgba(0,0,0,0.3) 0px 0px 10px;
     margin-top: 6px;
     margin-right: 1vw;
+    margin-bottom: 1vw;
     max-width: 1200px;
     z-index: 1;
+`
+const ShadowBox = styled.div`
+    background-color: white;
+    box-shadow: rgba(0,0,0,0.3) 0px 0px 10px;
 `
 const ShadowContainerEmu = styled.div`
     margin-left: ${DRAWER_WIDTH}px;

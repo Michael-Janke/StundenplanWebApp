@@ -9,7 +9,7 @@ import {
     TableRowColumn,
     TableFooter
 } from 'material-ui/Table';
-import { grey100, grey200, grey600, orange500  } from 'material-ui/styles/colors';
+import { grey100, grey200, grey600, orange500 } from 'material-ui/styles/colors';
 import { green100 } from 'material-ui/styles/colors';
 import styled from 'styled-components';
 import PeriodColumn from './period';
@@ -19,20 +19,18 @@ import moment from 'moment';
 import IconButton from 'material-ui/IconButton';
 import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
-import {changeWeek} from '../Main/actions';
+import { changeWeek } from '../Main/actions';
 
 class TimeTableGrid extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-
         };
         if (props.timetable) {
             this.parse(props);
         }
     }
-
 
     componentWillReceiveProps(nextProps) {
         if (this.props.timetable !== nextProps.timetable
@@ -285,45 +283,65 @@ class TimeTableGrid extends Component {
     }
 
     render() {
-        const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center', padding: 0 };
+        const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
         return (
-            <Table selectable={false} fixedHeader={true} >
-                <TableHeader
-                    style={{ backgroundColor: grey200, fontSize:'100%'  }}
-                    displaySelectAll={false}
-                    adjustForCheckbox={false}>
-                    <TableRow>
-                        <TableHeaderColumn style={{width: this.props.periodsWidth, padding: 2}}/>
-                        {WEEKDAY_NAMES.map((weekday, i) => (
-                            <TableHeaderColumn
-                                key={i}
-                                style={tableHeaderStyle}>
-                                {weekday}
-                            </TableHeaderColumn>
-                        ))}
-                    </TableRow>
-                </TableHeader>
-                <TableBody
-                    displayRowCheckbox={false}>
-                    {this.renderRows()}
-                </TableBody>
-                <TableFooter
-            adjustForCheckbox={false}>
-                <TableRow>
-                <TableRowColumn colSpan="6" >
-                    <IconButton primary={true} tooltip="Voherige Woche" onClick={() => this.props.setPreviousWeek()}>
-                        <BackIcon/>
+            <div style={{flexDirection: 'column', display: 'flex', height: '100%', maxHeight: 'calc(100vh - 82px)'}}>
+                {!this.props.showDrawer ? <TableToolBar>
+                    <IconButton primary={true} onClick={() => this.props.setPreviousWeek()}>
+                        <BackIcon />
                     </IconButton>
-                    <IconButton primary={true} tooltip="Nächste Woche" onClick={() => this.props.setNextWeek()}>
-                        <NextIcon/>
+                    <IconButton primary={true} onClick={() => this.props.setNextWeek()}>
+                        <NextIcon />
                     </IconButton>
-                </TableRowColumn>
-                </TableRow>
-            </TableFooter>
-            </Table>
+                </TableToolBar> : null}
+                <Table selectable={false} wrapperStyle={{flexDirection: 'column', display: 'flex', height: '100%', flex:1}} >
+                    <TableHeader
+                        style={{ backgroundColor: grey200, fontSize: '100%' }}
+                        displaySelectAll={false}
+                        adjustForCheckbox={false}>
+                        <TableRow>
+                            <TableHeaderColumn style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
+                            {WEEKDAY_NAMES.map((weekday, i) => (
+                                <TableHeaderColumn
+                                    key={i}
+                                    style={tableHeaderStyle}>
+                                    {weekday}
+                                </TableHeaderColumn>
+                            ))}
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody
+                        displayRowCheckbox={false}>
+                        {this.renderRows()}
+                    </TableBody>
+                    <TableFooter
+                        adjustForCheckbox={false}
+                    >
+                        <TableRow>
+                            <TableRowColumn colSpan="6" style={{ textAlign: 'right' }} >
+                                <IconButton primary={true} onClick={() => this.props.setPreviousWeek()}>
+                                    <BackIcon />
+                                </IconButton>
+                                <IconButton primary={true} onClick={() => this.props.setNextWeek()}>
+                                    <NextIcon />
+                                </IconButton>
+                            </TableRowColumn>
+                        </TableRow>
+                    </TableFooter>
+                </Table>
+            </div>
         );
     }
 }
+
+const TableToolBar = styled.div`
+    background-color: ${grey200};
+    border-bottom: 1px solid rgb(224, 224, 224);
+    height: 48px; 
+    text-align: right;
+    display: table;
+    width: 100%;
+`
 
 const WarningText = styled.div`
     width: 200px;
