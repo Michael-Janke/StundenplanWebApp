@@ -32,7 +32,7 @@ class UserAvatar extends Component {
         return <Avatar
             src={avatar && ("data:image/jpg;base64," + avatar.img)}
             size={48}
-            icon={< PersonIcon />}
+            icon={<PersonIcon />}
         />
     }
 }

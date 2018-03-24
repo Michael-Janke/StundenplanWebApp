@@ -27,8 +27,16 @@ class WGAppBar extends Component {
         }
     }
 
-    openDrawer() {
+    openDrawer = () => {
         this.setState({ open: true });
+    }
+
+    onPrintTimetable = () => {
+        window.setTimeout(window.print, 0);
+    }
+    
+    onCloseDrawer = (open) => {
+        this.setState({ open });
     }
 
     render() {
@@ -41,28 +49,28 @@ class WGAppBar extends Component {
                 }}
                 title={small ? "" : "Stundenplan"}
                 style={{ boxShadow: 'none' }}
-                onLeftIconButtonClick={() => this.openDrawer()}
+                onLeftIconButtonClick={this.openDrawer}
             >
                 <SearchBar
                     anchorIfSmall={this} />
                 <Icons>
-                    {small || <IconButton tooltip="Voherige Woche" onClick={() => this.props.setPreviousWeek()}>
+                    {small || <IconButton tooltip="Voherige Woche" onClick={this.props.setPreviousWeek}>
                         <BackIcon color={grey100} />
                     </IconButton>}
                     {small && <IconButton tooltip="Kalendar öffnen">
                         <CalendarIcon color={grey100} />
                     </IconButton>}
-                    {small || <IconButton tooltip="Nächste Woche" onClick={() => this.props.setNextWeek()}>
+                    {small || <IconButton tooltip="Nächste Woche" onClick={this.props.setNextWeek}>
                         <NextIcon color={grey100} />
                     </IconButton>}
-                    {small || <IconButton tooltip="Stundenplan drucken" onClick={() => window.setTimeout(window.print, 0)}>
+                    {small || <IconButton tooltip="Stundenplan drucken" onClick={this.onPrintTimetable}>
                         <PrintIcon color={grey100} />
                     </IconButton>}
                     <UserSettingsMenu />
                 </Icons>
                 <Drawer
                     open={this.state.open}
-                    close={(open) => this.setState({ open })}
+                    onClose={this.onCloseDrawer}
                 />
             </AppBar>
         )

@@ -94,29 +94,40 @@ class WGSearchBar extends Component {
         }
     }
 
+    onNewRequest = (chosen) => {
+        this.props.setTimeTable(chosen.type, chosen.id)
+    }
+    onChange = (searchText) => {
+        this.loadAvatars(searchText)
+    }
     render() {
         return (
             <Flex>
                 <SearchBar
-                    onChange={(searchText) => this.loadAvatars(searchText)}
-                    onRequestSearch={() => null}
-                    onNewRequest={(chosen) => this.props.setTimeTable(chosen.type, chosen.id)}
+                    onChange={this.onChange}
+                    onRequestSearch={true}
+                    onNewRequest={this.onNewRequest}
                     dataSource={this.state.dataSource}
                     hintText="Suche"
                     maxSearchResults={10}
                     filter={AutoComplete.fuzzyFilter}
-                    popoverProps={this.props.showAsModal ? { anchorEl: null, canAutoPosition: false, style: { marginTop: 64, marginLeft: '3vw', width: '94vw' } } : {}}
+                    popoverProps={this.props.showAsModal ?
+                        { anchorEl: null, canAutoPosition: false, style: { marginTop: 64, marginLeft: '3vw', width: '94vw' } } : {}
+                    }
                     style={{
                         backgroundColor: '#C5CAE9',
                         marginTop: 8,
                         marginRight: 8,
                         maxWidth: 800,
                         color: 'white'
-                    }} />
+                    }}
+                />
             </Flex>
         );
     }
 }
+
+
 const Flex = styled.div`
     flex: 1;
     display:flex;

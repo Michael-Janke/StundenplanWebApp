@@ -56,7 +56,7 @@ class Main extends Component {
                             color: 'red'
                         }}
                         onRequestClose={this.props.clearErrors} />
-                    <ReactInterval timeout={60 * 1000} enabled={true} callback={() => this.props.checkCounter()} />
+                    <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
                 </div>
             </MuiThemeProvider>
         );

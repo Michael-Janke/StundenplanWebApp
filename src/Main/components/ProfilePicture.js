@@ -23,7 +23,7 @@ class ProfilePicture extends Component {
             <Wrapper>
                 <ProfileImg src={this.props.user.profilePicture} />
                 <IconButton
-                    onClick={() => this.profilePicChange()}
+                    onClick={this.profilePicChange}
                     style={{ right: 0, top: 0, position: 'absolute' }}
                 >
                     <EditIcon />

@@ -286,17 +286,17 @@ class TimeTableGrid extends Component {
     render() {
         const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
         return (
-            <div style={{ flexDirection: 'column', display: 'flex', height: '100%'}}>
+            <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
                 {!this.props.showDrawer ? <TableToolBar>
-                    <IconButton primary={true} onClick={() => this.props.setPreviousWeek()}>
+                    <IconButton primary={true} onClick={this.props.setPreviousWeek}>
                         <BackIcon />
                     </IconButton>
-                    <IconButton primary={true} onClick={() => this.props.setNextWeek()}>
+                    <IconButton primary={true} onClick={this.props.setNextWeek}>
                         <NextIcon />
                     </IconButton>
                 </TableToolBar> : null}
                 <Print main name="TimeTable">
-                    <Table selectable={false} wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1,  maxHeight: 'calc(100vh - 82px)' }} >
+                    <Table selectable={false} wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: 'calc(100vh - 82px)' }} >
                         <TableHeader
                             style={{ backgroundColor: grey200, fontSize: '100%' }}
                             displaySelectAll={false}
@@ -323,10 +323,10 @@ class TimeTableGrid extends Component {
                             <NoPrint>
                                 <TableRow>
                                     <TableRowColumn colSpan="6" style={{ textAlign: 'right' }} >
-                                        <IconButton primary={true} onClick={() => this.props.setPreviousWeek()}>
+                                        <IconButton primary={true} onClick={this.props.setPreviousWeek}>
                                             <BackIcon />
                                         </IconButton>
-                                        <IconButton primary={true} onClick={() => this.props.setNextWeek()}>
+                                        <IconButton primary={true} onClick={this.props.setNextWeek}>
                                             <NextIcon />
                                         </IconButton>
                                     </TableRowColumn>

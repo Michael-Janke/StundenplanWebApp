@@ -43,7 +43,7 @@ const joinClasses = (classes) => {
 const AbstractLesson = ({ colorBar, small, last, specificSubstitutionType, field1, field2, fields3 }) => {
 
     if (!small) return (
-        <Lesson color={(specificSubstitutionType || {}).backgroundColor}>
+        <Lesson color={(specificSubstitutionType || {}).backgroundColor} flex>
             <ColorBar lineColor={colorBar} />
             
             <LessonContainer>
@@ -129,11 +129,11 @@ class Period extends Component {
             <PeriodsContainer>
                 {this.props.lessons.map((lesson, i) => {
                     let fields = {
-                        student: this.getStudentFields(lesson),
-                        teacher: this.getTeacherFields(lesson),
-                        room: this.getRoomFields(lesson),
-                        class: this.getStudentFields(lesson)
-                    }[this.props.type.toLowerCase()];
+                        student: this.getStudentFields,
+                        teacher: this.getTeacherFields,
+                        room: this.getRoomFields,
+                        class: this.getStudentFields
+                    }[this.props.type.toLowerCase()].bind(this, lesson)();
                     const { small } = this.props;
                     return (
                         <AbstractLesson

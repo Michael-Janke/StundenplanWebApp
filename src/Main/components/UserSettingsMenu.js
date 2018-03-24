@@ -22,18 +22,18 @@ import UserAvatar from './UserAvatar';
 var messaging;
 class UserSettingMenu extends React.Component {
 
-    profilePicChange() {
+    profilePicChange = () => {
         window.open("https://outlook.office365.com/ecp/PersonalSettings/EditAccount.aspx?chgPhoto=1&e" +
             "xsvurl=1&realm=wgmail.de",
             "popup", "width=600,height=400,status=yes,scrollbars=yes,resizable=yes");
     }
 
-    passwordChange() {
+    passwordChange = () => {
         window.open("https://login.wgmail.de/adfs/portal/updatepassword?username=" + this.props.upn,
             "popup", "width=400,height=600,status=yes,scrollbars=yes,resizable=yes");
     }
 
-    reset() {
+    reset = () => {
         purge().finally(() => {
             localStorage.clear();
             unregister();
@@ -41,7 +41,7 @@ class UserSettingMenu extends React.Component {
         })
     }
 
-    requestPermission() {
+    requestPermission = () => {
         const that = this;
         console.log('Requesting permission...');
         const messaging = firebase.messaging();
@@ -53,7 +53,7 @@ class UserSettingMenu extends React.Component {
         });
     }
 
-    setNotification() {
+    setNotification = () => {
         if (this.props.notificationToken) {
             this.props.setNotification({
                 oldToken: this.props.notificationToken,
@@ -89,19 +89,19 @@ class UserSettingMenu extends React.Component {
                 <MenuItem
                     primaryText="Profilbild ändern"
                     rightIcon={<ProfilePicIcon />}
-                    onClick={() => this.profilePicChange()} />
+                    onClick={this.profilePicChange} />
                 <MenuItem
                     primaryText="Passwort ändern"
                     rightIcon={<KeyIcon />}
-                    onClick={() => this.passwordChange()} />
+                    onClick={this.passwordChange} />
                 <MenuItem
                     primaryText="Reset"
                     rightIcon={<RefreshIcon />}
-                    onClick={() => this.reset()} />
+                    onClick={this.reset} />
                 <MenuItem
                     primaryText={"Benachrichtigungen " + (this.props.notificationToken ? "ausschalten" : "anschalten")}
                     rightIcon={this.props.notificationToken ? <NotificationsOff /> : <NotificationsOn />}
-                    onClick={() => this.setNotification()}
+                    onClick={this.setNotification}
                 />
             </IconMenu>
         );

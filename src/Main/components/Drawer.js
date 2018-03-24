@@ -5,13 +5,17 @@ import MenuItem from 'material-ui/MenuItem';
 import ProfilePicture from './ProfilePicture';
 
 export default class WGDrawer extends React.Component {
+  onRequestChange = (open) => {
+    this.props.onClose(open);
+  }
+
   render() {
     return (
       <div>
         <Drawer
           open={this.props.open}
           docked={false}
-          onRequestChange={(open) => this.props.close(open)}
+          onRequestChange={this.onRequestChange}
         >
           <ProfilePicture />
           <MenuItem>Menu Item</MenuItem>
