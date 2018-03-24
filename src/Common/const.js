@@ -36,7 +36,6 @@ export const SUBSTITUTION_MAP = {
     ELIMINATION: {
         color: colors.green900,
         backgroundColor: colors.green100,
-        color: "lime",
         name: "Entfall",
     },
     CLASS_SUBSTITUTION: {
@@ -72,7 +71,6 @@ export const SUBSTITUTION_MAP = {
     REDUNDANCY: {
         color: colors.green900,
         backgroundColor: colors.green100,
-        color: "lime",
         name: "Freistellung"
     }
 };

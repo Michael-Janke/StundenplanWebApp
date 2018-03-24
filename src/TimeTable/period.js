@@ -45,13 +45,13 @@ const AbstractLesson = ({ colorBar, small, last, specificSubstitutionType, field
     if (!small) return (
         <Lesson color={(specificSubstitutionType || {}).backgroundColor} flex>
             <ColorBar lineColor={colorBar} />
-            
+
             <LessonContainer>
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden' }}>
-                {specificSubstitutionType && <Substitution color={specificSubstitutionType.color}>{specificSubstitutionType.name}</Substitution>}
-                <Subject>{field1}</Subject>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden' }}>
+                    {specificSubstitutionType && <Substitution color={specificSubstitutionType.color}>{specificSubstitutionType.name}</Substitution>}
+                    <Subject>{field1}</Subject>
                 </div>
-                <div style={{ display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden', paddingLeft: 5 }}>
                     <Room>{field2}</Room>
                     {fields3.map((text, i) =>
                         <Teacher style={{ textAlign: 'right' }} key={i}>{text}</Teacher>
@@ -139,7 +139,7 @@ class Period extends Component {
                         <AbstractLesson
                             key={i}
                             {...lesson}
-                            last={this.props.lessons.length -1 === i}
+                            last={this.props.lessons.length - 1 === i}
                             small={small}
                             {...fields}
                         />
@@ -205,6 +205,7 @@ const LessonContainer = styled.div`
     `: `
         flex-direction: row;
         align-items: center; 
+        justify-content: space-between;
         padding-top: 0.5vmin;
         padding-bottom: 0.5vmin;
     `)}
