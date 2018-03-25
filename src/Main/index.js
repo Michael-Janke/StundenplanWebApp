@@ -13,7 +13,7 @@ import {
     showError
 } from "./actions"
 import TimeTable from "../TimeTable"
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { MuiThemeProvider } from 'material-ui/styles';
 import AppBar from './components/AppBar';
 import Theme from '../Common/theme';
 import ReactInterval from 'react-interval';
@@ -44,18 +44,19 @@ class Main extends Component {
 
     render() {
         return (
-            <MuiThemeProvider muiTheme={Theme}>
-                <div style={{flexDirection: 'column', display: 'flex', height: '100%'}}>
-                    <AppBar />
-                    <TimeTable />
-                    <Snackbar
-                        open={!!this.props.error}
-                        message={"Fehler: " + this.props.error}
-                        autoHideDuration={15000}
-                        contentStyle={{
-                            color: 'red'
-                        }}
-                        onRequestClose={this.props.clearErrors} />
+            <MuiThemeProvider theme={Theme}>
+                <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
+                    <AppBar>
+                        <TimeTable />
+                        <Snackbar
+                            open={!!this.props.error}
+                            message={"Fehler: " + this.props.error}
+                            autoHideDuration={15000}
+                            contentStyle={{
+                                color: 'red'
+                            }}
+                            onRequestClose={this.props.clearErrors} />
+                    </AppBar>
                     <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
                 </div>
             </MuiThemeProvider>

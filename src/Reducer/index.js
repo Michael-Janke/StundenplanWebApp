@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { responsiveDrawer } from 'material-ui-responsive-drawer';
+// import { responsiveDrawer } from 'material-ui-responsive-drawer';
 import { responsiveStateReducer } from 'redux-responsive';
 
 import user from './user';
@@ -9,7 +9,7 @@ import timetable from './timetable';
 
 export default combineReducers({
     browser: responsiveStateReducer,
-    responsiveDrawer: responsiveDrawer,
+    // responsiveDrawer: responsiveDrawer,
     user,
     error,
     timetable,

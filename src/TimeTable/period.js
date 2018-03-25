@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import { SUBJECT_COLORS, SUBJECT_COLORS_MAP } from '../Common/const';
 import chroma from 'chroma-js';
 import { Paper, Avatar } from 'material-ui';
-import PersonIcon from 'material-ui/svg-icons/social/person';
-import RoomIcon from 'material-ui/svg-icons/action/room';
-import { indigo50, indigo100 } from 'material-ui/styles/colors';
+import PersonIcon from 'material-ui-icons/Person';
+import RoomIcon from 'material-ui-icons/Room';
+import { indigo } from 'material-ui/colors';
 
 const extractSubject = (name) => {
     return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
@@ -84,7 +84,7 @@ class Period extends Component {
         return {
             colorBar: subject
                 ? SUBJECT_COLORS_MAP[extractSubject(subject.NAME)]
-                : indigo100,
+                : indigo[100],
             field1: subject ? subject.NAME : '-',
             field2: room ? room.NAME : '-',
             fields3: teacher.map((teacher, i) =>
@@ -99,7 +99,7 @@ class Period extends Component {
         return {
             colorBar: subject
                 ? SUBJECT_COLORS_MAP[extractSubject(subject.NAME)]
-                : indigo100,
+                : indigo[100],
             field1: subject ? subject.NAME : '-',
             field2: room ? room.NAME : '-',
             fields3: [joinClasses(classes)],
@@ -111,7 +111,7 @@ class Period extends Component {
         return {
             colorBar: subject
                 ? SUBJECT_COLORS_MAP[extractSubject(subject.NAME)]
-                : indigo100,
+                : indigo[100],
             field1: joinClasses(classes),
             field2: subject ? subject.NAME : '-',
             fields3: teacher.map((teacher, i) =>
@@ -227,7 +227,7 @@ const Lesson = styled.div`
     text-align: left;
     padding-right: 1vmin;
     flex-direction: row;
-    background-color: ${props => props.color || indigo50};
+    background-color: ${props => props.color || indigo[50]};
 `;
 
 export default Period;

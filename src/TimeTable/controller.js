@@ -7,7 +7,7 @@ import {
   WEEKDAY_NAMES,
   DRAWER_WIDTH
 } from "../Common/const";
-import {grey200, grey600} from 'material-ui/styles/colors'
+import { grey } from 'material-ui/styles/colors'
 
 class Controller extends Component {
   render() {
@@ -37,8 +37,8 @@ const ToolBar = styled.div `
   margin-top: auto;
   margin-left: ${DRAWER_WIDTH}px;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 6px, rgba(0, 0, 0, 0.3) 0px 0px 4px;
-  background-color: ${grey200};
-  color: ${grey600};
+  background-color: ${grey[200]};
+  color: ${grey[600]};
   align-items: center;
   justify-content: space-around;
   z-index: 1102;

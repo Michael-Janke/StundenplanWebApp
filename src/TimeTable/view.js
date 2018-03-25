@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import { } from "./actions";
 import { WEEKDAY_NAMES, DRAWER_WIDTH } from "../Common/const";
-import { grey200, grey600} from 'material-ui/styles/colors';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import { grey } from 'material-ui/colors';
 import TimeTableGrid from './timeTableGrid';
 import WeekCalendar from './weekCalendar';
+import { withTheme } from "material-ui/styles";
 
 class View extends Component {
 
@@ -62,7 +62,7 @@ class View extends Component {
         const drawerMargin = this.props.showDrawer ? undefined : '1vw';
         return (
             <Container>
-                <AppBar style={{ backgroundColor: this.props.muiTheme.palette.primary1Color }}>
+                <AppBar style={{ backgroundColor: this.props.theme.palette.primary1Color }}>
                     <ShadowContainerEmu />
                 </AppBar>
                 {this.props.showDrawer && <Drawer>
@@ -84,7 +84,7 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     position: relative;
-    color: ${grey600};
+    color: ${grey[600]};
 `
 
 const Drawer = styled.div`
@@ -127,7 +127,7 @@ const ToolBar = styled.div`
     flex-direction: row;
     height: 55px;
     margin-top: 9px;
-    background-color: ${grey200};
+    background-color: ${grey[200]};
     align-items: center;
     justify-content: space-around;
     z-index: 1;
@@ -164,7 +164,7 @@ const Grid = styled.div`
 const Cell = styled.div`
     display: flex;
     flex: 1;
-    border-bottom: solid 1px ${grey200};
+    border-bottom: solid 1px ${grey[200]};
 `
 const Times = styled.div`
     font-size:50%;
@@ -173,7 +173,7 @@ const Times = styled.div`
     flex-direction: column;
     justify-content: space-between;
     padding: 1vmin;
-    border-bottom: solid 1px ${grey200};
+    border-bottom: solid 1px ${grey[200]};
 `;
 const Time = styled.div`
 
@@ -184,7 +184,7 @@ const Periods = styled.div`
     justify-content: center;
     font-weight: bold;
     flex:1;
-    border-bottom: solid 1px ${grey200};
+    border-bottom: solid 1px ${grey[200]};
     padding: 5px;
 `;
 const Period = styled.div`
@@ -227,4 +227,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(muiThemeable()(View));
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme()(View));

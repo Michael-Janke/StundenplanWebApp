@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Provider } from "react-redux";
 import { PersistGate } from 'redux-persist/integration/react';
 import Main from './Main';
@@ -16,13 +15,11 @@ class App extends Component {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <MuiThemeProvider >
-            <PrintProvider>
-              <ResponsiveFontSize>
-                <Main />
-              </ResponsiveFontSize>
-            </PrintProvider>
-          </MuiThemeProvider >
+          <PrintProvider>
+            <ResponsiveFontSize>
+              <Main />
+            </ResponsiveFontSize>
+          </PrintProvider>
         </PersistGate>
       </Provider>
     );

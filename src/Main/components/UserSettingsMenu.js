@@ -3,15 +3,16 @@ import firebase from 'firebase';
 import { connect } from "react-redux";
 
 import Drawer from 'material-ui/Drawer';
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import MenuItem from 'material-ui/MenuItem';
+import Menu, { MenuItem } from 'material-ui/Menu';
+import { ListItemIcon, ListItemText } from 'material-ui/List';
 
-import ProfilePicIcon from 'material-ui/svg-icons/action/account-circle';
-import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
-import KeyIcon from 'material-ui/svg-icons/communication/vpn-key';
-import NotificationsOn from 'material-ui/svg-icons/social/notifications-active';
-import NotificationsOff from 'material-ui/svg-icons/social/notifications-off';
+import IconButton from 'material-ui/IconButton';
+
+import ProfilePicIcon from 'material-ui-icons/AccountCircle';
+import RefreshIcon from 'material-ui-icons/Refresh';
+import KeyIcon from 'material-ui-icons/VpnKey';
+import NotificationsOn from 'material-ui-icons/NotificationsActive';
+import NotificationsOff from 'material-ui-icons/NotificationsOff';
 
 import { purge } from '../../store';
 import { unregister } from '../../registerServiceWorker';
@@ -21,6 +22,8 @@ import UserAvatar from './UserAvatar';
 
 var messaging;
 class UserSettingMenu extends React.Component {
+
+    state = {};
 
     profilePicChange = () => {
         window.open("https://outlook.office365.com/ecp/PersonalSettings/EditAccount.aspx?chgPhoto=1&e" +
@@ -73,37 +76,65 @@ class UserSettingMenu extends React.Component {
         }
     }
 
+    handleClick = event => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+
+    handleClose = () => {
+        this.setState({ anchorEl: null });
+    };
+
+
     render() {
+        const { anchorEl } = this.state;
+
         return (
-            <IconMenu
-                iconButtonElement={
-                    <IconButton
-                        tooltipPosition="bottom-left"
-                        tooltip="Benutzereinstellungen"
-                        style={{ width: 48 + 8, height: 48, paddingLeft: 8, padding: 0 }}>
-                        <UserAvatar />
-                    </IconButton>}
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-            >
-                <MenuItem
-                    primaryText="Profilbild ändern"
-                    rightIcon={<ProfilePicIcon />}
-                    onClick={this.profilePicChange} />
-                <MenuItem
-                    primaryText="Passwort ändern"
-                    rightIcon={<KeyIcon />}
-                    onClick={this.passwordChange} />
-                <MenuItem
-                    primaryText="Reset"
-                    rightIcon={<RefreshIcon />}
-                    onClick={this.reset} />
-                <MenuItem
-                    primaryText={"Benachrichtigungen " + (this.props.notificationToken ? "ausschalten" : "anschalten")}
-                    rightIcon={this.props.notificationToken ? <NotificationsOff /> : <NotificationsOn />}
-                    onClick={this.setNotification}
-                />
-            </IconMenu>
+            <div>
+                <IconButton
+                    aria-label="More"
+                    aria-owns={anchorEl ? 'long-menu' : null}
+                    aria-haspopup="true"
+                    onClick={this.handleClick}
+                    style={{ width: 48 + 8, height: 48, paddingLeft: 8, padding: 0 }}
+                >
+                    <UserAvatar />
+                </IconButton>
+                <Menu
+                    id="long-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={this.handleClose}
+                >
+                    <MenuItem
+                        onClick={this.profilePicChange} >
+                        <ListItemIcon>
+                            <ProfilePicIcon />
+                        </ListItemIcon>
+                        <ListItemText inset primary="Profilbild ändern" />
+                    </MenuItem>
+                    <MenuItem
+                        onClick={this.passwordChange}>
+                        <ListItemIcon>
+                            <KeyIcon />
+                        </ListItemIcon>
+                        <ListItemText inset primary="Passwort ändern" />
+                    </MenuItem>
+                    <MenuItem
+                        onClick={this.reset}>
+                        <ListItemIcon>
+                            <RefreshIcon />
+                        </ListItemIcon>
+                        <ListItemText inset primary="Reset" />
+                    </MenuItem>
+                    <MenuItem
+                        onClick={this.setNotification}>
+                        <ListItemIcon>
+                            {this.props.notificationToken ? <NotificationsOff /> : <NotificationsOn />}
+                        </ListItemIcon>
+                        <ListItemText inset primary={"Benachrichtigungen " + (this.props.notificationToken ? "ausschalten" : "anschalten")} />
+                    </MenuItem>
+                </Menu>
+            </div>
         );
     }
 }

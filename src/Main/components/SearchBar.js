@@ -2,13 +2,12 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import SearchBar from 'material-ui-search-bar';
-import MenuItem from 'material-ui/MenuItem';
+import {MenuItem} from 'material-ui/Menu';
 import Avatar from 'material-ui/Avatar';
-import PersonIcon from 'material-ui/svg-icons/social/person';
-import ClassIcon from 'material-ui/svg-icons/social/group';
-import RoomIcon from 'material-ui/svg-icons/action/room';
+import PersonIcon from 'material-ui-icons/Person';
+import ClassIcon from 'material-ui-icons/Group';
+import RoomIcon from 'material-ui-icons/Room';
 import { loadAvatars, setTimeTable } from '../actions';
-import AutoComplete from 'material-ui/AutoComplete';
 import moment from 'moment';
 
 class WGSearchBar extends Component {
@@ -83,7 +82,7 @@ class WGSearchBar extends Component {
     }
 
     loadAvatars(searchText) {
-        var subset = this.state.dataSource.filter((value) => AutoComplete.fuzzyFilter(searchText, value.text));
+        var subset = this.state.dataSource.filter((value) => (searchText, value.text));
         subset = subset.filter((value, i) => i < 10
             && value.upn
             && (this.props.avatars[value.upn] === undefined
@@ -105,12 +104,12 @@ class WGSearchBar extends Component {
             <Flex>
                 <SearchBar
                     onChange={this.onChange}
-                    onRequestSearch={true}
-                    onNewRequest={this.onNewRequest}
+                    onRequestSearch={() => {}}
+                    // onNewRequest={this.onNewRequest}
                     dataSource={this.state.dataSource}
                     hintText="Suche"
                     maxSearchResults={10}
-                    filter={AutoComplete.fuzzyFilter}
+                    // filter={AutoComplete.fuzzyFilter}
                     popoverProps={this.props.showAsModal ?
                         { anchorEl: null, canAutoPosition: false, style: { marginTop: 64, marginLeft: '3vw', width: '94vw' } } : {}
                     }

@@ -1,24 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-    TableFooter
-} from 'material-ui/Table';
-import { grey100, grey200, grey600, orange500 } from 'material-ui/styles/colors';
-import { green100 } from 'material-ui/styles/colors';
+import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'material-ui/Table';
+import { grey } from 'material-ui/colors';
 import styled from 'styled-components';
 import PeriodColumn from './period';
 import { WEEKDAY_NAMES, getSpecificSubstitutionType } from '../Common/const';
-import WarningIcon from 'material-ui/svg-icons/alert/warning';
+import WarningIcon from 'material-ui-icons/Warning';
 import moment from 'moment';
 import IconButton from 'material-ui/IconButton';
-import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
-import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
+import BackIcon from 'material-ui-icons/ArrowBack';
+import NextIcon from 'material-ui-icons/ArrowForward';
 import { changeWeek } from '../Main/actions';
 import { NoPrint, Print } from 'react-easy-print';
 
@@ -231,13 +222,13 @@ class TimeTableGrid extends Component {
     }
 
     renderPeriodsRow(day, period) {
-        if (!this.state.data) { return <TableRowColumn key={day} />; }
+        if (!this.state.data) { return <TableCell key={day} />; }
         let dayObject = this.state.data[day];
         if (dayObject.holiday) {
             return (
-                <TableRowColumn key={day}>
+                <TableCell key={day}>
                     {dayObject.holiday}
-                </TableRowColumn>
+                </TableCell>
             );
         } else {
             let lessons = dayObject.periods[period - 1];
@@ -245,7 +236,7 @@ class TimeTableGrid extends Component {
                 return null;
             }
             return (
-                <TableRowColumn
+                <TableCell
                     key={day}
                     style={{
                         textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
@@ -256,7 +247,7 @@ class TimeTableGrid extends Component {
                         type={this.props.type}
                         avatars={this.props.avatars}
                         small={this.props.small} />
-                </TableRowColumn>
+                </TableCell>
             );
         }
     }
@@ -272,19 +263,19 @@ class TimeTableGrid extends Component {
         };
         return Object.values(this.props.periods).map((period, i) => (
             <TableRow key={i}>
-                <TableRowColumn style={periodColumnStyle}>
+                <TableCell style={periodColumnStyle}>
                     <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
                         {!this.props.small && this.renderPeriodTimes(period)}
                         {this.renderPeriodHeader(period)}
                     </div>
-                </TableRowColumn>
+                </TableCell>
                 {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsRow(i, period.PERIOD_TIME_ID))}
             </TableRow>
         ));
     }
 
     render() {
-        const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
+        const tableHeaderStyle = { color: grey[600], fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
         return (
             <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
                 {!this.props.showDrawer ? <TableToolBar>
@@ -297,21 +288,21 @@ class TimeTableGrid extends Component {
                 </TableToolBar> : null}
                 <Print main name="TimeTable">
                     <Table selectable={false} wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: 'calc(100vh - 82px)' }} >
-                        <TableHeader
-                            style={{ backgroundColor: grey200, fontSize: '100%' }}
+                        <TableHead
+                            style={{ backgroundColor: grey[200], fontSize: '100%' }}
                             displaySelectAll={false}
                             adjustForCheckbox={false}>
                             <TableRow>
-                                <TableHeaderColumn style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
+                                <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
                                 {WEEKDAY_NAMES.map((weekday, i) => (
-                                    <TableHeaderColumn
+                                    <TableCell
                                         key={i}
                                         style={tableHeaderStyle}>
                                         {weekday}
-                                    </TableHeaderColumn>
+                                    </TableCell>
                                 ))}
                             </TableRow>
-                        </TableHeader>
+                        </TableHead>
                         <TableBody
                             displayRowCheckbox={false}>
                             {this.renderRows()}
@@ -322,14 +313,14 @@ class TimeTableGrid extends Component {
                         >
                             <NoPrint>
                                 <TableRow>
-                                    <TableRowColumn colSpan="6" style={{ textAlign: 'right' }} >
+                                    <TableCell colSpan="6" style={{ textAlign: 'right' }} >
                                         <IconButton primary={true} onClick={this.props.setPreviousWeek}>
                                             <BackIcon />
                                         </IconButton>
                                         <IconButton primary={true} onClick={this.props.setNextWeek}>
                                             <NextIcon />
                                         </IconButton>
-                                    </TableRowColumn>
+                                    </TableCell>
                                 </TableRow>
                             </NoPrint>
                         </TableFooter>
@@ -342,7 +333,7 @@ class TimeTableGrid extends Component {
 }
 
 const TableToolBar = styled.div`
-    background-color: ${grey200};
+    background-color: ${grey[200]};
     border-bottom: 1px solid rgb(224, 224, 224);
     height: 48px; 
     text-align: right;
