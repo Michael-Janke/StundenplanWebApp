@@ -12,196 +12,12 @@ import BackIcon from 'material-ui-icons/ArrowBack';
 import NextIcon from 'material-ui-icons/ArrowForward';
 import { changeWeek } from '../Main/actions';
 import { NoPrint, Print } from 'react-easy-print';
+import makeGetCurrentTimetable from '../Selector/timetable';
 
 class TimeTableGrid extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-        };
-        if (props.timetable) {
-            this.parse(props);
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.timetable !== nextProps.timetable
-            || this.props.substitutions !== nextProps.substitutions) {
-            this.parse(nextProps);
-        }
-    }
-
-    parse(props) {
-        let { masterdata, timetable, substitutions, periods } = props;
-        periods = Object.values(periods);
-        let data = [];
-        for (let x = 0; x < WEEKDAY_NAMES.length; x++) {
-            let day = this.readTimetable(timetable, x, periods);
-            if (substitutions) {
-                this.joinSubstitutions(day, substitutions.substitutions[x]);
-            }
-            this.skipDuplications(day, periods);
-            this.translatePeriods(masterdata, day, periods);
-            data[x] = day;
-        }
-        this.state.data = data;
-    }
-
-    joinSubstitutions(day, subOnDay) {
-        if (!subOnDay) return;
-        if (subOnDay.holiday) {
-            day.holiday = subOnDay.holiday;
-            day.periods = undefined;
-        } else if (subOnDay.substitutions && day.periods) {
-
-            subOnDay.substitutions.forEach((substitution) => {
-                let period = day.periods[substitution.PERIOD - 1];
-                if (!period) return;
-                let lessons = period.lessons;
-                if (lessons) {
-                    for (let i = 0; i < lessons.length; i++) {
-                        let lesson = lessons[i];
-                        if (parseInt(lesson.TIMETABLE_ID) === substitution.TIMETABLE_ID) {
-                            let remove = !!['ROOM', 'TEACHER'].find((key) =>
-                                this.props.type === key.toLowerCase()
-                                && substitution[key + "_ID"] === lesson[key + "_ID"]
-                                && substitution[key + "_ID_NEW"]
-                                && lesson[key + "_ID"] !== substitution[key + "_ID_NEW"]
-                            );
-
-                            lessons[i] = {
-                                substitutionRemove: remove,
-                                substitutionType: substitution.TYPE,
-                                substitutionText: substitution.TEXT,
-                                specificSubstitutionType: getSpecificSubstitutionType(substitution),
-                                CLASS_IDS: substitution.CLASS_IDS_NEW.length
-                                    ? substitution.CLASS_IDS_NEW : substitution.CLASS_IDS,
-                                CLASS_IDS_ABSENT: substitution.CLASS_IDS_ABSENT,
-                                TEACHER_ID: substitution.TEACHER_ID_NEW || lesson.TEACHER_ID,
-                                SUBJECT_ID: substitution.SUBJECT_ID_NEW || lesson.SUBJECT_ID,
-                                ROOM_ID: substitution.ROOM_ID_NEW || lesson.ROOM_ID,
-
-                            };
-                            return;
-                        }
-                    }
-                }
-                if (!lessons) {
-                    period.lessons = lessons = [];
-                }
-                lessons.push({
-                    substitutionText: substitution.TEXT,
-                    substitutionRemove:
-                        substitution.TEACHER_ID === this.props.id
-                        && substitution.TEACHER_ID !== this.props.id,
-                    substitutionType: substitution.TYPE,
-                    CLASS_IDS: substitution.CLASS_IDS_NEW,
-                    TEACHER_ID: substitution.TEACHER_ID_NEW,
-                    SUBJECT_ID: substitution.SUBJECT_ID_NEW,
-                    ROOM_ID: substitution.ROOM_ID_NEW,
-                    specificSubstitutionType: getSpecificSubstitutionType(substitution),
-                });
-            });
-        }
-
-    }
-
-    comparePeriod(current, next) {
-        if (!next || !current) return false;
-        if (current.length != next.length) return false;
-        next = [...next];
-        for (let i = 0; i < current.length; i++) {
-            for (let j = 0; j < next.length; j++) {
-                if (this.compareLesson(current[i], next[j])) {
-                    next.splice(j);
-                    break;
-                }
-            }
-        }
-        return next.length == 0;
-    }
-    compareLesson(p1, p2) {
-        if (p1.TEACHER_ID !== p2.TEACHER_ID
-            || p1.SUBJECT_ID !== p2.SUBJECT_ID
-            || p1.ROOM_ID !== p2.ROOM_ID)
-            return false;
-        let classIds1 = p1.CLASS_IDS || [];
-        let classIds2 = p2.CLASS_IDS || [];
-
-        if (!(classIds1.length === classIds2.length && classIds1.every((v, i) => classIds2.indexOf(v) >= 0)))
-            return false;
-        return true;
-    }
-
-    skipDuplications(day, periods) {
-        if (day.holiday) {
-            return;
-        }
-        for (let y = 0; y < periods.length; y++) {
-            let current = day.periods[y];
-            current.skip = 0;
-            while (y + 1 < periods.length
-                && this.comparePeriod(current.lessons, day.periods[y + 1].lessons)) {
-                y++;
-                delete day.periods[y];
-                current.skip++;
-            }
-            if (current.lessons) {
-                for (let i = 0; i < current.lessons.length; i++) {
-                    let last = current.lessons[i] = { ...current.lessons[i] };
-                    last.TEACHER_IDS = [last.TEACHER_ID];
-                    delete last.TEACHER_ID;
-                    for (let j = i + 1; j < current.lessons.length; j++) {
-                        let lesson = current.lessons[j];
-                        if (lesson.ROOM_ID === last.ROOM_ID
-                            && lesson.SUBJECT_ID === last.SUBJECT_ID
-                            && lesson.substitutionType === last.substitutionType) {
-                            last.TEACHER_IDS.push(lesson.TEACHER_ID);
-                            current.lessons.splice(j);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    readTimetable(_data, day, periods) {
-        let data = [];
-        for (let y = 0; y < periods.length; y++) {
-            let lessons = (_data[day] || [])[y + 1];
-            if (lessons) {
-                lessons = [...lessons];
-            }
-            data[y] = { lessons };
-        }
-        return { periods: data };
-    }
-
-    translatePeriods(masterdata, day, periods) {
-        if (day.holiday) {
-            return day;
-        }
-        for (let y = 0; y < periods.length; y++) {
-            if (day.periods[y] && day.periods[y].lessons) {
-                this.translate(masterdata, day.periods[y]);
-            }
-        }
-    }
-
-    translate(masterdata, period) {
-        if (!period) return period;
-        period.lessons = period.lessons.map((period) => ({
-            substitutionText: period.substitutionText,
-            substitutionType: period.substitutionType,
-            specificSubstitutionType: period.specificSubstitutionType,
-            substitutionRemove: period.substitutionRemove,
-            teacher: period.TEACHER_IDS.map((t) => masterdata.Teacher[t]),
-            absentTeacher: [],
-            subject: masterdata.Subject[period.SUBJECT_ID],
-            room: masterdata.Room[period.ROOM_ID],
-            classes: (period.CLASS_IDS || []).map((c) => masterdata.Class[c]),
-            absentClasses: (period.CLASS_IDS_ABSENT || []).map((c) => masterdata.Class[c])
-        }));
-        return period;
     }
 
     renderPeriodTimes(period) {
@@ -222,8 +38,8 @@ class TimeTableGrid extends Component {
     }
 
     renderPeriodsRow(day, period) {
-        if (!this.state.data) { return <TableCell key={day} />; }
-        let dayObject = this.state.data[day];
+        if (!this.props.currentTimetable) { return <TableRowColumn key={day} />; }
+        let dayObject = this.props.currentTimetable[day];
         if (dayObject.holiday) {
             return (
                 <TableCell key={day}>
@@ -379,23 +195,26 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-const mapStateToProps = state => {
-    return {
-        masterdata: state.timetable.masterdata,
-        timetable: state.timetable.timetable,
-        substitutions: state.timetable.substitutions,
-        id: state.timetable.currentTimeTableId,
-        type: state.timetable.currentTimeTableType,
-        periods: state.timetable.masterdata.Period_Time,
-        small: state.browser.greaterThan.small,
-        showDrawer: state.browser.greaterThan.small,
-        small: state.browser.is.extraSmall || state.browser.is.medium,
-        periodsWidth: (state.browser.is.extraSmall || state.browser.is.medium) ? 20 : 70,
-        loading: state.timetable.loadingTimetable || state.timetable.loadingSubstitutions,
-        avatars: state.avatars,
-        warning: state.user.warning,
-        lastCheck: state.user.lastCheck
-    };
-};
+const makeMapStateToProps = () => {
+    const getCurrentTimetable = makeGetCurrentTimetable()
+    const mapStateToProps = (state, props) => {
+        return {
+            currentTimetable: getCurrentTimetable(state, props),
+            periods: state.timetable.masterdata.Period_Time,
+            id: state.timetable.currentTimeTableId,
+            type: state.timetable.currentTimeTableType,
+            small: state.browser.greaterThan.small,
+            showDrawer: state.browser.greaterThan.small,
+            small: state.browser.is.extraSmall || state.browser.is.medium,
+            periodsWidth: (state.browser.is.extraSmall || state.browser.is.medium) ? 20 : 70,
+            loading: state.timetable.loadingTimetable || state.timetable.loadingSubstitutions,
+            avatars: state.avatars,
+            warning: state.user.warning,
+            lastCheck: state.user.lastCheck
+        }
+    }
+    return mapStateToProps;
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimeTableGrid);
+
+export default connect(makeMapStateToProps, mapDispatchToProps)(TimeTableGrid);
