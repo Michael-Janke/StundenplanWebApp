@@ -1,6 +1,5 @@
 import { adalGetToken } from './Adal/react-adal';
 import { adalConfig, authContext } from './Adal/adalConfig';
-import moment from 'moment';
 
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
@@ -69,24 +68,28 @@ const dataService = store => next => action => {
 		case 'GET_MASTERDATA':
 			return requestApiGenerator(next)(API_URL, 'all', 'GET_MASTERDATA');
 		case "SET_TIMETABLE":
-			next({ type: "GET_TIMETABLE" });
+			return next({ type: "GET_TIMETABLE" });
 		case 'GET_TIMETABLE':
-			requestApiGenerator(next)(API_URL, 'timetable/' + (action.payload.type || currentTimeTableType) + '/' + (action.payload.id || currentTimeTableId), 'GET_TIMETABLE');
-
-		case "CHANGE_WEEK": case "SET_DATE":
-			var { currentTimeTableId, currentTimeTableType, timetableDate } = store.getState().timetable;
-			let date = moment(timetableDate);
-			var week = date.week();
-			var year = date.year();
-			next({ type: "GET_SUBSTITUTIONS" });
-		case "GET_SUBSTITUTIONS":
-			var week = week || action.payload.week();
-			var year = year || action.payload.year();
+			return requestApiGenerator(next)(API_URL, `timetable/${action.payload.type}/${action.payload.id}`, 'GET_TIMETABLE');
+		case "CHANGE_WEEK": case "SET_DATE": {
+			let { currentTimeTableId, currentTimeTableType, timetableDate } = store.getState().timetable;
+			return next({
+				type: "GET_SUBSTITUTIONS", payload: {
+					timetableDate,
+					type: currentTimeTableType,
+					id: currentTimeTableId
+				}
+			});
+		}
+		case "GET_SUBSTITUTIONS": {
+			let week = action.payload.date.week();
+			let year = action.payload.date.year();
 			return requestApiGenerator(next)(API_URL,
-				'substitution/' + (action.payload.type || currentTimeTableType)
-				+ '/' + (action.payload.id || currentTimeTableId)
+				'substitution/' + (action.payload.type)
+				+ '/' + (action.payload.id)
 				+ '/' + year + '-' + week,
 				'GET_SUBSTITUTIONS');
+		}
 		case 'GET_COUNTER':
 			return requestApiGenerator(next)(API_URL, 'counter', 'COUNTER');
 		case 'SET_NOTIFICATION':

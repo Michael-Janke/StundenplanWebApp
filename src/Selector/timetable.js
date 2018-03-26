@@ -36,7 +36,7 @@ function joinSubstitutions(day, subOnDay, type, id) {
             if (lessons) {
                 for (let i = 0; i < lessons.length; i++) {
                     let lesson = lessons[i];
-                    if (parseInt(lesson.TIMETABLE_ID) === substitution.TIMETABLE_ID) {
+                    if (lesson.TIMETABLE_ID === substitution.TIMETABLE_ID) {
                         let remove = !!['ROOM', 'TEACHER'].find((key) =>
                             type === key.toLowerCase()
                             && substitution[key + "_ID"] === lesson[key + "_ID"]
@@ -82,7 +82,7 @@ function joinSubstitutions(day, subOnDay, type, id) {
 }
 function comparePeriod(current, next) {
     if (!next || !current) return false;
-    if (current.length != next.length) return false;
+    if (current.length !== next.length) return false;
     next = [...next];
     for (let i = 0; i < current.length; i++) {
         for (let j = 0; j < next.length; j++) {
@@ -92,7 +92,7 @@ function comparePeriod(current, next) {
             }
         }
     }
-    return next.length == 0;
+    return next.length === 0;
 }
 function compareLesson(p1, p2) {
     if (p1.TEACHER_ID !== p2.TEACHER_ID

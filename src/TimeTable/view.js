@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { } from "./actions";
-import { WEEKDAY_NAMES, DRAWER_WIDTH } from "../Common/const";
+import { DRAWER_WIDTH } from "../Common/const";
 import { grey200, grey600} from 'material-ui/styles/colors';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import TimeTableGrid from './timeTableGrid';
@@ -66,7 +65,7 @@ class View extends Component {
                     <ShadowContainerEmu />
                 </AppBar>
                 {this.props.showDrawer && <Drawer>
-                    <WeekCalendar />
+                    <WeekCalendar selectedDate={this.props.timetableDate} />
                 </Drawer>}
                 <ShadowContainer style={{marginLeft: drawerMargin, marginRight: drawerMargin}}>
                     <ShadowBox>
@@ -121,24 +120,6 @@ const AppBar = styled.div`
     height: 104px;
     position: absolute;
 `
-const ToolBar = styled.div`
-    flex:1;
-    display:flex;
-    flex-direction: row;
-    height: 55px;
-    margin-top: 9px;
-    background-color: ${grey200};
-    align-items: center;
-    justify-content: space-around;
-    z-index: 1;
-`;
-
-const WeekdayHeader = styled.div`
-    font-size:85%;
-    flex: 2;
-    text-align: center;
-`;
-
 const HeaderColumn = styled.div`
     display: flex;
     flex-direction: column;
@@ -149,17 +130,6 @@ const WeekDayColumn = styled.div`
     display: flex;
     flex-direction: column;
     flex: 2
-`
-const EmptyHeader = styled.div`
-    flex:1;
-`;
-
-const Grid = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    background-color: white;
-    min-height: 500px;
 `
 const Cell = styled.div`
     display: flex;
@@ -191,23 +161,6 @@ const Period = styled.div`
 
 `;
 
-const Ancor = styled.div`
-    position:relative;
-    flex:10;
-    width:100%;
-`
-// const TimeTableGrid = styled.div`
-//     position:absolute;
-//     top:0;
-//     height: 100%;
-//     width: 100%;
-//     display:flex;
-//     flex-direction: row;    
-// `
-// const TimeTableContainer = styled.div`
-//     min-height: 100%;
-//     width: 100%;  
-// `
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -220,6 +173,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
     return {
         masterdata: state.timetable.masterdata,
+        timetableDate: state.timetable.timetableDate,
         periods: state.timetable.masterdata.Period_Time,
         showPeriods: state.browser.greaterThan.small,
         showDrawer: state.browser.greaterThan.small,

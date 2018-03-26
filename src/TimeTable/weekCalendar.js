@@ -1,13 +1,14 @@
 import React, {Component} from "react";
 import styled from "styled-components";
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import moment from 'moment';
 
 class WeekCalendar extends Component {
   render() {
     return (
         <Container>
-            <Year>{this.props.year}</Year>
-            <Week>KW {this.props.week}</Week>
+            <Year>{moment(this.props.timetableDate).format('YYYY')}</Year>
+            <Week>KW {moment(this.props.timetableDate).format('W')}</Week>
         </Container>
     );
   }
@@ -23,4 +24,4 @@ const Week = styled.div`
     font-size: 100%;
 `
 
-export default muiThemeable()(WeekCalendar);
+export default muiThemeable()(WeekCalendar); 

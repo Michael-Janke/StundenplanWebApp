@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 
 const ResponsiveFontSize = (props) => {
@@ -6,10 +6,9 @@ const ResponsiveFontSize = (props) => {
         extraSmall: 14,
         small: 15,
         medium: 16,
-        large: 18,
-        infinity: 20
+        large: 17,
+        infinity: 18
     }[props.mediaType];
-    console.log(props.mediaType);
     return (
         <div style={{ fontSize, height: '100%' }}>
             {props.children}
@@ -21,6 +20,5 @@ const mapStateToProps = state => {
         mediaType: state.browser.mediaType
     };
 };
-
 
 export default connect(mapStateToProps)(ResponsiveFontSize);

@@ -2,7 +2,6 @@ import React from 'react';
 import firebase from 'firebase';
 import { connect } from "react-redux";
 
-import Drawer from 'material-ui/Drawer';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
@@ -19,7 +18,6 @@ import { connectToServiceWorker } from '../../Common/firebase';
 import { setNotification, showError } from '../actions';
 import UserAvatar from './UserAvatar';
 
-var messaging;
 class UserSettingMenu extends React.Component {
 
     profilePicChange = () => {

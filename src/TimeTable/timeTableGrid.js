@@ -9,13 +9,10 @@ import {
     TableRowColumn,
     TableFooter
 } from 'material-ui/Table';
-import { grey100, grey200, grey600, orange500 } from 'material-ui/styles/colors';
-import { green100 } from 'material-ui/styles/colors';
+import { grey200, grey600 } from 'material-ui/styles/colors';
 import styled from 'styled-components';
 import PeriodColumn from './period';
-import { WEEKDAY_NAMES, getSpecificSubstitutionType } from '../Common/const';
-import WarningIcon from 'material-ui/svg-icons/alert/warning';
-import moment from 'moment';
+import { WEEKDAY_NAMES } from '../Common/const';
 import IconButton from 'material-ui/IconButton';
 import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
@@ -23,11 +20,7 @@ import { changeWeek } from '../Main/actions';
 import { NoPrint, Print } from 'react-easy-print';
 import makeGetCurrentTimetable from '../Selector/timetable';
 
-class TimeTableGrid extends Component {
-
-    constructor(props) {
-        super(props);
-    }
+class TimeTableGrid extends Component { 
 
     renderPeriodTimes(period) {
         const lpad2 = (number) => (number < 10 ? '0' : '') + number;
@@ -166,14 +159,6 @@ const TableToolBar = styled.div`
     width: 100%;
 `
 
-const WarningText = styled.div`
-    width: 200px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-size: 70%;
-`
-
 const Times = styled.div`
     font-size:50%;
     flex:1;
@@ -212,7 +197,6 @@ const makeMapStateToProps = () => {
             periods: state.timetable.masterdata.Period_Time,
             id: state.timetable.currentTimeTableId,
             type: state.timetable.currentTimeTableType,
-            small: state.browser.greaterThan.small,
             showDrawer: state.browser.greaterThan.small,
             small: state.browser.is.extraSmall || state.browser.is.medium,
             periodsWidth: (state.browser.is.extraSmall || state.browser.is.medium) ? 20 : 70,

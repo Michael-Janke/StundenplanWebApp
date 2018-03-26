@@ -8,7 +8,6 @@ import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
 import PrintIcon from 'material-ui/svg-icons/action/print';
 import CalendarIcon from 'material-ui/svg-icons/action/event';
-import MenuItem from 'material-ui/MenuItem';
 
 import UserSettingsMenu from './UserSettingsMenu';
 import Drawer from './Drawer';

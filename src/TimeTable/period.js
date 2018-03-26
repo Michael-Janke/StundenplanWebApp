@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { SUBJECT_COLORS, SUBJECT_COLORS_MAP } from '../Common/const';
-import chroma from 'chroma-js';
-import { Paper, Avatar } from 'material-ui';
-import PersonIcon from 'material-ui/svg-icons/social/person';
-import RoomIcon from 'material-ui/svg-icons/action/room';
+import { SUBJECT_COLORS_MAP } from '../Common/const';
 import { indigo50, indigo100 } from 'material-ui/styles/colors';
 
 const extractSubject = (name) => {
@@ -210,16 +206,6 @@ const LessonContainer = styled.div`
         padding-top: 0.5vmin;
         padding-bottom: 0.5vmin;
     `)}
-`;
-const LessonSubstitutuion = styled.div`
-    flex: 1;
-    display: flex;
-    overflow: hidden;
-    flex-direction: column;  
-    padding: 0;
-    align-items:center;
-    padding-top: 0.5vmin;
-    padding-bottom: 0.5vmin 
 `;
 
 const Lesson = styled.div`

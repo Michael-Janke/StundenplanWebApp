@@ -1,6 +1,4 @@
-import chroma from 'chroma-js';
 import * as colors from 'material-ui/styles/colors';
-
 
 export const WEEKDAY_NAMES = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
 export const DRAWER_WIDTH = 300;
