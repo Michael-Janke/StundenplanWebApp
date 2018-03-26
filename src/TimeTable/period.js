@@ -84,9 +84,11 @@ class Period extends Component {
             field1: subject ? subject.NAME : '-',
             field2: room ? room.NAME : '-',
             fields3: teacher.map((teacher, i) =>
-                this.props.small
-                    ? teacher.LASTNAME
-                    : (teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME),
+                teacher
+                    ? this.props.small
+                        ? teacher.LASTNAME
+                        : (teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME
+                    : '-'),
         }
     }
 

@@ -105,7 +105,7 @@ class WGSearchBar extends Component {
             <Flex>
                 <SearchBar
                     onChange={this.onChange}
-                    onRequestSearch={true}
+                    onRequestSearch={() => true}
                     onNewRequest={this.onNewRequest}
                     dataSource={this.state.dataSource}
                     hintText="Suche"

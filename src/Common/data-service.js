@@ -1,6 +1,6 @@
 import { adalGetToken } from './Adal/react-adal';
 import { adalConfig, authContext } from './Adal/adalConfig';
-
+import moment from 'moment';
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
 
@@ -73,20 +73,19 @@ const dataService = store => next => action => {
 			return requestApiGenerator(next)(API_URL, `timetable/${action.payload.type}/${action.payload.id}`, 'GET_TIMETABLE');
 		case "CHANGE_WEEK": case "SET_DATE": {
 			let { currentTimeTableId, currentTimeTableType, timetableDate } = store.getState().timetable;
-			return next({
+			next({
 				type: "GET_SUBSTITUTIONS", payload: {
-					timetableDate,
+					date: timetableDate,
 					type: currentTimeTableType,
 					id: currentTimeTableId
 				}
 			});
-		}
-		case "GET_SUBSTITUTIONS": {
-			let week = action.payload.date.week();
-			let year = action.payload.date.year();
+
+			let week = moment(timetableDate).week();
+			let year = moment(timetableDate).year();
 			return requestApiGenerator(next)(API_URL,
-				'substitution/' + (action.payload.type)
-				+ '/' + (action.payload.id)
+				'substitution/' + (currentTimeTableType)
+				+ '/' + (currentTimeTableId)
 				+ '/' + year + '-' + week,
 				'GET_SUBSTITUTIONS');
 		}
@@ -104,4 +103,4 @@ const dataService = store => next => action => {
 	}
 };
 
-export default dataService
+export default dataService 

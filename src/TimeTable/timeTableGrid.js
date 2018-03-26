@@ -20,7 +20,7 @@ import { changeWeek } from '../Main/actions';
 import { NoPrint, Print } from 'react-easy-print';
 import makeGetCurrentTimetable from '../Selector/timetable';
 
-class TimeTableGrid extends Component { 
+class TimeTableGrid extends Component {
 
     renderPeriodTimes(period) {
         const lpad2 = (number) => (number < 10 ? '0' : '') + number;
@@ -129,18 +129,18 @@ class TimeTableGrid extends Component {
                         <TableFooter
                             adjustForCheckbox={false}
                         >
-                            <NoPrint>
-                                <TableRow>
-                                    <TableRowColumn colSpan="6" style={{ textAlign: 'right' }} >
-                                        <IconButton primary={true} onClick={this.props.setPreviousWeek}>
+                            <TableRow>
+                                <TableRowColumn colSpan="6" style={{ textAlign: 'right' }} >
+                                    <NoPrint>
+                                        <IconButton onClick={this.props.setPreviousWeek}>
                                             <BackIcon />
                                         </IconButton>
-                                        <IconButton primary={true} onClick={this.props.setNextWeek}>
+                                        <IconButton onClick={this.props.setNextWeek}>
                                             <NextIcon />
                                         </IconButton>
-                                    </TableRowColumn>
-                                </TableRow>
-                            </NoPrint>
+                                    </NoPrint>
+                                </TableRowColumn>
+                            </TableRow>
                         </TableFooter>
 
                     </Table>
