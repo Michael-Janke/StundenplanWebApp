@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect'
 import { getSpecificSubstitutionType, WEEKDAY_NAMES } from '../Common/const';
+import moment from 'moment';
 
 const getMasterdata = state => state.timetable.masterdata;
 const getTimetable = state => state.timetable.timetable;
@@ -7,12 +8,14 @@ const getSubstitutions = state => state.timetable.substitutions;
 const getPeriods = state => state.timetable.masterdata.Period_Time;
 const getType = (state, props) => props.type;
 const getId = (state, props) => props.id;
+const getDate = (state) => state.timetable.timetableDate;
 
-function translateTimetable(masterdata, timetable, substitutions, periods, type, id) {
+function translateTimetable(masterdata, timetable, substitutions, periods, type, id, date) {
+    if(!timetable || !masterdata) return null;
     periods = Object.values(periods);
     let data = [];
     for (let x = 0; x < WEEKDAY_NAMES.length; x++) {
-        let day = readTimetable(timetable, x, periods, id);
+        let day = readTimetable(timetable, x, periods, date);
         if (substitutions) {
             joinSubstitutions(day, substitutions.substitutions[x], type);
         }
@@ -83,6 +86,7 @@ function joinSubstitutions(day, subOnDay, type, id) {
 function comparePeriod(current, next) {
     if (!next || !current) return false;
     if (current.length !== next.length) return false;
+    if (current.length === 0) return false;
     next = [...next];
     for (let i = 0; i < current.length; i++) {
         for (let j = 0; j < next.length; j++) {
@@ -108,7 +112,7 @@ function compareLesson(p1, p2) {
 }
 
 function skipDuplications(day, periods) {
-    if (day.holiday) {
+    if (!day || !day.periods || day.holiday) {
         return;
     }
     for (let y = 0; y < periods.length; y++) {
@@ -138,12 +142,17 @@ function skipDuplications(day, periods) {
         }
     }
 }
-function readTimetable(_data, day, periods) {
+function readTimetable(_data, day, periods, date) {
+    if(!_data) return {};
     let data = [];
+    let timetableDate = moment(date);
     for (let y = 0; y < periods.length; y++) {
-        let lessons = (_data[day] || [])[y + 1];
+        let lessons = (_data[day] || [])[y + 1] || [];
         if (lessons) {
-            lessons = [...lessons];
+            lessons = [...lessons].filter((lesson) => 
+                moment(lesson.DATE_FROM.date).isBefore(timetableDate) 
+                && moment(lesson.DATE_TO.date).isAfter(timetableDate)
+            );
         }
         data[y] = { lessons };
     }
@@ -186,6 +195,7 @@ const makeGetCurrentTimetable = () => {
         getPeriods,
         getType,
         getId,
+        getDate,
         translateTimetable
     );
 }; 

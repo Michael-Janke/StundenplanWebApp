@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
+import moment from 'moment';
 import { connect } from 'react-redux';
-import {
+import { 
     Table,
     TableBody,
     TableHeader,
@@ -10,15 +12,16 @@ import {
     TableFooter
 } from 'material-ui/Table';
 import { grey200, grey600 } from 'material-ui/styles/colors';
-import styled from 'styled-components';
-import PeriodColumn from './period';
-import { WEEKDAY_NAMES } from '../Common/const';
 import IconButton from 'material-ui/IconButton';
 import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
-import { changeWeek } from '../Main/actions';
 import { NoPrint, Print } from 'react-easy-print';
+import { WEEKDAY_NAMES } from '../Common/const';
+
+import { changeWeek } from '../Main/actions';
 import makeGetCurrentTimetable from '../Selector/timetable';
+import Holiday from './Holiday';
+import PeriodColumn from './period';
 
 class TimeTableGrid extends Component {
 
@@ -31,6 +34,7 @@ class TimeTableGrid extends Component {
             </Times>
         )
     }
+
     renderPeriodHeader(period) {
         return (
             <Periods key={-period.PERIOD_TIME_ID}>
@@ -39,18 +43,20 @@ class TimeTableGrid extends Component {
         )
     }
 
-    renderPeriodsRow(day, period) {
+    renderPeriodsColumn(day, periodNumber) {
         if (!this.props.currentTimetable) { return <TableRowColumn key={day} />; }
         let dayObject = this.props.currentTimetable[day];
         if (dayObject.holiday) {
+            if(periodNumber !== 1) return;
+            let isNextDay = (this.props.currentTimetable[day-1]||{}).holiday === dayObject.holiday;
             return (
-                <TableRowColumn key={day}>
-                    {dayObject.holiday}
+                <TableRowColumn key={day} rowSpan={Object.keys(this.props.periods).length} style={{padding: 0}}>
+                    <Holiday holiday={dayObject.holiday} noText={isNextDay} />
                 </TableRowColumn>
             );
         } else {
-            let lessons = dayObject.periods[period - 1];
-            if (!lessons) {
+            let period = dayObject.periods[periodNumber - 1];
+            if (!period) {
                 return null;
             }
             return (
@@ -59,9 +65,9 @@ class TimeTableGrid extends Component {
                     style={{
                         textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
                     }}
-                    rowSpan={lessons ? lessons.skip + 1 : 0}>
+                    rowSpan={period ? period.skip + 1 : 0}>
                     <PeriodColumn
-                        lessons={lessons.lessons}
+                        lessons={period.lessons}
                         type={this.props.type}
                         avatars={this.props.avatars}
                         small={this.props.small} />
@@ -87,7 +93,7 @@ class TimeTableGrid extends Component {
                         {this.renderPeriodHeader(period)}
                     </div>
                 </TableRowColumn>
-                {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsRow(i, period.PERIOD_TIME_ID))}
+                {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
             </TableRow>
         ));
     }
@@ -112,11 +118,13 @@ class TimeTableGrid extends Component {
                             adjustForCheckbox={false}>
                             <TableRow>
                                 <TableHeaderColumn style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
-                                {WEEKDAY_NAMES.map((weekday, i) => (
+                                {[0,1,2,3,4].map((weekday, i) => (
                                     <TableHeaderColumn
                                         key={i}
                                         style={tableHeaderStyle}>
-                                        {weekday}
+                                        {moment(this.props.date).weekday(0).add(i, 'days').format(this.props.small ? 'dd' : 'dddd')}
+                                        <br/>
+                                        {moment(this.props.date).weekday(0).add(i, 'days').format('DD.MM.')}
                                     </TableHeaderColumn>
                                 ))}
                             </TableRow>
@@ -194,6 +202,7 @@ const makeMapStateToProps = () => {
     const mapStateToProps = (state, props) => {
         return {
             currentTimetable: getCurrentTimetable(state, props),
+            date: state.timetable.timetableDate,
             periods: state.timetable.masterdata.Period_Time,
             id: state.timetable.currentTimeTableId,
             type: state.timetable.currentTimeTableType,
