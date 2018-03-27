@@ -67,9 +67,18 @@ const dataService = store => next => action => {
 			return requestApiGenerator(next)(API_URL, 'me', 'GET_ME');
 		case 'GET_MASTERDATA':
 			return requestApiGenerator(next)(API_URL, 'all', 'GET_MASTERDATA');
-		case "SET_TIMETABLE":
+		case "SET_TIMETABLE": {
 			next({ type: "GET_TIMETABLE" });
-			return requestApiGenerator(next)(API_URL, `timetable/${action.payload.type}/${action.payload.id}`, 'GET_TIMETABLE');
+			requestApiGenerator(next)(API_URL, 
+				`timetable/${action.payload.type}/${action.payload.id}`, 'GET_TIMETABLE');
+
+			next({ type: "GET_SUBSTITUTIONS" });
+			let { timetableDate } = store.getState().timetable;
+			let week = moment(timetableDate).week();
+			let year = moment(timetableDate).year();
+			return requestApiGenerator(next)(API_URL, 
+				`substitution/${action.payload.type}/${action.payload.id}/${year}-${week}`, 'GET_SUBSTITUTIONS');
+		}
 		case "CHANGE_WEEK": case "SET_DATE": {
 			let { currentTimeTableId, currentTimeTableType, timetableDate } = store.getState().timetable;
 			next({

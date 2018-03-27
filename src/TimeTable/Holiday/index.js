@@ -49,6 +49,11 @@ const Container = styled.div`
     -moz-box-shadow:    inset 0 0 5px #FFFFFF;
     -webkit-box-shadow: inset 0 0 5px #FFFFFF;
     box-shadow:         inset 0 0 5px #FFFFFF;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -ms-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 `;
 
 const Text = styled.div`

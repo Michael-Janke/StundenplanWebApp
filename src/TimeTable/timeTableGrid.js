@@ -100,6 +100,7 @@ class TimeTableGrid extends Component {
 
     render() {
         const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
+        const headerHeight = !this.props.showDrawer ? 128 : 82;
         return (
             <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
                 {!this.props.showDrawer ? <TableToolBar>
@@ -111,7 +112,7 @@ class TimeTableGrid extends Component {
                     </IconButton>
                 </TableToolBar> : null}
                 <Print main name="TimeTable">
-                    <Table selectable={false} wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: 'calc(100vh - 82px)' }} >
+                    <Table selectable={false} wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: `calc(100vh - ${headerHeight}px)` }} >
                         <TableHeader
                             style={{ backgroundColor: grey200, fontSize: '100%' }}
                             displaySelectAll={false}
@@ -134,7 +135,7 @@ class TimeTableGrid extends Component {
                             {this.renderRows()}
                         </TableBody>
 
-                        <TableFooter
+                        {this.props.showDrawer && <TableFooter
                             adjustForCheckbox={false}
                         >
                             <TableRow>
@@ -149,7 +150,7 @@ class TimeTableGrid extends Component {
                                     </NoPrint>
                                 </TableRowColumn>
                             </TableRow>
-                        </TableFooter>
+                        </TableFooter>}
 
                     </Table>
                 </Print>

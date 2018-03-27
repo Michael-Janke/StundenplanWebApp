@@ -150,7 +150,9 @@ function readTimetable(_data, day, periods, date) {
         let lessons = (_data[day] || [])[y + 1] || [];
         if (lessons) {
             lessons = [...lessons].filter((lesson) => 
-                moment(lesson.DATE_FROM.date).isBefore(timetableDate) 
+                lesson.DATE_FROM
+                && lesson.DATE_TO
+                && moment(lesson.DATE_FROM.date).isBefore(timetableDate) 
                 && moment(lesson.DATE_TO.date).isAfter(timetableDate)
             );
         }
