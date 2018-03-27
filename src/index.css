@@ -8,3 +8,7 @@ body {
 div[style*="margin: auto 16px;"] {
   margin-right: 0px !important;
 }
+
+html, body, div#root, .app {
+  height: 100%;
+}
