@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import moment from 'moment';
 import { connect } from 'react-redux';
-import { 
+import {
     Table,
     TableBody,
     TableHeader,
@@ -22,6 +21,7 @@ import { changeWeek } from '../Main/actions';
 import makeGetCurrentTimetable from '../Selector/timetable';
 import Holiday from './Holiday';
 import PeriodColumn from './period';
+
 
 class TimeTableGrid extends Component {
 
@@ -47,21 +47,23 @@ class TimeTableGrid extends Component {
         if (!this.props.currentTimetable) { return <TableRowColumn key={day} />; }
         let dayObject = this.props.currentTimetable[day];
         if (dayObject.holiday) {
-            if(periodNumber !== 1) return;
-            let isNextDay = (this.props.currentTimetable[day-1]||{}).holiday === dayObject.holiday;
-            return (
-                <TableRowColumn key={day} rowSpan={Object.keys(this.props.periods).length} style={{padding: 0}}>
-                    <Holiday holiday={dayObject.holiday} noText={isNextDay} />
+            if (periodNumber !== 1) return;
+            let isNextDay = (this.props.currentTimetable[day - 1] || {}).holiday === dayObject.holiday;
+            return [
+                <TableRowColumn key={day} colSpan={4} rowSpan={Object.keys(this.props.periods).length} style={{ padding: 0 }}>
+                    <Holiday holiday={dayObject.holiday} date={dayObject.date.format("dd.mm")} noText={isNextDay} />
                 </TableRowColumn>
-            );
+            ];
         } else {
             let period = dayObject.periods[periodNumber - 1];
+            let absences = (dayObject.absences || [])[periodNumber];
             if (!period) {
                 return null;
             }
-            return (
+            return [
                 <TableRowColumn
                     key={day}
+                    colSpan={absences ? 3 : 4}
                     style={{
                         textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
                     }}
@@ -71,8 +73,18 @@ class TimeTableGrid extends Component {
                         type={this.props.type}
                         avatars={this.props.avatars}
                         small={this.props.small} />
+                </TableRowColumn>,
+                absences && absences.first &&
+                <TableRowColumn
+                    key={"absence" + day}
+                    colSpan={1}
+                    rowSpan={absences.skip}
+                    style={{
+                        padding: 0,
+                    }}>
+                    <div style={{ wordWrap: 'break-word' }}>{absences.text}</div>
                 </TableRowColumn>
-            );
+            ];
         }
     }
 
@@ -93,7 +105,9 @@ class TimeTableGrid extends Component {
                         {this.renderPeriodHeader(period)}
                     </div>
                 </TableRowColumn>
-                {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
+                {[].concat.apply([],
+                    WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))
+                )}
             </TableRow>
         ));
     }
@@ -112,20 +126,24 @@ class TimeTableGrid extends Component {
                     </IconButton>
                 </TableToolBar> : null}
                 <Print main name="TimeTable">
-                    <Table selectable={false} wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: `calc(100vh - ${headerHeight}px)` }} >
+                    <Table
+                        disabled={this.props.invalidated}    
+                        selectable={false}
+                        wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: `calc(100vh - ${headerHeight}px)` }}
+                    >
                         <TableHeader
                             style={{ backgroundColor: grey200, fontSize: '100%' }}
                             displaySelectAll={false}
                             adjustForCheckbox={false}>
                             <TableRow>
                                 <TableHeaderColumn style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
-                                {[0,1,2,3,4].map((weekday, i) => (
+                                {this.props.currentTimetable && this.props.currentTimetable.map((day, i) => (
                                     <TableHeaderColumn
                                         key={i}
                                         style={tableHeaderStyle}>
-                                        {moment(this.props.date).weekday(0).add(i, 'days').format(this.props.small ? 'dd' : 'dddd')}
-                                        <br/>
-                                        {moment(this.props.date).weekday(0).add(i, 'days').format('DD.MM.')}
+                                        {day.date.format(this.props.small ? 'dd' : 'dddd')}
+                                        <br />
+                                        {day.date.format('DD.MM.')}
                                     </TableHeaderColumn>
                                 ))}
                             </TableRow>
@@ -213,7 +231,8 @@ const makeMapStateToProps = () => {
             loading: state.timetable.loadingTimetable || state.timetable.loadingSubstitutions,
             avatars: state.avatars,
             warning: state.user.warning,
-            lastCheck: state.user.lastCheck
+            lastCheck: state.user.lastCheck,
+            invalidated: true,
         }
     }
     return mapStateToProps;

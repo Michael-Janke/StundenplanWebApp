@@ -1,6 +1,5 @@
 import { adalGetToken } from './Adal/react-adal';
 import { adalConfig, authContext } from './Adal/adalConfig';
-import moment from 'moment';
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
 
@@ -11,7 +10,7 @@ const handleErrors = (response) => {
 	return response;
 }
 
-const requestApiGenerator = next => (endpoint, route, name, METHOD = "GET", body) => {
+const requestApiGenerator = next => (endpoint, route, action, METHOD = "GET", body) => {
 	adalGetToken(authContext, adalConfig.endpoints[endpoint]).then((token) =>
 		fetch(endpoint + route, {
 			method: METHOD,
@@ -25,19 +24,21 @@ const requestApiGenerator = next => (endpoint, route, name, METHOD = "GET", body
 			.then(res => res.json())
 			.then((res) =>
 				next({
-					type: name + '_RECEIVED',
+					...action,
+					type: action.type + '_RECEIVED',
 					payload: res
 				}))
 			.catch((err) =>
 				next({
-					type: name + '_ERROR',
+					...action,
+					type: action.type + '_ERROR',
 					payload: err.message ? { text: err.message } : err
 				})
 			)
 	)
 }
 
-const getImageGenerator = next => (endpoint, route, name) => {
+const getImageGenerator = next => (endpoint, route, action) => {
 	adalGetToken(authContext, adalConfig.endpoints[endpoint]).then((token) =>
 		fetch(endpoint + route, {
 			headers: {
@@ -47,13 +48,14 @@ const getImageGenerator = next => (endpoint, route, name) => {
 			.then(res => res.blob())
 			.then((blob) =>
 				next({
-					type: name + '_RECEIVED',
+					...action,
+					type: action.type + '_RECEIVED',
 					payload: { blob }
 				})
 			)
 			.catch((err) =>
 				next({
-					type: name + '_ERROR',
+					type: action.type + '_ERROR',
 					payload: err
 				})
 			)
@@ -64,48 +66,32 @@ const dataService = store => next => action => {
 	next(action);
 	switch (action.type) {
 		case 'GET_ME':
-			return requestApiGenerator(next)(API_URL, 'me', 'GET_ME');
+			// GET_ME_RECEIVED will call this middleware again (store.dispatch)
+			return requestApiGenerator(store.dispatch)(API_URL, 'me', { type: 'GET_ME' });
 		case 'GET_MASTERDATA':
-			return requestApiGenerator(next)(API_URL, 'all', 'GET_MASTERDATA');
-		case "SET_TIMETABLE": {
-			next({ type: "GET_TIMETABLE" });
-			requestApiGenerator(next)(API_URL, 
-				`timetable/${action.payload.type}/${action.payload.id}`, 'GET_TIMETABLE');
-
-			next({ type: "GET_SUBSTITUTIONS" });
-			let { timetableDate } = store.getState().timetable;
-			let week = moment(timetableDate).week();
-			let year = moment(timetableDate).year();
-			return requestApiGenerator(next)(API_URL, 
-				`substitution/${action.payload.type}/${action.payload.id}/${year}-${week}`, 'GET_SUBSTITUTIONS');
-		}
-		case "CHANGE_WEEK": case "SET_DATE": {
-			let { currentTimeTableId, currentTimeTableType, timetableDate } = store.getState().timetable;
-			next({
-				type: "GET_SUBSTITUTIONS", payload: {
-					date: timetableDate,
-					type: currentTimeTableType,
-					id: currentTimeTableId
-				}
-			});
-
-			let week = moment(timetableDate).week();
-			let year = moment(timetableDate).year();
+			return requestApiGenerator(next)(API_URL, 'all', { type: 'GET_MASTERDATA' });
+		case "GET_TIMETABLE": {
 			return requestApiGenerator(next)(API_URL,
-				'substitution/' + (currentTimeTableType)
-				+ '/' + (currentTimeTableId)
-				+ '/' + year + '-' + week,
-				'GET_SUBSTITUTIONS');
+				`timetable/${action.payload.type}/${action.payload.id}`,
+				{ type: 'GET_TIMETABLE', request: action.payload }
+			);
+		}
+		case "GET_SUBSTITUTIONS": {
+			let { id, type, week, year } = action.payload;
+			return requestApiGenerator(next)(API_URL,
+				`substitution/${type}/${id}/${year}-${week}`,
+				{ type: 'GET_SUBSTITUTIONS', request: action.payload }
+			);
 		}
 		case 'GET_COUNTER':
-			return requestApiGenerator(next)(API_URL, 'counter', 'COUNTER');
+			return requestApiGenerator(next)(API_URL, 'counter', { type: 'COUNTER' });
 		case 'SET_NOTIFICATION':
-			return requestApiGenerator(next)(API_URL, 'notifications', 'SET_NOTIFICATION',
+			return requestApiGenerator(next)(API_URL, 'notifications', { type: 'SET_NOTIFICATION' },
 				'POST', JSON.stringify(action.payload));
 		case 'GET_PROFILE_PICTURE':
-			return getImageGenerator(next)(GRAPH_URL, '/beta/me/photo/$value', 'PROFILE_PICTURE');
+			return getImageGenerator(next)(GRAPH_URL, '/beta/me/photo/$value', { type: 'PROFILE_PICTURE' });
 		case 'GET_PROFILE_PICTURE_SMALL':
-			return getImageGenerator(next)(GRAPH_URL, '/beta/me/photos/48x48/$value', 'PROFILE_PICTURE_SMALL');
+			return getImageGenerator(next)(GRAPH_URL, '/beta/me/photos/48x48/$value', { type: 'PROFILE_PICTURE_SMALL' });
 		default:
 			break
 	}

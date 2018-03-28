@@ -25,7 +25,7 @@ class Holiday extends Component {
   render() {
     var img = bridgeImg;
     for(var key in holidayImageMap) {
-      if(this.props.holiday.indexOf(key) >= 0) {
+      if(this.props.holiday.indexOf(key) >= 0 || this.props.date.indexOf(key) !== -1) {
         img = holidayImageMap[key];
       }
     }

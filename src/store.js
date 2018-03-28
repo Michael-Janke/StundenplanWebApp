@@ -4,6 +4,8 @@ import storage from 'redux-persist/lib/storage' // defaults to localStorage for 
 import { composeWithDevTools } from 'redux-devtools-extension'
 import rootReducer from './Reducer'
 import dataService from './Common/data-service'
+import actionRedirector from './Common/action-redirects';
+import cacheService from './Common/cache-service';
 import profilePictureService from './Common/profilePictureService'
 import { responsiveStoreEnhancer } from 'redux-responsive'
 
@@ -15,15 +17,17 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = createStore(persistedReducer, 
+const store = createStore(persistedReducer,
   composeWithDevTools(
     applyMiddleware(
-      dataService, 
-      profilePictureService), 
+      actionRedirector,
+      cacheService,
+      dataService,
+      profilePictureService),
     responsiveStoreEnhancer)
-  );
+);
 
-  const persistor = persistStore(store);
+const persistor = persistStore(store);
 
 export default () => {
   return { store, persistor }

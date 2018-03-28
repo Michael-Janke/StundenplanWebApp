@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { getTimetableCacheKey, getSubstitutionsCacheKey } from '../Common/const';
 
 const initialState = {
   loadingMasterData: false,
@@ -9,6 +10,8 @@ const initialState = {
     Room: [],
     Student: [],
   },
+  timetables: {},
+  substitutions: {},
   timetableDate: moment()
 };
 
@@ -20,8 +23,6 @@ export default function timetableReducer(state = initialState, action = {}) {
         ...state,
         ...action.payload.timetable,
         loadingMasterData: false,
-        loadingTimetable: false,
-        loadingSubstitutions: false,
       };
     case "GET_MASTERDATA":
       return {
@@ -54,20 +55,20 @@ export default function timetableReducer(state = initialState, action = {}) {
       };
     case "CHANGE_WEEK":
       const min = moment()
-                    .year(state.masterdata.minMaxDates.min.year)
-                    .week(state.masterdata.minMaxDates.min.week)
-                    .add(-1, 'week');
+        .year(state.masterdata.minMaxDates.min.year)
+        .week(state.masterdata.minMaxDates.min.week)
+        .add(-1, 'week');
       const max = moment()
-                    .year(state.masterdata.minMaxDates.max.year)
-                    .week(state.masterdata.minMaxDates.max.week)
-                    .add(1, 'week');
+        .year(state.masterdata.minMaxDates.max.year)
+        .week(state.masterdata.minMaxDates.max.week)
+        .add(1, 'week');
       return {
         ...state,
-        timetableDate: moment.max( min, 
-                        moment.min( max,
-                          moment(state.timetableDate).add(action.payload.direction, 'week')
-                        )
-                      )
+        timetableDate: moment.max(min,
+          moment.min(max,
+            moment(state.timetableDate).add(action.payload.direction, 'week')
+          )
+        )
       };
     case "SET_DATE":
       return {
@@ -77,25 +78,49 @@ export default function timetableReducer(state = initialState, action = {}) {
     case "GET_TIMETABLE":
       return {
         ...state,
-        loadingTimetable: true,
+        // timetables: { ...state.timetables, [getTimetableCacheKey(action.payload)]: null },
+      };
+    case "GET_TIMETABLE_ERROR":
+      return {
+        ...state,
+        timetables: { ...state.timetables, [getTimetableCacheKey(action.payload)]: null },
       };
     case "GET_TIMETABLE_RECEIVED":
       return {
         ...state,
-        timetable: action.payload,
-        loadingTimetable: false,
+        timetables: { ...state.timetables, [getTimetableCacheKey(action.request)]: action.payload },
+        invalidated: false,
       };
     case "GET_SUBSTITUTIONS":
       return {
         ...state,
-        loadingSubstitutions: true,
+        substitutions: {
+          ...state.substitutions,
+          // [getSubstitutionsCacheKey(action.payload)]: null
+        },
       };
     case "GET_SUBSTITUTIONS_RECEIVED":
       return {
         ...state,
-        substitutions: action.payload,
-        loadingSubstitutions: false,
+        substitutions: {
+          ...state.substitutions,
+          [getSubstitutionsCacheKey(action.request)]: action.payload
+        },
+        invalidated: false,
       }
+    case "GET_SUBSTITUTIONS_ERROR":
+      return {
+        ...state,
+        substitutions: {
+          ...state.substitutions,
+          [getSubstitutionsCacheKey(action.request)]: null
+        },
+      }
+    case "INVALIDATE":
+      return {
+        ...state,
+        invalidated: true,
+      };
     default:
       return state;
   }

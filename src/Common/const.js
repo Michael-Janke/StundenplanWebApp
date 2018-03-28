@@ -72,3 +72,6 @@ export const SUBSTITUTION_MAP = {
         name: "Freistellung"
     }
 };
+
+export const getSubstitutionsCacheKey = ({ id, type, week, year }) => `substitutions-${id}-${type}@${week}-${year}`;
+export const getTimetableCacheKey = ({ id, type }) => `timetable-${id}-${type}`;
