@@ -7,6 +7,16 @@ export function checkCounter() {
     return { type: "GET_COUNTER" };
 }
 
+export function counterChanged(counterChanged) {
+    return (dispatch) => {
+        dispatch({ type: "COUNTER_CHANGED", payload: counterChanged });
+        if (counterChanged) {
+            dispatch(loadMe());
+            dispatch(loadMasterData());
+        }
+    }
+}
+
 export function loadProfilePicture() {
     return { type: "GET_PROFILE_PICTURE" };
 }
@@ -35,6 +45,20 @@ export function setNotification({ newToken, oldToken }) {
     return { type: "SET_NOTIFICATION", payload: { newToken, oldToken } };
 }
 
-export function changeWeek(direction) {
-    return { type: "CHANGE_WEEK", payload: { direction } };
+export function changeWeek(direction, id, type) {
+    return { type: "CHANGE_WEEK", payload: { direction, id, type } };
+}
+export function setMyTimetable() {
+    return (dispatch, getState) => {
+        let { id, type } = getState().user;
+        if (id && type) {
+            dispatch({ type: "SET_MY_TIMETABLE", payload: { id, type } });
+        }    
+    };
+}
+
+export function loadMasterData() {
+    return {
+        type: "GET_MASTERDATA"
+    };
 }

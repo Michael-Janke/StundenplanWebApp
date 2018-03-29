@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'material-ui/Table';
 import { grey } from 'material-ui/colors';
-import styled from 'styled-components';
 import PeriodColumn from './period';
 import { WEEKDAY_NAMES, getSpecificSubstitutionType } from '../Common/const';
 import WarningIcon from 'material-ui-icons/Warning';
@@ -10,15 +10,14 @@ import moment from 'moment';
 import IconButton from 'material-ui/IconButton';
 import BackIcon from 'material-ui-icons/ArrowBack';
 import NextIcon from 'material-ui-icons/ArrowForward';
-import { changeWeek } from '../Main/actions';
 import { NoPrint, Print } from 'react-easy-print';
+
+import { changeWeek } from '../Main/actions';
 import makeGetCurrentTimetable from '../Selector/timetable';
+import Holiday from './Holiday';
+
 
 class TimeTableGrid extends Component {
-
-    constructor(props) {
-        super(props);
-    }
 
     renderPeriodTimes(period) {
         const lpad2 = (number) => (number < 10 ? '0' : '') + number;
@@ -29,6 +28,7 @@ class TimeTableGrid extends Component {
             </Times>
         )
     }
+
     renderPeriodHeader(period) {
         return (
             <Periods key={-period.PERIOD_TIME_ID}>
@@ -37,34 +37,48 @@ class TimeTableGrid extends Component {
         )
     }
 
-    renderPeriodsRow(day, period) {
-        if (!this.props.currentTimetable) { return <TableRowColumn key={day} />; }
+    renderPeriodsColumn(day, periodNumber) {
+        if (!this.props.currentTimetable) { return <TableCell key={day} />; }
         let dayObject = this.props.currentTimetable[day];
         if (dayObject.holiday) {
-            return (
-                <TableCell key={day}>
-                    {dayObject.holiday}
+            if (periodNumber !== 1) return;
+            let isNextDay = (this.props.currentTimetable[day - 1] || {}).holiday === dayObject.holiday;
+            return [
+                <TableCell key={day} colSpan={4} rowSpan={0} style={{ padding: 0, height: 1 }}>
+                    <Holiday holiday={dayObject.holiday} date={dayObject.date.format("dd.mm")} noText={isNextDay} />
                 </TableCell>
-            );
+            ];
         } else {
-            let lessons = dayObject.periods[period - 1];
-            if (!lessons) {
+            let period = dayObject.periods[periodNumber - 1];
+            let absences = (dayObject.absences || [])[periodNumber];
+            if (!period) {
                 return null;
             }
-            return (
+            return [
                 <TableCell
                     key={day}
+                    colSpan={absences ? 3 : 4}
                     style={{
                         textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
                     }}
-                    rowSpan={lessons ? lessons.skip + 1 : 0}>
+                    rowSpan={period ? period.skip + 1 : 0}>
                     <PeriodColumn
-                        lessons={lessons.lessons}
+                        lessons={period.lessons}
                         type={this.props.type}
                         avatars={this.props.avatars}
                         small={this.props.small} />
+                </TableCell>,
+                absences && absences.first &&
+                <TableCell
+                    key={"absence" + day}
+                    colSpan={1}
+                    rowSpan={absences.skip}
+                    style={{
+                        padding: 0,
+                    }}>
+                    <div style={{ wordWrap: 'break-word' }}>{absences.text}</div>
                 </TableCell>
-            );
+            ];
         }
     }
 
@@ -85,13 +99,16 @@ class TimeTableGrid extends Component {
                         {this.renderPeriodHeader(period)}
                     </div>
                 </TableCell>
-                {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsRow(i, period.PERIOD_TIME_ID))}
+                {[].concat.apply([],
+                    WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))
+                )}
             </TableRow>
         ));
     }
 
     render() {
         const tableHeaderStyle = { color: grey[600], fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
+        const headerHeight = !this.props.showDrawer ? 128 : 82;
         return (
             <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
                 {!this.props.showDrawer ? <TableToolBar>
@@ -103,50 +120,72 @@ class TimeTableGrid extends Component {
                     </IconButton>
                 </TableToolBar> : null}
                 <Print main name="TimeTable">
-                    <Table selectable={false} wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: 'calc(100vh - 82px)' }} >
-                        <TableHead
-                            style={{ backgroundColor: grey[200], fontSize: '100%' }}
-                            displaySelectAll={false}
-                            adjustForCheckbox={false}>
-                            <TableRow>
-                                <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
-                                {WEEKDAY_NAMES.map((weekday, i) => (
-                                    <TableCell
-                                        key={i}
-                                        style={tableHeaderStyle}>
-                                        {weekday}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody
-                            displayRowCheckbox={false}>
-                            {this.renderRows()}
-                        </TableBody>
+                    <div style={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: `calc(100vh - ${headerHeight}px)` }}>
+                        <GrayoutTable
+                            disabled={this.props.counterChanged}
+                            selectable={false}
 
-                        <TableFooter
-                            adjustForCheckbox={false}
                         >
-                            <NoPrint>
+                            <TableHead
+                                style={{ backgroundColor: grey[200], fontSize: '100%' }}
+                                displaySelectAll={false}
+                                adjustForCheckbox={false}>
                                 <TableRow>
-                                    <TableCell colSpan="6" style={{ textAlign: 'right' }} >
-                                        <IconButton primary={true} onClick={this.props.setPreviousWeek}>
-                                            <BackIcon />
-                                        </IconButton>
-                                        <IconButton primary={true} onClick={this.props.setNextWeek}>
-                                            <NextIcon />
-                                        </IconButton>
-                                    </TableCell>
+                                    <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
+                                    {this.props.currentTimetable && this.props.currentTimetable.map((day, i) => (
+                                        <TableCell
+                                            key={i}
+                                            colspan={4}
+                                            style={tableHeaderStyle}>
+                                            {day.date.format(this.props.small ? 'dd' : 'dddd')}
+                                            <br />
+                                            {day.date.format('DD.MM.')}
+                                        </TableCell>
+                                    ))}
                                 </TableRow>
-                            </NoPrint>
-                        </TableFooter>
+                            </TableHead>
+                            <TableBody
+                                displayRowCheckbox={false}>
+                                {this.renderRows()}
+                            </TableBody>
 
-                    </Table>
+                            {this.props.showDrawer && <TableFooter
+                                adjustForCheckbox={false}
+                            >
+                                <TableRow>
+                                    <TableRow colSpan="6" style={{ textAlign: 'right' }} >
+                                        <NoPrint>
+                                            <IconButton onClick={this.props.setPreviousWeek}>
+                                                <BackIcon />
+                                            </IconButton>
+                                            <IconButton onClick={this.props.setNextWeek}>
+                                                <NextIcon />
+                                            </IconButton>
+                                        </NoPrint>
+                                    </TableRow>
+                                </TableRow>
+                            </TableFooter>}
+
+                        </GrayoutTable>
+                    </div>
                 </Print>
             </div>
         );
     }
 }
+
+const GrayoutTable = styled(Table) `
+    ${props => props.disabled && `
+        -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+        -o-filter: grayscale(100%);
+        filter: grayscale(100%);
+        filter: gray;`
+    }
+    table-layout: fixed;
+    width: 100%;
+`;
 
 const TableToolBar = styled.div`
     background-color: ${grey[200]};
@@ -155,14 +194,6 @@ const TableToolBar = styled.div`
     text-align: right;
     display: table;
     width: 100%;
-`
-
-const WarningText = styled.div`
-    width: 200px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-size: 70%;
 `
 
 const Times = styled.div`
@@ -200,17 +231,18 @@ const makeMapStateToProps = () => {
     const mapStateToProps = (state, props) => {
         return {
             currentTimetable: getCurrentTimetable(state, props),
+            date: state.timetable.timetableDate,
             periods: state.timetable.masterdata.Period_Time,
             id: state.timetable.currentTimeTableId,
             type: state.timetable.currentTimeTableType,
-            small: state.browser.greaterThan.small,
             showDrawer: state.browser.greaterThan.small,
             small: state.browser.is.extraSmall || state.browser.is.medium,
             periodsWidth: (state.browser.is.extraSmall || state.browser.is.medium) ? 20 : 70,
             loading: state.timetable.loadingTimetable || state.timetable.loadingSubstitutions,
             avatars: state.avatars,
             warning: state.user.warning,
-            lastCheck: state.user.lastCheck
+            lastCheck: state.user.lastCheck,
+            counterChanged: state.timetable.counterChanged,
         }
     }
     return mapStateToProps;

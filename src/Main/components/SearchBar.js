@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import SearchBar from 'material-ui-search-bar';
 import {MenuItem} from 'material-ui/Menu';
 import Avatar from 'material-ui/Avatar';
 import PersonIcon from 'material-ui-icons/Person';
@@ -9,6 +8,7 @@ import ClassIcon from 'material-ui-icons/Group';
 import RoomIcon from 'material-ui-icons/Room';
 import { loadAvatars, setTimeTable } from '../actions';
 import moment from 'moment';
+import { TextField } from "material-ui";
 
 class WGSearchBar extends Component {
 
@@ -102,7 +102,7 @@ class WGSearchBar extends Component {
     render() {
         return (
             <Flex>
-                <SearchBar
+                <TextField
                     onChange={this.onChange}
                     onRequestSearch={() => {}}
                     // onNewRequest={this.onNewRequest}

@@ -6,11 +6,12 @@ import {
 } from "react-redux";
 import Snackbar from 'material-ui/Snackbar';
 import {
-    loadMe,
     clearErrors,
     checkCounter,
     setNotification,
-    showError
+    showError,
+    setMyTimetable,
+    counterChanged
 } from "./actions"
 import TimeTable from "../TimeTable"
 import { MuiThemeProvider } from 'material-ui/styles';
@@ -24,15 +25,16 @@ class Main extends Component {
     constructor(props) {
         super(props);
         props.checkCounter();
-        props.needsUpdate && props.loadMe();
+        this.props.setMyTimetable();
+        props.needsUpdate && props.counterChanged(true);
         if (this.props.notificationToken) {
             connectToServiceWorker(this.props.setNotification, this.props.notificationToken);
         }
     }
 
     componentWillUpdate(nextProps) {
-        if (!this.props.needsUpdate && nextProps.needsUpdate) {
-            nextProps.loadMe();
+        if (this.props.needsUpdate !== nextProps.needsUpdate) {
+            nextProps.counterChanged(nextProps.needsUpdate);
         }
     }
 
@@ -56,8 +58,8 @@ class Main extends Component {
                                 color: 'red'
                             }}
                             onRequestClose={this.props.clearErrors} />
+                        <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
                     </AppBar>
-                    <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
                 </div>
             </MuiThemeProvider>
         );
@@ -66,7 +68,8 @@ class Main extends Component {
 
 const mapDispatchToProps = dispatch => {
     return {
-        loadMe: () => { dispatch(loadMe()); },
+        setMyTimetable: () => { dispatch(setMyTimetable()) },
+        counterChanged: (changed) => dispatch(counterChanged(changed)),
         checkCounter: () => { dispatch(checkCounter()); },
         clearErrors: () => { dispatch(clearErrors()); },
         showError: (text) => { dispatch(showError(text)); },
@@ -78,6 +81,8 @@ const mapStateToProps = state => {
     return {
         loading: state.user.loading,
         needsUpdate: state.user.counterChanged,
+        type: state.user.type,
+        id: state.user.id,
         error: state.error.error,
         notificationToken: state.user.notificationToken
     };

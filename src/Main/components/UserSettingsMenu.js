@@ -20,7 +20,6 @@ import { connectToServiceWorker } from '../../Common/firebase';
 import { setNotification, showError } from '../actions';
 import UserAvatar from './UserAvatar';
 
-var messaging;
 class UserSettingMenu extends React.Component {
 
     state = {};

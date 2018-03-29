@@ -18,7 +18,6 @@ class UserAvatar extends Component {
     }
 
     checkAvatar(props) {
-        console.log(props);
         if (!props.upn) return;
         if (!props.avatars) return;
         const avatar = props.avatars[props.upn];

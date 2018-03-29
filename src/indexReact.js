@@ -5,7 +5,9 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import reactTabEventPlugin from 'react-tap-event-plugin';
 import firebase from 'firebase';
+import moment from 'moment';
 import 'moment/locale/de';
+moment.locale('de')
 
 reactTabEventPlugin();
 firebase.initializeApp({

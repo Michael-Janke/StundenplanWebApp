@@ -1,6 +1,4 @@
-import chroma from 'chroma-js';
 import * as colors from 'material-ui/colors';
-
 
 export const WEEKDAY_NAMES = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
 export const DRAWER_WIDTH = 300;
@@ -23,19 +21,19 @@ export function getSpecificSubstitutionType(substitution) {
 
 export const SUBSTITUTION_MAP = {
     SUBSTITUTION: {
-        color: colors.red900,
-        backgroundColor: colors.red50,
+        color: colors.red[900],
+        backgroundColor: colors.red[50],
         name: "Vertretung",
         targets: ['room', 'subject', 'teacher'],
     },
     ASSIGNMENT: {
-        color: colors.yellow900,
-        backgroundColor: colors.yellow50,
+        color: colors.yellow[900],
+        backgroundColor: colors.yellow[50],
         name: "Aufgaben",
     },
     ELIMINATION: {
-        color: colors.green900,
-        backgroundColor: colors.green100,
+        color: colors.green[900],
+        backgroundColor: colors.green[100],
         name: "Entfall",
     },
     CLASS_SUBSTITUTION: {
@@ -44,33 +42,37 @@ export const SUBSTITUTION_MAP = {
         targets: [],
     },
     ROOM_SUBSTITUTION: {
-        color: colors.blue900,
-        backgroundColor: colors.lightBlue50,
+        color: colors.blue[900],
+        backgroundColor: colors.lightBlue[50],
         name: "Raumvertretung",
         targets: ['room']
     },
     INFORMATION: {
-        color: colors.greenA500,
+        color: colors.green.A500,
+        backgroundColor: colors.green[50],
         name: "Hinweis",
     },
     SWAP: {
-        color: colors.lime900,
-        backgroundColor: colors.lime50,
+        color: colors.lime[900],
+        backgroundColor: colors.lime[50],
         name: "Tausch"
     },
     EXTRA_LESSON: {
-        colors: colors.purple900,
-        backgroundColor: colors.purple50,
+        colors: colors.purple[900],
+        backgroundColor: colors.purple[50],
         name: "Zusatzstunde"
     },
     SUPERVISION: {
-        color: colors.grey900,
+        color: colors.grey[900],
         name: "Mitbetreuung",
         targets: ['teacher']
     },
     REDUNDANCY: {
-        color: colors.green900,
-        backgroundColor: colors.green100,
+        color: colors.green[900],
+        backgroundColor: colors.green[100],
         name: "Freistellung"
     }
 };
+
+export const getSubstitutionsCacheKey = ({ id, type, week, year }) => `substitutions-${id}-${type}@${week}-${year}`;
+export const getTimetableCacheKey = ({ id, type }) => `timetable-${id}-${type}`;

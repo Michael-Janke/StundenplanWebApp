@@ -1,20 +1,46 @@
 import { createSelector } from 'reselect'
-import { getSpecificSubstitutionType, WEEKDAY_NAMES } from '../Common/const';
+import { getSpecificSubstitutionType, WEEKDAY_NAMES, getSubstitutionsCacheKey, getTimetableCacheKey } from '../Common/const';
+import moment from 'moment';
 
-const getMasterdata = state => state.timetable.masterdata;
-const getTimetable = state => state.timetable.timetable;
-const getSubstitutions = state => state.timetable.substitutions;
-const getPeriods = state => state.timetable.masterdata.Period_Time;
-const getType = (state, props) => props.type;
-const getId = (state, props) => props.id;
+const getTimetableState = (state) => state.timetable;
+const getMasterdata = createSelector(getTimetableState, (state) => state.masterdata);
+const getTimetables = createSelector(getTimetableState, (state) => state.timetables);
+const getSubstitutions = createSelector(getTimetableState, (state) => state.substitutions);
 
-function translateTimetable(masterdata, timetable, substitutions, periods, type, id) {
+const getDate = createSelector(getTimetableState, (state) => state.timetableDate);
+const getWeekSelector = createSelector(getDate, (date) => moment(date).week());
+const getYearSelector = createSelector(getDate, (date) => moment(date).year());
+
+const getType = createSelector(getTimetableState, (state) => state.currentTimeTableType);
+const getId = createSelector(getTimetableState, (state) => state.currentTimeTableId);
+const getPeriods = createSelector(getTimetableState, (state) => state.masterdata.Period_Time);
+
+const getCurrentTimetableSelector = createSelector(
+    getTimetables,
+    getType,
+    getId,
+    (timetables, type, id) => timetables[getTimetableCacheKey({ type, id })]
+);
+const getCurrentSubstitutionsSelector = createSelector(
+    getSubstitutions,
+    getType,
+    getId,
+    getWeekSelector,
+    getYearSelector,
+    (substitutions, type, id, week, year) => substitutions[getSubstitutionsCacheKey({ type, id, week, year })]
+);
+
+
+
+
+function translateTimetable(masterdata, timetable, substitutions, periods, type, id, date) {
+    if (!timetable || !masterdata || !substitutions) return null;
     periods = Object.values(periods);
     let data = [];
     for (let x = 0; x < WEEKDAY_NAMES.length; x++) {
-        let day = readTimetable(timetable, x, periods, id);
+        let day = readTimetable(timetable, x, periods, date);
         if (substitutions) {
-            joinSubstitutions(day, substitutions.substitutions[x], type);
+            joinSubstitutions(day, substitutions.substitutions[x], type, id);
         }
         skipDuplications(day, periods);
         translatePeriods(masterdata, day, periods);
@@ -36,14 +62,13 @@ function joinSubstitutions(day, subOnDay, type, id) {
             if (lessons) {
                 for (let i = 0; i < lessons.length; i++) {
                     let lesson = lessons[i];
-                    if (parseInt(lesson.TIMETABLE_ID) === substitution.TIMETABLE_ID) {
+                    if (lesson.TIMETABLE_ID === substitution.TIMETABLE_ID) {
                         let remove = !!['ROOM', 'TEACHER'].find((key) =>
                             type === key.toLowerCase()
                             && substitution[key + "_ID"] === lesson[key + "_ID"]
                             && substitution[key + "_ID_NEW"]
                             && lesson[key + "_ID"] !== substitution[key + "_ID_NEW"]
                         );
-
                         lessons[i] = {
                             substitutionRemove: remove,
                             substitutionType: substitution.TYPE,
@@ -68,7 +93,7 @@ function joinSubstitutions(day, subOnDay, type, id) {
                 substitutionText: substitution.TEXT,
                 substitutionRemove:
                     substitution.TEACHER_ID === id
-                    && substitution.TEACHER_ID !== id,
+                    && substitution.TEACHER_ID_NEW !== id,
                 substitutionType: substitution.TYPE,
                 CLASS_IDS: substitution.CLASS_IDS_NEW,
                 TEACHER_ID: substitution.TEACHER_ID_NEW,
@@ -78,11 +103,24 @@ function joinSubstitutions(day, subOnDay, type, id) {
             });
         });
     }
+    if (subOnDay.absences) {
+        let absences = day.absences = [];
+        subOnDay.absences.forEach((absence) => {
+            absences[absence.PERIOD_FROM] = {
+                first: true,
+                skip: absence.PERIOD_TO - absence.PERIOD_FROM + 1,
+                text: absence.TEXT,
+            };
+            absences.length = absence.PERIOD_TO + 1;
+            absences.fill({}, absence.PERIOD_FROM + 1, absence.PERIOD_TO + 1);
+        });
+    }
 
 }
 function comparePeriod(current, next) {
     if (!next || !current) return false;
-    if (current.length != next.length) return false;
+    if (current.length !== next.length) return false;
+    if (current.length === 0) return false;
     next = [...next];
     for (let i = 0; i < current.length; i++) {
         for (let j = 0; j < next.length; j++) {
@@ -92,7 +130,7 @@ function comparePeriod(current, next) {
             }
         }
     }
-    return next.length == 0;
+    return next.length === 0;
 }
 function compareLesson(p1, p2) {
     if (p1.TEACHER_ID !== p2.TEACHER_ID
@@ -108,7 +146,7 @@ function compareLesson(p1, p2) {
 }
 
 function skipDuplications(day, periods) {
-    if (day.holiday) {
+    if (!day || !day.periods || day.holiday) {
         return;
     }
     for (let y = 0; y < periods.length; y++) {
@@ -138,16 +176,23 @@ function skipDuplications(day, periods) {
         }
     }
 }
-function readTimetable(_data, day, periods) {
+function readTimetable(_data, day, periods, date) {
+    if (!_data) return {};
     let data = [];
+    let timetableDate = moment(date).weekday(0).add(day, 'day');
     for (let y = 0; y < periods.length; y++) {
-        let lessons = (_data[day] || [])[y + 1];
+        let lessons = (_data[day] || [])[y + 1] || [];
         if (lessons) {
-            lessons = [...lessons];
+            lessons = lessons.filter((lesson) =>
+                lesson.DATE_FROM
+                && lesson.DATE_TO
+                && moment(lesson.DATE_FROM.date).isBefore(timetableDate)
+                && moment(lesson.DATE_TO.date).isAfter(timetableDate)
+            );
         }
-        data[y] = { lessons };
+        data[y] = { lessons, date: timetableDate };
     }
-    return { periods: data };
+    return { periods: data, date: timetableDate };
 }
 
 function translatePeriods(masterdata, day, periods) {
@@ -169,7 +214,6 @@ function translate(masterdata, period) {
         specificSubstitutionType: period.specificSubstitutionType,
         substitutionRemove: period.substitutionRemove,
         teacher: period.TEACHER_IDS.map((t) => masterdata.Teacher[t]),
-        absentTeacher: [],
         subject: masterdata.Subject[period.SUBJECT_ID],
         room: masterdata.Room[period.ROOM_ID],
         classes: (period.CLASS_IDS || []).map((c) => masterdata.Class[c]),
@@ -181,13 +225,14 @@ function translate(masterdata, period) {
 const makeGetCurrentTimetable = () => {
     return createSelector(
         getMasterdata,
-        getTimetable,
-        getSubstitutions,
+        getCurrentTimetableSelector,
+        getCurrentSubstitutionsSelector,
         getPeriods,
         getType,
         getId,
+        getDate,
         translateTimetable
     );
-}; 
+};
 
 export default makeGetCurrentTimetable;

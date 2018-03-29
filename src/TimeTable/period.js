@@ -5,7 +5,8 @@ import chroma from 'chroma-js';
 import { Paper, Avatar } from 'material-ui';
 import PersonIcon from 'material-ui-icons/Person';
 import RoomIcon from 'material-ui-icons/Room';
-import { indigo } from 'material-ui/colors';
+import { indigo, grey } from 'material-ui/colors';
+import ActionInfo from 'material-ui-icons/Info';
 
 const extractSubject = (name) => {
     return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
@@ -40,24 +41,36 @@ const joinClasses = (classes) => {
     return outcome;
 }
 
-const AbstractLesson = ({ colorBar, small, last, specificSubstitutionType, field1, field2, fields3 }) => {
+const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionType, substitutionText, field1, field2, fields3 }) => {
+
+    const ClassField1 = Subject;
+    const ClassField2 = Room;
+    const ClassFields3 = ({ children, ...props }) => children.map((text, i) => <Teacher key={i} {...props}>{text}</Teacher>);
 
     if (!small) return (
-        <Lesson color={(specificSubstitutionType || {}).backgroundColor} flex>
+        <Lesson color={(specificSubstitutionType || {}).backgroundColor} flex={!specificSubstitutionType || !multiple}>
             <ColorBar lineColor={colorBar} />
-
-            <LessonContainer>
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden' }}>
-                    {specificSubstitutionType && <Substitution color={specificSubstitutionType.color}>{specificSubstitutionType.name}</Substitution>}
-                    <Subject>{field1}</Subject>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden', paddingLeft: 5 }}>
-                    <Room>{field2}</Room>
-                    {fields3.map((text, i) =>
-                        <Teacher style={{ textAlign: 'right' }} key={i}>{text}</Teacher>
-                    )}
-                </div>
-            </LessonContainer>
+            <LessonWrapper>
+                <LessonContainer>
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden' }}>
+                        {specificSubstitutionType &&
+                            <Substitution color={specificSubstitutionType.color}>{specificSubstitutionType.name}</Substitution>
+                        }
+                        <ClassField1>{field1}</ClassField1>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden', paddingLeft: 5 }}>
+                        <ClassField2>{field2}</ClassField2>
+                        <ClassFields3 style={{ textAlign: 'right' }}>
+                            {fields3}
+                        </ClassFields3>
+                    </div>
+                </LessonContainer>
+                {substitutionText &&
+                    <SubstitutionText color={grey[600]}>
+                        <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} color={grey[500]} />
+                        <div style={{ flex: 1 }}>{substitutionText}</div>
+                    </SubstitutionText>}
+            </LessonWrapper>
 
         </Lesson>
     );
@@ -66,11 +79,14 @@ const AbstractLesson = ({ colorBar, small, last, specificSubstitutionType, field
             <ColorBar lineColor={colorBar} />
             <LessonContainer small>
                 {specificSubstitutionType && <Substitution>{specificSubstitutionType.name}</Substitution>}
-                <Subject>{field1}</Subject>
-                {fields3.map((text, i) =>
-                    <Teacher key={i}>{text}</Teacher>
-                )}
-                <Room>{field2}</Room>
+                <ClassField1>{field1}</ClassField1>
+                <ClassFields3>{fields3}</ClassFields3>
+                <ClassField2>{field2}</ClassField2>
+                {substitutionText &&
+                    <SubstitutionText color={grey[600]}>
+                        <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} color={grey[500]} />
+                        <div style={{ flex: 1 }}>{substitutionText}</div>
+                    </SubstitutionText>}
             </LessonContainer>
         </Lesson>
     );
@@ -88,9 +104,11 @@ class Period extends Component {
             field1: subject ? subject.NAME : '-',
             field2: room ? room.NAME : '-',
             fields3: teacher.map((teacher, i) =>
-                this.props.small
-                    ? teacher.LASTNAME
-                    : (teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME),
+                teacher
+                    ? this.props.small
+                        ? teacher.LASTNAME
+                        : (teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME
+                    : '-'),
         }
     }
 
@@ -140,6 +158,7 @@ class Period extends Component {
                             key={i}
                             {...lesson}
                             last={this.props.lessons.length - 1 === i}
+                            multiple={this.props.lessons.length > 1}
                             small={small}
                             {...fields}
                         />
@@ -168,7 +187,6 @@ const PeriodsContainer = styled.div`
 const Subject = styled.div`
     font-size: 75%;
     font-weight: 600;
-    margin-right: 1vmin;
 
 `;
 
@@ -179,6 +197,14 @@ const Substitution = styled.div`
     overflow: hidden;
     white-space: nowrap;
     color: ${props => props.color};
+`;
+
+const SubstitutionText = styled.div`
+    font-size: 70%;
+    color: ${props => props.color};
+    white-space: normal;
+    align-items: center;
+    display: flex;
 `;
 
 const Room = styled.div`
@@ -194,7 +220,6 @@ const Teacher = styled.div`
 `;
 
 const LessonContainer = styled.div`
-    flex: 1;
     display: flex;
     overflow: hidden;
     width: 100%;
@@ -210,15 +235,13 @@ const LessonContainer = styled.div`
         padding-bottom: 0.5vmin;
     `)}
 `;
-const LessonSubstitutuion = styled.div`
-    flex: 1;
+
+const LessonWrapper = styled.div`
     display: flex;
+    width: 100%;
+    flex-direction: column;
     overflow: hidden;
-    flex-direction: column;  
-    padding: 0;
-    align-items:center;
-    padding-top: 0.5vmin;
-    padding-bottom: 0.5vmin 
+    justify-content: center;
 `;
 
 const Lesson = styled.div`
