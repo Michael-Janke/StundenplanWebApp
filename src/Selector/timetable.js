@@ -106,14 +106,13 @@ function joinSubstitutions(day, subOnDay, type, id) {
     if (subOnDay.absences) {
         let absences = day.absences = [];
         subOnDay.absences.forEach((absence) => {
-            for (let i = absence.PERIOD_FROM; i <= absence.PERIOD_TO; i++) {
-                absences[i] = {
-                    first: i === absence.PERIOD_FROM,
-                    skip: absence.PERIOD_TO - absence.PERIOD_FROM + 1,
-                    text: absence.TEXT,
-
-                };
-            }
+            absences[absence.PERIOD_FROM] = {
+                first: true,
+                skip: absence.PERIOD_TO - absence.PERIOD_FROM + 1,
+                text: absence.TEXT,
+            };
+            absences.length = absence.PERIOD_TO + 1;
+            absences.fill({}, absence.PERIOD_FROM + 1, absence.PERIOD_TO + 1);
         });
     }
 

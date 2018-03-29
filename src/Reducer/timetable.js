@@ -12,7 +12,7 @@ const initialState = {
   },
   timetables: {},
   substitutions: {},
-  timetableDate: moment()
+  timetableDate: moment().isoWeekday() > 5 ? moment().add(1, 'week') : moment()
 };
 
 export default function timetableReducer(state = initialState, action = {}) {
@@ -22,7 +22,10 @@ export default function timetableReducer(state = initialState, action = {}) {
       return {
         ...state,
         ...action.payload.timetable,
+        currentTimeTableId: action.payload.user && action.payload.user.id,
+        currentTimeTableType: action.payload.user && action.payload.user.type,
         loadingMasterData: false,
+        timetableDate: state.timetableDate,
       };
     case "GET_MASTERDATA":
       return {
@@ -53,7 +56,8 @@ export default function timetableReducer(state = initialState, action = {}) {
         currentTimeTableType: action.payload.type,
         currentTimeTableId: action.payload.id,
       };
-    case "CHANGE_WEEK":
+    case "CHANGE_WEEK": case "SET_DATE": case "SET_MY_TIMETABLE":
+      let { id, type } = action.payload;
       const min = moment()
         .year(state.masterdata.minMaxDates.min.year)
         .week(state.masterdata.minMaxDates.min.week)
@@ -62,19 +66,21 @@ export default function timetableReducer(state = initialState, action = {}) {
         .year(state.masterdata.minMaxDates.max.year)
         .week(state.masterdata.minMaxDates.max.week)
         .add(1, 'week');
+      let newDate = action.payload ?
+        action.payload.direction
+          ? moment(state.timetableDate).add(action.payload.direction, 'week')
+          : moment(action.payload.date)
+        : moment().isoWeekday() > 5 ? moment().add(1, 'week') : moment();
       return {
         ...state,
+        currentTimeTableId: id || state.currentTimeTableId,
+        currentTimeTableType: type || state.currentTimeTableType,
         timetableDate: moment.max(min,
           moment.min(max,
-            moment(state.timetableDate).add(action.payload.direction, 'week')
+            newDate
           )
         )
       };
-    case "SET_DATE":
-      return {
-        ...state,
-        timetableDate: action.payload
-      }
     case "GET_TIMETABLE":
       return {
         ...state,
@@ -89,7 +95,7 @@ export default function timetableReducer(state = initialState, action = {}) {
       return {
         ...state,
         timetables: { ...state.timetables, [getTimetableCacheKey(action.request)]: action.payload },
-        invalidated: false,
+        counterChanged: false,
       };
     case "GET_SUBSTITUTIONS":
       return {
@@ -106,7 +112,7 @@ export default function timetableReducer(state = initialState, action = {}) {
           ...state.substitutions,
           [getSubstitutionsCacheKey(action.request)]: action.payload
         },
-        invalidated: false,
+        counterChanged: false
       }
     case "GET_SUBSTITUTIONS_ERROR":
       return {
@@ -116,10 +122,23 @@ export default function timetableReducer(state = initialState, action = {}) {
           [getSubstitutionsCacheKey(action.request)]: null
         },
       }
-    case "INVALIDATE":
+    case "COUNTER_CHANGED":
+      let { currentTimeTableId, currentTimeTableType, timetableDate } = state;
+      let year = moment(timetableDate).year();
+      let week = moment(timetableDate).week();
+      let substitutionsKey = getSubstitutionsCacheKey({ id: currentTimeTableId, type: currentTimeTableType, year, week });
+      let timetableKey = getTimetableCacheKey({ id: currentTimeTableId, type: currentTimeTableType });
       return {
         ...state,
-        invalidated: true,
+        ...(action.payload && {
+          substitutions: {
+            [substitutionsKey]: state.substitutions[substitutionsKey]
+          },
+          timetables: {
+            [timetableKey]: state.timetables[timetableKey]
+          },
+        }),
+        counterChanged: action.payload,
       };
     default:
       return state;

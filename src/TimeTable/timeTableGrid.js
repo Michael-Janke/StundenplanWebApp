@@ -50,7 +50,7 @@ class TimeTableGrid extends Component {
             if (periodNumber !== 1) return;
             let isNextDay = (this.props.currentTimetable[day - 1] || {}).holiday === dayObject.holiday;
             return [
-                <TableRowColumn key={day} colSpan={4} rowSpan={Object.keys(this.props.periods).length} style={{ padding: 0 }}>
+                <TableRowColumn key={day} colSpan={4} rowSpan={0} style={{ padding: 0 }}>
                     <Holiday holiday={dayObject.holiday} date={dayObject.date.format("dd.mm")} noText={isNextDay} />
                 </TableRowColumn>
             ];
@@ -126,8 +126,8 @@ class TimeTableGrid extends Component {
                     </IconButton>
                 </TableToolBar> : null}
                 <Print main name="TimeTable">
-                    <Table
-                        disabled={this.props.invalidated}    
+                    <GrayoutTable
+                        disabled={this.props.counterChanged}    
                         selectable={false}
                         wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: `calc(100vh - ${headerHeight}px)` }}
                     >
@@ -170,12 +170,23 @@ class TimeTableGrid extends Component {
                             </TableRow>
                         </TableFooter>}
 
-                    </Table>
+                    </GrayoutTable>
                 </Print>
             </div>
         );
     }
 }
+
+const GrayoutTable = styled(Table) `
+    ${props => props.disabled && `
+        -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+        -o-filter: grayscale(100%);
+        filter: grayscale(100%);
+        filter: gray;`
+    }
+`;
 
 const TableToolBar = styled.div`
     background-color: ${grey200};
@@ -232,7 +243,7 @@ const makeMapStateToProps = () => {
             avatars: state.avatars,
             warning: state.user.warning,
             lastCheck: state.user.lastCheck,
-            invalidated: true,
+            counterChanged: state.timetable.counterChanged,
         }
     }
     return mapStateToProps;

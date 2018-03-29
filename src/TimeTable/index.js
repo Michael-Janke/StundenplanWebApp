@@ -1,57 +1,95 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { loadMasterData } from "./actions";
-import View from './view';
-import moment from 'moment';
+import { DRAWER_WIDTH } from "../Common/const";
+import { grey600} from 'material-ui/styles/colors';
+import muiThemeable from 'material-ui/styles/muiThemeable';
+import TimeTableGrid from './timeTableGrid';
+import WeekCalendar from './weekCalendar';
 
-class TimeTable extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      params: {
-        week: moment().week(),
-        year: moment().year()
-      }
-    };
-    props.needsUpdate && props.loadMasterData();
-  }
-
-  componentWillUpdate(nextProps) {
-    if (!this.props.needsUpdate && nextProps.needsUpdate) {
-      nextProps.loadMasterData();
+class View extends Component {
+    render() {
+        const drawerMargin = this.props.showDrawer ? undefined : '1vw';
+        return (
+            <Container>
+                <AppBar style={{ backgroundColor: this.props.muiTheme.palette.primary1Color }}>
+                    <ShadowContainerEmu />
+                </AppBar>
+                {this.props.showDrawer && <Drawer>
+                    <WeekCalendar selectedDate={this.props.timetableDate} />
+                </Drawer>}
+                <ShadowContainer style={{marginLeft: drawerMargin, marginRight: drawerMargin}}>
+                    <ShadowBox>
+                        <TimeTableGrid/>
+                    </ShadowBox>
+                </ShadowContainer>
+            </Container>
+        );
     }
-  }
-
-  render() {
-    return (
-      <ColumnLayout>
-        <View params />
-      </ColumnLayout>
-    );
-  }
 }
 
-const ColumnLayout = styled.div`
+const Container = styled.div`
     display: flex;
-    flex: 1;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    color: ${grey600};
+`
+
+const Drawer = styled.div`
+    width: ${DRAWER_WIDTH}px;
+    min-width: ${DRAWER_WIDTH}px;
+`
+
+const ShadowContainer = styled.div`
+    display: flex;
     flex-direction: column;
     width: 100%;
-`;
+    margin-top: 6px;
+    margin-right: 1vw;
+    margin-bottom: 1vw;
+    max-width: 1200px;
+    z-index: 1;
+`
+const ShadowBox = styled.div`
+    background-color: white;
+    box-shadow: rgba(0,0,0,0.3) 0px 0px 10px;
+`
+const ShadowContainerEmu = styled.div`
+    margin-left: ${DRAWER_WIDTH}px;
+    margin-right: 1vw;
+    max-width: 1200px;
+    width:100%;
+    height: 1px;
+`
+const AppBar = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 104px;
+    position: absolute;
+`
+
 
 const mapDispatchToProps = dispatch => {
-  return {
-    loadMasterData: () => {
-      dispatch(loadMasterData());
-    }
-  };
+    return {
+        logout: () => {
+            dispatch();
+        }
+    };
 };
 
 const mapStateToProps = state => {
-  return {
-    needsUpdate: state.user.counterChanged,
-  };
+    return {
+        masterdata: state.timetable.masterdata,
+        timetableDate: state.timetable.timetableDate,
+        periods: state.timetable.masterdata.Period_Time,
+        showPeriods: state.browser.greaterThan.small,
+        showDrawer: state.browser.greaterThan.small,
+        mediaType: state.browser.mediaType,
+    };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimeTable);
+export default connect(mapStateToProps, mapDispatchToProps)(muiThemeable()(View));

@@ -49,6 +49,7 @@ export const SUBSTITUTION_MAP = {
     },
     INFORMATION: {
         color: colors.greenA500,
+        backgroundColor: colors.green50,
         name: "Hinweis",
     },
     SWAP: {

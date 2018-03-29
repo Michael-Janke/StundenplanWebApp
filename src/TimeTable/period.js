@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { SUBJECT_COLORS_MAP } from '../Common/const';
-import { indigo50, indigo100 } from 'material-ui/styles/colors';
+import { indigo50, indigo100, grey600, grey500 } from 'material-ui/styles/colors';
+import ActionInfo from 'material-ui/svg-icons/action/info';
 
 const extractSubject = (name) => {
     return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
@@ -36,7 +37,7 @@ const joinClasses = (classes) => {
     return outcome;
 }
 
-const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionType, field1, field2, fields3 }) => {
+const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionType, substitutionText, field1, field2, fields3 }) => {
 
     const ClassField1 = Subject;
     const ClassField2 = Room;
@@ -45,19 +46,27 @@ const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionT
     if (!small) return (
         <Lesson color={(specificSubstitutionType || {}).backgroundColor} flex={!specificSubstitutionType || !multiple}>
             <ColorBar lineColor={colorBar} />
-
-            <LessonContainer>
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden' }}>
-                    {specificSubstitutionType && <Substitution color={specificSubstitutionType.color}>{specificSubstitutionType.name}</Substitution>}
-                    <ClassField1>{field1}</ClassField1>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden', paddingLeft: 5 }}>
-                    <ClassField2>{field2}</ClassField2>
-                    <ClassFields3 style={{textAlign: 'right'}}>
-                        {fields3}
-                    </ClassFields3>
-                </div>
-            </LessonContainer>
+            <LessonWrapper>
+                <LessonContainer>
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden' }}>
+                        {specificSubstitutionType &&
+                            <Substitution color={specificSubstitutionType.color}>{specificSubstitutionType.name}</Substitution>
+                        }
+                        <ClassField1>{field1}</ClassField1>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden', paddingLeft: 5 }}>
+                        <ClassField2>{field2}</ClassField2>
+                        <ClassFields3 style={{ textAlign: 'right' }}>
+                            {fields3}
+                        </ClassFields3>
+                    </div>
+                </LessonContainer>
+                {substitutionText &&
+                    <SubstitutionText color={grey600}>
+                        <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} color={grey500} />
+                        <div style={{ flex: 1 }}>{substitutionText}</div>
+                    </SubstitutionText>}
+            </LessonWrapper>
 
         </Lesson>
     );
@@ -69,6 +78,11 @@ const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionT
                 <ClassField1>{field1}</ClassField1>
                 <ClassFields3>{fields3}</ClassFields3>
                 <ClassField2>{field2}</ClassField2>
+                {substitutionText &&
+                    <SubstitutionText color={grey600}>
+                        <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} color={grey500} />
+                        <div style={{ flex: 1 }}>{substitutionText}</div>
+                    </SubstitutionText>}
             </LessonContainer>
         </Lesson>
     );
@@ -181,6 +195,14 @@ const Substitution = styled.div`
     color: ${props => props.color};
 `;
 
+const SubstitutionText = styled.div`
+    font-size: 70%;
+    color: ${props => props.color};
+    white-space: normal;
+    align-items: center;
+    display: flex;
+`;
+
 const Room = styled.div`
     font-size: 70%;
 `;
@@ -194,7 +216,6 @@ const Teacher = styled.div`
 `;
 
 const LessonContainer = styled.div`
-    flex: 1;
     display: flex;
     overflow: hidden;
     width: 100%;
@@ -209,6 +230,14 @@ const LessonContainer = styled.div`
         padding-top: 0.5vmin;
         padding-bottom: 0.5vmin;
     `)}
+`;
+
+const LessonWrapper = styled.div`
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    overflow: hidden;
+    justify-content: center;
 `;
 
 const Lesson = styled.div`
