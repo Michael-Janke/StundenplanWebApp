@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'material-ui/Table';
 import { grey } from 'material-ui/colors';
 import PeriodColumn from './period';
-import { WEEKDAY_NAMES, getSpecificSubstitutionType } from '../Common/const';
-import WarningIcon from 'material-ui-icons/Warning';
-import moment from 'moment';
+import { WEEKDAY_NAMES } from '../Common/const';
 import IconButton from 'material-ui/IconButton';
 import BackIcon from 'material-ui-icons/ArrowBack';
 import NextIcon from 'material-ui-icons/ArrowForward';
@@ -112,30 +110,25 @@ class TimeTableGrid extends Component {
         return (
             <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
                 {!this.props.showDrawer ? <TableToolBar>
-                    <IconButton primary={true} onClick={this.props.setPreviousWeek}>
+                    <IconButton onClick={this.props.setPreviousWeek}>
                         <BackIcon />
                     </IconButton>
-                    <IconButton primary={true} onClick={this.props.setNextWeek}>
+                    <IconButton onClick={this.props.setNextWeek}>
                         <NextIcon />
                     </IconButton>
                 </TableToolBar> : null}
                 <Print main name="TimeTable">
                     <div style={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: `calc(100vh - ${headerHeight}px)` }}>
                         <GrayoutTable
-                            disabled={this.props.counterChanged}
-                            selectable={false}
-
-                        >
+                            disabled={this.props.counterChanged}>
                             <TableHead
-                                style={{ backgroundColor: grey[200], fontSize: '100%' }}
-                                displaySelectAll={false}
-                                adjustForCheckbox={false}>
+                                style={{ backgroundColor: grey[200], fontSize: '100%' }}>
                                 <TableRow>
                                     <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
                                     {this.props.currentTimetable && this.props.currentTimetable.map((day, i) => (
                                         <TableCell
                                             key={i}
-                                            colspan={4}
+                                            colSpan={4}
                                             style={tableHeaderStyle}>
                                             {day.date.format(this.props.small ? 'dd' : 'dddd')}
                                             <br />
@@ -145,15 +138,14 @@ class TimeTableGrid extends Component {
                                 </TableRow>
                             </TableHead>
                             <TableBody
-                                displayRowCheckbox={false}>
+                                style={{ overflowX: 'hidden', overflowY: 'auto' }}>
                                 {this.renderRows()}
                             </TableBody>
 
                             {this.props.showDrawer && <TableFooter
-                                adjustForCheckbox={false}
                             >
                                 <TableRow>
-                                    <TableRow colSpan="6" style={{ textAlign: 'right' }} >
+                                    <TableCell colSpan="6" style={{ textAlign: 'right' }} >
                                         <NoPrint>
                                             <IconButton onClick={this.props.setPreviousWeek}>
                                                 <BackIcon />
@@ -162,7 +154,7 @@ class TimeTableGrid extends Component {
                                                 <NextIcon />
                                             </IconButton>
                                         </NoPrint>
-                                    </TableRow>
+                                    </TableCell>
                                 </TableRow>
                             </TableFooter>}
 
@@ -185,6 +177,7 @@ const GrayoutTable = styled(Table) `
     }
     table-layout: fixed;
     width: 100%;
+    height: 100%;
 `;
 
 const TableToolBar = styled.div`

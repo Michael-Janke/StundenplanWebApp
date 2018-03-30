@@ -1,8 +1,6 @@
 import React from 'react';
 import firebase from 'firebase';
 import { connect } from "react-redux";
-
-import Drawer from 'material-ui/Drawer';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import { ListItemIcon, ListItemText } from 'material-ui/List';
 
@@ -86,7 +84,6 @@ class UserSettingMenu extends React.Component {
 
     render() {
         const { anchorEl } = this.state;
-
         return (
             <div>
                 <IconButton

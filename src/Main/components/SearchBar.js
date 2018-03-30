@@ -1,14 +1,180 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import {MenuItem} from 'material-ui/Menu';
+import { MenuItem } from 'material-ui/Menu';
+import { ListItemIcon, ListItemText } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import PersonIcon from 'material-ui-icons/Person';
 import ClassIcon from 'material-ui-icons/Group';
 import RoomIcon from 'material-ui-icons/Room';
 import { loadAvatars, setTimeTable } from '../actions';
 import moment from 'moment';
-import { TextField } from "material-ui";
+import { withStyles } from "material-ui/styles";
+import Paper from "material-ui/Paper";
+import Autosuggest from 'react-autosuggest';
+import SearchBar from "material-ui-search-bar";
+
+function renderInput(inputProps) {
+    const { classes, ref, ...other } = inputProps;
+    return (
+        <SearchBar
+            fullWidth
+            inputRef={ref}
+            classes={{
+                input: classes.input,
+            }}
+            inputProps={other}
+            style={{
+                backgroundColor: '#C5CAE9',
+                marginTop: 8,
+                marginRight: 8,
+                maxWidth: 800,
+                color: 'white'
+            }}
+            onChange={(text) => other.onChange({ target: { value: text } })}
+        />
+    );
+}
+
+function renderSuggestion(suggestion, { query, isHighlighted }) {
+    return (
+        React.cloneElement(suggestion.value, { component: 'div', key: suggestion.key })
+    );
+}
+
+function renderSuggestionsContainer(options) {
+    const { containerProps, children } = options;
+    return (
+        <Paper {...containerProps} square>
+            {children}
+        </Paper>
+    );
+}
+
+function fuzzysearch(needle, haystack) {
+    var hlen = haystack.length;
+    var nlen = needle.length;
+    if (nlen > hlen) {
+        return false;
+    }
+    if (nlen === hlen) {
+        return needle === haystack;
+    }
+    outer: for (var i = 0, j = 0; i < nlen; i++) {
+        var nch = needle.charCodeAt(i);
+        while (j < hlen) {
+            if (haystack.charCodeAt(j++) === nch) {
+                continue outer;
+            }
+        }
+        return false;
+    }
+    return true;
+}
+
+
+
+const styles = theme => ({
+    container: {
+        flexGrow: 1,
+    },
+    suggestionsContainerOpen: {
+        position: 'absolute',
+        zIndex: 1,
+        marginTop: theme.spacing.unit,
+    },
+    suggestion: {
+        display: 'block',
+    },
+    suggestionsList: {
+        margin: 0,
+        padding: 0,
+        listStyleType: 'none',
+    },
+});
+
+class IntegrationAutosuggest extends React.Component {
+    state = {
+        value: '',
+        suggestions: [],
+    };
+
+    getSuggestionValue = (suggestion) => {
+        return suggestion.text;
+    }
+
+    getSuggestions(value) {
+        const inputValue = value;
+        const inputLength = inputValue.length;
+        let count = 0;
+        return inputLength === 0
+            ? []
+            : this.props.dataSource.filter(suggestion => {
+                const keep =
+                    count < 5 && fuzzysearch(inputValue, suggestion.text.toLowerCase());
+
+                if (keep) {
+                    count += 1;
+                }
+
+                return keep;
+            });
+    }
+
+    handleSuggestionsFetchRequested = ({ value }) => {
+        value = value.trim().toLowerCase();
+        if (this.props.onChange) {
+            this.props.onChange(value);
+        }
+        this.setState({
+            suggestions: this.getSuggestions(value),
+        });
+    };
+
+    handleSuggestionsClearRequested = () => {
+        this.setState({
+            suggestions: [],
+        });
+    };
+
+    handleChange = (event, { newValue }) => {
+        this.setState({
+            value: newValue,
+        });
+    };
+
+    render() {
+        const { classes } = this.props;
+
+        return (
+            <Autosuggest
+                theme={{
+                    container: classes.container,
+                    suggestionsContainerOpen: classes.suggestionsContainerOpen,
+                    suggestionsList: classes.suggestionsList,
+                    suggestion: classes.suggestion,
+                }}
+                renderInputComponent={renderInput}
+                suggestions={this.state.suggestions}
+                onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
+                onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
+                onSuggestionSelected={this.props.onSuggestionSelected}
+                renderSuggestionsContainer={renderSuggestionsContainer}
+                getSuggestionValue={this.getSuggestionValue}
+                renderSuggestion={renderSuggestion}
+                inputProps={{
+                    classes,
+                    placeholder: 'Name',
+                    value: this.state.value,
+                    onChange: this.handleChange,
+                }}
+            />
+        );
+    }
+}
+
+
+const AutoComplete = withStyles(styles)(IntegrationAutosuggest);
 
 class WGSearchBar extends Component {
 
@@ -29,8 +195,8 @@ class WGSearchBar extends Component {
     mergeDataSource(masterdata, avatars = {}) {
         if (!masterdata) return [];
         const avatar = (upn) => avatars[upn] && avatars[upn].img
-            ? { leftAvatar: <Avatar src={"data:image/jpg;base64," + avatars[upn].img} size={32} />, insetChildren: true }
-            : { leftIcon: <PersonIcon /> };
+            ? <Avatar src={"data:image/jpg;base64," + avatars[upn].img} size={32} />
+            : <ListItemIcon><PersonIcon /></ListItemIcon>;
         return [
             ...Object.values(masterdata.Class).map((entry) => ({
                 text: "Klasse " + entry.NAME,
@@ -41,7 +207,12 @@ class WGSearchBar extends Component {
                         leftIcon={<ClassIcon />}
                         primaryText={entry.NAME}
                         secondaryText="Klasse"
-                    />),
+                    >
+                        <ListItemIcon>
+                            <ClassIcon />
+                        </ListItemIcon>
+                        <ListItemText>{entry.NAME}</ListItemText>
+                    </MenuItem>),
             })),
             ...Object.values(masterdata.Teacher).map((entry) => ({
                 text: `Lehrer ${entry.FIRSTNAME} ${entry.LASTNAME}`,
@@ -50,9 +221,10 @@ class WGSearchBar extends Component {
                 id: entry.TEACHER_ID,
                 value: (
                     <MenuItem
-                        {...avatar(entry.UPN)}
-                        primaryText={entry.FIRSTNAME[0] + '. ' + entry.LASTNAME}
-                        secondaryText="Lehrer" />
+                        secondaryText="Lehrer">
+                        {avatar(entry.UPN)}
+                        <ListItemText>{entry.FIRSTNAME[0] + '. ' + entry.LASTNAME}</ListItemText>
+                    </MenuItem>
                 ),
             })),
             ...Object.values(masterdata.Student).map((entry) => ({
@@ -62,27 +234,30 @@ class WGSearchBar extends Component {
                 id: entry.STUDENT_ID,
                 value: (
                     <MenuItem
-                        {...avatar(entry.UPN)}
                         primaryText={`${entry.LASTNAME}, ${entry.FIRSTNAME}`}
                         secondaryText="Schüler"
-                    />),
+                    >
+                        {avatar(entry.UPN)}
+                        <ListItemText>{`${entry.LASTNAME}, ${entry.FIRSTNAME}`}</ListItemText>
+                    </MenuItem>),
             })),
             ...Object.values(masterdata.Room).map((entry) => ({
                 text: "Raum " + entry.NAME,
                 type: "room",
                 id: entry.ROOM_ID,
-                value: (<MenuItem
-                    leftIcon={<RoomIcon />}
-                    primaryText={entry.NAME}
-                    secondaryText="Raum"
-                />),
+                value: (<MenuItem secondaryText="Raum">
+                    <ListItemIcon>
+                        <RoomIcon />
+                    </ListItemIcon>
+                    <ListItemText>{entry.NAME}</ListItemText>
+                </MenuItem>),
             })),
         ]
 
     }
 
     loadAvatars(searchText) {
-        var subset = this.state.dataSource.filter((value) => (searchText, value.text));
+        var subset = this.state.dataSource.filter((value) => fuzzysearch(searchText, value.text.toLowerCase()));
         subset = subset.filter((value, i) => i < 10
             && value.upn
             && (this.props.avatars[value.upn] === undefined
@@ -93,33 +268,20 @@ class WGSearchBar extends Component {
         }
     }
 
-    onNewRequest = (chosen) => {
-        this.props.setTimeTable(chosen.type, chosen.id)
+    onNewRequest = (event, data) => {
+        this.props.setTimeTable(data.suggestion.type, data.suggestion.id)
     }
     onChange = (searchText) => {
         this.loadAvatars(searchText)
     }
+
     render() {
         return (
             <Flex>
-                <TextField
-                    onChange={this.onChange}
-                    onRequestSearch={() => {}}
-                    // onNewRequest={this.onNewRequest}
+                <AutoComplete
                     dataSource={this.state.dataSource}
-                    hintText="Suche"
-                    maxSearchResults={10}
-                    // filter={AutoComplete.fuzzyFilter}
-                    popoverProps={this.props.showAsModal ?
-                        { anchorEl: null, canAutoPosition: false, style: { marginTop: 64, marginLeft: '3vw', width: '94vw' } } : {}
-                    }
-                    style={{
-                        backgroundColor: '#C5CAE9',
-                        marginTop: 8,
-                        marginRight: 8,
-                        maxWidth: 800,
-                        color: 'white'
-                    }}
+                    onChange={this.onChange}
+                    onSuggestionSelected={this.onNewRequest}
                 />
             </Flex>
         );

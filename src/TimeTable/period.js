@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { SUBJECT_COLORS, SUBJECT_COLORS_MAP } from '../Common/const';
-import chroma from 'chroma-js';
-import { Paper, Avatar } from 'material-ui';
-import PersonIcon from 'material-ui-icons/Person';
-import RoomIcon from 'material-ui-icons/Room';
+import { SUBJECT_COLORS_MAP } from '../Common/const';
 import { indigo, grey } from 'material-ui/colors';
 import ActionInfo from 'material-ui-icons/Info';
 
@@ -67,8 +63,8 @@ const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionT
                 </LessonContainer>
                 {substitutionText &&
                     <SubstitutionText color={grey[600]}>
-                        <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} color={grey[500]} />
-                        <div style={{ flex: 1 }}>{substitutionText}</div>
+                        <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin', color: grey[500] }} />
+                        <div style={{ flex: 1, overflow: 'hidden' }}>{substitutionText}</div>
                     </SubstitutionText>}
             </LessonWrapper>
 
@@ -84,8 +80,8 @@ const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionT
                 <ClassField2>{field2}</ClassField2>
                 {substitutionText &&
                     <SubstitutionText color={grey[600]}>
-                        <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} color={grey[500]} />
-                        <div style={{ flex: 1 }}>{substitutionText}</div>
+                        <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin', color: grey[500] }} />
+                        <div style={{ flex: 1, overflow: 'hidden' }}>{substitutionText}</div>
                     </SubstitutionText>}
             </LessonContainer>
         </Lesson>
@@ -203,6 +199,8 @@ const SubstitutionText = styled.div`
     font-size: 70%;
     color: ${props => props.color};
     white-space: normal;
+    word-wrap: break-word;
+    overflow: hidden;
     align-items: center;
     display: flex;
 `;

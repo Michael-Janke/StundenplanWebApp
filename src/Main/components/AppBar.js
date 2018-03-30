@@ -4,8 +4,6 @@ import { withStyles } from 'material-ui/styles';
 import Drawer from 'material-ui/SwipeableDrawer';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
-import List from 'material-ui/List';
-import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import Hidden from 'material-ui/Hidden';
 import Divider from 'material-ui/Divider';
@@ -26,7 +24,7 @@ import ProfilePicture from './ProfilePicture';
 const styles = theme => ({
     root: {
         // flexGrow: 1,
-        // height: '100%',
+        height: '100%',
         // zIndex: 1,
         overflow: 'hidden',
         // position: 'relative',
