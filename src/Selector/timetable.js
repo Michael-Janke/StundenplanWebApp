@@ -46,6 +46,7 @@ function translateTimetable(masterdata, timetable, substitutions, periods, type,
         translatePeriods(masterdata, day, periods);
         data[x] = day;
     }
+    console.log(data);
     return data;
 }
 function joinSubstitutions(day, subOnDay, type, id) {
@@ -74,12 +75,15 @@ function joinSubstitutions(day, subOnDay, type, id) {
                             substitutionType: substitution.TYPE,
                             substitutionText: substitution.TEXT,
                             specificSubstitutionType: getSpecificSubstitutionType(substitution),
-                            CLASS_IDS: substitution.CLASS_IDS_NEW.length
-                                ? substitution.CLASS_IDS_NEW : substitution.CLASS_IDS,
+                            CLASS_IDS: substitution.CLASS_IDS_NEW.length ? substitution.CLASS_IDS_NEW : substitution.CLASS_IDS,
                             CLASS_IDS_ABSENT: substitution.CLASS_IDS_ABSENT,
+                            CLASS_IDS_OLD: substitution.CLASS_IDS_NEW.length ? substitution.CLASS_IDS : [],
                             TEACHER_ID: substitution.TEACHER_ID_NEW || lesson.TEACHER_ID,
+                            TEACHER_ID_OLD: substitution.TEACHER_ID_NEW && substitution.TEACHER_ID_NEW !== lesson.TEACHER_ID && lesson.TEACHER_ID,
                             SUBJECT_ID: substitution.SUBJECT_ID_NEW || lesson.SUBJECT_ID,
+                            SUBJECT_ID_OLD: substitution.SUBJECT_ID_NEW && substitution.SUBJECT_ID_NEW !== lesson.SUBJECT_ID && lesson.SUBJECT_ID,
                             ROOM_ID: substitution.ROOM_ID_NEW || lesson.ROOM_ID,
+                            ROOM_ID_OLD: substitution.ROOM_ID_NEW && substitution.ROOM_ID_NEW !== lesson.ROOM_ID && lesson.ROOM_ID
 
                         };
                         return;
@@ -89,10 +93,16 @@ function joinSubstitutions(day, subOnDay, type, id) {
             if (!lessons) {
                 period.lessons = lessons = [];
             }
+            if (type === "teacher"
+                && substitution.TEACHER_ID === id
+                && substitution.TEACHER_ID_NEW !== id) {
+                debugger;
+            }
             lessons.push({
                 substitutionText: substitution.TEXT,
                 substitutionRemove:
-                    substitution.TEACHER_ID === id
+                    type === "teacher"
+                    && substitution.TEACHER_ID === id
                     && substitution.TEACHER_ID_NEW !== id,
                 substitutionType: substitution.TYPE,
                 CLASS_IDS: substitution.CLASS_IDS_NEW,
@@ -159,23 +169,39 @@ function skipDuplications(day, periods) {
             current.skip++;
         }
         if (current.lessons) {
-            for (let i = 0; i < current.lessons.length; i++) {
-                let last = current.lessons[i] = { ...current.lessons[i] };
-                last.TEACHER_IDS = [last.TEACHER_ID];
-                delete last.TEACHER_ID;
-                for (let j = i + 1; j < current.lessons.length; j++) {
-                    let lesson = current.lessons[j];
-                    if (lesson.ROOM_ID === last.ROOM_ID
-                        && lesson.SUBJECT_ID === last.SUBJECT_ID
-                        && lesson.substitutionType === last.substitutionType) {
-                        last.TEACHER_IDS.push(lesson.TEACHER_ID);
-                        current.lessons.splice(j);
-                    }
+            skipTeacherDuplications(current.lessons);
+        }
+    }
+}
+
+function skipTeacherDuplications(lessons) {
+    for (let i = 0; i < lessons.length; i++) {
+        let last = lessons[i] = { ...lessons[i] };
+        last.TEACHER_IDS = [last.TEACHER_ID];
+        last.TEACHER_IDS_OLD = [];
+        if (last.TEACHER_ID_OLD) {
+            last.TEACHER_IDS_OLD.push(last.TEACHER_ID_OLD);
+        }
+        delete last.TEACHER_ID;
+        delete last.TEACHER_ID_OLD;
+        for (let j = i + 1; j < lessons.length; j++) {
+            let lesson = lessons[j];
+            if (lesson.ROOM_ID === last.ROOM_ID
+                && lesson.SUBJECT_ID === last.SUBJECT_ID
+                // && lesson.substitutionType === last.substitutionType
+            ) {
+                if (!last.TEACHER_IDS.includes(lesson.TEACHER_ID)) {
+                    last.TEACHER_IDS.push(lesson.TEACHER_ID);
                 }
+                if (lesson.TEACHER_ID_OLD && !last.TEACHER_IDS_OLD.includes(lesson.TEACHER_ID_OLD)) {
+                    last.TEACHER_IDS_OLD.push(lesson.TEACHER_ID_OLD);
+                }
+                lessons.splice(j);
             }
         }
     }
 }
+
 function readTimetable(_data, day, periods, date) {
     if (!_data) return {};
     let data = [];
@@ -213,11 +239,24 @@ function translate(masterdata, period) {
         substitutionType: period.substitutionType,
         specificSubstitutionType: period.specificSubstitutionType,
         substitutionRemove: period.substitutionRemove,
-        teacher: period.TEACHER_IDS.map((t) => masterdata.Teacher[t]),
-        subject: masterdata.Subject[period.SUBJECT_ID],
-        room: masterdata.Room[period.ROOM_ID],
-        classes: (period.CLASS_IDS || []).map((c) => masterdata.Class[c]),
-        absentClasses: (period.CLASS_IDS_ABSENT || []).map((c) => masterdata.Class[c])
+
+        teachers: {
+            new: period.TEACHER_IDS.map((t) => masterdata.Teacher[t]),
+            old: !!period.TEACHER_IDS_OLD.length && period.TEACHER_IDS_OLD.map((t) => masterdata.Teacher[t])
+        },
+        subject: {
+            new: masterdata.Subject[period.SUBJECT_ID],
+            old: masterdata.Subject[period.SUBJECT_ID_OLD]
+        },
+        room: {
+            new: masterdata.Room[period.ROOM_ID],
+            old: masterdata.Room[period.ROOM_ID_OLD]
+        },
+        classes: {
+            new: (period.CLASS_IDS || []).map((c) => masterdata.Class[c]),
+            old: !!(period.CLASS_IDS_OLD || []).length && period.CLASS_IDS_OLD.map((c) => masterdata.Class[c]),
+            absent: !!(period.CLASS_IDS_ABSENT || []).length && period.CLASS_IDS_ABSENT.map((c) => masterdata.Class[c])
+        }
     }));
     return period;
 }

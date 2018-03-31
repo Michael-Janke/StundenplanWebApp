@@ -3,45 +3,23 @@ import styled from 'styled-components';
 import { SUBJECT_COLORS_MAP } from '../Common/const';
 import { indigo50, indigo100, grey600, grey500 } from 'material-ui/styles/colors';
 import ActionInfo from 'material-ui/svg-icons/action/info';
+import Subject from './Fields/subject';
+import Room from './Fields/room';
+import Classes from './Fields/classes';
+import Teachers from './Fields/teachers';
 
 const extractSubject = (name) => {
     return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
 }
 
-const joinClasses = (classes) => {
-    if (classes.length === 0) return "";
-    if (classes.length === 1) return classes[0].NAME;
-    classes = classes.map((_class) => {
-        let split = _class.NAME.match(/[a-zA-Z]+|[0-9]+/g)
-        return {
-            grade: split[0],
-            letter: split[1]
-        }
-    });
-    classes.sort((a, b) => {
-        if (a.grade < b.grade) return -1;
-        if (a.grade > b.grade) return 1;
-        if (a.letter < b.letter) return -1;
-        if (a.letter > b.letter) return 1;
-        return 0;
-    });
 
-    let outcome = "";
-    classes.reduce((prev, _class) => {
-        if (!prev || prev.grade !== _class.grade) {
-            outcome += _class.grade;
-        }
-        outcome += _class.letter;
-        return _class;
-    }, null);
-    return outcome;
-}
+const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, removalField }) => {
 
-const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionType, substitutionText, field1, field2, fields3 }) => {
-
-    const ClassField1 = Subject;
-    const ClassField2 = Room;
-    const ClassFields3 = ({ children, ...props }) => children.map((text, i) => <Teacher key={i} {...props}>{text}</Teacher>);
+    const additionalProps = { small };
+    const ClassField1 = React.cloneElement(fields[0], additionalProps);
+    const ClassField2 = React.cloneElement(fields[1], additionalProps);
+    const ClassField3 = React.cloneElement(fields[2], additionalProps);
+    const ClassRemovalField = removalField && React.cloneElement(removalField, additionalProps);
 
     if (!small) return (
         <Lesson color={(specificSubstitutionType || {}).backgroundColor} flex={!specificSubstitutionType || !multiple}>
@@ -52,15 +30,14 @@ const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionT
                         {specificSubstitutionType &&
                             <Substitution color={specificSubstitutionType.color}>{specificSubstitutionType.name}</Substitution>
                         }
-                        <ClassField1>{field1}</ClassField1>
+                        {ClassField1}
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden', paddingLeft: 5 }}>
-                        <ClassField2>{field2}</ClassField2>
-                        <ClassFields3 style={{ textAlign: 'right' }}>
-                            {fields3}
-                        </ClassFields3>
+                        {ClassField2}
+                        {ClassField3}
                     </div>
                 </LessonContainer>
+                {ClassRemovalField}
                 {substitutionText &&
                     <SubstitutionText color={grey600}>
                         <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} color={grey500} />
@@ -75,9 +52,10 @@ const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionT
             <ColorBar lineColor={colorBar} />
             <LessonContainer small>
                 {specificSubstitutionType && <Substitution>{specificSubstitutionType.name}</Substitution>}
-                <ClassField1>{field1}</ClassField1>
-                <ClassFields3>{fields3}</ClassFields3>
-                <ClassField2>{field2}</ClassField2>
+                {ClassField1}
+                {ClassField3}
+                {ClassField2}
+                {ClassRemovalField}
                 {substitutionText &&
                     <SubstitutionText color={grey600}>
                         <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} color={grey500} />
@@ -92,46 +70,35 @@ const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionT
 class Period extends Component {
 
     getStudentFields(lesson) {
-        const { subject, room, teacher } = lesson;
+        const { subject, room, teachers } = lesson;
         return {
-            colorBar: subject
-                ? SUBJECT_COLORS_MAP[extractSubject(subject.NAME)]
+            colorBar: subject.new
+                ? SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)]
                 : indigo100,
-            field1: subject ? subject.NAME : '-',
-            field2: room ? room.NAME : '-',
-            fields3: teacher.map((teacher, i) =>
-                teacher
-                    ? this.props.small
-                        ? teacher.LASTNAME
-                        : (teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME
-                    : '-'),
+            fields: [<Subject subject={subject} />, <Room room={room} />, <Teachers teachers={teachers} />],
+            removalField: null // cannot happen
         }
     }
 
     getTeacherFields(lesson) {
-        const { subject, room, classes } = lesson;
+        const { subject, room, classes, teachers, substitutionRemove } = lesson;
         return {
-            colorBar: subject
-                ? SUBJECT_COLORS_MAP[extractSubject(subject.NAME)]
+            colorBar: subject.new
+                ? SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)]
                 : indigo100,
-            field1: subject ? subject.NAME : '-',
-            field2: room ? room.NAME : '-',
-            fields3: [joinClasses(classes)],
+            fields: [<Subject subject={subject} />, <Room room={room} />, <Classes classes={classes} />],
+            removalField: substitutionRemove && <Teachers teachers={teachers}/>
         }
     }
 
     getRoomFields(lesson) {
-        const { subject, teacher, classes } = lesson;
+        const { subject, teachers, classes, substitutionRemove, room } = lesson;
         return {
-            colorBar: subject
-                ? SUBJECT_COLORS_MAP[extractSubject(subject.NAME)]
+            colorBar: subject.new
+                ? SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)]
                 : indigo100,
-            field1: joinClasses(classes),
-            field2: subject ? subject.NAME : '-',
-            fields3: teacher.map((teacher, i) =>
-                this.props.small
-                    ? teacher.LASTNAME
-                    : (teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME),
+            fields: [<Classes classes={classes} />, <Subject subject={subject} />, <Teachers teachers={teachers} />],
+            removalField: substitutionRemove && <Room room={room}/>
         }
     }
 
@@ -180,12 +147,6 @@ const PeriodsContainer = styled.div`
     flex-direction: column;
 `;
 
-const Subject = styled.div`
-    font-size: 75%;
-    font-weight: 600;
-
-`;
-
 const Substitution = styled.div`
     font-size: 60%;
     font-weight: 600;
@@ -203,17 +164,7 @@ const SubstitutionText = styled.div`
     display: flex;
 `;
 
-const Room = styled.div`
-    font-size: 70%;
-`;
 
-const Teacher = styled.div`
-    font-size: 70%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 100%;
-`;
 
 const LessonContainer = styled.div`
     display: flex;
