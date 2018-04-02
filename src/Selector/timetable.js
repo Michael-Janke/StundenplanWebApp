@@ -55,7 +55,6 @@ function joinSubstitutions(day, subOnDay, type, id) {
         day.holiday = subOnDay.holiday;
         day.periods = undefined;
     } else if (subOnDay.substitutions && day.periods) {
-
         subOnDay.substitutions.forEach((substitution) => {
             let period = day.periods[substitution.PERIOD - 1];
             if (!period) return;
@@ -76,8 +75,8 @@ function joinSubstitutions(day, subOnDay, type, id) {
                             substitutionText: substitution.TEXT,
                             specificSubstitutionType: getSpecificSubstitutionType(substitution),
                             CLASS_IDS: substitution.CLASS_IDS_NEW.length ? substitution.CLASS_IDS_NEW : substitution.CLASS_IDS,
-                            CLASS_IDS_ABSENT: substitution.CLASS_IDS_ABSENT,
                             CLASS_IDS_OLD: substitution.CLASS_IDS_NEW.length ? substitution.CLASS_IDS : [],
+                            CLASS_IDS_ABSENT: substitution.CLASS_IDS_ABSENT,
                             TEACHER_ID: substitution.TEACHER_ID_NEW || lesson.TEACHER_ID,
                             TEACHER_ID_OLD: substitution.TEACHER_ID_NEW && substitution.TEACHER_ID_NEW !== lesson.TEACHER_ID && lesson.TEACHER_ID,
                             SUBJECT_ID: substitution.SUBJECT_ID_NEW || lesson.SUBJECT_ID,
@@ -114,15 +113,19 @@ function joinSubstitutions(day, subOnDay, type, id) {
         });
     }
     if (subOnDay.absences) {
-        let absences = day.absences = [];
         subOnDay.absences.forEach((absence) => {
-            absences[absence.PERIOD_FROM] = {
-                first: true,
-                skip: absence.PERIOD_TO - absence.PERIOD_FROM + 1,
-                text: absence.TEXT,
-            };
-            absences.length = absence.PERIOD_TO + 1;
-            absences.fill({}, absence.PERIOD_FROM + 1, absence.PERIOD_TO + 1);
+            for (let i = absence.PERIOD_FROM; i <= absence.PERIOD_TO; i++) {
+                let period = day.periods[i-1];
+                if (!period) continue;
+                let lessons = period.lessons;
+                if (lessons && lessons.length) {
+                    lessons.forEach((lesson) => {
+                        lesson.absence = absence;
+                    })
+                } else {
+                    period.lessons = [{ absence }];
+                }
+            }
         });
     }
 
@@ -188,6 +191,7 @@ function skipTeacherDuplications(lessons) {
             let lesson = lessons[j];
             if (lesson.ROOM_ID === last.ROOM_ID
                 && lesson.SUBJECT_ID === last.SUBJECT_ID
+                && lesson.absence === last.absence
                 // && lesson.substitutionType === last.substitutionType
             ) {
                 if (!last.TEACHER_IDS.includes(lesson.TEACHER_ID)) {
@@ -239,7 +243,7 @@ function translate(masterdata, period) {
         substitutionType: period.substitutionType,
         specificSubstitutionType: period.specificSubstitutionType,
         substitutionRemove: period.substitutionRemove,
-
+        absence: period.absence,
         teachers: {
             new: period.TEACHER_IDS.map((t) => masterdata.Teacher[t]),
             old: !!period.TEACHER_IDS_OLD.length && period.TEACHER_IDS_OLD.map((t) => masterdata.Teacher[t])

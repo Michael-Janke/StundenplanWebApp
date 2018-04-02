@@ -12,7 +12,7 @@ const teacherToName = (teacher, small) =>
 function TeachersContainer({ teachers, small }) {
     const NormalTeacher = !!teachers.old ? NewTeacher : Teacher;
     return (
-        <Container>
+        <Container small={small}>
             {teachers.new.map((teacher, i) => <NormalTeacher key={i}>{teacherToName(teacher, small)}</NormalTeacher>)}
             {teachers.old && teachers.old.map((teacher, i) => <OldTeacher key={"o" + i}>{teacherToName(teacher, small)}</OldTeacher>)}
         </Container>
@@ -27,7 +27,7 @@ TeachersContainer.propTypes = {
 const Container = styled.div`
     flex-direction: column;
     display: flex;
-    align-items: flex-end;
+    ${props => !props.small && `align-items: flex-end`};
 `;
 
 const Teacher = styled.div`

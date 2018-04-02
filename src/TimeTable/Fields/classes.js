@@ -2,73 +2,57 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const joinClasses = (classes) => {
-    if (classes.length === 0) return "";
-    if (classes.length === 1) return classes[0].NAME;
+const extractClasses = (classes) => {
     classes = classes.map((_class) => {
         let split = _class.NAME.match(/[a-zA-Z]+|[0-9]+/g)
         return {
-            grade: split[0],
-            letter: split[1]
+            grade: parseInt(split[0], 10),
+            letter: { letter: split[1] }
         }
     });
-    classes.sort((a, b) => {
-        if (a.grade < b.grade) return -1;
-        if (a.grade > b.grade) return 1;
-        if (a.letter < b.letter) return -1;
-        if (a.letter > b.letter) return 1;
-        return 0;
-    });
-
-    let outcome = "";
-    classes.reduce((prev, _class) => {
-        if (!prev || prev.grade !== _class.grade) {
-            outcome += _class.grade;
+    return classes.reduce((prev, current) => {
+        let object = prev[current.grade];
+        if (!object) {
+            object = prev[current.grade] = { letters: [] };
         }
-        outcome += _class.letter;
-        return _class;
-    }, null);
-    return outcome;
+        object.letters.push(current.letter);
+        return prev;
+    }, {});
 }
 
-const extractClasses = (classes, old) => {
-    classes = classes.map((_class) => {
-        let split = _class.NAME.match(/[a-zA-Z]+|[0-9]+/g)
-        return {
-            grade: split[0],
-            letters: [{ letter: split[1] }]
-        }
+const combine = (oldClasses, newClasses) => {
+    Object.keys(oldClasses).forEach((key) => {
+        let oldElem = oldClasses[key];
+        let elem = newClasses[key];
+        oldElem.letters.forEach((letter) => {
+            letter.remove = elem.letters.filter(newLetter => newLetter.letter === letter.letter).length === 0;
+            letter.add = oldElem.letters.filter(oldLetter => letter.letter === oldLetter.letter).length === 0;
+        });
     });
-
-    classes.sort((a, b) => {
-        if (a.grade < b.grade) return -1;
-        if (a.grade > b.grade) return 1;
-        if (a.letter < b.letter) return -1;
-        if (a.letter > b.letter) return 1;
-        return 0;
-    });
-
-    let outcome = [];
-    outcome.push(classes.reduce((prev, current) => {
-        if (current.grade === prev.grade) {
-            prev.letters = [...prev.letters, ...current.letters];
-            return prev;
-        } else {
-            outcome.push(prev);
-            return current;
-        }
-    }));
-    return outcome;
-}
-
+};
 
 
 function ClassesContainer({ classes, small }) {
-    const NormalClass = !!classes.old ? NewClass : Class;
+    let extracted = extractClasses(classes.new);
+    let oldExtracted = classes.old && extractClasses(classes.old);
+    if (oldExtracted) {
+        combine(oldExtracted, extracted);
+    }
+    let extractedClasses = oldExtracted || extracted;
     return (
-        <Container>
-            {classes.new.map((element, i) => <NormalClass key={i}>{element.NAME}</NormalClass>)}
-            {classes.old && classes.old.map((element, i) => <OldClass key={"o" + i}>{element.NAME}</OldClass>)}
+        <Container small={small}>
+            {Object.keys(extractedClasses).map((key, i) => {
+                let classes = extractedClasses[key];
+                return (
+                    <ClassContainer key={i}>
+                        <Grade>{key}</Grade>
+                        {classes.letters.map((letter, i) => letter.remove
+                            ? <OldClass key={i}>{letter.letter}</OldClass>
+                            : <Class key={i}>{letter.letter}</Class>
+                        )}
+                    </ClassContainer>
+                )
+            })}
         </Container>
     )
 }
@@ -81,7 +65,18 @@ ClassesContainer.propTypes = {
 const Container = styled.div`
     flex-direction: column;
     display: flex;
+    ${props => !props.small && `align-items: flex-end`};
+`;
+const ClassContainer = styled.div`
+    display: flex;
     align-items: flex-end;
+`;
+
+const Grade = styled.div`
+    font-size: 70%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 `;
 
 const Class = styled.div`
@@ -91,11 +86,8 @@ const Class = styled.div`
     white-space: nowrap;
 `;
 
-const NewClass = styled(Class) `
-`;
-
 const OldClass = styled(Class) `
-    font-size: 50%;
+    font-size: 70%;
     text-decoration: line-through;
 `;
 

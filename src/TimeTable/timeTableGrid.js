@@ -22,7 +22,6 @@ import makeGetCurrentTimetable from '../Selector/timetable';
 import Holiday from './Holiday';
 import PeriodColumn from './period';
 
-
 class TimeTableGrid extends Component {
 
     renderPeriodTimes(period) {
@@ -49,21 +48,19 @@ class TimeTableGrid extends Component {
         if (dayObject.holiday) {
             if (periodNumber !== 1) return;
             let isNextDay = (this.props.currentTimetable[day - 1] || {}).holiday === dayObject.holiday;
-            return [
-                <TableRowColumn key={day} colSpan={4} rowSpan={0} style={{ padding: 0 }}>
+            return (
+                <TableRowColumn key={day} rowSpan={0} style={{ padding: 0 }}>
                     <Holiday holiday={dayObject.holiday} date={dayObject.date.format("dd.mm")} noText={isNextDay} />
                 </TableRowColumn>
-            ];
+            );
         } else {
             let period = dayObject.periods[periodNumber - 1];
-            let absences = (dayObject.absences || [])[periodNumber];
             if (!period) {
                 return null;
             }
-            return [
+            return (
                 <TableRowColumn
                     key={day}
-                    colSpan={absences ? 3 : 4}
                     style={{
                         textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
                     }}
@@ -73,18 +70,8 @@ class TimeTableGrid extends Component {
                         type={this.props.type}
                         avatars={this.props.avatars}
                         small={this.props.small} />
-                </TableRowColumn>,
-                absences && absences.first &&
-                <TableRowColumn
-                    key={"absence" + day}
-                    colSpan={1}
-                    rowSpan={absences.skip}
-                    style={{
-                        padding: 0,
-                    }}>
-                    <div style={{ wordWrap: 'break-word' }}>{absences.text}</div>
                 </TableRowColumn>
-            ];
+            );
         }
     }
 
@@ -105,9 +92,7 @@ class TimeTableGrid extends Component {
                         {this.renderPeriodHeader(period)}
                     </div>
                 </TableRowColumn>
-                {[].concat.apply([],
-                    WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))
-                )}
+                {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
             </TableRow>
         ));
     }
@@ -127,7 +112,7 @@ class TimeTableGrid extends Component {
                 </TableToolBar> : null}
                 <Print main name="TimeTable">
                     <GrayoutTable
-                        disabled={this.props.counterChanged}    
+                        disabled={this.props.counterChanged}
                         selectable={false}
                         wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: `calc(100vh - ${headerHeight}px)` }}
                     >
