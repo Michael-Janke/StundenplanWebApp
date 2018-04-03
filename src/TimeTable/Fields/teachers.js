@@ -27,10 +27,12 @@ TeachersContainer.propTypes = {
 const Container = styled.div`
     flex-direction: column;
     display: flex;
+    width: 100%;
     ${props => !props.small && `align-items: flex-end`};
 `;
 
 const Teacher = styled.div`
+    width: 100%;
     font-size: 70%;
     text-overflow: ellipsis;
     overflow: hidden;

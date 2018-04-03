@@ -31,7 +31,7 @@ const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionT
                         }
                         <Field1 />
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden', paddingLeft: 5 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', overflow: 'hidden', paddingLeft: 5 }}>
                         <Field2 />
                         <Field3 />
                     </div>

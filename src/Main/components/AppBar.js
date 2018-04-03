@@ -16,13 +16,14 @@ import { showError, changeWeek } from '../actions';
 
 import { grey100 } from 'material-ui/styles/colors';
 import { DRAWER_WIDTH } from '../../Common/const';
+import Calendar from "./Calendar";
 
 class WGAppBar extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            open: false
+            open: false,
         }
     }
 
@@ -38,6 +39,12 @@ class WGAppBar extends Component {
         this.setState({ open });
     }
 
+    handleCalendar = () => {
+        this.refs.calendar.getWrappedInstance().open();
+    }
+
+
+
     render() {
         const small = this.props.small;
         return (
@@ -50,18 +57,19 @@ class WGAppBar extends Component {
                 style={{ boxShadow: 'none' }}
                 onLeftIconButtonClick={this.openDrawer}
             >
+                <Calendar ref="calendar"/>
                 <SearchBar
                     anchorIfSmall={this} />
                 <Icons>
                     {small || <IconButton tooltip="Voherige Woche" onClick={this.props.setPreviousWeek}>
                         <BackIcon color={grey100} />
                     </IconButton>}
-                    {small && <IconButton tooltip="Kalendar öffnen">
-                        <CalendarIcon color={grey100} />
-                    </IconButton>}
                     {small || <IconButton tooltip="Nächste Woche" onClick={this.props.setNextWeek}>
                         <NextIcon color={grey100} />
                     </IconButton>}
+                    <IconButton tooltip="Kalendar öffnen">
+                        <CalendarIcon color={grey100} onClick={this.handleCalendar} />
+                    </IconButton>
                     {small || <IconButton tooltip="Stundenplan drucken" onClick={this.onPrintTimetable}>
                         <PrintIcon color={grey100} />
                     </IconButton>}
