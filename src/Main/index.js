@@ -11,7 +11,8 @@ import {
     setNotification,
     showError,
     setMyTimetable,
-    counterChanged
+    counterChanged,
+    sendLoginStatistic
 } from "./actions"
 import TimeTable from "../TimeTable"
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -26,6 +27,7 @@ class Main extends Component {
         super(props);
         props.checkCounter();
         this.props.setMyTimetable();
+        this.props.sendLoginStatistic();
         props.needsUpdate && props.counterChanged(true);
         if (this.props.notificationToken) {
             connectToServiceWorker(this.props.setNotification, this.props.notificationToken);
@@ -68,6 +70,7 @@ class Main extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         setMyTimetable: () => { dispatch(setMyTimetable()) },
+        sendLoginStatistic: () => {dispatch(sendLoginStatistic())},
         counterChanged: (changed) => dispatch(counterChanged(changed)),
         checkCounter: () => { dispatch(checkCounter()); },
         clearErrors: () => { dispatch(clearErrors()); },

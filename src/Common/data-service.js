@@ -84,6 +84,8 @@ const dataService = store => next => action => {
 				{ type: 'GET_SUBSTITUTIONS', request: action.payload }
 			);
 		}
+		case "SEND_LOGIN_STATISTIC":
+			return requestApiGenerator(next)(API_URL, 'statistics/login', { type: "LOGIN_STATISTIC" }, 'POST', '{}');	
 		case "SEND_FEEDBACK":
 			return requestApiGenerator(next)(GRAPH_URL, 'beta/me/sendMail', { type: 'FEEDBACK' }, 'POST',
 				JSON.stringify(createFeedbackMail(action.payload)));

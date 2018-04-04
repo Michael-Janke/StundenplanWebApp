@@ -11,6 +11,10 @@ export function checkCounter() {
     return { type: "GET_COUNTER" };
 }
 
+export function sendLoginStatistic() {
+    return { type: "SEND_LOGIN_STATISTIC" };
+}
+
 export function counterChanged(counterChanged) {
     return (dispatch) => {
         dispatch({ type: "COUNTER_CHANGED", payload: counterChanged });

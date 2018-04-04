@@ -46,7 +46,6 @@ function translateTimetable(masterdata, timetable, substitutions, periods, type,
         translatePeriods(masterdata, day, periods);
         data[x] = day;
     }
-    console.log(data);
     return data;
 }
 function joinSubstitutions(day, subOnDay, type, id) {
