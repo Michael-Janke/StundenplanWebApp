@@ -115,7 +115,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        notificationToken: state.user.notificationToken
+        notificationToken: state.user.notificationToken,
+        upn: state.user.upn,
     };
 };
 

@@ -69,6 +69,7 @@ export class Calendar extends Component {
         return (
             <div>
                 <DatePicker
+                    floatingLabelText="datePicker"
                     autoOk
                     locale="de"
                     DateTimeFormat={DateTimeFormat}

@@ -3,6 +3,10 @@ export function loadMe() {
     return { type: "GET_ME" };
 }
 
+export function sendFeedback(feedback) {
+    return { type: "SEND_FEEDBACK", payload: feedback };
+}
+
 export function checkCounter() {
     return { type: "GET_COUNTER" };
 }

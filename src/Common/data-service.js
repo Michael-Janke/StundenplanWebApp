@@ -1,5 +1,6 @@
 import { adalGetToken } from './Adal/react-adal';
 import { adalConfig, authContext } from './Adal/adalConfig';
+import { createFeedbackMail } from './feedback';
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
 
@@ -21,7 +22,7 @@ const requestApiGenerator = next => (endpoint, route, action, METHOD = "GET", bo
 			}
 		})
 			.then(handleErrors)
-			.then(res => res.json())
+			.then(res => res.json().catch(err => null))
 			.then((res) =>
 				next({
 					...action,
@@ -83,6 +84,9 @@ const dataService = store => next => action => {
 				{ type: 'GET_SUBSTITUTIONS', request: action.payload }
 			);
 		}
+		case "SEND_FEEDBACK":
+			return requestApiGenerator(next)(GRAPH_URL, 'beta/me/sendMail', { type: 'FEEDBACK' }, 'POST',
+				JSON.stringify(createFeedbackMail(action.payload)));
 		case 'GET_COUNTER':
 			return requestApiGenerator(next)(API_URL, 'counter', { type: 'COUNTER' });
 		case 'SET_NOTIFICATION':

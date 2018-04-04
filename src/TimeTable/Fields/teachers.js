@@ -28,7 +28,10 @@ const Container = styled.div`
     flex-direction: column;
     display: flex;
     width: 100%;
-    ${props => !props.small && `align-items: flex-end`};
+    ${props => !props.small && `
+        align-items: flex-end; 
+        text-align: right;
+    `};
 `;
 
 const Teacher = styled.div`

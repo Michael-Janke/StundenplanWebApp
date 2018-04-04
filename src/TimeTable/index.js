@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { DRAWER_WIDTH } from "../Common/const";
-import { grey600} from 'material-ui/styles/colors';
+import { grey600 } from 'material-ui/styles/colors';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import TimeTableGrid from './timeTableGrid';
-import WeekCalendar from './weekCalendar';
+// import Dates from '../Dates';
 
 class View extends Component {
     render() {
@@ -15,12 +15,15 @@ class View extends Component {
                 <AppBar style={{ backgroundColor: this.props.muiTheme.palette.primary1Color }}>
                     <ShadowContainerEmu />
                 </AppBar>
-                {this.props.showDrawer && <Drawer>
-                    <WeekCalendar selectedDate={this.props.timetableDate} />
-                </Drawer>}
-                <ShadowContainer style={{marginLeft: drawerMargin, marginRight: drawerMargin}}>
+
+                {this.props.showDrawer &&
+                    <Drawer>
+                        {/* <Dates selectedDate={this.props.timetableDate} /> */}
+                    </Drawer>
+                }
+                <ShadowContainer style={{ marginLeft: drawerMargin, marginRight: drawerMargin }}>
                     <ShadowBox>
-                        <TimeTableGrid/>
+                        <TimeTableGrid />
                     </ShadowBox>
                 </ShadowContainer>
             </Container>
@@ -38,23 +41,23 @@ const Container = styled.div`
 `
 
 const Drawer = styled.div`
-    width: ${DRAWER_WIDTH}px;
     min-width: ${DRAWER_WIDTH}px;
+    z-index: 1;
 `
 
 const ShadowContainer = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     width: 100%;
     margin-top: 6px;
     margin-right: 1vw;
     margin-bottom: 1vw;
-    max-width: 1200px;
     z-index: 1;
 `
 const ShadowBox = styled.div`
     background-color: white;
     box-shadow: rgba(0,0,0,0.3) 0px 0px 10px;
+    max-width: 1200px;
 `
 const ShadowContainerEmu = styled.div`
     margin-left: ${DRAWER_WIDTH}px;

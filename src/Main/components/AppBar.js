@@ -8,7 +8,7 @@ import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
 import PrintIcon from 'material-ui/svg-icons/action/print';
 import CalendarIcon from 'material-ui/svg-icons/action/event';
-
+import FeedbackIcon from 'material-ui/svg-icons/action/feedback';
 import UserSettingsMenu from './UserSettingsMenu';
 import Drawer from './Drawer';
 import SearchBar from './SearchBar';
@@ -17,6 +17,7 @@ import { showError, changeWeek } from '../actions';
 import { grey100 } from 'material-ui/styles/colors';
 import { DRAWER_WIDTH } from '../../Common/const';
 import Calendar from "./Calendar";
+import Feedback from './Feedback';
 
 class WGAppBar extends Component {
 
@@ -43,7 +44,9 @@ class WGAppBar extends Component {
         this.refs.calendar.getWrappedInstance().open();
     }
 
-
+    handleFeedback = () => {
+        this.refs.feedback.getWrappedInstance().open();
+    }
 
     render() {
         const small = this.props.small;
@@ -70,11 +73,15 @@ class WGAppBar extends Component {
                     <IconButton tooltip="Kalendar öffnen">
                         <CalendarIcon color={grey100} onClick={this.handleCalendar} />
                     </IconButton>
+                    <IconButton tooltip="Feedback geben">
+                        <FeedbackIcon color={grey100} onClick={this.handleFeedback} />
+                    </IconButton>
                     {small || <IconButton tooltip="Stundenplan drucken" onClick={this.onPrintTimetable}>
                         <PrintIcon color={grey100} />
                     </IconButton>}
                     <UserSettingsMenu />
                 </Icons>
+                <Feedback ref="feedback"/>
                 <Drawer
                     open={this.state.open}
                     onClose={this.onCloseDrawer}

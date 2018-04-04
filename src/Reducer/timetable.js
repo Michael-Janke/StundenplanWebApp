@@ -9,6 +9,7 @@ const initialState = {
     Teacher: [],
     Room: [],
     Student: [],
+    minMaxDates: {},
   },
   timetables: {},
   substitutions: {},

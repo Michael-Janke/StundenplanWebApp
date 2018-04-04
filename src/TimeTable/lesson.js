@@ -13,7 +13,7 @@ const SubstitutionText = ({ children }) => (
     </SubstitutionTextContainer>
 )
 
-const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, removalField }) => {
+const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, removalField, absence }) => {
 
     const Field1 = Field.bind(null, fields[0], { small });
     const Field2 = Field.bind(null, fields[1], { small });
@@ -37,7 +37,9 @@ const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionT
                     </div>
                 </LessonContainer>
                 {removalField && <RemovalField />}
-                {substitutionText && <SubstitutionText>{substitutionText}</SubstitutionText>}
+                {(substitutionText || absence) &&
+                    <SubstitutionText>{substitutionText ? substitutionText + (absence ? ` (${absence.TEXT})` : "") : absence.TEXT}</SubstitutionText>
+                }
             </LessonWrapper>
         </Lesson>
     );
@@ -51,7 +53,9 @@ const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionT
                 <Field3 />
                 <Field2 />
                 {removalField && <RemovalField />}
-                {substitutionText && <SubstitutionText>{substitutionText}</SubstitutionText>}
+                {(substitutionText || absence) &&
+                    <SubstitutionText>{substitutionText ? substitutionText + (absence ? ` (${absence.TEXT})` : "") : absence.TEXT}</SubstitutionText>
+                }
             </LessonContainer>
         </Lesson>
     );
