@@ -8,7 +8,8 @@ export const adalConfig = {
     "https://graph.microsoft.com/": "https://graph.microsoft.com/"
   },
   cacheLocation: 'localStorage',
-  popUp: false
+  popUp: false,
+  postLogoutRedirectUri: 'https://www.wolkenberg-gymnasium.de'
 };
 
 export const authContext = new AuthenticationContext(adalConfig);

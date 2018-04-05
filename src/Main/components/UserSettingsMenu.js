@@ -11,14 +11,16 @@ import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import KeyIcon from 'material-ui/svg-icons/communication/vpn-key';
 import NotificationsOn from 'material-ui/svg-icons/social/notifications-active';
 import NotificationsOff from 'material-ui/svg-icons/social/notifications-off';
+import LogOutIcon from 'material-ui/svg-icons/action/exit-to-app';
 
 import { purge } from '../../store';
 import { unregister } from '../../registerServiceWorker';
 import { connectToServiceWorker } from '../../Common/firebase';
 import { setNotification, showError } from '../actions';
+import { authContext } from '../../Common/Adal/adalConfig';
 import UserAvatar from './UserAvatar';
 
-class UserSettingMenu extends React.Component {
+class UserSettingsMenu extends React.Component {
 
     profilePicChange = () => {
         window.open("https://outlook.office365.com/ecp/PersonalSettings/EditAccount.aspx?chgPhoto=1&e" +
@@ -71,6 +73,10 @@ class UserSettingMenu extends React.Component {
         }
     }
 
+    logout = () => {
+        authContext.logOut();
+    }
+
     render() {
         return (
             <IconMenu
@@ -101,6 +107,10 @@ class UserSettingMenu extends React.Component {
                     rightIcon={this.props.notificationToken ? <NotificationsOff /> : <NotificationsOn />}
                     onClick={this.setNotification}
                 />
+                <MenuItem
+                    primaryText="Logout"
+                    rightIcon={<LogOutIcon />}
+                    onClick={this.logout} />
             </IconMenu>
         );
     }
@@ -120,7 +130,7 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserSettingMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(UserSettingsMenu);
 
 
 
