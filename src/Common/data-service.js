@@ -71,6 +71,12 @@ const dataService = store => next => action => {
 			return requestApiGenerator(store.dispatch)(API_URL, 'me', { type: 'GET_ME' });
 		case 'GET_MASTERDATA':
 			return requestApiGenerator(next)(API_URL, 'all', { type: 'GET_MASTERDATA' });
+		case 'ADD_DATE':
+			return requestApiGenerator(next)(API_URL, 'dates/', { type: 'ADD_DATE' }, 'POST', JSON.stringify(action.payload));
+		case 'EDIT_DATE':
+			return requestApiGenerator(next)(API_URL, 'dates/' + action.payload.DATE_ID, { type: 'EDIT_DATE' }, 'PATCH', JSON.stringify(action.payload));
+		case 'GET_DATES':
+			return requestApiGenerator(next)(API_URL, 'dates/', { type: 'GET_DATES' });
 		case "GET_TIMETABLE": {
 			return requestApiGenerator(next)(API_URL,
 				`timetable/${action.payload.type}/${action.payload.id}`,

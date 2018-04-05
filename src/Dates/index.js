@@ -5,48 +5,105 @@ import moment from 'moment';
 import { Paper } from "material-ui";
 import { connect } from 'react-redux';
 import Day from './day';
+import { getDates } from "./actions";
+import makeGetCurrentDates from "../Selector/dates";
+import IconButton from "material-ui/IconButton/IconButton";
+import AddIcon from "material-ui/svg-icons/content/add";
+import AddDialog from "./Dialogs/addDialog";
 
+class Dates extends Component {
 
-class WeekCalendar extends Component {
+    constructor(props) {
+        super(props);
+        this.props.getDates();
+    }
+
+    handleOnEdit = (appointment) => {
+        this.refs.addDialog.getWrappedInstance().open(appointment);
+    }
+
+    handleOnAdd = () => {
+        this.refs.addDialog.getWrappedInstance().open();
+    }
+
     render() {
         console.log(this.props.muiTheme);
         return (
             <Container>
                 <Header>
-                    <Year>{moment(this.props.timetableDate).format('YYYY')}</Year>
-                    <Week>KW {moment(this.props.timetableDate).format('W')}</Week>
+                    <div>
+                        <Year>{moment(this.props.timetableDate).format('YYYY')}</Year>
+                        <Week>KW {moment(this.props.timetableDate).format('W')}</Week>
+                    </div>
+                    <IconButton onClick={this.handleOnAdd}>
+                        <AddIcon />
+                    </IconButton>
                 </Header>
                 <Content>
-                    <Day date={moment()}></Day>
+                    {this.props.dates.map((date, i) => (<Day key={i} date={date.DATE} onEdit={this.handleOnEdit} appointments={date.dates} />))}
                 </Content>
+                <AddDialog ref="addDialog" />
             </Container>
         );
     }
 }
 const Content = styled.div`
-    height: 100%;
     overflow: auto;
+    padding: 8px 16px;
+    max-height: calc(100vh - 200px);
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 `;
 
 const Header = styled.div`
     border-bottom: 1px solid #e0e0e0;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
 `;
 
 const Container = styled(Paper) `
     z-index: 1;
     margin-left: 1vw;
     margin-right: 1vw;
-    padding: 16px;
-    height: 100%;
-`
+    margin-top: 20px;
+`;
 const Year = styled.div`
     font-size: 70%;
-`
+`;
 const Week = styled.div`
     font-size: 100%;
-`
-const mapStateToProps = (state) => ({
-    timetableDate: state.timetable.timetableDate,
+`;
+const makeMapStateToProps = () => {
+    const getCurrentDates = makeGetCurrentDates();
+    const mapStateToProps = (state, props) => {
+        return {
+            timetableDate: state.timetable.timetableDate,
+            dates: getCurrentDates(state),
+        }
+    }
+    return mapStateToProps;
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    getDates: () => dispatch(getDates()),
 });
 
-export default connect(mapStateToProps)(muiThemeable()(WeekCalendar)); 
+export default connect(makeMapStateToProps, mapDispatchToProps)(muiThemeable()(Dates)); 

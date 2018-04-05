@@ -5,7 +5,7 @@ import { DRAWER_WIDTH } from "../Common/const";
 import { grey600 } from 'material-ui/styles/colors';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import TimeTableGrid from './timeTableGrid';
-// import Dates from '../Dates';
+import Dates from '../Dates';
 
 class View extends Component {
     render() {
@@ -18,7 +18,7 @@ class View extends Component {
 
                 {this.props.showDrawer &&
                     <Drawer>
-                        {/* <Dates selectedDate={this.props.timetableDate} /> */}
+                        <Dates selectedDate={this.props.timetableDate} />
                     </Drawer>
                 }
                 <ShadowContainer style={{ marginLeft: drawerMargin, marginRight: drawerMargin }}>
