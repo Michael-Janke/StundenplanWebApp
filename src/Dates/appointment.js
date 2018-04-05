@@ -1,9 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { green800, lightGreen600, lime600, orange600 } from 'material-ui/styles/colors';
-import RoomIcon from 'material-ui/svg-icons/action/room';
-import TimeIcon from 'material-ui/svg-icons/device/access-time';
-import ClassIcon from 'material-ui/svg-icons/social/group';
+import { orange600 } from 'material-ui/styles/colors';
 import EditIcon from 'material-ui/svg-icons/content/create';
 import DeleteIcon from 'material-ui/svg-icons/action/delete-forever';
 import IconButton from 'material-ui/IconButton/IconButton';
@@ -49,11 +46,6 @@ function Appointment({ TEXT, SUBTEXT, onEdit, onDelete }) {
     )
 }
 
-const Text = styled.div`
-    font-size: 100%;
-    width: 100%;
-    margin-left: 10px;
-`;
 
 const Paragraph = styled.div`
     margin: 2px;

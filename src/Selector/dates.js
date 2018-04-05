@@ -2,9 +2,10 @@ import { createSelector } from 'reselect'
 import moment from 'moment';
 
 const getDates = (state) => state.dates.dates;
-const getCurrentTimetableDate = (state) => moment(state.timetable.timetableDate).startOf('day');
+const getCurrentTimetableDate = (state) => state.timetable.timetableDate;
 
 const getMappedDates = (dates, currentDate) => {
+    currentDate = moment(currentDate).startOf('day');
     let array = [];
     dates.forEach(element => {
         let startDate = moment(element.DATE_FROM.date);
