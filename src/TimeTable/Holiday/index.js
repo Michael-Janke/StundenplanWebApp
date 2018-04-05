@@ -31,7 +31,7 @@ class Holiday extends Component {
     }
     return (
       <Container img={img}>
-        {this.props.noText || <Text>{this.props.holiday}</Text>}
+        <Text>{this.props.holiday}</Text>
       </Container>
     );
   }
@@ -41,7 +41,7 @@ const Container = styled.div`
     background-color: ${green100};
     display: flex;
     height: 100%; 
-    background: url(${(props) => props.img}) no-repeat center center fixed; 
+    background: url(${(props) => props.img}) no-repeat center center; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

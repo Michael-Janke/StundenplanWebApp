@@ -48,9 +48,11 @@ class TimeTableGrid extends Component {
         if (dayObject.holiday) {
             if (periodNumber !== 1) return;
             let isNextDay = (this.props.currentTimetable[day - 1] || {}).holiday === dayObject.holiday;
+            if (isNextDay) return;
+            let colSpan = this.props.currentTimetable.slice(day).filter((dayX) => dayX.holiday === dayObject.holiday).length;
             return (
-                <TableRowColumn key={day} rowSpan={Object.values(this.props.periods).length} style={{ padding: 0 }}>
-                    <Holiday holiday={dayObject.holiday} date={dayObject.date.format("dd.mm")} noText={isNextDay} />
+                <TableRowColumn key={day} rowSpan={Object.values(this.props.periods).length} style={{ padding: 0 }} colSpan = {colSpan}>
+                    <Holiday holiday={dayObject.holiday} date={dayObject.date.format("dd.mm")} />
                 </TableRowColumn>
             );
         } else {
