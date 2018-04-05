@@ -49,7 +49,7 @@ class TimeTableGrid extends Component {
             if (periodNumber !== 1) return;
             let isNextDay = (this.props.currentTimetable[day - 1] || {}).holiday === dayObject.holiday;
             return (
-                <TableRowColumn key={day} rowSpan={0} style={{ padding: 0 }}>
+                <TableRowColumn key={day} rowSpan={Object.values(this.props.periods).length} style={{ padding: 0 }}>
                     <Holiday holiday={dayObject.holiday} date={dayObject.date.format("dd.mm")} noText={isNextDay} />
                 </TableRowColumn>
             );

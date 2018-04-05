@@ -5,7 +5,7 @@ import moment from 'moment';
 import { Paper } from "material-ui";
 import { connect } from 'react-redux';
 import Day from './day';
-import { getDates } from "./actions";
+import { getDates, deleteDate } from "./actions";
 import makeGetCurrentDates from "../Selector/dates";
 import IconButton from "material-ui/IconButton/IconButton";
 import AddIcon from "material-ui/svg-icons/content/add";
@@ -22,12 +22,15 @@ class Dates extends Component {
         this.refs.addDialog.getWrappedInstance().open(appointment);
     }
 
+    handleOnDelete = (appointment) => {
+        this.props.deleteDate(appointment);
+    }
+
     handleOnAdd = () => {
         this.refs.addDialog.getWrappedInstance().open();
     }
 
     render() {
-        console.log(this.props.muiTheme);
         return (
             <Container>
                 <Header>
@@ -35,12 +38,21 @@ class Dates extends Component {
                         <Year>{moment(this.props.timetableDate).format('YYYY')}</Year>
                         <Week>KW {moment(this.props.timetableDate).format('W')}</Week>
                     </div>
-                    <IconButton onClick={this.handleOnAdd}>
-                        <AddIcon />
-                    </IconButton>
+                    {this.props.isAdmin &&
+                        <IconButton onClick={this.handleOnAdd}>
+                            <AddIcon />
+                        </IconButton>
+                    }    
                 </Header>
                 <Content>
-                    {this.props.dates.map((date, i) => (<Day key={i} date={date.DATE} onEdit={this.handleOnEdit} appointments={date.dates} />))}
+                    {this.props.dates.map((date, i) =>
+                        <Day
+                            key={i}
+                            date={date.DATE}
+                            onEdit={this.props.isAdmin ? this.handleOnEdit : undefined}
+                            onDelete={this.props.isAdmin ? this.handleOnDelete : undefined}
+                            appointments={date.dates} />
+                    )}
                 </Content>
                 <AddDialog ref="addDialog" />
             </Container>
@@ -97,6 +109,7 @@ const makeMapStateToProps = () => {
         return {
             timetableDate: state.timetable.timetableDate,
             dates: getCurrentDates(state),
+            isAdmin: state.user.scope === 'admin'
         }
     }
     return mapStateToProps;
@@ -104,6 +117,7 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = (dispatch) => ({
     getDates: () => dispatch(getDates()),
+    deleteDate: (date) => dispatch(deleteDate(date)),
 });
 
 export default connect(makeMapStateToProps, mapDispatchToProps)(muiThemeable()(Dates)); 

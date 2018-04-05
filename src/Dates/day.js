@@ -6,7 +6,7 @@ import moment from 'moment';
 
 export default class Day extends Component {
     render() {
-        const { date, appointments, onEdit } = this.props;
+        const { date, appointments, onEdit, onDelete } = this.props;
         return (
             <Container>
                 <LeftHeader>
@@ -14,7 +14,14 @@ export default class Day extends Component {
                     <WeekdayName>{date.format("dd")}</WeekdayName>
                 </LeftHeader>
                 <Content>
-                    {appointments.map((appointment, i) => (<Appointment {...appointment} onEdit={onEdit && onEdit.bind(null, appointment)} key={i} />))}
+                    {appointments.map((appointment, i) =>
+                        <Appointment
+                            {...appointment}
+                            onEdit={onEdit && onEdit.bind(null, appointment)}
+                            onDelete={onDelete && onDelete.bind(null, appointment)}
+                            key={i}
+                        />
+                    )}
                 </Content>
             </Container>
         )

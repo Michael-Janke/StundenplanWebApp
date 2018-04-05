@@ -190,7 +190,8 @@ export class AddDialog extends Component {
                             Vorschau
                         </PreviewHeader>
                         <PreviewContainer>
-                            <Day date={moment(this.state.appointment.DATE_FROM)} appointments={[this.state.appointment]} />
+                            <Day date={moment(this.state.appointment.DATE_FROM)}
+                                appointments={[this.state.appointment]} />
                         </PreviewContainer>
                     </Preview>
                 </Container>
@@ -213,7 +214,7 @@ const PreviewHeader = styled.div`
 `;
 
 const Preview = styled.div`
-    min-width: 300px;
+    width: 300px;
     // border-left: 1px solid #e0e0e0;
     align-items: center;
     display: flex;

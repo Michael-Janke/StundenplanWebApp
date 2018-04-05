@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { green800, lightGreen600, lime600 } from 'material-ui/styles/colors';
+import { green800, lightGreen600, lime600, orange600 } from 'material-ui/styles/colors';
 import RoomIcon from 'material-ui/svg-icons/action/room';
 import TimeIcon from 'material-ui/svg-icons/device/access-time';
 import ClassIcon from 'material-ui/svg-icons/social/group';
 import EditIcon from 'material-ui/svg-icons/content/create';
+import DeleteIcon from 'material-ui/svg-icons/action/delete-forever';
 import IconButton from 'material-ui/IconButton/IconButton';
 
 const styles = {
@@ -14,13 +15,16 @@ const styles = {
         color: 'inherit',
     }
 }
-function Appointment({ TEXT, SUBTEXT, onEdit }) {
+function Appointment({ TEXT, SUBTEXT, onEdit, onDelete }) {
     return (
         <Container>
             {onEdit &&
                 <Toolbar>
-                    <IconButton onClick={onEdit}>
+                    <IconButton onClick={onEdit} style={styles.icon}>
                         <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={onDelete}>
+                        <DeleteIcon style={styles.icon} />
                     </IconButton>
                 </Toolbar>
             }
@@ -58,11 +62,13 @@ const Paragraph = styled.div`
 `;
 
 const Container = styled.div`
-    background-color: #73D99C;
+    background-color: ${orange600};
     color: white;
     padding: 8px;
     border-radius: 2px;
     box-shadow: rgba(0,0,0,0.1) 0px 0px 10px;
+    word-wrap: break-word;
+    width: 100%;
 `;
 
 const Toolbar = styled.div`

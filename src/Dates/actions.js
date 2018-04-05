@@ -10,3 +10,7 @@ export function editDate(date) {
 export function getDates() {
     return { type: "GET_DATES" };
 }
+
+export function deleteDate(date) {
+    return { type: "DELETE_DATE", payload: date };
+}

@@ -2,7 +2,7 @@ import { createSelector } from 'reselect'
 import moment from 'moment';
 
 const getDates = (state) => state.dates.dates;
-const getCurrentTimetableDate = (state) => moment(state.timetable.timetableDate).weekday(0);
+const getCurrentTimetableDate = (state) => moment(state.timetable.timetableDate).startOf('day');
 
 const getMappedDates = (dates, currentDate) => {
     let array = [];
@@ -18,7 +18,6 @@ const getMappedDates = (dates, currentDate) => {
         }
         object.dates.push(element);
     });
-    console.log(array, dates);
     return array;
 };
 
