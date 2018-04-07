@@ -20,6 +20,8 @@ import AppBar from './components/AppBar';
 import Theme from '../Common/theme';
 import ReactInterval from 'react-interval';
 import { connectToServiceWorker } from '../Common/firebase';
+import PrintProvider from 'react-easy-print';
+
 
 class Main extends Component {
 
@@ -48,21 +50,23 @@ class Main extends Component {
 
     render() {
         return (
-            <MuiThemeProvider muiTheme={Theme}>
-                <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
-                    <AppBar />
-                    <TimeTable />
-                    <Snackbar
-                        open={!!this.props.error}
-                        message={"Fehler: " + this.props.error}
-                        autoHideDuration={15000}
-                        contentStyle={{
-                            color: 'red'
-                        }}
-                        onRequestClose={this.props.clearErrors} />
-                    <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
-                </div>
-            </MuiThemeProvider>
+            <PrintProvider>
+                <MuiThemeProvider muiTheme={Theme}>
+                    <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
+                        <AppBar />
+                        <TimeTable />
+                        <Snackbar
+                            open={!!this.props.error}
+                            message={"Fehler: " + this.props.error}
+                            autoHideDuration={15000}
+                            contentStyle={{
+                                color: 'red'
+                            }}
+                            onRequestClose={this.props.clearErrors} />
+                        <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
+                    </div>
+                </MuiThemeProvider>
+            </PrintProvider>
         );
     }
 }
@@ -70,7 +74,7 @@ class Main extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         setMyTimetable: () => { dispatch(setMyTimetable()) },
-        sendLoginStatistic: () => {dispatch(sendLoginStatistic())},
+        sendLoginStatistic: () => { dispatch(sendLoginStatistic()) },
         counterChanged: (changed) => dispatch(counterChanged(changed)),
         checkCounter: () => { dispatch(checkCounter()); },
         clearErrors: () => { dispatch(clearErrors()); },

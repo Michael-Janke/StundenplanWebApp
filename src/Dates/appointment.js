@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { orange600 } from 'material-ui/styles/colors';
 import EditIcon from 'material-ui/svg-icons/content/create';
 import DeleteIcon from 'material-ui/svg-icons/action/delete-forever';
 import IconButton from 'material-ui/IconButton/IconButton';
@@ -32,15 +31,6 @@ function Appointment({ TEXT, SUBTEXT, onEdit, onDelete }) {
                 <Paragraph>
                     {SUBTEXT}
                 </Paragraph>
-                {/* <Paragraph>
-                    <RoomIcon style={styles.icon} />
-                </Paragraph>
-                <Paragraph>
-                    <TimeIcon style={styles.icon} />
-                </Paragraph>
-                <Paragraph>
-                    <ClassIcon style={styles.icon} />
-                </Paragraph> */}
             </Content>
         </Container>
     )
@@ -54,11 +44,8 @@ const Paragraph = styled.div`
 `;
 
 const Container = styled.div`
-    background-color: ${orange600};
-    color: white;
     padding: 8px;
     border-radius: 2px;
-    box-shadow: rgba(0,0,0,0.1) 0px 0px 10px;
     word-wrap: break-word;
     width: 100%;
 `;
@@ -68,12 +55,12 @@ const Toolbar = styled.div`
 `;
 
 const Header = styled.div`
-    font-size: 90%;
+    font-size: 70%;
     font-weight: 600;
     margin-bottom: 1vmin;
 `;
 const Content = styled.div`
-    font-size: 75%;
+    font-size: 60%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

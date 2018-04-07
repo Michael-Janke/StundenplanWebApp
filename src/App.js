@@ -7,7 +7,6 @@ import ResponsiveFontSize from './Common/ResponsiveFontSize';
 
 import './App.css';
 import createStore from './store';
-import PrintProvider from 'react-easy-print';
 
 const { store, persistor } = createStore();
 
@@ -17,11 +16,9 @@ class App extends Component {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <MuiThemeProvider >
-            <PrintProvider>
-              <ResponsiveFontSize>
-                <Main />
-              </ResponsiveFontSize>
-            </PrintProvider>
+            <ResponsiveFontSize>
+              <Main />
+            </ResponsiveFontSize>
           </MuiThemeProvider >
         </PersistGate>
       </Provider>

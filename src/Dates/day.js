@@ -29,11 +29,10 @@ export default class Day extends Component {
 }
 
 const Container = styled.div`
-    border-bottom: 1px solid #e0e0e0;
     display: flex;
     flex-direction: row;
-    padding-top: 2vmin;
-    padding-bottom: 2vmin;
+    padding-top: 1vmin;
+    padding-bottom: 1vmin;
     margin-left: .1vmin;
     margin-right: .1vmin;
 
@@ -42,6 +41,7 @@ const Container = styled.div`
 const LeftHeader = styled.div`
     display: flex;
     flex-direction: column;
+    width: 30px;
 `;
 
 const WeekdayName = styled.div`

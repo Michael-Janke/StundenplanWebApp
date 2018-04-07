@@ -1,0 +1,8 @@
+/* .sticky .sticky-container{
+    font-size: 100%;
+} */
+
+.sticky-container {
+    font-size: 70%;
+    transition: all 1s;
+}
