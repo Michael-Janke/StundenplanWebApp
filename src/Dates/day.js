@@ -55,6 +55,5 @@ const DayOfMonth = styled.div`
 `;
 
 const Content = styled.div`
-    width: 100%;
-    margin-left: 2vmin;
+    padding-left: 2vmin;
 `;

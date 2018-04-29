@@ -44,9 +44,7 @@ const Paragraph = styled.div`
 `;
 
 const Container = styled.div`
-    padding: 8px;
-    border-radius: 2px;
-    word-wrap: break-word;
+    word-break: break-word;
     width: 100%;
 `;
 
