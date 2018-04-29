@@ -11,7 +11,8 @@ import {
     setNotification,
     showError,
     setMyTimetable,
-    counterChanged
+    counterChanged,
+    sendLoginStatistic
 } from "./actions"
 import TimeTable from "../TimeTable"
 import { MuiThemeProvider } from 'material-ui/styles';
@@ -19,6 +20,8 @@ import AppBar from './components/AppBar';
 import Theme from '../Common/theme';
 import ReactInterval from 'react-interval';
 import { connectToServiceWorker } from '../Common/firebase';
+import PrintProvider from 'react-easy-print';
+
 
 class Main extends Component {
 
@@ -26,6 +29,7 @@ class Main extends Component {
         super(props);
         props.checkCounter();
         this.props.setMyTimetable();
+        this.props.sendLoginStatistic();
         props.needsUpdate && props.counterChanged(true);
         if (this.props.notificationToken) {
             connectToServiceWorker(this.props.setNotification, this.props.notificationToken);
@@ -46,22 +50,24 @@ class Main extends Component {
 
     render() {
         return (
-            <MuiThemeProvider theme={Theme}>
-                <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
-                    <AppBar>
-                        <TimeTable />
-                        <Snackbar
-                            open={!!this.props.error}
-                            message={"Fehler: " + this.props.error}
-                            autoHideDuration={15000}
-                            contentStyle={{
-                                color: 'red'
-                            }}
-                            onRequestClose={this.props.clearErrors} />
-                        <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
-                    </AppBar>
-                </div>
-            </MuiThemeProvider>
+            <PrintProvider>
+                <MuiThemeProvider theme={Theme}>
+                    <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
+                        <AppBar>
+                            <TimeTable />
+                            <Snackbar
+                                open={!!this.props.error}
+                                message={"Fehler: " + this.props.error}
+                                autoHideDuration={15000}
+                                contentStyle={{
+                                    color: 'red'
+                                }}
+                                onRequestClose={this.props.clearErrors} />
+                            <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
+                        </AppBar>
+                    </div>
+                </MuiThemeProvider>
+            </PrintProvider>
         );
     }
 }
@@ -69,6 +75,7 @@ class Main extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         setMyTimetable: () => { dispatch(setMyTimetable()) },
+        sendLoginStatistic: () => { dispatch(sendLoginStatistic()) },
         counterChanged: (changed) => dispatch(counterChanged(changed)),
         checkCounter: () => { dispatch(checkCounter()); },
         clearErrors: () => { dispatch(clearErrors()); },

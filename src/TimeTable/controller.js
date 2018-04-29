@@ -7,7 +7,7 @@ import {
   WEEKDAY_NAMES,
   DRAWER_WIDTH
 } from "../Common/const";
-import { grey } from 'material-ui/styles/colors'
+import grey from 'material-ui/colors/grey';
 
 class Controller extends Component {
   render() {

@@ -11,14 +11,16 @@ import RefreshIcon from 'material-ui-icons/Refresh';
 import KeyIcon from 'material-ui-icons/VpnKey';
 import NotificationsOn from 'material-ui-icons/NotificationsActive';
 import NotificationsOff from 'material-ui-icons/NotificationsOff';
+import LogOutIcon from 'material-ui-icons/ExitToApp';
 
 import { purge } from '../../store';
 import { unregister } from '../../registerServiceWorker';
 import { connectToServiceWorker } from '../../Common/firebase';
 import { setNotification, showError } from '../actions';
+import { authContext } from '../../Common/Adal/adalConfig';
 import UserAvatar from './UserAvatar';
 
-class UserSettingMenu extends React.Component {
+class UserSettingsMenu extends React.Component {
 
     state = {};
 
@@ -81,6 +83,9 @@ class UserSettingMenu extends React.Component {
         this.setState({ anchorEl: null });
     };
 
+    logout = () => {
+        authContext.logOut();
+    }
 
     render() {
         const { anchorEl } = this.state;
@@ -129,6 +134,13 @@ class UserSettingMenu extends React.Component {
                         </ListItemIcon>
                         <ListItemText inset primary={"Benachrichtigungen " + (this.props.notificationToken ? "ausschalten" : "anschalten")} />
                     </MenuItem>
+                    <MenuItem
+                        onClick={this.logout}>
+                        <ListItemIcon>
+                            <LogOutIcon />
+                        </ListItemIcon>
+                        <ListItemText inset primary="Logout" />
+                    </MenuItem>
                 </Menu>
             </div>
         );
@@ -144,11 +156,12 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        notificationToken: state.user.notificationToken
+        notificationToken: state.user.notificationToken,
+        upn: state.user.upn,
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserSettingMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(UserSettingsMenu);
 
 
 

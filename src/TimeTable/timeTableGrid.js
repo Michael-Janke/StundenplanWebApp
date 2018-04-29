@@ -14,7 +14,6 @@ import { changeWeek } from '../Main/actions';
 import makeGetCurrentTimetable from '../Selector/timetable';
 import Holiday from './Holiday';
 
-
 class TimeTableGrid extends Component {
 
     renderPeriodTimes(period) {
@@ -41,21 +40,21 @@ class TimeTableGrid extends Component {
         if (dayObject.holiday) {
             if (periodNumber !== 1) return;
             let isNextDay = (this.props.currentTimetable[day - 1] || {}).holiday === dayObject.holiday;
-            return [
-                <TableCell key={day} colSpan={4} rowSpan={0} style={{ padding: 0, height: 1 }}>
-                    <Holiday holiday={dayObject.holiday} date={dayObject.date.format("dd.mm")} noText={isNextDay} />
+            if (isNextDay) return;
+            let colSpan = this.props.currentTimetable.slice(day).filter((dayX) => dayX.holiday === dayObject.holiday).length;
+            return (
+                <TableCell key={day} rowSpan={Object.values(this.props.periods).length} style={{ padding: 0 }} colSpan = {colSpan}>
+                    <Holiday holiday={dayObject.holiday} date={dayObject.date.format("dd.mm")} />
                 </TableCell>
-            ];
+            );
         } else {
             let period = dayObject.periods[periodNumber - 1];
-            let absences = (dayObject.absences || [])[periodNumber];
             if (!period) {
                 return null;
             }
-            return [
+            return (
                 <TableCell
                     key={day}
-                    colSpan={absences ? 3 : 4}
                     style={{
                         textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
                     }}
@@ -65,18 +64,8 @@ class TimeTableGrid extends Component {
                         type={this.props.type}
                         avatars={this.props.avatars}
                         small={this.props.small} />
-                </TableCell>,
-                absences && absences.first &&
-                <TableCell
-                    key={"absence" + day}
-                    colSpan={1}
-                    rowSpan={absences.skip}
-                    style={{
-                        padding: 0,
-                    }}>
-                    <div style={{ wordWrap: 'break-word' }}>{absences.text}</div>
                 </TableCell>
-            ];
+            );
         }
     }
 
@@ -97,9 +86,7 @@ class TimeTableGrid extends Component {
                         {this.renderPeriodHeader(period)}
                     </div>
                 </TableCell>
-                {[].concat.apply([],
-                    WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))
-                )}
+                {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
             </TableRow>
         ));
     }
@@ -118,48 +105,51 @@ class TimeTableGrid extends Component {
                     </IconButton>
                 </TableToolBar> : null}
                 <Print main name="TimeTable">
-                    <div style={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: `calc(100vh - ${headerHeight}px)` }}>
-                        <GrayoutTable
-                            disabled={this.props.counterChanged}>
-                            <TableHead
-                                style={{ backgroundColor: grey[200], fontSize: '100%' }}>
-                                <TableRow>
-                                    <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
-                                    {this.props.currentTimetable && this.props.currentTimetable.map((day, i) => (
-                                        <TableCell
-                                            key={i}
-                                            colSpan={4}
-                                            style={tableHeaderStyle}>
-                                            {day.date.format(this.props.small ? 'dd' : 'dddd')}
-                                            <br />
-                                            {day.date.format('DD.MM.')}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody
-                                style={{ overflowX: 'hidden', overflowY: 'auto' }}>
-                                {this.renderRows()}
-                            </TableBody>
+                    <GrayoutTable
+                        disabled={this.props.counterChanged}
+                        selectable={false}
+                        wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: `calc(100vh - ${headerHeight}px)` }}
+                    >
+                        <TableHead
+                            style={{ backgroundColor: grey[200], fontSize: '100%' }}
+                            displaySelectAll={false}
+                            adjustForCheckbox={false}>
+                            <TableRow>
+                            <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
+                                {this.props.currentTimetable && this.props.currentTimetable.map((day, i) => (
+                                <TableCell
+                                        key={i}
+                                        style={tableHeaderStyle}>
+                                        {day.date.format(this.props.small ? 'dd' : 'dddd')}
+                                        <br />
+                                        {day.date.format('DD.MM.')}
+                                </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody
+                            displayRowCheckbox={false}>
+                            {this.renderRows()}
+                        </TableBody>
 
-                            {this.props.showDrawer && <TableFooter
-                            >
-                                <TableRow>
-                                    <TableCell colSpan="6" style={{ textAlign: 'right' }} >
-                                        <NoPrint>
-                                            <IconButton onClick={this.props.setPreviousWeek}>
-                                                <BackIcon />
-                                            </IconButton>
-                                            <IconButton onClick={this.props.setNextWeek}>
-                                                <NextIcon />
-                                            </IconButton>
-                                        </NoPrint>
-                                    </TableCell>
-                                </TableRow>
-                            </TableFooter>}
+                        {this.props.showDrawer && <TableFooter
+                            adjustForCheckbox={false}
+                        >
+                            <TableRow>
+                                <TableCell colSpan="6" style={{ textAlign: 'right' }} >
+                                    <NoPrint>
+                                        <IconButton onClick={this.props.setPreviousWeek}>
+                                            <BackIcon />
+                                        </IconButton>
+                                        <IconButton onClick={this.props.setNextWeek}>
+                                            <NextIcon />
+                                        </IconButton>
+                                    </NoPrint>
+                                </TableCell>
+                            </TableRow>
+                        </TableFooter>}
 
-                        </GrayoutTable>
-                    </div>
+                    </GrayoutTable>
                 </Print>
             </div>
         );

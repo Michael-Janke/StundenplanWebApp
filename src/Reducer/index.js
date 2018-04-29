@@ -6,6 +6,7 @@ import user from './user';
 import error from './error';
 import avatars from './avatars';
 import timetable from './timetable';
+import dates from './dates';
 
 export default combineReducers({
     browser: responsiveStateReducer,
@@ -13,5 +14,6 @@ export default combineReducers({
     user,
     error,
     timetable,
-    avatars
+    avatars,
+    dates,
 });

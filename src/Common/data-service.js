@@ -1,5 +1,6 @@
 import { adalGetToken } from './Adal/react-adal';
 import { adalConfig, authContext } from './Adal/adalConfig';
+import { createFeedbackMail } from './feedback';
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
 
@@ -21,7 +22,7 @@ const requestApiGenerator = next => (endpoint, route, action, METHOD = "GET", bo
 			}
 		})
 			.then(handleErrors)
-			.then(res => res.json())
+			.then(res => res.json().catch(err => null))
 			.then((res) =>
 				next({
 					...action,
@@ -70,6 +71,15 @@ const dataService = store => next => action => {
 			return requestApiGenerator(store.dispatch)(API_URL, 'me', { type: 'GET_ME' });
 		case 'GET_MASTERDATA':
 			return requestApiGenerator(next)(API_URL, 'all', { type: 'GET_MASTERDATA' });
+		case 'ADD_DATE':
+			return requestApiGenerator(next)(API_URL, 'dates/', { type: 'ADD_DATE' }, 'POST', JSON.stringify(action.payload));
+		case 'DELETE_DATE':
+			return requestApiGenerator(next)(API_URL, 'dates/' + action.payload.DATE_ID,
+				{ type: 'DELETE_DATE', request: action.payload }, 'DELETE');
+		case 'EDIT_DATE':
+			return requestApiGenerator(next)(API_URL, 'dates/' + action.payload.DATE_ID, { type: 'EDIT_DATE' }, 'PATCH', JSON.stringify(action.payload));
+		case 'GET_DATES':
+			return requestApiGenerator(next)(API_URL, 'dates/', { type: 'GET_DATES' });
 		case "GET_TIMETABLE": {
 			return requestApiGenerator(next)(API_URL,
 				`timetable/${action.payload.type}/${action.payload.id}`,
@@ -83,6 +93,11 @@ const dataService = store => next => action => {
 				{ type: 'GET_SUBSTITUTIONS', request: action.payload }
 			);
 		}
+		case "SEND_LOGIN_STATISTIC":
+			return requestApiGenerator(next)(API_URL, 'statistics/login', { type: "LOGIN_STATISTIC" }, 'POST', '{}');	
+		case "SEND_FEEDBACK":
+			return requestApiGenerator(next)(GRAPH_URL, 'beta/me/sendMail', { type: 'FEEDBACK' }, 'POST',
+				JSON.stringify(createFeedbackMail(action.payload)));
 		case 'GET_COUNTER':
 			return requestApiGenerator(next)(API_URL, 'counter', { type: 'COUNTER' });
 		case 'SET_NOTIFICATION':

@@ -24,12 +24,13 @@ export const SUBSTITUTION_MAP = {
         color: colors.red[900],
         backgroundColor: colors.red[50],
         name: "Vertretung",
-        targets: ['room', 'subject', 'teacher'],
+        priority: 5,
     },
     ASSIGNMENT: {
         color: colors.yellow[900],
         backgroundColor: colors.yellow[50],
         name: "Aufgaben",
+        priority: 4,
     },
     ELIMINATION: {
         color: colors.green[900],
@@ -38,14 +39,13 @@ export const SUBSTITUTION_MAP = {
     },
     CLASS_SUBSTITUTION: {
         color: "#a7bef7",
-        name: "Klasse absent",
-        targets: [],
+        name: "Klasse absent"
     },
     ROOM_SUBSTITUTION: {
         color: colors.blue[900],
         backgroundColor: colors.lightBlue[50],
         name: "Raumvertretung",
-        targets: ['room']
+        priority: 1,
     },
     INFORMATION: {
         color: colors.green.A500,
@@ -65,7 +65,6 @@ export const SUBSTITUTION_MAP = {
     SUPERVISION: {
         color: colors.grey[900],
         name: "Mitbetreuung",
-        targets: ['teacher']
     },
     REDUNDANCY: {
         color: colors.green[900],

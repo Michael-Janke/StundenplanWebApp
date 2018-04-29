@@ -6,24 +6,21 @@ import ResponsiveFontSize from './Common/ResponsiveFontSize';
 
 import './App.css';
 import createStore from './store';
-import PrintProvider from 'react-easy-print';
 
 const { store, persistor } = createStore();
 
 class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <PrintProvider>
-            <ResponsiveFontSize>
-              <Main />
-            </ResponsiveFontSize>
-          </PrintProvider>
-        </PersistGate>
-      </Provider>
-    );
-  }
+    render() {
+        return (
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                    <ResponsiveFontSize>
+                        <Main />
+                    </ResponsiveFontSize>
+                </PersistGate>
+            </Provider>
+        );
+    }
 }
 
 export default App;

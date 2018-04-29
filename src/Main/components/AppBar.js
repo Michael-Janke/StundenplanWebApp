@@ -20,6 +20,8 @@ import UserSettingsMenu from './UserSettingsMenu';
 import { grey } from 'material-ui/colors';
 import { DRAWER_WIDTH } from '../../Common/const';
 import ProfilePicture from './ProfilePicture';
+import Calendar from "./Calendar";
+import Feedback from './Feedback';
 
 const styles = theme => ({
     root: {
@@ -75,6 +77,14 @@ class ResponsiveDrawer extends React.Component {
         window.setTimeout(window.print, 0);
     }
 
+    handleCalendar = () => {
+        this.refs.calendar.getWrappedInstance().open();
+    }
+
+    handleFeedback = () => {
+        this.refs.feedback.getWrappedInstance().open();
+    }
+
     render() {
         const { classes, theme, small } = this.props;
 
@@ -116,6 +126,7 @@ class ResponsiveDrawer extends React.Component {
                         </Icons>
 
                     </Toolbar>
+                    <Feedback ref="feedback" />
                 </AppBar>
                 <Hidden mdUp>
                     <Drawer

@@ -5,7 +5,7 @@ import { DRAWER_WIDTH } from "../Common/const";
 import { grey } from 'material-ui/colors';
 import withTheme from 'material-ui/styles/withTheme';
 import TimeTableGrid from './timeTableGrid';
-import WeekCalendar from './weekCalendar';
+import Dates from '../Dates';
 
 class View extends Component {
     render() {
@@ -16,8 +16,9 @@ class View extends Component {
                     <ShadowContainerEmu />
                 </AppBar>
                 {this.props.showDrawer && <Drawer>
-                    <WeekCalendar selectedDate={this.props.timetableDate} />
+                    <Dates />
                 </Drawer>}
+                
                 <ShadowContainer style={{ marginLeft: drawerMargin, marginRight: drawerMargin }}>
                     <ShadowBox>
                         <TimeTableGrid />
@@ -38,23 +39,23 @@ const Container = styled.div`
 `
 
 const Drawer = styled.div`
-    width: ${DRAWER_WIDTH}px;
     min-width: ${DRAWER_WIDTH}px;
+    z-index: 1;
 `
 
 const ShadowContainer = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     width: 100%;
     margin-top: 6px;
     margin-right: 1vw;
     margin-bottom: 1vw;
-    max-width: 1200px;
     z-index: 1;
 `
 const ShadowBox = styled.div`
     background-color: white;
     box-shadow: rgba(0,0,0,0.3) 0px 0px 10px;
+    max-width: 1200px;
 `
 const ShadowContainerEmu = styled.div`
     margin-left: ${DRAWER_WIDTH}px;

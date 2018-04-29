@@ -47,6 +47,11 @@ export default function userReducer(state = initialState, action = {}) {
                 loading: false,
                 ...action.payload
             };
+        case "FEEDBACK_RECEIVED":
+            return {
+                ...state,
+                feedbackSuccess: true,
+            } 
         case "PROFILE_PICTURE_RECEIVED":
             return {
                 ...state,
