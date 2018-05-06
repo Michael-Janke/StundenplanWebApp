@@ -13,7 +13,6 @@ import NextIcon from '@material-ui/icons/ArrowForward';
 import FeedbackIcon from '@material-ui/icons/Feedback';
 import PrintIcon from '@material-ui/icons/Print';
 import LampIcon from '@material-ui/icons/LightbulbOutline';
-import SearchIcon from '@material-ui/icons/Search';
 import SearchBar from './SearchBar';
 import { connect } from 'react-redux';
 import { changeWeek, showError } from '../actions';
@@ -23,7 +22,6 @@ import grey from 'material-ui/colors/grey';
 import { DRAWER_WIDTH } from '../../Common/const';
 import ProfilePicture from './ProfilePicture';
 import Feedback from './Feedback';
-import Transition from 'react-transition-group/Transition';
 import indigo from 'material-ui/colors/indigo';
 
 const styles = theme => ({

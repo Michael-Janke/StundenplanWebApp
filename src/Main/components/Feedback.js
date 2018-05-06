@@ -10,8 +10,6 @@ import { Button, TextField } from 'material-ui';
 import { connect } from 'react-redux';
 import { sendFeedback } from '../actions';
 import FeedbackIcon from '@material-ui/icons/Feedback';
-import { grey, purple } from 'material-ui/colors';
-
 import Slide from 'material-ui/transitions/Slide';
 
 function Transition(props) {

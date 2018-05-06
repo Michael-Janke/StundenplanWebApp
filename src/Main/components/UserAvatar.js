@@ -29,7 +29,7 @@ class UserAvatar extends Component {
     render() {
         const avatar = (this.props.avatars || {})[this.props.upn];
         return <Avatar
-            src={avatar && ("data:image/jpg;base64," + avatar.img)}
+            src={avatar && avatar.img && ("data:image/jpg;base64," + avatar.img)}
             size={48}
             icon={<PersonIcon />}
         />

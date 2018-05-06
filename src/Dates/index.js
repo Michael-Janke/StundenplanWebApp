@@ -39,7 +39,7 @@ class Dates extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.min !== nextProps.min || this.props.max !== nextProps.max) {
-            this.setState(...this.calculateStartDate(nextProps.min, nextProps.max));
+            this.setState(this.calculateStartDate(nextProps.min, nextProps.max));
         }
         // if (this.props.timetableDate.week() !== nextProps.timetableDate.week()) {
         //     let index = Math.abs(this.state.min.diff(nextProps.timetableDate.clone().startOf('month'), 'month'));
