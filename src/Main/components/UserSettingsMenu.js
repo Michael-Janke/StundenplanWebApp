@@ -6,12 +6,12 @@ import { ListItemIcon, ListItemText } from 'material-ui/List';
 
 import IconButton from 'material-ui/IconButton';
 
-import ProfilePicIcon from 'material-ui-icons/AccountCircle';
-import RefreshIcon from 'material-ui-icons/Refresh';
-import KeyIcon from 'material-ui-icons/VpnKey';
-import NotificationsOn from 'material-ui-icons/NotificationsActive';
-import NotificationsOff from 'material-ui-icons/NotificationsOff';
-import LogOutIcon from 'material-ui-icons/ExitToApp';
+import ProfilePicIcon from '@material-ui/icons/AccountCircle';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import KeyIcon from '@material-ui/icons/VpnKey';
+import NotificationsOn from '@material-ui/icons/NotificationsActive';
+import NotificationsOff from '@material-ui/icons/NotificationsOff';
+import LogOutIcon from '@material-ui/icons/ExitToApp';
 
 import { purge } from '../../store';
 import { unregister } from '../../registerServiceWorker';
@@ -19,6 +19,7 @@ import { connectToServiceWorker } from '../../Common/firebase';
 import { setNotification, showError } from '../actions';
 import { authContext } from '../../Common/Adal/adalConfig';
 import UserAvatar from './UserAvatar';
+import { withTheme } from 'material-ui';
 
 class UserSettingsMenu extends React.Component {
 
@@ -161,7 +162,7 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserSettingsMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme()(UserSettingsMenu));
 
 
 

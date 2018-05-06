@@ -32,7 +32,7 @@ const combine = (oldClasses, newClasses) => {
 };
 
 
-function ClassesContainer({ classes, small }) {
+function ClassesContainer({ classes, small, left, themeClasses }) {
     let extracted = extractClasses(classes.new);
     let oldExtracted = classes.old && extractClasses(classes.old);
     if (oldExtracted) {
@@ -40,7 +40,7 @@ function ClassesContainer({ classes, small }) {
     }
     let extractedClasses = oldExtracted || extracted;
     return (
-        <Container small={small}>
+        <Container left={left} className={themeClasses['classes']}>
             {Object.keys(extractedClasses).map((key, i) => {
                 let classes = extractedClasses[key];
                 return (
@@ -57,6 +57,12 @@ function ClassesContainer({ classes, small }) {
     )
 }
 
+export const classStyles = theme => ({
+    'classes': {
+
+    },
+});
+
 ClassesContainer.propTypes = {
     Classes: PropTypes.object,
     small: PropTypes.bool,
@@ -65,7 +71,7 @@ ClassesContainer.propTypes = {
 const Container = styled.div`
     flex-direction: column;
     display: flex;
-    ${props => !props.small && `align-items: flex-end`};
+    ${props => !props.left && `align-items: flex-end`};
 `;
 const ClassContainer = styled.div`
     display: flex;

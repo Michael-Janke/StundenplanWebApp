@@ -13,7 +13,7 @@ import germanImg from './german.jpg';
 const holidayImageMap = {
   "Oster":easterImg,
   "Ferientag":bridgeImg,
-  "1.5.":firstMayImg,
+  "01.05":firstMayImg,
   "Sommer":summerImg,
   "Herbst":autumnImg,
   "Weihn":xmasImg,

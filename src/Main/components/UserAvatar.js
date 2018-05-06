@@ -4,7 +4,7 @@ import moment from "moment";
 import { loadAvatars } from '../actions';
 
 import Avatar from 'material-ui/Avatar';
-import PersonIcon from 'material-ui-icons/Person';
+import PersonIcon from '@material-ui/icons/Person';
 
 class UserAvatar extends Component {
 

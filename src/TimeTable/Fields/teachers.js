@@ -9,15 +9,30 @@ const teacherToName = (teacher, small) =>
             : (teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME
         : '-';
 
-function TeachersContainer({ teachers, small }) {
+function TeachersContainer({ teachers, small, left, themeClasses }) {
     const NormalTeacher = !!teachers.old ? NewTeacher : Teacher;
     return (
-        <Container small={small}>
-            {teachers.new.map((teacher, i) => <NormalTeacher key={i}>{teacherToName(teacher, small)}</NormalTeacher>)}
-            {teachers.old && teachers.old.map((teacher, i) => <OldTeacher key={"o" + i}>{teacherToName(teacher, small)}</OldTeacher>)}
+        <Container left={left} className={themeClasses['teacher']}>
+            {teachers.new.map((teacher, i) =>
+                <NormalTeacher className={themeClasses.teacher[!!teachers.old ? 'teacher-new' : 'teacher-normal']} key={i}>
+                    {teacherToName(teacher, small)}
+                </NormalTeacher>
+            )}
+            {teachers.old &&
+                teachers.old.map((teacher, i) =>
+                    <OldTeacher className={themeClasses['teacher-old']} key={"o" + i}>
+                        {teacherToName(teacher, small)}
+                    </OldTeacher>
+                )}
         </Container>
     )
 }
+
+export const teacherStyles = () => ({
+    'teacher': {
+
+    }
+});
 
 TeachersContainer.propTypes = {
     teachers: PropTypes.object,
@@ -28,7 +43,7 @@ const Container = styled.div`
     flex-direction: column;
     display: flex;
     width: 100%;
-    ${props => !props.small && `
+    ${props => !props.left && `
         align-items: flex-end; 
         text-align: right;
     `};

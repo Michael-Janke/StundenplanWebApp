@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { DRAWER_WIDTH } from "../Common/const";
-import { grey } from 'material-ui/colors';
 import withTheme from 'material-ui/styles/withTheme';
 import TimeTableGrid from './timeTableGrid';
 import Dates from '../Dates';
@@ -11,13 +10,11 @@ class View extends Component {
     render() {
         const drawerMargin = this.props.showDrawer ? undefined : '1vw';
         return (
-            <Container>
-                <AppBar style={{ backgroundColor: this.props.theme.palette.primary1Color }}>
-                    <ShadowContainerEmu />
-                </AppBar>
-                {this.props.showDrawer && <Drawer>
+            <Container backgroundColor={this.props.theme.palette.background.default}>
+                <AppBar/>
+                {/* {this.props.showDrawer && <Drawer>
                     <Dates />
-                </Drawer>}
+                </Drawer>} */}
                 
                 <ShadowContainer style={{ marginLeft: drawerMargin, marginRight: drawerMargin }}>
                     <ShadowBox>
@@ -35,7 +32,7 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     position: relative;
-    color: ${grey[600]};
+    background-color: ${props => props.backgroundColor};
 `
 
 const Drawer = styled.div`
@@ -53,17 +50,16 @@ const ShadowContainer = styled.div`
     z-index: 1;
 `
 const ShadowBox = styled.div`
-    background-color: white;
     box-shadow: rgba(0,0,0,0.3) 0px 0px 10px;
     max-width: 1200px;
 `
-const ShadowContainerEmu = styled.div`
-    margin-left: ${DRAWER_WIDTH}px;
-    margin-right: 1vw;
-    max-width: 1200px;
-    width:100%;
-    height: 1px;
-`
+// const ShadowContainerEmu = styled.div`
+//     margin-left: ${DRAWER_WIDTH}px;
+//     margin-right: 1vw;
+//     max-width: 1200px;
+//     width:100%;
+//     height: 1px;
+// `
 const AppBar = styled.div`
     display: flex;
     flex-direction: row;

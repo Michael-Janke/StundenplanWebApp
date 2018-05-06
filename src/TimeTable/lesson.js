@@ -3,7 +3,12 @@ import styled from "styled-components";
 import grey from 'material-ui/colors/grey';
 import ActionInfo from '@material-ui/icons/Info';
 import indigo from 'material-ui/colors/indigo';
-
+import { darken } from 'material-ui/styles/colorManipulator';
+import { withStyles } from 'material-ui';
+import { subjectStyles } from './Fields/subject';
+import { roomStyles } from './Fields/room';
+import { classStyles } from './Fields/classes';
+import { teacherStyles } from './Fields/teachers';
 const Field = (field, props, customProps) => (<field.reactClass {...field.props} {...props} {...customProps} />);
 
 const SubstitutionText = ({ children }) => (
@@ -11,17 +16,25 @@ const SubstitutionText = ({ children }) => (
         <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} color={grey[500]} />
         <div style={{ flex: 1 }}>{children}</div>
     </SubstitutionTextContainer>
-)
+);
 
-const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, removalField, absence }) => {
+const styles = theme => ({
+    ...subjectStyles(theme),
+    ...roomStyles(theme),
+    ...teacherStyles(theme),
+    ...classStyles(theme),
+});
 
-    const Field1 = Field.bind(null, fields[0], { small });
-    const Field2 = Field.bind(null, fields[1], { small });
-    const Field3 = Field.bind(null, fields[2], { small });
-    const RemovalField = removalField && Field.bind(null, removalField, { small });
+const AbstractLesson = (props) => {
+    let { classes, theme, colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, removalField, absence } = props;
+
+    const Field1 = Field.bind(null, fields[0], { small, themeClasses: classes });
+    const Field2 = Field.bind(null, fields[1], { small, themeClasses: classes });
+    const Field3 = Field.bind(null, fields[2], { small, themeClasses: classes });
+    const RemovalField = removalField && Field.bind(null, removalField, { small, themeClasses: classes });
 
     if (!small) return (
-        <Lesson color={(specificSubstitutionType || {}).backgroundColor} flex={!specificSubstitutionType || !multiple}>
+        <Lesson type={theme.palette.type} color={(specificSubstitutionType || {}).backgroundColor} flex={!specificSubstitutionType || !multiple}>
             <ColorBar lineColor={colorBar} />
             <LessonWrapper>
                 <LessonContainer>
@@ -29,14 +42,14 @@ const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionT
                         {specificSubstitutionType &&
                             <SubstitutionType color={specificSubstitutionType.color}>{specificSubstitutionType.name}</SubstitutionType>
                         }
-                        <Field1 />
+                        <Field1 left />
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', overflow: 'hidden', paddingLeft: 5 }}>
                         <Field2 />
                         <Field3 />
                     </div>
                 </LessonContainer>
-                {removalField && <RemovalField />}
+                {removalField && <RemovalField left />}
                 {(substitutionText || absence) &&
                     <SubstitutionText>{substitutionText ? substitutionText + (absence ? ` (${absence.TEXT})` : "") : absence.TEXT}</SubstitutionText>
                 }
@@ -44,15 +57,15 @@ const AbstractLesson = ({ colorBar, small, last, multiple, specificSubstitutionT
         </Lesson>
     );
     if (small) return (
-        <Lesson color={(specificSubstitutionType || {}).backgroundColor} flex={last}>
+        <Lesson type={theme.palette.type} color={(specificSubstitutionType || {}).backgroundColor} flex={last}>
             <ColorBar lineColor={colorBar} />
             <LessonContainer small>
                 {specificSubstitutionType &&
                     <SubstitutionType color={specificSubstitutionType.color}>{specificSubstitutionType.name}</SubstitutionType>}
-                <Field1 />
-                <Field3 />
-                <Field2 />
-                {removalField && <RemovalField />}
+                <Field1 left />
+                <Field3 left />
+                <Field2 left />
+                {removalField && <RemovalField left />}
                 {(substitutionText || absence) &&
                     <SubstitutionText>{substitutionText ? substitutionText + (absence ? ` (${absence.TEXT})` : "") : absence.TEXT}</SubstitutionText>
                 }
@@ -116,7 +129,7 @@ const Lesson = styled.div`
     text-align: left;
     padding-right: 1vmin;
     flex-direction: row;
-    background-color: ${props => props.color || indigo[50]};
+    background-color: ${props => (props.type === 'dark' ? darken : (c) => c)(props.color || indigo[50], 0.6)};
 `;
 
-export default AbstractLesson;
+export default withStyles(styles, { withTheme: true })(AbstractLesson);

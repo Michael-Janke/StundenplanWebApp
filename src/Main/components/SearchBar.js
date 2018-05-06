@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { MenuItem } from 'material-ui/Menu';
-import { ListItemIcon, ListItemText } from 'material-ui/List';
+import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
-import PersonIcon from 'material-ui-icons/Person';
-import ClassIcon from 'material-ui-icons/Group';
-import RoomIcon from 'material-ui-icons/Room';
+import PersonIcon from '@material-ui/icons/Person';
+import ClassIcon from '@material-ui/icons/Group';
+import RoomIcon from '@material-ui/icons/Room';
 import { loadAvatars, setTimeTable } from '../actions';
 import moment from 'moment';
 import { withStyles } from "material-ui/styles";
@@ -29,6 +28,7 @@ function renderInput(inputProps) {
                 marginTop: 8,
                 marginRight: 8,
                 maxWidth: 800,
+                minWidth: 0,
                 color: 'white'
             }}
             onChange={(text) => other.onChange({ target: { value: text } })}
@@ -143,6 +143,10 @@ class IntegrationAutosuggest extends React.Component {
         });
     };
 
+    handleRequestSearch = (value) => {
+
+    }
+
     render() {
         const { classes } = this.props;
 
@@ -156,6 +160,7 @@ class IntegrationAutosuggest extends React.Component {
                 }}
                 renderInputComponent={renderInput}
                 suggestions={this.state.suggestions}
+                onRequestSearch={this.handleRequestSearch}
                 onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
                 onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
                 onSuggestionSelected={this.props.onSuggestionSelected}
@@ -203,16 +208,13 @@ class WGSearchBar extends Component {
                 type: "class",
                 id: entry.CLASS_ID,
                 value: (
-                    <MenuItem
-                        leftIcon={<ClassIcon />}
-                        primaryText={entry.NAME}
-                        secondaryText="Klasse"
-                    >
+                    <ListItem
+                        button>
                         <ListItemIcon>
                             <ClassIcon />
                         </ListItemIcon>
-                        <ListItemText>{entry.NAME}</ListItemText>
-                    </MenuItem>),
+                        <ListItemText secondary="Klasse">{entry.NAME}</ListItemText>
+                    </ListItem>),
             })),
             ...Object.values(masterdata.Teacher).map((entry) => ({
                 text: `Lehrer ${entry.FIRSTNAME} ${entry.LASTNAME}`,
@@ -220,11 +222,11 @@ class WGSearchBar extends Component {
                 type: "teacher",
                 id: entry.TEACHER_ID,
                 value: (
-                    <MenuItem
-                        secondaryText="Lehrer">
+                    <ListItem
+                        button>
                         {avatar(entry.UPN)}
-                        <ListItemText>{entry.FIRSTNAME[0] + '. ' + entry.LASTNAME}</ListItemText>
-                    </MenuItem>
+                        <ListItemText secondary="Lehrer">{entry.FIRSTNAME[0] + '. ' + entry.LASTNAME}</ListItemText>
+                    </ListItem>
                 ),
             })),
             ...Object.values(masterdata.Student).map((entry) => ({
@@ -233,24 +235,25 @@ class WGSearchBar extends Component {
                 type: "student",
                 id: entry.STUDENT_ID,
                 value: (
-                    <MenuItem
-                        primaryText={`${entry.LASTNAME}, ${entry.FIRSTNAME}`}
-                        secondaryText="Schüler"
-                    >
+                    <ListItem
+                        button>
                         {avatar(entry.UPN)}
-                        <ListItemText>{`${entry.LASTNAME}, ${entry.FIRSTNAME}`}</ListItemText>
-                    </MenuItem>),
+                        <ListItemText secondary="Schüler">{`${entry.LASTNAME}, ${entry.FIRSTNAME}`}</ListItemText>
+                    </ListItem>),
             })),
             ...Object.values(masterdata.Room).map((entry) => ({
                 text: "Raum " + entry.NAME,
                 type: "room",
                 id: entry.ROOM_ID,
-                value: (<MenuItem secondaryText="Raum">
-                    <ListItemIcon>
-                        <RoomIcon />
-                    </ListItemIcon>
-                    <ListItemText>{entry.NAME}</ListItemText>
-                </MenuItem>),
+                value: (
+                    <ListItem
+                        button>
+                        <ListItemIcon>
+                            <RoomIcon />
+                        </ListItemIcon>
+                        <ListItemText secondary="Raum">{entry.NAME}</ListItemText>
+                    </ListItem>
+                ),
             })),
         ]
 
@@ -291,6 +294,8 @@ class WGSearchBar extends Component {
 
 const Flex = styled.div`
     flex: 1;
+    position: relative;
+    overflow: visible;
     display:flex;
     flex-direction: column;
 `

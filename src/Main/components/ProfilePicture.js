@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import { loadProfilePicture } from "../actions"
 import IconButton from 'material-ui/IconButton'
-import EditIcon from 'material-ui-icons/Create';
+import EditIcon from '@material-ui/icons/Create';
 
 class ProfilePicture extends Component {
 

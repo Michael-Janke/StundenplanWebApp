@@ -4,21 +4,32 @@ import styled from 'styled-components';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import blue from 'material-ui/colors/blue';
 import grey from 'material-ui/colors/grey';
-const blue800 = blue['800'];
-const grey600 = grey['600'];
 
-function RoomContainer({ room, small }) {
+
+function RoomContainer({ room, small, themeClasses }) {
     const changed = !!room.old;
-    const ClassNormal = changed ? NewRoom : Room;
+    const RoomNormal = changed ? NewRoom : Room;
     const Arrow = changed && <ArrowForward style={{ height: 10, width: null }} />;
     return (
-        <Container>
-            {!small && changed && <OldRoom>{room.old.NAME}</OldRoom>}
+        <Container className={themeClasses.room.root}>
+            {!small && changed && <OldRoom className={themeClasses['room-old']}>{room.old.NAME}</OldRoom>}
             {!small && Arrow}
-            <ClassNormal>{room.new ? room.new.NAME : '-'}</ClassNormal>
+            <RoomNormal className={themeClasses[changed ? 'room-new' : 'room-normal']}>{room.new ? room.new.NAME : '-'}</RoomNormal>
         </Container>
     )
 }
+
+export const roomStyles = (theme) => ({
+    'room': {
+
+    },
+    'room-new': {
+        color: blue[theme.palette.type === 'dark' ? 400 : 800],
+    },
+    'room-old': {
+        color: grey[600],
+    },
+});
 
 RoomContainer.propTypes = {
     room: PropTypes.object,
@@ -36,13 +47,11 @@ const Room = styled.div`
 `;
 
 const NewRoom = styled(Room)`
-    color: ${blue800};
     font-weight: 600;
     font-size: 65%;
 `;
 
 const OldRoom = styled(Room)`
-    color: ${grey600};
     font-size: 50%;
 `;
 

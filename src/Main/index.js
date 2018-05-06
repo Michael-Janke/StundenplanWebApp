@@ -17,7 +17,7 @@ import {
 import TimeTable from "../TimeTable"
 import { MuiThemeProvider } from 'material-ui/styles';
 import AppBar from './components/AppBar';
-import Theme from '../Common/theme';
+import createTheme from '../Common/theme';
 import ReactInterval from 'react-interval';
 import { connectToServiceWorker } from '../Common/firebase';
 import PrintProvider from 'react-easy-print';
@@ -27,6 +27,10 @@ class Main extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            dark: false,
+            theme: createTheme('light'),
+        }
         props.checkCounter();
         this.props.setMyTimetable();
         this.props.sendLoginStatistic();
@@ -47,24 +51,27 @@ class Main extends Component {
         }
     }
 
+    onThemeToggle = () => {
+        this.setState({ dark: !this.state.dark, theme: createTheme(!this.state.dark ? 'dark' : 'light') });
+    }
+
 
     render() {
         return (
             <PrintProvider>
-                <MuiThemeProvider theme={Theme}>
+                <MuiThemeProvider theme={this.state.theme}>
                     <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
-                        <AppBar>
-                            <TimeTable />
-                            <Snackbar
-                                open={!!this.props.error}
-                                message={"Fehler: " + this.props.error}
-                                autoHideDuration={15000}
-                                contentStyle={{
-                                    color: 'red'
-                                }}
-                                onRequestClose={this.props.clearErrors} />
-                            <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
-                        </AppBar>
+                        <AppBar onThemeToggle={this.onThemeToggle}/>
+                        <TimeTable />
+                        <Snackbar
+                            open={!!this.props.error}
+                            message={"Fehler: " + this.props.error}
+                            autoHideDuration={15000}
+                            contentStyle={{
+                                color: 'red'
+                            }}
+                            onRequestClose={this.props.clearErrors} />
+                        <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
                     </div>
                 </MuiThemeProvider>
             </PrintProvider>

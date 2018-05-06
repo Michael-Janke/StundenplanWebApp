@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import './month.css';
-import EnhancedSticky from './EnhancedSticky';
 import AppointmentDay from './day';
 import lightBlue from 'material-ui/colors/lightBlue';
-const lightBlue600 = lightBlue['600'];
+import { ListSubheader } from 'material-ui';
 
 const getWeeksOfMonth = (firstDayOfMonth) => {
     let weeks = [];
@@ -37,7 +36,7 @@ export default class MonthView extends Component {
             let weekDates = dates.filter(date => date.DATE.week() === week.weekOfYear);
             let dayMap = weekDates.map(date => date.DATE.date());
             return (
-                <div key={i}>    
+                <div key={i}>
                     <Week>
                         <WeekOfYear>KW {week.weekOfYear}</WeekOfYear>
                         {week.week.map((day, j) =>
@@ -67,34 +66,34 @@ export default class MonthView extends Component {
     render() {
         const month = this.props.startMonth.clone().add(this.props.index, 'month');
         return (
-            <Month className="block">
-                <EnhancedSticky
-                    ref="sticky"
-                    boundaryElement=".block"
-                    scrollElement=".scroll-area"
-                    topOffset={0}
-                    hideOnBoundaryHit={false}
-                    bottomOffset={0}>
+            <Month>
+                <Sticky classes>
                     <Header className="sticky-container">
                         <div>
                             <HeaderWeek>{month.format('MMMM')}</HeaderWeek>
                             <HeaderYear>{month.format('YYYY')}</HeaderYear>
                         </div>
                     </Header>
-                </EnhancedSticky>
-                <Week>
-                    <WeekOfYear></WeekOfYear>
-                    {["M", "D", "M", "D", "F", "S", "S"].map((day, j) =>
-                        <Day key={j}>
-                            <DayWrapper>{day}</DayWrapper>
-                        </Day>
-                    )}
-                </Week>
+                </Sticky>
+                <div key={-0}>
+                    <Week>
+                        <WeekOfYear></WeekOfYear>
+                        {["M", "D", "M", "D", "F", "S", "S"].map((day, j) =>
+                            <Day key={j}>
+                                <DayWrapper>{day}</DayWrapper>
+                            </Day>
+                        )}
+                    </Week>
+                </div>
                 {this.renderWeeks(month)}
             </Month>
         );
     }
 }
+
+const Sticky = styled(ListSubheader) `
+    padding: 0px;
+`;
 
 const Header = styled.div`
     background-color: white;
@@ -130,7 +129,7 @@ const DayWrapper = styled.div`
     justify-content: center;
     align-items: center;
     ${props => props.hasDate && `
-        background: ${lightBlue600};
+        background: ${lightBlue[600]};
         border-radius: 50%;
     `}
 `;
@@ -144,11 +143,8 @@ const Day = styled.div`
     justify-content: center;
 `;
 
-const Month = styled.div`
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
+const Month = styled.ul`
+    padding: 0;
 `;
 
 const Week = styled.div`

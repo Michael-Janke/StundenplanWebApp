@@ -1,12 +1,31 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import moment from 'moment';
-import { Paper } from "material-ui";
+import { Paper, withStyles } from "material-ui";
 import { connect } from 'react-redux';
 import MonthView from './month';
 import { getDates, deleteDate } from "./actions";
 import makeGetCurrentDates from "../Selector/dates";
 import AddDialog from "./Dialogs/addDialog";
+import List from "material-ui/List";
+
+const styles = theme => ({
+    root: {
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
+        position: 'relative',
+        overflow: 'auto',
+        height: 500,
+    },
+    listSection: {
+        backgroundColor: 'inherit',
+    },
+    ul: {
+        backgroundColor: 'inherit',
+        padding: 0,
+    },
+});
 
 class Dates extends Component {
 
@@ -22,10 +41,10 @@ class Dates extends Component {
         if (this.props.min !== nextProps.min || this.props.max !== nextProps.max) {
             this.setState(...this.calculateStartDate(nextProps.min, nextProps.max));
         }
-        if (this.props.timetableDate.week() !== nextProps.timetableDate.week()) {
-            let index = Math.abs(this.state.min.diff(nextProps.timetableDate.clone().startOf('month'), 'month'));
-            this.refs[index].scrollToMe();
-        }
+        // if (this.props.timetableDate.week() !== nextProps.timetableDate.week()) {
+        //     let index = Math.abs(this.state.min.diff(nextProps.timetableDate.clone().startOf('month'), 'month'));
+        //     this.refs[index].scrollToMe();
+        // }
     }
     shouldComponentUpdate(nextProps, nextState) {
         if (this.props.min !== nextProps.min || this.props.max !== nextProps.max) {
@@ -67,24 +86,28 @@ class Dates extends Component {
         const props = { isAdmin: this.props.isAdmin };
         for (let i = 0; i < this.state.monthCount; i++) {
             months.push(
-                <MonthView
-                    ref={i}
-                    startMonth={this.state.min}
-                    index={i}
-                    dates={this.props.dates}
+                <li
                     key={i}
-                    {...props} />
+                >
+                    <MonthView
+                        ref={i}
+                        startMonth={this.state.min}
+                        index={i}
+                        dates={this.props.dates}
+                        {...props} />
+                </li>
             )
         }
         return months;
     }
 
     render() {
+        const { classes } = this.props;
         return (
             <Container>
-                <Content className="scroll-area">
+                <List className={classes.root} subheader={<li />}>
                     {this.renderMonths()}
-                </Content>
+                </List>
                 <AddDialog ref="addDialog" />
             </Container>
         );
@@ -147,4 +170,4 @@ const mapDispatchToProps = (dispatch) => ({
     deleteDate: (date) => dispatch(deleteDate(date)),
 });
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(Dates); 
+export default connect(makeMapStateToProps, mapDispatchToProps)(withStyles(styles)(Dates)); 

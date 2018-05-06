@@ -6,13 +6,14 @@ import { grey } from 'material-ui/colors';
 import PeriodColumn from './period';
 import { WEEKDAY_NAMES } from '../Common/const';
 import IconButton from 'material-ui/IconButton';
-import BackIcon from 'material-ui-icons/ArrowBack';
-import NextIcon from 'material-ui-icons/ArrowForward';
+import BackIcon from '@material-ui/icons/ArrowBack';
+import NextIcon from '@material-ui/icons/ArrowForward';
 import { NoPrint, Print } from 'react-easy-print';
 
 import { changeWeek } from '../Main/actions';
 import makeGetCurrentTimetable from '../Selector/timetable';
 import Holiday from './Holiday';
+import { Paper, withStyles } from 'material-ui';
 
 class TimeTableGrid extends Component {
 
@@ -43,8 +44,8 @@ class TimeTableGrid extends Component {
             if (isNextDay) return;
             let colSpan = this.props.currentTimetable.slice(day).filter((dayX) => dayX.holiday === dayObject.holiday).length;
             return (
-                <TableCell key={day} rowSpan={Object.values(this.props.periods).length} style={{ padding: 0 }} colSpan = {colSpan}>
-                    <Holiday holiday={dayObject.holiday} date={dayObject.date.format("dd.mm")} />
+                <TableCell key={day} rowSpan={Object.values(this.props.periods).length} style={{ padding: 0 }} colSpan={colSpan}>
+                    <Holiday holiday={dayObject.holiday} date={dayObject.date.format("DD.MM")} />
                 </TableCell>
             );
         } else {
@@ -62,7 +63,6 @@ class TimeTableGrid extends Component {
                     <PeriodColumn
                         lessons={period.lessons}
                         type={this.props.type}
-                        avatars={this.props.avatars}
                         small={this.props.small} />
                 </TableCell>
             );
@@ -92,8 +92,8 @@ class TimeTableGrid extends Component {
     }
 
     render() {
-        const tableHeaderStyle = { color: grey[600], fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
-        const headerHeight = !this.props.showDrawer ? 128 : 82;
+        const { classes } = this.props;
+        const tableHeaderStyle = { fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
         return (
             <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
                 {!this.props.showDrawer ? <TableToolBar>
@@ -105,56 +105,69 @@ class TimeTableGrid extends Component {
                     </IconButton>
                 </TableToolBar> : null}
                 <Print main name="TimeTable">
-                    <GrayoutTable
-                        disabled={this.props.counterChanged}
-                        selectable={false}
-                        wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: `calc(100vh - ${headerHeight}px)` }}
-                    >
-                        <TableHead
-                            style={{ backgroundColor: grey[200], fontSize: '100%' }}
-                            displaySelectAll={false}
-                            adjustForCheckbox={false}>
-                            <TableRow>
-                            <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
-                                {this.props.currentTimetable && this.props.currentTimetable.map((day, i) => (
-                                <TableCell
-                                        key={i}
-                                        style={tableHeaderStyle}>
-                                        {day.date.format(this.props.small ? 'dd' : 'dddd')}
-                                        <br />
-                                        {day.date.format('DD.MM.')}
-                                </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody
-                            displayRowCheckbox={false}>
-                            {this.renderRows()}
-                        </TableBody>
+                    <Paper>
+                        <GrayoutTable className={classes['table-header']}>
+                            <TableHead
+                                style={{ fontSize: '100%' }}>
+                                <TableRow>
+                                    <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
+                                    {this.props.currentTimetable && this.props.currentTimetable.map((day, i) => (
+                                        <TableCell
+                                            key={i}
+                                        // style={tableHeaderStyle}
+                                        >
+                                            {day.date.format(this.props.small ? 'dd' : 'dddd')}
+                                            <br />
+                                            {day.date.format('DD.MM.')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
+                        </GrayoutTable>
+                        <div style={{ maxHeight: `calc(100vh - ${200}px)`, overflowY: 'auto' }}>
+                            <GrayoutTable
+                                className={classes.table}
+                                disabled={this.props.counterChanged}
+                            >
+                                <TableBody>
+                                    {this.renderRows()}
+                                </TableBody>
 
-                        {this.props.showDrawer && <TableFooter
-                            adjustForCheckbox={false}
-                        >
-                            <TableRow>
-                                <TableCell colSpan="6" style={{ textAlign: 'right' }} >
-                                    <NoPrint>
-                                        <IconButton onClick={this.props.setPreviousWeek}>
-                                            <BackIcon />
-                                        </IconButton>
-                                        <IconButton onClick={this.props.setNextWeek}>
-                                            <NextIcon />
-                                        </IconButton>
-                                    </NoPrint>
-                                </TableCell>
-                            </TableRow>
-                        </TableFooter>}
+                            </GrayoutTable>
+                        </div>
+                        {this.props.showDrawer && <GrayoutTable
+                            className={classes.table}
+                            disabled={this.props.counterChanged}>
+                            <TableFooter>
+                                <TableRow>
+                                    <TableCell colSpan="6" style={{ textAlign: 'right' }} >
+                                        <NoPrint>
+                                            <IconButton onClick={this.props.setPreviousWeek}>
+                                                <BackIcon />
+                                            </IconButton>
+                                            <IconButton onClick={this.props.setNextWeek}>
+                                                <NextIcon />
+                                            </IconButton>
+                                        </NoPrint>
+                                    </TableCell>
+                                </TableRow>
+                            </TableFooter></GrayoutTable>}
 
-                    </GrayoutTable>
+                    </Paper>
                 </Print>
             </div>
         );
     }
 }
+
+const styles = theme => ({
+    table: {
+        backgroundColor: theme.palette.background.default,
+    },
+    'table-header': {
+        backgroundColor: theme.palette.background.paper,
+    }
+});
 
 const GrayoutTable = styled(Table) `
     ${props => props.disabled && `
@@ -171,7 +184,7 @@ const GrayoutTable = styled(Table) `
 `;
 
 const TableToolBar = styled.div`
-    background-color: ${grey[200]};
+    // background-color: ${grey[200]};
     border-bottom: 1px solid rgb(224, 224, 224);
     height: 48px; 
     text-align: right;
@@ -222,7 +235,6 @@ const makeMapStateToProps = () => {
             small: state.browser.is.extraSmall || state.browser.is.medium,
             periodsWidth: (state.browser.is.extraSmall || state.browser.is.medium) ? 20 : 70,
             loading: state.timetable.loadingTimetable || state.timetable.loadingSubstitutions,
-            avatars: state.avatars,
             warning: state.user.warning,
             lastCheck: state.user.lastCheck,
             counterChanged: state.timetable.counterChanged,
@@ -232,4 +244,4 @@ const makeMapStateToProps = () => {
 }
 
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(TimeTableGrid);
+export default connect(makeMapStateToProps, mapDispatchToProps)(withStyles(styles)(TimeTableGrid));

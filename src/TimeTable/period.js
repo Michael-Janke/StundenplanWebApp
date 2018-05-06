@@ -78,7 +78,6 @@ const Period = ({ lessons, type, small }) => {
                 return (
                     <AbstractLesson
                         key={i}
-                        {...lesson}
                         last={lessons.length - 1 === i}
                         multiple={lessons.length > 1}
                         small={small}
