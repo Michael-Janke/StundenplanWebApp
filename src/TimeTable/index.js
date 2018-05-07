@@ -18,7 +18,7 @@ class View extends Component {
 
                 {this.props.showDrawer &&
                     <Drawer>
-                        <Dates selectedDate={this.props.timetableDate} />
+                        <Dates />
                     </Drawer>
                 }
                 <ShadowContainer style={{ marginLeft: drawerMargin, marginRight: drawerMargin }}>
