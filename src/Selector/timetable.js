@@ -91,22 +91,20 @@ function joinSubstitutions(day, subOnDay, type, id) {
             if (!lessons) {
                 period.lessons = lessons = [];
             }
-            if (type === "teacher"
-                && substitution.TEACHER_ID === id
-                && substitution.TEACHER_ID_NEW !== id) {
-                debugger;
-            }
             lessons.push({
                 substitutionText: substitution.TEXT,
                 substitutionRemove:
                     type === "teacher"
-                    && substitution.TEACHER_ID === id
-                    && substitution.TEACHER_ID_NEW !== id,
+                    && substitution.TEACHER_ID !== 0,
                 substitutionType: substitution.TYPE,
                 CLASS_IDS: substitution.CLASS_IDS_NEW,
+                CLASS_IDS_OLD: substitution.CLASS_IDS_NEW.length ? substitution.CLASS_IDS : [],
                 TEACHER_ID: substitution.TEACHER_ID_NEW,
+                TEACHER_ID_OLD: substitution.TEACHER_ID,
                 SUBJECT_ID: substitution.SUBJECT_ID_NEW,
+                SUBJECT_ID_OLD: substitution.SUBJECT_ID,
                 ROOM_ID: substitution.ROOM_ID_NEW,
+                ROOM_ID_OLD: substitution.ROOM_ID,
                 specificSubstitutionType: getSpecificSubstitutionType(substitution),
             });
         });
