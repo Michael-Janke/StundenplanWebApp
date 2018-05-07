@@ -112,7 +112,7 @@ function joinSubstitutions(day, subOnDay, type, id) {
     if (subOnDay.absences) {
         subOnDay.absences.forEach((absence) => {
             for (let i = absence.PERIOD_FROM; i <= absence.PERIOD_TO; i++) {
-                let period = day.periods[i-1];
+                let period = day.periods[i - 1];
                 if (!period) continue;
                 let lessons = period.lessons;
                 if (lessons && lessons.length) {
@@ -152,6 +152,9 @@ function compareLesson(p1, p2) {
 
     if (!(classIds1.length === classIds2.length && classIds1.every((v, i) => classIds2.indexOf(v) >= 0)))
         return false;
+    if (p1.substitutionType !== p2.substitutionType) {
+        return false;
+    }
     return true;
 }
 
@@ -197,9 +200,21 @@ function skipTeacherDuplications(lessons) {
                 if (lesson.TEACHER_ID_OLD && !last.TEACHER_IDS_OLD.includes(lesson.TEACHER_ID_OLD)) {
                     last.TEACHER_IDS_OLD.push(lesson.TEACHER_ID_OLD);
                 }
+                combineSubstitutions(last, lesson);
                 lessons.splice(j);
             }
         }
+    }
+}
+
+function combineSubstitutions(receiver, lesson) {
+    if (!lesson.specificSubstitutionType) {
+        return;
+    }
+    let receiverPriority = (receiver.specificSubstitutionType || {}).priority || -1;
+    let priority = lesson.specificSubstitutionType.priority || 0;
+    if (priority > receiverPriority) {
+        receiver.specificSubstitutionType = lesson.specificSubstitutionType;
     }
 }
 

@@ -1,29 +1,6 @@
 import Sticky from 'react-sticky-el';
 
 export default class EnhancedSticky extends Sticky {
-
-    constructor(props) {
-        super(props);
-        this.oldIsFixed = this.isFixed;
-        this.isFixed = (holderRect, wrapperRect, boundaryRect, scrollRect) => {
-            var ret = this.oldIsFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
-            const {
-                mode
-            } = this.props;
-            if (mode === 'top') {
-                if (Math.abs(holderRect.top - scrollRect.top) <= 20) {
-                    this.holderEl.classList.add('sticky');
-                } else {
-                    this.holderEl.classList.remove('sticky');
-                }
-            }
-
-            return ret;
-        }
-    }
-
-
-
     scrollToMe() {
         const holderRect = this.holderEl.getBoundingClientRect();
         const toValue = this.scrollElement.scrollTop + holderRect.top - 92;
