@@ -5,19 +5,20 @@ import { DRAWER_WIDTH } from "../Common/const";
 import withTheme from 'material-ui/styles/withTheme';
 import TimeTableGrid from './timeTableGrid';
 import Dates from '../Dates';
+import indigo from 'material-ui/colors/indigo';
 
 class View extends Component {
     render() {
-        const drawerMargin = this.props.showDrawer ? undefined : '1vw';
+        const drawerMargin = this.props.showDrawer ? 48 : undefined;
         return (
-            <Container backgroundColor={this.props.theme.palette.background.default}>
-                <AppBar/>
+            <Container>
+                <AppBar backgroundColor={indigo[600]}/>
                 {/* {this.props.showDrawer && <Drawer>
                     <Dates />
                 </Drawer>} */}
                 
-                <ShadowContainer style={{ marginLeft: drawerMargin, marginRight: drawerMargin }}>
-                    <ShadowBox>
+                <ShadowContainer>
+                    <ShadowBox style={{ marginTop: drawerMargin }}>
                         <TimeTableGrid />
                     </ShadowBox>
                 </ShadowContainer>
@@ -27,11 +28,10 @@ class View extends Component {
 }
 
 const Container = styled.div`
-    display: flex;
-    align-items: stretch;
     width: 100%;
     height: 100%;
     position: relative;
+    display: flex;
     background-color: ${props => props.backgroundColor};
 `
 
@@ -48,6 +48,7 @@ const ShadowContainer = styled.div`
     margin-right: 1vw;
     margin-bottom: 1vw;
     z-index: 1;
+    position: relative;
 `
 const ShadowBox = styled.div`
     box-shadow: rgba(0,0,0,0.3) 0px 0px 10px;
@@ -67,6 +68,8 @@ const AppBar = styled.div`
     width: 100%;
     height: 104px;
     position: absolute;
+    background-color: ${props => props.backgroundColor};
+
 `
 
 

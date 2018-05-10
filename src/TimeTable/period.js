@@ -69,6 +69,7 @@ const Period = ({ lessons, type, small }) => {
     return (
         <PeriodsContainer>
             {lessons.map((lesson, i) => {
+                let { classes, subject, teachers, room, ...other } = lesson;
                 let fields = {
                     student: getStudentFields,
                     teacher: getTeacherFields,
@@ -77,6 +78,7 @@ const Period = ({ lessons, type, small }) => {
                 }[type.toLowerCase()](lesson);
                 return (
                     <AbstractLesson
+                        {...other}
                         key={i}
                         last={lessons.length - 1 === i}
                         multiple={lessons.length > 1}

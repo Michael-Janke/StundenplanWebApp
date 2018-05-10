@@ -58,10 +58,13 @@ class Main extends Component {
 
     render() {
         return (
-            <PrintProvider>
-                <MuiThemeProvider theme={this.state.theme}>
-                    <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
-                        <AppBar onThemeToggle={this.onThemeToggle}/>
+            <MuiThemeProvider theme={this.state.theme}>
+                <div style={{
+                    flexDirection: 'column', display: 'flex', height: '100%',
+                    backgroundColor: this.state.theme.palette.background.default
+                }}>
+                    <PrintProvider>
+                        <AppBar onThemeToggle={this.onThemeToggle} />
                         <TimeTable />
                         <Snackbar
                             open={!!this.props.error}
@@ -72,9 +75,9 @@ class Main extends Component {
                             }}
                             onRequestClose={this.props.clearErrors} />
                         <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
-                    </div>
-                </MuiThemeProvider>
-            </PrintProvider>
+                    </PrintProvider>
+                </div>
+            </MuiThemeProvider>
         );
     }
 }
