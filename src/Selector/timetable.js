@@ -201,7 +201,7 @@ function skipTeacherDuplications(lessons) {
                     last.TEACHER_IDS_OLD.push(lesson.TEACHER_ID_OLD);
                 }
                 combineSubstitutions(last, lesson);
-                lessons.splice(j);
+                lessons.splice(j, 1);
             }
         }
     }

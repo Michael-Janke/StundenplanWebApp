@@ -123,7 +123,7 @@ class TimeTableGrid extends Component {
                             </TableRow>
                         </TableHead>
                     </GrayoutTable>
-                    <div style={{ maxHeight: `calc(100vh - ${200}px)`, overflowY: 'auto' }}>
+                    <div style={{ maxHeight: `calc(100vh - ${176 + (this.props.showDrawer ? 56 : 0)}px)`, overflowY: 'auto' }}>
                         <GrayoutTable
                             className={classes.table}
                             disabled={this.props.counterChanged}
