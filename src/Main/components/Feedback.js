@@ -98,7 +98,6 @@ export class Feedback extends Component {
                         Abbrechen
                     </Button>
                     <Button
-                        keyboardFocused={true}
                         onClick={this.handleSendFeedback}
                         color="primary"
                     >

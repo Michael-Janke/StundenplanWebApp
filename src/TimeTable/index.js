@@ -9,7 +9,6 @@ import indigo from 'material-ui/colors/indigo';
 
 class View extends Component {
     render() {
-        const drawerMargin = this.props.showDrawer ? 48 : undefined;
         return (
             <Container>
                 <AppBar backgroundColor={indigo[600]}/>
@@ -18,7 +17,7 @@ class View extends Component {
                 </Drawer>} */}
                 
                 <ShadowContainer>
-                    <ShadowBox style={{ marginTop: drawerMargin }}>
+                    <ShadowBox>
                         <TimeTableGrid />
                     </ShadowBox>
                 </ShadowContainer>

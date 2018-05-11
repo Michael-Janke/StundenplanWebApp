@@ -23,7 +23,16 @@ import { DRAWER_WIDTH } from '../../Common/const';
 import ProfilePicture from './ProfilePicture';
 import Feedback from './Feedback';
 import indigo from 'material-ui/colors/indigo';
+import { Tooltip } from 'material-ui';
+import SvgIcon from 'material-ui/SvgIcon';
 
+function LampOnIcon(props) {
+    return (
+        <SvgIcon {...props}>
+            <path d="m9,21c0,0.55 0.45,1 1,1l4,0c0.55,0 1,-0.45 1,-1l0,-1l-6,0l0,1zm3,-19c-3.86,0 -7,3.14 -7,7c0,2.38 1.19,4.47 3,5.74l0,2.26c0,0.55 0.45,1 1,1l6,0c0.55,0 1,-0.45 1,-1l0,-2.26c1.81,-1.27 3,-3.36 3,-5.74c0,-3.86 -3.14,-7 -7,-7z" />
+        </SvgIcon>
+    );
+}
 const styles = theme => ({
     root: {
         // flexGrow: 1,
@@ -77,7 +86,7 @@ class ResponsiveDrawer extends React.Component {
 
     render() {
         const { classes, theme, small } = this.props;
-
+        const LampComponent = theme.palette.type === 'dark' ? LampOnIcon : LampIcon;
         const drawer = (
             <div>
                 <ProfilePicture />
@@ -96,27 +105,50 @@ class ResponsiveDrawer extends React.Component {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <SearchBar />
 
                         <Icons>
-                            {small || <IconButton tooltip="Theme ändern" onClick={this.props.onThemeToggle}>
-                                <LampIcon className={classes.icon} />
-                            </IconButton>}
-                            {small || <IconButton tooltip="Feedback" onClick={this.handleFeedback}>
-                                <FeedbackIcon className={classes.icon} />
-                            </IconButton>}
-                            {small || <IconButton tooltip="Voherige Woche" onClick={this.props.setPreviousWeek}>
-                                <BackIcon className={classes.icon} />
-                            </IconButton>}
-                            {small && <IconButton tooltip="Kalendar öffnen">
-                                <CalendarIcon className={classes.icon} />
-                            </IconButton>}
-                            {small || <IconButton tooltip="Nächste Woche" onClick={this.props.setNextWeek}>
-                                <NextIcon className={classes.icon} />
-                            </IconButton>}
-                            {small || <IconButton tooltip="Stundenplan drucken" onClick={this.onPrintTimetable}>
-                                <PrintIcon className={classes.icon} />
-                            </IconButton>}
+                            {small ||
+                                <Tooltip id="tooltip-theme" title="Theme ändern">
+                                    <IconButton onClick={this.props.onThemeToggle}>
+                                        <LampComponent className={classes.icon} />
+                                    </IconButton>
+                                </Tooltip>
+                            }
+                            {small ||
+                                <Tooltip id="tooltip-feedback" title="Feedback">
+                                    <IconButton onClick={this.handleFeedback}>
+                                        <FeedbackIcon className={classes.icon} />
+                                    </IconButton>
+                                </Tooltip>
+                            }
+                            {small ||
+                                <Tooltip id="tooltip-prev" title="Voherige Woche">
+                                    <IconButton onClick={this.props.setPreviousWeek}>
+                                        <BackIcon className={classes.icon} />
+                                    </IconButton>
+                                </Tooltip>
+                            }
+                            {small &&
+                                <Tooltip id="tooltip-calendar" title="Kalendar öffnen">
+                                    <IconButton>
+                                        <CalendarIcon className={classes.icon} />
+                                    </IconButton>
+                                </Tooltip>
+                            }
+                            {small ||
+                                <Tooltip id="tooltip-next" title="Nächste Woche">
+                                    <IconButton onClick={this.props.setNextWeek}>
+                                        <NextIcon className={classes.icon} />
+                                    </IconButton>
+                                </Tooltip>
+                            }
+                            {small ||
+                                <Tooltip id="tooltip-print" title="Stundenplan drucken">
+                                    <IconButton onClick={this.onPrintTimetable}>
+                                        <PrintIcon className={classes.icon} />
+                                    </IconButton>
+                                </Tooltip>
+                            }
                             <UserSettingsMenu />
                         </Icons>
                     </Toolbar>
@@ -144,10 +176,11 @@ class ResponsiveDrawer extends React.Component {
 }
 
 const Icons = styled.div`
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-`
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+            `
 
 
 ResponsiveDrawer.propTypes = {

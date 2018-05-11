@@ -9,11 +9,11 @@ import { subjectStyles } from './Fields/subject';
 import { roomStyles } from './Fields/room';
 import { classStyles } from './Fields/classes';
 import { teacherStyles } from './Fields/teachers';
-const Field = (field, props, customProps) => (<field.reactClass {...field.props} {...props} {...customProps} />);
+const Field = (field, props, customProps) => React.createElement(field.reactClass, { ...field.props, ...props, ...customProps });
 
 const SubstitutionText = ({ children }) => (
     <SubstitutionTextContainer color={grey[600]}>
-        <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} color={grey[500]} />
+        <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} />
         <div style={{ flex: 1 }}>{children}</div>
     </SubstitutionTextContainer>
 );

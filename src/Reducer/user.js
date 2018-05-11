@@ -26,6 +26,11 @@ export default function userReducer(state = initialState, action = {}) {
                 lastCheck: moment(),
                 warning: false
             };
+        case "CHANGE_THEME":
+            return {
+                ...state,
+                themeType: action.payload,
+            };
         case "COUNTER_ERROR":
             return {
                 ...state,

@@ -232,9 +232,9 @@ function readTimetable(_data, day, periods, date) {
                 && moment(lesson.DATE_TO.date).isAfter(timetableDate)
             );
         }
-        data[y] = { lessons, date: timetableDate };
+        data[y] = { lessons };
     }
-    return { periods: data, date: timetableDate };
+    return { periods: data };
 }
 
 function translatePeriods(masterdata, day, periods) {
@@ -248,9 +248,48 @@ function translatePeriods(masterdata, day, periods) {
     }
 }
 
+function equalArrays(array1, array2) {
+    if (array1 === array2) {
+        return true;
+    }
+    if (array1.length !== array2.length) {
+        return false;
+    }
+    for (let i = 0; i < array1.length; i++) {
+        let o1 = array1[i];
+        let o2 = array2[i];
+        if (o1 !== o2) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export function equalPeriods(period1, period2) {
+
+    if (
+        ((!!period1.TIMETABLE_ID) ? period1.TIMETABLE_ID === period2.TIMETABLE_ID : false)
+        || (period1.absence === period2.absence
+            && period1.substitutionText === period2.substitutionText
+            && period1.substitutionRemove === period2.substitutionRemove
+            && period1.specificSubstitutionType === period2.specificSubstitutionType
+            && period1.SUBJECT_ID === period2.SUBJECT_ID
+            && period1.SUBJECT_ID_OLD === period2.SUBJECT_ID_OLD
+            && period1.ROOM_ID === period2.ROOM_ID
+            && period1.ROOM_ID_OLD === period2.ROOM_ID_OLD
+            && equalArrays(period1.TEACHER_IDS, period2.TEACHER_IDS)
+            && equalArrays(period1.TEACHER_IDS_OLD, period2.TEACHER_IDS_OLD)
+            && equalArrays(period1.CLASS_IDS, period2.CLASS_IDS)
+            && equalArrays(period1.CLASS_IDS_OLD, period2.CLASS_IDS_OLD))) {
+        return true;
+    }
+    return false;
+}
+
 function translate(masterdata, period) {
     if (!period) return period;
     period.lessons = period.lessons.map((period) => ({
+        reference: period,
         substitutionText: period.substitutionText,
         substitutionType: period.substitutionType,
         specificSubstitutionType: period.specificSubstitutionType,

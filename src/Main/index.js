@@ -12,7 +12,8 @@ import {
     showError,
     setMyTimetable,
     counterChanged,
-    sendLoginStatistic
+    sendLoginStatistic,
+    changeTheme
 } from "./actions"
 import TimeTable from "../TimeTable"
 import { MuiThemeProvider } from 'material-ui/styles';
@@ -28,9 +29,7 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dark: false,
-            theme: createTheme('light'),
-        }
+        };
         props.checkCounter();
         this.props.setMyTimetable();
         this.props.sendLoginStatistic();
@@ -40,7 +39,13 @@ class Main extends Component {
         }
     }
 
-    componentWillUpdate(nextProps) {
+    static getDerivedStateFromProps(nextProps, prevState) {
+        return { theme: createTheme(nextProps.themeType) };
+    }
+
+    
+
+    componentDidUpdate(nextProps) {
         if (this.props.needsUpdate !== nextProps.needsUpdate) {
             nextProps.counterChanged(nextProps.needsUpdate);
         }
@@ -52,7 +57,7 @@ class Main extends Component {
     }
 
     onThemeToggle = () => {
-        this.setState({ dark: !this.state.dark, theme: createTheme(!this.state.dark ? 'dark' : 'light') });
+        this.props.changeTheme(this.props.themeType === 'dark' ? 'light' : 'dark');
     }
 
 
@@ -90,7 +95,8 @@ const mapDispatchToProps = dispatch => {
         checkCounter: () => { dispatch(checkCounter()); },
         clearErrors: () => { dispatch(clearErrors()); },
         showError: (text) => { dispatch(showError(text)); },
-        setNotification: (token) => { dispatch(setNotification(token)); }
+        setNotification: (token) => { dispatch(setNotification(token)); },
+        changeTheme: (type) => { dispatch(changeTheme(type)); },
     };
 };
 
@@ -101,7 +107,8 @@ const mapStateToProps = state => {
         type: state.user.type,
         id: state.user.id,
         error: state.error.error,
-        notificationToken: state.user.notificationToken
+        notificationToken: state.user.notificationToken,
+        themeType: state.user.themeType,
     };
 };
 

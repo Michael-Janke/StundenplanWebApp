@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import Table, { TableBody, TableCell, TableHead, TableRow, TableFooter } from 'material-ui/Table';
+import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import { grey } from 'material-ui/colors';
 import PeriodColumn from './period';
 import { WEEKDAY_NAMES } from '../Common/const';
@@ -15,8 +15,8 @@ import makeGetCurrentTimetable from '../Selector/timetable';
 import Holiday from './Holiday';
 import { withStyles } from 'material-ui';
 
-class TimeTableGrid extends Component {
 
+class TimeTableGrid extends Component {
     renderPeriodTimes(period) {
         const lpad2 = (number) => (number < 10 ? '0' : '') + number;
         return (
@@ -43,9 +43,10 @@ class TimeTableGrid extends Component {
             let isNextDay = (this.props.currentTimetable[day - 1] || {}).holiday === dayObject.holiday;
             if (isNextDay) return;
             let colSpan = this.props.currentTimetable.slice(day).filter((dayX) => dayX.holiday === dayObject.holiday).length;
+            let date = this.props.date.clone().weekday(0).add(day - 1, 'days');
             return (
                 <TableCell key={day} rowSpan={Object.values(this.props.periods).length} style={{ padding: 0 }} colSpan={colSpan}>
-                    <Holiday holiday={dayObject.holiday} date={dayObject.date.format("DD.MM")} />
+                    <Holiday holiday={dayObject.holiday} date={date.format("DD.MM")} />
                 </TableCell>
             );
         } else {
@@ -94,64 +95,54 @@ class TimeTableGrid extends Component {
     render() {
         const { classes } = this.props;
         const tableHeaderStyle = { fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
+
         return (
             <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
                 <Print main name="TimeTable">
-                    {!this.props.showDrawer ? <TableToolBar className={classes['table-header']} border={this.props.theme.palette.divider}>
-                        <IconButton onClick={this.props.setPreviousWeek}>
-                            <BackIcon />
-                        </IconButton>
-                        <IconButton onClick={this.props.setNextWeek}>
-                            <NextIcon />
-                        </IconButton>
-                    </TableToolBar> : null}
-                    <GrayoutTable className={classes['table-header']}>
-                        <TableHead
-                            style={{ fontSize: '100%' }}>
-                            <TableRow style={{ height: 48 }}>
-                                <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
-                                {this.props.currentTimetable && this.props.currentTimetable.map((day, i) => (
-                                    <TableCell
-                                        key={i}
-                                    // style={tableHeaderStyle}
-                                    >
-                                        {day.date.format(this.props.small ? 'dd' : 'dddd')}
-                                        <br />
-                                        {day.date.format('DD.MM.')}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                    </GrayoutTable>
-                    <div style={{ maxHeight: `calc(100vh - ${176 + (this.props.showDrawer ? 56 : 0)}px)`, overflowY: 'auto' }}>
-                        <GrayoutTable
-                            className={classes.table}
-                            disabled={this.props.counterChanged}
-                        >
-                            <TableBody>
-                                {this.renderRows()}
-                            </TableBody>
+                    <TableToolBar className={classes['table-header']} border={this.props.theme.palette.divider}>
 
+                        <NoPrint>
+                            <IconButton onClick={this.props.setPreviousWeek}>
+                                <BackIcon />
+                            </IconButton>
+                            <IconButton onClick={this.props.setNextWeek}>
+                                <NextIcon />
+                            </IconButton>
+                        </NoPrint>
+                    </TableToolBar>
+                    <div>
+                        <GrayoutTable className={classes['table-header']}>
+                            <TableHead
+                                style={{ fontSize: '100%' }}>
+                                <TableRow style={{ height: 48 }}>
+                                    <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
+                                    {[1, 2, 3, 4, 5].map((day, i) => {
+                                        let date = this.props.date.clone().weekday(0).add(day - 1, 'days');
+                                        return (
+                                            <TableCell
+                                                key={i}
+                                            // style={tableHeaderStyle}
+                                            >
+                                                {date.format(this.props.small ? 'dd' : 'dddd')}
+                                                <br />
+                                                {date.format('DD.MM.')}
+                                            </TableCell>
+                                        );
+                                    })}
+                                </TableRow>
+                            </TableHead>
                         </GrayoutTable>
+                        <div style={{ maxHeight: `calc(100vh - ${180}px)`, overflowY: 'auto' }}>
+                            <GrayoutTable
+                                className={classes.table}
+                                disabled={this.props.counterChanged}
+                            >
+                                <TableBody>
+                                    {this.renderRows()}
+                                </TableBody>
+                            </GrayoutTable>
+                        </div>
                     </div>
-                    {this.props.showDrawer && <GrayoutTable
-                        className={classes['table-footer']}
-                        disabled={this.props.counterChanged}>
-                        <TableFooter>
-                            <TableRow>
-                                <TableCell colSpan="6" style={{ textAlign: 'right' }} >
-                                    <NoPrint>
-                                        <IconButton onClick={this.props.setPreviousWeek}>
-                                            <BackIcon />
-                                        </IconButton>
-                                        <IconButton onClick={this.props.setNextWeek}>
-                                            <NextIcon />
-                                        </IconButton>
-                                    </NoPrint>
-                                </TableCell>
-                            </TableRow>
-                        </TableFooter></GrayoutTable>}
-
                 </Print>
             </div>
         );
@@ -227,7 +218,7 @@ const makeMapStateToProps = () => {
     const getCurrentTimetable = makeGetCurrentTimetable()
     const mapStateToProps = (state, props) => {
         return {
-            currentTimetable: getCurrentTimetable(state, props),
+            currentTimetable: getCurrentTimetable(state),
             date: state.timetable.timetableDate,
             periods: state.timetable.masterdata.Period_Time,
             id: state.timetable.currentTimeTableId,

@@ -20,6 +20,7 @@ import { setNotification, showError } from '../actions';
 import { authContext } from '../../Common/Adal/adalConfig';
 import UserAvatar from './UserAvatar';
 import { withTheme } from 'material-ui';
+import { Tooltip } from 'material-ui';
 
 class UserSettingsMenu extends React.Component {
 
@@ -92,20 +93,31 @@ class UserSettingsMenu extends React.Component {
         const { anchorEl } = this.state;
         return (
             <div>
-                <IconButton
-                    aria-label="More"
-                    aria-owns={anchorEl ? 'long-menu' : null}
-                    aria-haspopup="true"
-                    onClick={this.handleClick}
-                    style={{ width: 48 + 8, height: 48, paddingLeft: 8, padding: 0 }}
-                >
-                    <UserAvatar />
-                </IconButton>
+                <Tooltip id="tooltip-settings" title="Benutzereinstellungen">
+                    <IconButton
+                        aria-label="More"
+                        aria-owns={anchorEl ? 'long-menu' : null}
+                        aria-haspopup="true"
+                        onClick={this.handleClick}
+                        style={{ width: 48 + 8, height: 48, paddingLeft: 8, padding: 0 }}
+                    >
+                        <UserAvatar />
+                    </IconButton>
+                </Tooltip>
                 <Menu
                     id="long-menu"
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                    getContentAnchorEl={undefined}
                 >
                     <MenuItem
                         onClick={this.profilePicChange} >
