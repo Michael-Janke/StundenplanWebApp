@@ -1,4 +1,4 @@
-import * as colors from 'material-ui/colors';
+import * as colors from '@material-ui/core/colors';
 
 export const WEEKDAY_NAMES = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
 export const DRAWER_WIDTH = 300;

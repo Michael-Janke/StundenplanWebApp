@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { green } from 'material-ui/colors';
+import { green } from '@material-ui/core/colors';
 import easterImg from './easter.jpg';
 import bridgeImg from './bridge.jpg';
 import firstMayImg from './firstMay.jpg';
@@ -9,6 +9,7 @@ import autumnImg from './autumn.jpg';
 import xmasImg from './xmas.jpg';
 import winterImg from './winter.jpg';
 import germanImg from './german.jpg';
+import ascentionImg from './ascention.jpg';
 
 const holidayImageMap = {
   "Oster":easterImg,
@@ -18,7 +19,8 @@ const holidayImageMap = {
   "Herbst":autumnImg,
   "Weihn":xmasImg,
   "Winter":winterImg,
-  "3.10":germanImg,
+  "3.10": germanImg,
+  "10.5": ascentionImg,
 }
 
 class Holiday extends Component {

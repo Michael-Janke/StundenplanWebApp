@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
-import { grey } from 'material-ui/colors';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import { grey } from '@material-ui/core/colors';
 import PeriodColumn from './period';
 import { WEEKDAY_NAMES } from '../Common/const';
-import IconButton from 'material-ui/IconButton';
-import BackIcon from '@material-ui/icons/ArrowBack';
-import NextIcon from '@material-ui/icons/ArrowForward';
-import { NoPrint, Print } from 'react-easy-print';
-
+import { Print } from 'react-easy-print';
 import { changeWeek } from '../Main/actions';
 import makeGetCurrentTimetable from '../Selector/timetable';
 import Holiday from './Holiday';
-import { withStyles } from 'material-ui';
+import { withStyles } from '@material-ui/core';
 
 
 class TimeTableGrid extends Component {
@@ -99,49 +99,36 @@ class TimeTableGrid extends Component {
         return (
             <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
                 <Print main name="TimeTable">
-                    <TableToolBar className={classes['table-header']} border={this.props.theme.palette.divider}>
-
-                        <NoPrint>
-                            <IconButton onClick={this.props.setPreviousWeek}>
-                                <BackIcon />
-                            </IconButton>
-                            <IconButton onClick={this.props.setNextWeek}>
-                                <NextIcon />
-                            </IconButton>
-                        </NoPrint>
-                    </TableToolBar>
-                    <div>
-                        <GrayoutTable className={classes['table-header']}>
-                            <TableHead
-                                style={{ fontSize: '100%' }}>
-                                <TableRow style={{ height: 48 }}>
-                                    <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
-                                    {[1, 2, 3, 4, 5].map((day, i) => {
-                                        let date = this.props.date.clone().weekday(0).add(day - 1, 'days');
-                                        return (
-                                            <TableCell
-                                                key={i}
-                                            // style={tableHeaderStyle}
-                                            >
-                                                {date.format(this.props.small ? 'dd' : 'dddd')}
-                                                <br />
-                                                {date.format('DD.MM.')}
-                                            </TableCell>
-                                        );
-                                    })}
-                                </TableRow>
-                            </TableHead>
+                    <Table className={classes['table-header']}>
+                        <TableHead
+                            style={{ fontSize: '100%' }}>
+                            <TableRow style={{ height: 48 }}>
+                                <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
+                                {[1, 2, 3, 4, 5].map((day, i) => {
+                                    let date = this.props.date.clone().weekday(0).add(day - 1, 'days');
+                                    return (
+                                        <TableCell
+                                            key={i}
+                                        // style={tableHeaderStyle}
+                                        >
+                                            {date.format(this.props.small ? 'dd' : 'dddd')}
+                                            <br />
+                                            {date.format('DD.MM.')}
+                                        </TableCell>
+                                    );
+                                })}
+                            </TableRow>
+                        </TableHead>
+                    </Table>
+                    <div style={{ maxHeight: `calc(100vh - ${180}px)`, overflowY: 'auto' }}>
+                        <GrayoutTable
+                            className={classes.table}
+                            disabled={this.props.counterChanged}
+                        >
+                            <TableBody>
+                                {this.renderRows()}
+                            </TableBody>
                         </GrayoutTable>
-                        <div style={{ maxHeight: `calc(100vh - ${180}px)`, overflowY: 'auto' }}>
-                            <GrayoutTable
-                                className={classes.table}
-                                disabled={this.props.counterChanged}
-                            >
-                                <TableBody>
-                                    {this.renderRows()}
-                                </TableBody>
-                            </GrayoutTable>
-                        </div>
                     </div>
                 </Print>
             </div>
@@ -155,6 +142,7 @@ const styles = theme => ({
     },
     'table-header': {
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
+        tableLayout: 'fixed',
     },
     'table-footer': {
         backgroundColor: theme.palette.background.paper,

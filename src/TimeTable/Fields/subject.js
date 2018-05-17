@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import ArrowForward from '@material-ui/icons/ArrowForward';
-import red from 'material-ui/colors/red';
-import grey from 'material-ui/colors/grey';
+import red from '@material-ui/core/colors/red';
+import grey from '@material-ui/core/colors/grey';
 
 function SubjectContainer({ subject, small, themeClasses }) {
     const changed = !!subject.old;

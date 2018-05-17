@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Dialog, {
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-} from 'material-ui/Dialog';
-import { Button, TextField } from 'material-ui';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { Button, TextField } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { sendFeedback } from '../actions';
 import FeedbackIcon from '@material-ui/icons/Feedback';
-import Slide from 'material-ui/transitions/Slide';
+import Slide from '@material-ui/core/Slide';
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;

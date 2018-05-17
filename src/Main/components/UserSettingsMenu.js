@@ -1,10 +1,12 @@
 import React from 'react';
 import firebase from 'firebase';
 import { connect } from "react-redux";
-import Menu, { MenuItem } from 'material-ui/Menu';
-import { ListItemIcon, ListItemText } from 'material-ui/List';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 
-import IconButton from 'material-ui/IconButton';
+import IconButton from '@material-ui/core/IconButton';
 
 import ProfilePicIcon from '@material-ui/icons/AccountCircle';
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -19,8 +21,8 @@ import { connectToServiceWorker } from '../../Common/firebase';
 import { setNotification, showError } from '../actions';
 import { authContext } from '../../Common/Adal/adalConfig';
 import UserAvatar from './UserAvatar';
-import { withTheme } from 'material-ui';
-import { Tooltip } from 'material-ui';
+import { withTheme } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 
 class UserSettingsMenu extends React.Component {
 

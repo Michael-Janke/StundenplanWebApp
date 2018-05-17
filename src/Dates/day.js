@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import cyan from 'material-ui/colors/cyan';
-import orange from 'material-ui/colors/orange';
+import cyan from '@material-ui/core/colors/cyan';
+import orange from '@material-ui/core/colors/orange';
 import Appointment from './appointment';
 import moment from 'moment';
 

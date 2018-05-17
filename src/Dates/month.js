@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import './month.css';
 import AppointmentDay from './day';
-import lightBlue from 'material-ui/colors/lightBlue';
-import { ListSubheader } from 'material-ui';
+import lightBlue from '@material-ui/core/colors/lightBlue';
+import { ListSubheader } from '@material-ui/core';
 
 const getWeeksOfMonth = (firstDayOfMonth) => {
     let weeks = [];

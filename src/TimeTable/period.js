@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { SUBJECT_COLORS_MAP } from '../Common/const';
 
-import { indigo } from 'material-ui/colors';
+import { indigo } from '@material-ui/core/colors';
 import Subject from './Fields/subject';
 import Room from './Fields/room';
 import Classes from './Fields/classes';

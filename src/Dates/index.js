@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import moment from 'moment';
-import { Paper, withStyles } from "material-ui";
+import { Paper, withStyles } from "@material-ui/core";
 import { connect } from 'react-redux';
 import MonthView from './month';
 import { getDates, deleteDate } from "./actions";
 import makeGetCurrentDates from "../Selector/dates";
 import AddDialog from "./Dialogs/addDialog";
-import List from "material-ui/List";
+import List from '@material-ui/core/List';
 
 const styles = theme => ({
     root: {

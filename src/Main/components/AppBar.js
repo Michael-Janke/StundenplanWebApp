@@ -1,30 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Drawer from 'material-ui/SwipeableDrawer';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import IconButton from 'material-ui/IconButton';
-import Divider from 'material-ui/Divider';
+import { withStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/SwipeableDrawer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import CalendarIcon from '@material-ui/icons/Event';
+import SearchIcon from '@material-ui/icons/Search';
 import NextIcon from '@material-ui/icons/ArrowForward';
 import FeedbackIcon from '@material-ui/icons/Feedback';
 import PrintIcon from '@material-ui/icons/Print';
 import LampIcon from '@material-ui/icons/LightbulbOutline';
-import SearchBar from './SearchBar';
+import Search from '../../TimeTable/search.js';
 import { connect } from 'react-redux';
 import { changeWeek, showError } from '../actions';
 import styled from 'styled-components';
 import UserSettingsMenu from './UserSettingsMenu';
-import grey from 'material-ui/colors/grey';
+import grey from '@material-ui/core/colors/grey';
 import { DRAWER_WIDTH } from '../../Common/const';
 import ProfilePicture from './ProfilePicture';
 import Feedback from './Feedback';
-import indigo from 'material-ui/colors/indigo';
-import { Tooltip } from 'material-ui';
-import SvgIcon from 'material-ui/SvgIcon';
+import indigo from '@material-ui/core/colors/indigo';
+import { Tooltip } from '@material-ui/core';
+import SvgIcon from '@material-ui/core/SvgIcon';
 
 function LampOnIcon(props) {
     return (
@@ -107,6 +108,11 @@ class ResponsiveDrawer extends React.Component {
                         </IconButton>
 
                         <Icons>
+                            <Tooltip id="tooltip-theme" title="Suchen">
+                                <IconButton onClick={this.handleSearch}>
+                                    <SearchIcon className={classes.icon} />
+                                </IconButton>
+                            </Tooltip>
                             {small ||
                                 <Tooltip id="tooltip-theme" title="Theme ändern">
                                     <IconButton onClick={this.props.onThemeToggle}>
@@ -152,6 +158,7 @@ class ResponsiveDrawer extends React.Component {
                             <UserSettingsMenu />
                         </Icons>
                     </Toolbar>
+                    <Search open={this.state.searchOpen} onClose={this.handleSearch}/>
                     <Feedback ref="feedback" />
                 </AppBar>
                 <Drawer

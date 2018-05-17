@@ -1,27 +1,24 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { DRAWER_WIDTH } from "../Common/const";
-import withTheme from 'material-ui/styles/withTheme';
+import withTheme from '@material-ui/core/styles/withTheme';
 import TimeTableGrid from './timeTableGrid';
-import Dates from '../Dates';
-import indigo from 'material-ui/colors/indigo';
+import indigo from '@material-ui/core/colors/indigo';
+import { Paper } from "@material-ui/core";
 
 class View extends Component {
     render() {
         return (
             <Container>
-                <AppBar backgroundColor={indigo[600]}/>
+                <AppBar backgroundColor={indigo[600]} />
                 {/* {this.props.showDrawer && <Drawer>
                     <Dates />
                 </Drawer>} */}
-                
+
                 <ShadowContainer>
-                    <ShadowBox>
-                        <TimeTableGrid />
-                    </ShadowBox>
+                    <TimeTableGrid />
                 </ShadowContainer>
-            </Container>
+            </Container >
         );
     }
 }
@@ -34,25 +31,20 @@ const Container = styled.div`
     background-color: ${props => props.backgroundColor};
 `
 
-const Drawer = styled.div`
-    min-width: ${DRAWER_WIDTH}px;
-    z-index: 1;
-`
 
-const ShadowContainer = styled.div`
+const ShadowContainer = styled(Paper)`
     display: flex;
     flex-direction: row;
     width: 100%;
     margin-top: 6px;
     margin-right: 1vw;
+    margin-left: 1vw;
     margin-bottom: 1vw;
     z-index: 1;
     position: relative;
-`
-const ShadowBox = styled.div`
-    box-shadow: rgba(0,0,0,0.3) 0px 0px 10px;
     max-width: 1200px;
 `
+
 // const ShadowContainerEmu = styled.div`
 //     margin-left: ${DRAWER_WIDTH}px;
 //     margin-right: 1vw;

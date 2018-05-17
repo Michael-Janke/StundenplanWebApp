@@ -1,22 +1,24 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
 import PersonIcon from '@material-ui/icons/Person';
 import ClassIcon from '@material-ui/icons/Group';
 import RoomIcon from '@material-ui/icons/Room';
 import { loadAvatars, setTimeTable } from '../actions';
 import moment from 'moment';
-import { withStyles } from "material-ui/styles";
-import Paper from "material-ui/Paper";
+import { withStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
 import Autosuggest from 'react-autosuggest';
-import SearchBar from "material-ui-search-bar";
+// import SearchBar from "material-ui-search-bar";
 
 function renderInput(inputProps) {
     const { classes, ref, ...other } = inputProps;
     return (
-        <SearchBar
+        <div
             fullWidth
             inputRef={ref}
             classes={{

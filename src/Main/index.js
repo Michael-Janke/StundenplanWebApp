@@ -4,7 +4,7 @@ import React, {
 import {
     connect
 } from "react-redux";
-import Snackbar from 'material-ui/Snackbar';
+import Snackbar from '@material-ui/core/Snackbar';
 import {
     clearErrors,
     checkCounter,
@@ -16,7 +16,7 @@ import {
     changeTheme
 } from "./actions"
 import TimeTable from "../TimeTable"
-import { MuiThemeProvider } from 'material-ui/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import AppBar from './components/AppBar';
 import createTheme from '../Common/theme';
 import ReactInterval from 'react-interval';

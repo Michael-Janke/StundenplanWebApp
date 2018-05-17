@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from "styled-components";
-import grey from 'material-ui/colors/grey';
 import ActionInfo from '@material-ui/icons/Info';
-import indigo from 'material-ui/colors/indigo';
-import { darken } from 'material-ui/styles/colorManipulator';
-import { withStyles } from 'material-ui';
+import indigo from '@material-ui/core/colors/indigo';
+import { darken } from '@material-ui/core/styles/colorManipulator';
+import { withStyles } from '@material-ui/core';
 import { subjectStyles } from './Fields/subject';
 import { roomStyles } from './Fields/room';
 import { classStyles } from './Fields/classes';
@@ -12,7 +11,7 @@ import { teacherStyles } from './Fields/teachers';
 const Field = (field, props, customProps) => React.createElement(field.reactClass, { ...field.props, ...props, ...customProps });
 
 const SubstitutionText = ({ children }) => (
-    <SubstitutionTextContainer color={grey[600]}>
+    <SubstitutionTextContainer>
         <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} />
         <div style={{ flex: 1 }}>{children}</div>
     </SubstitutionTextContainer>
@@ -33,15 +32,23 @@ const AbstractLesson = (props) => {
     const Field3 = Field.bind(null, fields[2], { small, themeClasses: classes });
     const RemovalField = removalField && Field.bind(null, removalField, { small, themeClasses: classes });
 
+    let substitutionTextBig = substitutionText && substitutionText.length > 16;
+    const substitutionType = specificSubstitutionType &&
+        (<SubstitutionType color={specificSubstitutionType.color}>
+            {(!substitutionText || substitutionTextBig) ? specificSubstitutionType.name : substitutionText}
+        </SubstitutionType>);
+
+    const extraInfo = (substitutionTextBig || absence) &&
+        (<SubstitutionText>
+            {substitutionText ? substitutionText + (absence ? ` (${absence.TEXT})` : "") : absence.TEXT}</SubstitutionText>);
+
     if (!small) return (
         <Lesson type={theme.palette.type} color={(specificSubstitutionType || {}).backgroundColor} flex={!specificSubstitutionType || !multiple}>
             <ColorBar lineColor={colorBar} />
             <LessonWrapper>
                 <LessonContainer>
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden' }}>
-                        {specificSubstitutionType &&
-                            <SubstitutionType color={specificSubstitutionType.color}>{specificSubstitutionType.name}</SubstitutionType>
-                        }
+                        {substitutionType}
                         <Field1 left />
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', overflow: 'hidden', paddingLeft: 5 }}>
@@ -50,9 +57,7 @@ const AbstractLesson = (props) => {
                     </div>
                 </LessonContainer>
                 {removalField && <RemovalField left />}
-                {(substitutionText || absence) &&
-                    <SubstitutionText>{substitutionText ? substitutionText + (absence ? ` (${absence.TEXT})` : "") : absence.TEXT}</SubstitutionText>
-                }
+                {extraInfo}
             </LessonWrapper>
         </Lesson>
     );
@@ -60,15 +65,12 @@ const AbstractLesson = (props) => {
         <Lesson type={theme.palette.type} color={(specificSubstitutionType || {}).backgroundColor} flex={last}>
             <ColorBar lineColor={colorBar} />
             <LessonContainer small>
-                {specificSubstitutionType &&
-                    <SubstitutionType color={specificSubstitutionType.color}>{specificSubstitutionType.name}</SubstitutionType>}
+                {substitutionType}
                 <Field1 left />
                 <Field3 left />
                 <Field2 left />
                 {removalField && <RemovalField left />}
-                {(substitutionText || absence) &&
-                    <SubstitutionText>{substitutionText ? substitutionText + (absence ? ` (${absence.TEXT})` : "") : absence.TEXT}</SubstitutionText>
-                }
+                {extraInfo}
             </LessonContainer>
         </Lesson>
     );
@@ -91,7 +93,6 @@ const SubstitutionType = styled.div`
 
 const SubstitutionTextContainer = styled.div`
     font-size: 70%;
-    color: ${props => props.color};
     white-space: normal;
     align-items: center;
     display: flex;

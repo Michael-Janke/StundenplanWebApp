@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import moment from "moment";
 import { loadAvatars } from '../actions';
 
-import Avatar from 'material-ui/Avatar';
+import Avatar from '@material-ui/core/Avatar';
 import PersonIcon from '@material-ui/icons/Person';
 
 class UserAvatar extends Component {

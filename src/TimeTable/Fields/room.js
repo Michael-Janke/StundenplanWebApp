@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import ArrowForward from '@material-ui/icons/ArrowForward';
-import blue from 'material-ui/colors/blue';
-import grey from 'material-ui/colors/grey';
+import blue from '@material-ui/core/colors/blue';
+import grey from '@material-ui/core/colors/grey';
 
 
 function RoomContainer({ room, small, themeClasses }) {

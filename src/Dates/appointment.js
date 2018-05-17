@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import EditIcon from '@material-ui/icons/Create';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
-import IconButton from 'material-ui/IconButton/IconButton';
+import IconButton from '@material-ui/core/IconButton';
 
 const styles = {
     icon: {
