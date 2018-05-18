@@ -43,7 +43,7 @@ function translateTimetable(masterdata, timetable, substitutions, periods, type,
             joinSubstitutions(day, substitutions.substitutions[x], type, id);
         }
         skipDuplications(day, periods);
-        translatePeriods(masterdata, day, periods);
+        translatePeriods(masterdata, day, periods, id, type);
         data[x] = day;
     }
     return data;
@@ -94,17 +94,18 @@ function joinSubstitutions(day, subOnDay, type, id) {
             lessons.push({
                 substitutionText: substitution.TEXT,
                 substitutionRemove:
-                    type === "teacher"
-                    && substitution.TEACHER_ID !== 0,
+                    (type === 'teacher' && !!substitution.TEACHER_ID)
+                    || (type === 'room' && !!substitution.ROOM_ID),
                 substitutionType: substitution.TYPE,
-                CLASS_IDS: substitution.CLASS_IDS_NEW,
+                CLASS_IDS: substitution.CLASS_IDS_NEW.length ? substitution.CLASS_IDS_NEW : substitution.CLASS_IDS,
                 CLASS_IDS_OLD: substitution.CLASS_IDS_NEW.length ? substitution.CLASS_IDS : [],
-                TEACHER_ID: substitution.TEACHER_ID_NEW,
-                TEACHER_ID_OLD: substitution.TEACHER_ID,
-                SUBJECT_ID: substitution.SUBJECT_ID_NEW,
-                SUBJECT_ID_OLD: substitution.SUBJECT_ID,
-                ROOM_ID: substitution.ROOM_ID_NEW,
-                ROOM_ID_OLD: substitution.ROOM_ID,
+                CLASS_IDS_ABSENT: substitution.CLASS_IDS_ABSENT,
+                TEACHER_ID: substitution.TEACHER_ID_NEW || substitution.TEACHER_ID,
+                TEACHER_ID_OLD: substitution.TEACHER_ID_NEW && substitution.TEACHER_ID_NEW !== substitution.TEACHER_ID && substitution.TEACHER_ID,
+                SUBJECT_ID: substitution.SUBJECT_ID_NEW || substitution.SUBJECT_ID,
+                SUBJECT_ID_OLD: substitution.SUBJECT_ID_NEW && substitution.SUBJECT_ID_NEW !== substitution.SUBJECT_ID && substitution.SUBJECT_ID,
+                ROOM_ID: substitution.ROOM_ID_NEW || substitution.ROOM_ID,
+                ROOM_ID_OLD: substitution.ROOM_ID_NEW && substitution.ROOM_ID_NEW !== substitution.ROOM_ID && substitution.ROOM_ID,
                 specificSubstitutionType: getSpecificSubstitutionType(substitution),
             });
         });
@@ -116,11 +117,9 @@ function joinSubstitutions(day, subOnDay, type, id) {
                 if (!period) continue;
                 let lessons = period.lessons;
                 if (lessons && lessons.length) {
-                    lessons.forEach((lesson) => {
-                        lesson.absence = absence;
-                    })
+                    period.lessons = lessons.map((lesson) => ({ ...lesson, absence: absence }));
                 } else {
-                    period.lessons = [{ absence }];
+                    period.lessons = [{ absence, absenceOnly: true }];
                 }
             }
         });
@@ -192,6 +191,7 @@ function skipTeacherDuplications(lessons) {
             if (lesson.ROOM_ID === last.ROOM_ID
                 && lesson.SUBJECT_ID === last.SUBJECT_ID
                 && lesson.absence === last.absence
+                && equalArrays(lesson.CLASS_IDS, last.CLASS_IDS)
                 // && lesson.substitutionType === last.substitutionType
             ) {
                 if (!last.TEACHER_IDS.includes(lesson.TEACHER_ID)) {
@@ -237,13 +237,13 @@ function readTimetable(_data, day, periods, date) {
     return { periods: data };
 }
 
-function translatePeriods(masterdata, day, periods) {
+function translatePeriods(masterdata, day, periods, id, type) {
     if (day.holiday) {
         return day;
     }
     for (let y = 0; y < periods.length; y++) {
         if (day.periods[y] && day.periods[y].lessons) {
-            translate(masterdata, day.periods[y]);
+            translate(masterdata, day.periods[y], id, type);
         }
     }
 }
@@ -268,8 +268,9 @@ function equalArrays(array1, array2) {
 export function equalPeriods(period1, period2) {
 
     if (
-        ((!!period1.TIMETABLE_ID) ? period1.TIMETABLE_ID === period2.TIMETABLE_ID : false)
+        ((!!period1.TIMETABLE_ID) ? (period1.TIMETABLE_ID === period2.TIMETABLE_ID && period1.absence === period2.absence) : false)
         || (period1.absence === period2.absence
+            && period1.absenceOnly === period2.absenceOnly
             && period1.substitutionText === period2.substitutionText
             && period1.substitutionRemove === period2.substitutionRemove
             && period1.specificSubstitutionType === period2.specificSubstitutionType
@@ -286,31 +287,55 @@ export function equalPeriods(period1, period2) {
     return false;
 }
 
-function translate(masterdata, period) {
+function getIrrelevanceLevel(size, lesson, type, id) {
+    let irrelevanceLevel = 0;
+    if (lesson.substitutionRemove) {
+        if (type === 'teacher' && lesson.SUBJECT_ID !== lesson.SUBJECT_ID_OLD && lesson.SUBJECT_ID_OLD) {
+            irrelevanceLevel += 2;
+        }
+        if (type === 'room' && lesson.ROOM_ID_OLD === id) {
+            irrelevanceLevel += 4;
+        }
+        if (type === 'teacher' && lesson.TEACHER_IDS.indexOf(id) === -1) {
+            irrelevanceLevel += 3;
+        }
+    }
+    if (lesson.substitutionType === 'REDUNDANCY' || lesson.substitutionType === 'ELIMINATION') {
+        irrelevanceLevel += type === 'room' ? 2 : (size > 1 ? 5 : 3);
+    }
+    if (lesson.substitutionType === 'ASSIGNMENT' && type === 'room') {
+        irrelevanceLevel += 5;
+    }
+    return irrelevanceLevel;
+}
+
+function translate(masterdata, period, id, type) {
     if (!period) return period;
-    period.lessons = period.lessons.map((period) => ({
-        reference: period,
-        substitutionText: period.substitutionText,
-        substitutionType: period.substitutionType,
-        specificSubstitutionType: period.specificSubstitutionType,
-        substitutionRemove: period.substitutionRemove,
-        absence: period.absence,
+    period.lessons = period.lessons.map((lesson) => ({
+        reference: lesson,
+        irrelevanceLevel: getIrrelevanceLevel(period.lessons.length, lesson, type, id),
+        absenceOnly: lesson.absenceOnly,
+        substitutionText: lesson.substitutionText,
+        substitutionType: lesson.substitutionType,
+        specificSubstitutionType: lesson.specificSubstitutionType,
+        substitutionRemove: lesson.substitutionRemove,
+        absence: lesson.absence,
         teachers: {
-            new: period.TEACHER_IDS.map((t) => masterdata.Teacher[t]),
-            old: !!period.TEACHER_IDS_OLD.length && period.TEACHER_IDS_OLD.map((t) => masterdata.Teacher[t])
+            new: lesson.TEACHER_IDS.map((t) => masterdata.Teacher[t]),
+            old: !!lesson.TEACHER_IDS_OLD.length && lesson.TEACHER_IDS_OLD.map((t) => masterdata.Teacher[t])
         },
         subject: {
-            new: masterdata.Subject[period.SUBJECT_ID],
-            old: masterdata.Subject[period.SUBJECT_ID_OLD]
+            new: masterdata.Subject[lesson.SUBJECT_ID],
+            old: masterdata.Subject[lesson.SUBJECT_ID_OLD]
         },
         room: {
-            new: masterdata.Room[period.ROOM_ID],
-            old: masterdata.Room[period.ROOM_ID_OLD]
+            new: masterdata.Room[lesson.ROOM_ID],
+            old: masterdata.Room[lesson.ROOM_ID_OLD]
         },
         classes: {
-            new: (period.CLASS_IDS || []).map((c) => masterdata.Class[c]),
-            old: !!(period.CLASS_IDS_OLD || []).length && period.CLASS_IDS_OLD.map((c) => masterdata.Class[c]),
-            absent: !!(period.CLASS_IDS_ABSENT || []).length && period.CLASS_IDS_ABSENT.map((c) => masterdata.Class[c])
+            new: (lesson.CLASS_IDS || []).map((c) => masterdata.Class[c]),
+            old: !!(lesson.CLASS_IDS_OLD || []).length && lesson.CLASS_IDS_OLD.map((c) => masterdata.Class[c]),
+            absent: !!(lesson.CLASS_IDS_ABSENT || []).length && lesson.CLASS_IDS_ABSENT.map((c) => masterdata.Class[c])
         }
     }));
     return period;

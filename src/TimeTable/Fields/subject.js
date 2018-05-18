@@ -5,8 +5,9 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 import red from '@material-ui/core/colors/red';
 import grey from '@material-ui/core/colors/grey';
 
-function SubjectContainer({ subject, small, themeClasses }) {
-    const changed = !!subject.old;
+function SubjectContainer({ subject, small, themeClasses, irrelevanceLevel }) {
+    small = small || irrelevanceLevel > 3;
+    const changed = !!subject.old && irrelevanceLevel <= 3;
     const ClassNormal = changed ? NewSubject : Subject;
     const Arrow = changed && <ArrowForward style={{ height: 10, width: null }} />;
     return (

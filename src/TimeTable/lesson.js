@@ -2,6 +2,7 @@ import React from 'react';
 import styled from "styled-components";
 import ActionInfo from '@material-ui/icons/Info';
 import indigo from '@material-ui/core/colors/indigo';
+import grey from '@material-ui/core/colors/grey';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core';
 import { subjectStyles } from './Fields/subject';
@@ -25,8 +26,7 @@ const styles = theme => ({
 });
 
 const AbstractLesson = (props) => {
-    let { classes, theme, colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, removalField, absence } = props;
-
+    let { classes, theme, colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, removalField, absence, irrelevanceLevel } = props;
     const Field1 = Field.bind(null, fields[0], { small, themeClasses: classes });
     const Field2 = Field.bind(null, fields[1], { small, themeClasses: classes });
     const Field3 = Field.bind(null, fields[2], { small, themeClasses: classes });
@@ -43,8 +43,12 @@ const AbstractLesson = (props) => {
             {substitutionText ? substitutionText + (absence ? ` (${absence.TEXT})` : "") : absence.TEXT}</SubstitutionText>);
 
     if (!small) return (
-        <Lesson type={theme.palette.type} color={(specificSubstitutionType || {}).backgroundColor} flex={!specificSubstitutionType || !multiple}>
-            <ColorBar lineColor={colorBar} />
+        <Lesson
+            type={theme.palette.type}
+            irrelevanceLevel={irrelevanceLevel}
+            color={(specificSubstitutionType || {}).backgroundColor}
+            flex={!specificSubstitutionType || !multiple}>
+            <ColorBar lineColor={irrelevanceLevel < 3 && colorBar} />
             <LessonWrapper>
                 <LessonContainer>
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden' }}>
@@ -62,8 +66,12 @@ const AbstractLesson = (props) => {
         </Lesson>
     );
     if (small) return (
-        <Lesson type={theme.palette.type} color={(specificSubstitutionType || {}).backgroundColor} flex={last}>
-            <ColorBar lineColor={colorBar} />
+        <Lesson
+            type={theme.palette.type}
+            irrelevanceLevel={irrelevanceLevel}
+            color={(specificSubstitutionType || {}).backgroundColor}
+            flex={last}>
+            <ColorBar lineColor={irrelevanceLevel < 3 && colorBar} />
             <LessonContainer small>
                 {substitutionType}
                 <Field1 left />
@@ -76,10 +84,13 @@ const AbstractLesson = (props) => {
     );
 };
 
+
+
+
 const ColorBar = styled.div`
     width: 3%;
     margin-right:5px;
-    background-color: ${props => props.lineColor};
+    background-color: ${props => props.lineColor || indigo[100]};
 `;
 
 const SubstitutionType = styled.div`
@@ -130,7 +141,10 @@ const Lesson = styled.div`
     text-align: left;
     padding-right: 1vmin;
     flex-direction: row;
-    background-color: ${props => (props.type === 'dark' ? darken : (c) => c)(props.color || indigo[50], 0.6)};
+    font-size: ${props => props.irrelevanceLevel < 3 ? '100%' : '85%'};
+    background-color: ${props => (props.type === 'dark' ? darken : (c) => c)(
+        (props.irrelevanceLevel < 3 ? props.color : grey[100]) || indigo[50], 0.6
+    )};
 `;
 
 export default withStyles(styles, { withTheme: true })(AbstractLesson);

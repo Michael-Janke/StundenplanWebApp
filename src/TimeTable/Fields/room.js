@@ -6,8 +6,8 @@ import blue from '@material-ui/core/colors/blue';
 import grey from '@material-ui/core/colors/grey';
 
 
-function RoomContainer({ room, small, themeClasses }) {
-    const changed = !!room.old;
+function RoomContainer({ room, small, themeClasses, irrelevanceLevel }) {
+    const changed = irrelevanceLevel <= 3 && !!room.old;
     const RoomNormal = changed ? NewRoom : Room;
     const Arrow = changed && <ArrowForward style={{ height: 10, width: null }} />;
     return (

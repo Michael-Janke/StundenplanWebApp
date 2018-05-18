@@ -9,21 +9,22 @@ const teacherToName = (teacher, small) =>
             : (teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME
         : '-';
 
-function TeachersContainer({ teachers, small, left, themeClasses }) {
+function TeachersContainer({ teachers, small, left, themeClasses, irrelevanceLevel }) {
+    const irrelevant = irrelevanceLevel > 3;
     const NormalTeacher = !!teachers.old ? NewTeacher : Teacher;
     return (
         <Container left={left} className={themeClasses['teacher']}>
             {teachers.new.map((teacher, i) =>
-                <NormalTeacher className={themeClasses.teacher[!!teachers.old ? 'teacher-new' : 'teacher-normal']} key={i}>
+                <NormalTeacher className={themeClasses.teacher[!irrelevant && !!teachers.old ? 'teacher-new' : 'teacher-normal']} key={i}>
                     {teacherToName(teacher, small)}
                 </NormalTeacher>
             )}
-            {teachers.old &&
+            {small || irrelevant || (teachers.old &&
                 teachers.old.map((teacher, i) =>
                     <OldTeacher className={themeClasses['teacher-old']} key={"o" + i}>
                         {teacherToName(teacher, small)}
                     </OldTeacher>
-                )}
+                ))}
         </Container>
     )
 }

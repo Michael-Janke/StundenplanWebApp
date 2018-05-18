@@ -1,65 +1,64 @@
 import React from 'react';
 import styled from 'styled-components';
 import { SUBJECT_COLORS_MAP } from '../Common/const';
-
-import { indigo } from '@material-ui/core/colors';
 import Subject from './Fields/subject';
 import Room from './Fields/room';
 import Classes from './Fields/classes';
 import Teachers from './Fields/teachers';
 import AbstractLesson from './lesson';
+import Absence from './absence';
 import { equalPeriods } from '../Selector/timetable';
 
 const extractSubject = (name) => {
     return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
 }
 
-const FieldDescription = (reactClass, props) => ({ reactClass, props });
+const FieldDescription = irrelevanceLevel => (reactClass, props) => ({ reactClass, props: { ...props, irrelevanceLevel } });
 
 function getStudentFields(lesson) {
-    const { subject, room, teachers } = lesson;
+    const { subject, room, teachers, irrelevanceLevel } = lesson;
+    const FieldDescriptor = FieldDescription(irrelevanceLevel);
     return {
         colorBar: subject.new
-            ? SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)]
-            : indigo[100],
+            && SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)],
         fields: [
-            FieldDescription(Subject, { subject }),
-            FieldDescription(Room, { room }),
-            FieldDescription(Teachers, { teachers }),
+            FieldDescriptor(Subject, { subject }),
+            FieldDescriptor(Room, { room }),
+            FieldDescriptor(Teachers, { teachers }),
         ],
         removalField: null // cannot happen
     }
 }
 
 function getTeacherFields(lesson) {
-    const { subject, room, classes, teachers, substitutionRemove } = lesson;
+    const { subject, room, classes, teachers, substitutionRemove, irrelevanceLevel } = lesson;
+    const FieldDescriptor = FieldDescription(irrelevanceLevel);
     return {
         colorBar: subject.new
-            ? SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)]
-            : indigo[100],
+            && SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)],
         fields: [
-            FieldDescription(Subject, { subject }),
-            FieldDescription(Room, { room }),
-            FieldDescription(Classes, { classes }),
+            FieldDescriptor(Subject, { subject }),
+            FieldDescriptor(Room, { room }),
+            FieldDescriptor(Classes, { classes }),
         ],
         removalField: substitutionRemove
-            && FieldDescription(Teachers, { teachers })
+            && FieldDescriptor(Teachers, { teachers })
     }
 }
 
 function getRoomFields(lesson) {
-    const { subject, teachers, classes, substitutionRemove, room } = lesson;
+    const { subject, teachers, classes, substitutionRemove, room, irrelevanceLevel } = lesson;
+    const FieldDescriptor = FieldDescription(irrelevanceLevel);
     return {
         colorBar: subject.new
-            ? SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)]
-            : indigo[100],
+            && SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)],
         fields: [
-            FieldDescription(Classes, { classes }),
-            FieldDescription(Subject, { subject }),
-            FieldDescription(Teachers, { teachers }),
+            FieldDescriptor(Classes, { classes }),
+            FieldDescriptor(Subject, { subject }),
+            FieldDescriptor(Teachers, { teachers }),
         ],
         removalField: substitutionRemove
-            && FieldDescription(Room, { room })
+            && FieldDescriptor(Room, { room })
     }
 }
 
@@ -89,22 +88,32 @@ class Period extends React.Component {
             <PeriodsContainer>
                 {lessons.map((lesson, i) => {
                     let { classes, subject, teachers, room, ...other } = lesson;
-                    let fields = {
-                        student: getStudentFields,
-                        teacher: getTeacherFields,
-                        room: getRoomFields,
-                        class: getStudentFields
-                    }[type.toLowerCase()](lesson);
-                    return (
-                        <AbstractLesson
-                            {...other}
-                            key={i}
-                            last={lessons.length - 1 === i}
-                            multiple={lessons.length > 1}
-                            small={small}
-                            {...fields}
-                        />
-                    );
+                    if (other.absenceOnly) {
+                        return (
+                            <Absence
+                                {...other}
+                                key={i}
+                                small={small}
+                            />
+                        );
+                    } else {
+                        let fields = {
+                            student: getStudentFields,
+                            teacher: getTeacherFields,
+                            room: getRoomFields,
+                            class: getStudentFields
+                        }[type.toLowerCase()](lesson);
+                        return (
+                            <AbstractLesson
+                                {...other}
+                                key={i}
+                                last={lessons.length - 1 === i}
+                                multiple={lessons.length > 1}
+                                small={small}
+                                {...fields}
+                            />
+                        );
+                    }
                 })}
             </PeriodsContainer>
         );
