@@ -51,11 +51,6 @@ class Main extends Component {
         }
     }
 
-    componentWillMount() {
-        if (this.props.notificationToken && navigator.serviceWorker) {
-        }
-    }
-
     onThemeToggle = () => {
         this.props.changeTheme(this.props.themeType === 'dark' ? 'light' : 'dark');
     }

@@ -59,7 +59,7 @@ export class Feedback extends Component {
 
         const customContentStyle = {
             maxWidth: 500,
-            overflow: 'hidden',
+            overflowY: 'auto',
         };
         return (
             <Dialog

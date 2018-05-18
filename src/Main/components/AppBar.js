@@ -12,7 +12,6 @@ import CalendarIcon from '@material-ui/icons/Event';
 import NextIcon from '@material-ui/icons/ArrowForward';
 import FeedbackIcon from '@material-ui/icons/Feedback';
 import PrintIcon from '@material-ui/icons/Print';
-import LampIcon from '@material-ui/icons/LightbulbOutline';
 import Search from './Search.js';
 import { connect } from 'react-redux';
 import { changeWeek, showError } from '../actions';
@@ -23,26 +22,14 @@ import { DRAWER_WIDTH } from '../../Common/const';
 import ProfilePicture from './ProfilePicture';
 import Feedback from './Feedback';
 import indigo from '@material-ui/core/colors/indigo';
-import SvgIcon from '@material-ui/core/SvgIcon';
 
 const Tooltip = ({ children }) => children;
 
-function LampOnIcon(props) {
-    return (
-        <SvgIcon {...props}>
-            <path d="m9,21c0,0.55 0.45,1 1,1l4,0c0.55,0 1,-0.45 1,-1l0,-1l-6,0l0,1zm3,-19c-3.86,0 -7,3.14 -7,7c0,2.38 1.19,4.47 3,5.74l0,2.26c0,0.55 0.45,1 1,1l6,0c0.55,0 1,-0.45 1,-1l0,-2.26c1.81,-1.27 3,-3.36 3,-5.74c0,-3.86 -3.14,-7 -7,-7z" />
-        </SvgIcon>
-    );
-}
 const styles = theme => ({
     root: {
-        // flexGrow: 1,
-        // zIndex: 1,
         overflow: 'hidden',
-        // position: 'relative',
         display: 'flex',
         width: '100%',
-
     },
     appBar: {
         backgroundColor: indigo[600],
@@ -51,9 +38,6 @@ const styles = theme => ({
     drawerPaper: {
         width: DRAWER_WIDTH,
 
-    },
-    content: {
-        backgroundColor: theme.palette.background.default,
     },
     icon: {
         color: grey[100]
@@ -86,8 +70,8 @@ class ResponsiveDrawer extends React.Component {
     }
 
     render() {
-        const { classes, theme, small } = this.props;
-        const LampComponent = theme.palette.type === 'dark' ? LampOnIcon : LampIcon;
+        const { classes, theme, small, large } = this.props;
+        // const LampComponent = theme.palette.type === 'dark' ? LampOnIcon : LampIcon;
         const drawer = (
             <div>
                 <ProfilePicture />
@@ -102,27 +86,20 @@ class ResponsiveDrawer extends React.Component {
                             color="inherit"
                             aria-label="open drawer"
                             onClick={this.handleDrawerToggle}
-                            className={classes.navIconHide}
                         >
                             <MenuIcon />
                         </IconButton>
 
                         <Icons>
-                            <Search>
-                                {small ||
+                            <Search shrinkChildren={small} alwaysOpen={large}>
+                                {/* {small ||
                                     <Tooltip id="tooltip-theme" title="Theme ändern">
                                         <IconButton onClick={this.props.onThemeToggle}>
                                             <LampComponent className={classes.icon} />
                                         </IconButton>
                                     </Tooltip>
-                                }
-                                {small ||
-                                    <Tooltip id="tooltip-feedback" title="Feedback">
-                                        <IconButton onClick={this.handleFeedback}>
-                                            <FeedbackIcon className={classes.icon} />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
+                                } */}
+                                
                                 {small ||
                                     <Tooltip id="tooltip-prev" title="Voherige Woche">
                                         <IconButton onClick={this.props.setPreviousWeek}>
@@ -144,6 +121,11 @@ class ResponsiveDrawer extends React.Component {
                                         </IconButton>
                                     </Tooltip>
                                 }
+                                <Tooltip id="tooltip-feedback" title="Feedback">
+                                    <IconButton onClick={this.handleFeedback}>
+                                        <FeedbackIcon className={classes.icon} />
+                                    </IconButton>
+                                </Tooltip>
                                 {small ||
                                     <Tooltip id="tooltip-print" title="Stundenplan drucken">
                                         <IconButton onClick={this.onPrintTimetable}>
@@ -201,7 +183,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        small: state.browser.lessThan.medium
+        small: state.browser.lessThan.medium,
+        large: state.browser.greaterThan.large,
     };
 };
 

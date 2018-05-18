@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Table from '@material-ui/core/Table';
@@ -16,7 +16,7 @@ import Holiday from './Holiday';
 import { withStyles } from '@material-ui/core';
 
 
-class TimeTableGrid extends Component {
+class TimeTableGrid extends React.PureComponent {
     renderPeriodTimes(period) {
         const lpad2 = (number) => (number < 10 ? '0' : '') + number;
         return (
@@ -109,7 +109,7 @@ class TimeTableGrid extends Component {
                                     return (
                                         <TableCell
                                             key={i}
-                                        // style={tableHeaderStyle}
+                                            style={tableHeaderStyle}
                                         >
                                             {date.format(this.props.small ? 'dd' : 'dddd')}
                                             <br />

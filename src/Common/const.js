@@ -64,6 +64,7 @@ export const SUBSTITUTION_MAP = {
     },
     SUPERVISION: {
         color: colors.grey[900],
+        backgroundColor: colors.red[50],
         name: "Mitbetreuung",
     },
     REDUNDANCY: {

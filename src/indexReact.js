@@ -16,6 +16,7 @@ firebase.initializeApp({
 });
 firebase.messaging().usePublicVapidKey("BFM3t4WACinSsfYyZfnlLtYmDsEk8Uk-TXHh-fNnKcrb9avPfJ-rDLdiMJvVLLyQRywcbE3nC0LEZ2L3OEKsn4w");
 
+
 var App = require('./App').default;
 ReactDOM.render(<App/>, document.getElementById('root'));
 

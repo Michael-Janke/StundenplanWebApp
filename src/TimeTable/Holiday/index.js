@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 import { green } from '@material-ui/core/colors';
 import easterImg from './easter.jpg';
@@ -20,10 +20,10 @@ const holidayImageMap = {
   "Weihn":xmasImg,
   "Winter":winterImg,
   "3.10": germanImg,
-  "10.5": ascentionImg,
+  "Himmel": ascentionImg,
 }
 
-class Holiday extends Component {
+class Holiday extends React.PureComponent {
   render() {
     var img = bridgeImg;
     for(var key in holidayImageMap) {
