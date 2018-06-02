@@ -1,14 +1,12 @@
 import React from 'react';
-import { withStyles, IconButton, Input, Zoom, ClickAwayListener, ListItemIcon, Avatar, List, ListItem, ListItemText, ListItemSecondaryAction } from '@material-ui/core';
+import { withStyles, IconButton, Input, Zoom, ClickAwayListener, ListItemIcon, List, ListItem, ListItemText, ListItemSecondaryAction } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import indigo from '@material-ui/core/colors/indigo';
-import PersonIcon from '@material-ui/icons/Person';
-import ClassIcon from '@material-ui/icons/Group';
-import RoomIcon from '@material-ui/icons/Room';
-import moment from 'moment';
+
 import { connect } from 'react-redux';
 import { setTimeTable, loadAvatars } from '../actions';
+import { checkAvatars, ObjectIcon } from './Avatars';
 
 function fuzzysearch(needle, haystack) {
     needle = needle.toLowerCase();
@@ -33,10 +31,6 @@ function fuzzysearch(needle, haystack) {
     return true;
 }
 
-const ProfilePicture = (upn, avatars) => avatars[upn] && avatars[upn].img
-    ? <Avatar src={"data:image/jpg;base64," + avatars[upn].img} size={32} />
-    : <ListItemIcon><PersonIcon /></ListItemIcon>;
-
 
 class Search extends React.Component {
     state = { open: false, nonEmpty: false, value: "" };
@@ -45,7 +39,11 @@ class Search extends React.Component {
         if (!this.state.open) {
             this.input.focus();
         }
-        this.setState({ open: !this.state.open, value: "", result: null });
+        this.setState({ open: !this.state.open, value: "" });
+    }
+
+    handleFocus = () => {
+        this.setState({ open: true });
     }
 
     handleInputRef = (ref) => {
@@ -53,21 +51,25 @@ class Search extends React.Component {
     }
 
     handleClear = () => {
-        this.setState({ nonEmpty: false, value: "", result: null });
+        this.setState({ nonEmpty: false, value: "" });
     }
 
     handleInput = (e) => {
+        if (!this.state.open) {
+            return;
+        }
         let value = e.target.value;
-        this.setState({ nonEmpty: value.length > 0, value, result: this.search(value) });
-        this.loadAvatars();
+        this.setState({ nonEmpty: value.length > 0, value });
     }
 
     handleClickAway = () => {
-        this.setState({ open: false, nonEmpty: false, value: "", result: null });
+        if (this.state.open) {
+            this.setState({ open: false, nonEmpty: false, value: "" });
+        }
     }
 
     handleClick = (obj) => {
-        this.setState({ open: false, nonEmpty: false, value: "", result: null });
+        this.setState({ open: false, nonEmpty: false, value: "" });
         this.props.setTimetable(obj);
     }
 
@@ -75,42 +77,28 @@ class Search extends React.Component {
         if ((e.charCode === 13 || e.key === 'Enter') && this.state.result && this.state.result.length) {
             this.handleClick(this.state.result[0]);
         }
-    }
-
-    loadAvatars() {
-        if (!this.state.result) return;
-        var subset = this.state.result.slice();
-        subset = subset.filter((value, i) => i < 10
-            && value.upn
-            && (this.props.avatars[value.upn] === undefined
-                || moment(this.props.avatars[value.upn].expires).isBefore(moment()))
-        );
-        if (subset.length > 0) {
-            this.props.loadAvatars(subset.map((a) => a.upn));
+        if ((e.keyCode === 27 || e.key === 'ESC')) {
+            this.setState({ open: false, value: "", nonEmpty: false });
         }
     }
-
-    search(searchString) {
-        return this.state.data
-            .slice()
-            .filter(obj => fuzzysearch(searchString, obj.searchString));
-    }
-
     render() {
         const { classes, shrinkChildren, alwaysOpen } = this.props;
         const { open, nonEmpty } = this.state;
         const isOpen = alwaysOpen || open;
         return (
-            <ClickAwayListener onClickAway={this.handleClickAway}>
-                <div className={classes.root}>
+            <div className={classes.root}>
+                <ClickAwayListener onClickAway={this.handleClickAway}>
                     <div className={classes.searchbarWrapper}>
-                        <div className={classes.searchbar + (!isOpen ? " " + classes.searchbarClosed : "")}>
-                            <div className={classes.inputField + (isOpen ? " " + classes.inputFieldOpen : "")}>
+                        <div className={classes.searchbar +
+                            (!isOpen ? " " + classes.searchbarClosed : "")}>
+                            <div className={classes.inputField +
+                                (isOpen ? " " + classes.inputFieldOpen : "")}>
                                 <Input
                                     inputRef={this.handleInputRef}
                                     placeholder="Suchen"
                                     fullWidth
                                     disableUnderline
+                                    onFocus={this.handleFocus}
                                     onChange={this.handleInput}
                                     value={this.state.value}
                                     inputProps={{ className: classes.nativeInput }}
@@ -133,22 +121,27 @@ class Search extends React.Component {
                                 <ClearIcon />
                             </IconButton>
                         </div>
-                        <div className={classes.dropDown + (!isOpen ? " " + classes.dropDownClosed : "")}>
+                        <div className={classes.dropDown + (!open ? " " + classes.dropDownClosed : "")}>
                             {this.state.result && !!this.state.result.length &&
                                 <List
                                     className={classes.list}
                                     component="div">
                                     {this.state.result
-                                        .slice(0, 10)
                                         .map((object, i) =>
                                             (
                                                 <ListItem
-                                                    key={i}
+                                                    key={object.id + object.type}
                                                     button
                                                     onClick={this.handleClick.bind(null, object)}
                                                     {...(i === 0 && { className: classes.listItemSelected })}
                                                 >
-                                                    {object.icon}
+                                                    <ListItemIcon>
+                                                        <ObjectIcon
+                                                            type={object.type}
+                                                            avatars={object.upn && this.props.avatars}
+                                                            upn={object.upn}
+                                                        />
+                                                    </ListItemIcon>
                                                     <ListItemText inset primary={object.text} secondary={object.secondary} />
                                                     <ListItemSecondaryAction>
                                                         <IconButton>
@@ -161,69 +154,78 @@ class Search extends React.Component {
                                 </List>}
                         </div>
                     </div>
-                    <div className={classes.children + (isOpen && shrinkChildren ? " " + classes.childrenOpen : "")}>
-                        {React.Children.map(this.props.children, child => {
-                            if (!child) return;
-                            return (
-                                <Zoom in={!shrinkChildren || !isOpen} className={classes.child}>
-                                    <div>
-                                        {child}
-                                    </div>
-                                </Zoom>
-                            );
-                        })}
-                    </div>
+                </ClickAwayListener>
+
+                <div className={classes.children
+                    + (isOpen && shrinkChildren ? " " + classes.childrenOpen : "")}>
+                    {React.Children.map(this.props.children, child => {
+                        if (!child) return;
+                        return (
+                            <Zoom in={!shrinkChildren || !isOpen} className={classes.child}>
+                                <div>
+                                    {child}
+                                </div>
+                            </Zoom>
+                        );
+                    })}
                 </div>
-            </ClickAwayListener >
+            </div>
         );
     }
 }
 
-Search.getDerivedStateFromProps = (props) => {
+Search.getDerivedStateFromProps = (props, state) => {
+    console.log(state);
     const { masterdata, avatars } = props;
-    return {
-        data: [
-            ...Object.values(masterdata.Class).map((entry) => ({
-                searchString: "Klasse " + entry.NAME,
-                type: "class",
-                id: entry.CLASS_ID,
-                text: entry.NAME,
-                secondary: "Klasse",
-                icon: <ListItemIcon><ClassIcon /></ListItemIcon>
-            })),
-            ...Object.values(masterdata.Teacher).map((entry) => ({
-                searchString: `Lehrer ${entry.FIRSTNAME} ${entry.LASTNAME}`,
-                upn: entry.UPN,
-                type: "teacher",
-                id: entry.TEACHER_ID,
-                text: entry.FIRSTNAME[0] + '. ' + entry.LASTNAME,
-                secondary: "Lehrer",
-                icon: ProfilePicture(entry.UPN, avatars)
-            })),
-            ...Object.values(masterdata.Student).map((entry) => ({
-                searchString: `Schüler ${entry.FIRSTNAME} ${entry.LASTNAME}`,
-                upn: entry.UPN,
-                type: "student",
-                id: entry.STUDENT_ID,
-                text: entry.FIRSTNAME + " " + entry.LASTNAME,
-                secondary: "Schüler",
-                icon: ProfilePicture(entry.UPN, avatars)
-            })),
-            ...Object.values(masterdata.Room).map((entry) => ({
-                searchString: "Raum " + entry.NAME,
-                type: "room",
-                id: entry.ROOM_ID,
-                text: entry.NAME,
-                secondary: "Klasse",
-                icon: <ListItemIcon><RoomIcon /></ListItemIcon>
-            })),
-        ]
-    };
+    const { value } = state;
+    let data = [
+        ...Object.values(masterdata.Class).map((entry) => ({
+            searchString: "Klasse " + entry.NAME,
+            type: "class",
+            id: entry.CLASS_ID,
+            text: entry.NAME,
+            secondary: "Klasse",
+        })),
+        ...Object.values(masterdata.Teacher).map((entry) => ({
+            searchString: `Lehrer ${entry.FIRSTNAME} ${entry.LASTNAME}`,
+            upn: entry.UPN,
+            type: "teacher",
+            id: entry.TEACHER_ID,
+            text: entry.FIRSTNAME[0] + '. ' + entry.LASTNAME,
+            secondary: "Lehrer",
+        })),
+        ...Object.values(masterdata.Student).map((entry) => ({
+            searchString: `Schüler ${entry.FIRSTNAME} ${entry.LASTNAME}`,
+            upn: entry.UPN,
+            type: "student",
+            id: entry.STUDENT_ID,
+            text: entry.FIRSTNAME + " " + entry.LASTNAME,
+            secondary: "Schüler",
+        })),
+        ...Object.values(masterdata.Room).map((entry) => ({
+            searchString: "Raum " + entry.NAME,
+            type: "room",
+            id: entry.ROOM_ID,
+            text: entry.NAME,
+            secondary: "Klasse",
+        })),
+    ];
+    let filtered;
+    filtered = data
+        .filter(obj => fuzzysearch(value, obj.searchString))
+        .slice(0, 20);
+    checkAvatars(
+        filtered.map((e) => e.upn),
+        avatars,
+        props.loadAvatars
+    );
+    return { data, result: filtered };
 }
 
 const styles = theme => ({
     icon: {
-        transition: 'transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+        transition: theme.transitions.create(['transform']),
+        WebkitTransition: theme.transitions.create(['transform']),
         color: 'rgb(158, 158, 158)',
         transform: 'scale(1,1)',
     },
@@ -231,14 +233,13 @@ const styles = theme => ({
         backgroundColor: 'rgba(0, 0, 0, 0.08)'
     },
     list: {
-        overflowY: 'auto',
-        maxHeight: '500px',
     },
     iconHidden: {
         transform: 'scale(0,0)',
     },
     searchIcon: {
         transitionProperty: 'transform, color',
+        WebkitTransitionProperty: 'transform, color',
     },
     searchIconActive: {
         color: 'white',
@@ -262,8 +263,11 @@ const styles = theme => ({
     },
     searchbar: {
         width: '100%',
-        transition: 'all 400ms',
-        boxShadow: theme.shadows[2],
+        transform: 'translate3d(0,0,0)',
+        transition: theme.transitions.create(['background', 'box-shadow']),
+        WebkitTransition: theme.transitions.create(['background', 'box-shadow']),
+        willChange: 'background, box-shadow',
+        boxShadow: theme.shadows[4],
         borderRadius: 2,
         background: `rgb(197, 202, 233) radial-gradient(circle, transparent 1%, ${indigo[600]} 1%) center/15000%;`,
         display: 'flex',
@@ -273,13 +277,24 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper,
         position: 'absolute',
         width: '100%',
+        maxHeight: '70vh',
         opacity: 1,
         marginTop: theme.spacing.unit,
-        boxShadow: theme.shadows[2],
+        boxShadow: theme.shadows[4],
+        borderRadius: 2,
+        transition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
+        WebkitTransition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
+        willChange: 'opacity, transform',
+        overflowY: 'auto',
+        transform: 'translate3d(0,0,0)',
     },
     dropDownClosed: {
-        height: '0%',
+        // overflow: 'hidden',
+        // maxHeight: '0%',
+        pointerEvents: 'none',
         opacity: 0,
+        boxShadow: 'none',
+        transform: 'translate3d(0,-8px,0)',
     },
     searchbarClosed: {
         backgroundSize: '100%',
@@ -288,11 +303,17 @@ const styles = theme => ({
     },
     nativeInput: {
         width: '100%',
+        // remove clear icon on edge
+        '&::-ms-clear': {
+            display: 'none',
+        }
     },
     inputField: {
         width: '0%',
         opacity: 0,
-        transition: 'all 400ms',
+        transition: theme.transitions.create(['width', 'opacity']),
+        WebkitTransition: theme.transitions.create(['width', 'opacity']),
+        willChange: 'width, opacity',
         height: '100%',
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
     },
@@ -301,9 +322,11 @@ const styles = theme => ({
         opacity: 1,
     },
     children: {
+        transform: 'translate3d(0,0,0)',
         display: 'flex',
         maxWidth: '100%',
-        transition: 'max-width 400ms',
+        transition: theme.transitions.create(['max-width']),
+        WebkitTransition: theme.transitions.create(['max-width']),
     },
     childrenOpen: {
         maxWidth: '0%',

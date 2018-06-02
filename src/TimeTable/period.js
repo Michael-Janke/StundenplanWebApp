@@ -1,64 +1,75 @@
 import React from 'react';
 import styled from 'styled-components';
 import { SUBJECT_COLORS_MAP } from '../Common/const';
-import Subject from './Fields/subject';
-import Room from './Fields/room';
-import Classes from './Fields/classes';
-import Teachers from './Fields/teachers';
 import AbstractLesson from './lesson';
 import Absence from './absence';
 import { equalPeriods } from '../Selector/timetable';
+import SubjectContainer from './Fields/subject';
+import RoomContainer from './Fields/room';
+import TeachersContainer from './Fields/teachers';
+import ClassesContainer from './Fields/classes';
 
 const extractSubject = (name) => {
     return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
 }
-
-const FieldDescription = irrelevanceLevel => (reactClass, props) => ({ reactClass, props: { ...props, irrelevanceLevel } });
-
 function getStudentFields(lesson) {
-    const { subject, room, teachers, irrelevanceLevel } = lesson;
-    const FieldDescriptor = FieldDescription(irrelevanceLevel);
+    const { subject, room, teachers } = lesson;
     return {
         colorBar: subject.new
             && SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)],
-        fields: [
-            FieldDescriptor(Subject, { subject }),
-            FieldDescriptor(Room, { room }),
-            FieldDescriptor(Teachers, { teachers }),
-        ],
-        removalField: null // cannot happen
+        fields: {
+            new: !lesson.isOld && [
+                SubjectContainer('new')(subject),
+                RoomContainer('new')(room),
+                TeachersContainer('new')(teachers),
+            ],
+            old: lesson.isOld && [
+                SubjectContainer('old')(subject),
+            ]
+        }
     }
 }
 
 function getTeacherFields(lesson) {
-    const { subject, room, classes, teachers, substitutionRemove, irrelevanceLevel } = lesson;
-    const FieldDescriptor = FieldDescription(irrelevanceLevel);
+    const { subject, room, classes, teachers } = lesson;
     return {
         colorBar: subject.new
             && SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)],
-        fields: [
-            FieldDescriptor(Subject, { subject }),
-            FieldDescriptor(Room, { room }),
-            FieldDescriptor(Classes, { classes }),
-        ],
-        removalField: substitutionRemove
-            && FieldDescriptor(Teachers, { teachers })
+        fields: {
+            new: !lesson.isOld && [
+                SubjectContainer('new')(subject),
+                RoomContainer('new')(room),
+                ClassesContainer('new')(classes),
+            ],
+            old: lesson.isOld && [
+                SubjectContainer('old')(subject),
+                ClassesContainer('old')(classes),
+            ],
+            substitution: lesson.substitutionInfo && [
+                SubjectContainer(lesson.substitutionInfo)(subject),
+                TeachersContainer(lesson.substitutionInfo)(teachers),
+            ],
+
+        },
     }
 }
 
 function getRoomFields(lesson) {
-    const { subject, teachers, classes, substitutionRemove, room, irrelevanceLevel } = lesson;
-    const FieldDescriptor = FieldDescription(irrelevanceLevel);
+    const { subject, teachers, classes } = lesson;
     return {
         colorBar: subject.new
             && SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)],
-        fields: [
-            FieldDescriptor(Classes, { classes }),
-            FieldDescriptor(Subject, { subject }),
-            FieldDescriptor(Teachers, { teachers }),
-        ],
-        removalField: substitutionRemove
-            && FieldDescriptor(Room, { room })
+        fields: {
+            new: !lesson.isOld && [
+                ClassesContainer('new')(classes),
+                SubjectContainer('new')(subject),
+                TeachersContainer('new')(teachers),
+            ],
+            old: lesson.isOld && [
+                ClassesContainer('old')(classes),
+                SubjectContainer('old')(subject),
+            ]
+        },
     }
 }
 

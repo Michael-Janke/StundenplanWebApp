@@ -13,7 +13,10 @@ import { Print } from 'react-easy-print';
 import { changeWeek } from '../Main/actions';
 import makeGetCurrentTimetable from '../Selector/timetable';
 import Holiday from './Holiday';
-import { withStyles } from '@material-ui/core';
+import { withStyles, IconButton, ListItemIcon, ListItem, ListItemText } from '@material-ui/core';
+import BackIcon from '@material-ui/icons/ArrowBack';
+import NextIcon from '@material-ui/icons/ArrowForward';
+import { ObjectIcon } from '../Main/components/Avatars';
 
 
 class TimeTableGrid extends React.PureComponent {
@@ -93,11 +96,23 @@ class TimeTableGrid extends React.PureComponent {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, id, type } = this.props;
         const tableHeaderStyle = { fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
+        const currentTimetable = (
+            <ConnectedCurrentTimetableInformation id={id} type={type} />
+        );
 
         return (
             <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
+                <div className={classes.tableToolbar + " " + classes['table-header']}>
+                    {currentTimetable}
+                    <IconButton onClick={this.props.setPreviousWeek}>
+                        <BackIcon />
+                    </IconButton>
+                    <IconButton onClick={this.props.setNextWeek}>
+                        <NextIcon />
+                    </IconButton>
+                </div>
                 <Print main name="TimeTable">
                     <Table className={classes['table-header']}>
                         <TableHead
@@ -136,6 +151,25 @@ class TimeTableGrid extends React.PureComponent {
     }
 }
 
+
+const CurrentTimetableInformation = ({ id, type, masterdata, avatars }) => {
+    if (!masterdata || !type || !id) return null;
+    let object = masterdata[type[0].toUpperCase() + type.slice(1)][id];
+    if (!object) return null;
+    return (
+        <ListItem>
+            <ListItemIcon><ObjectIcon avatars={avatars} upn={object.UPN} type={type} /></ListItemIcon>
+            <ListItemText>{object.LASTNAME ? object.FIRSTNAME + " " + object.LASTNAME : object.NAME}</ListItemText>
+        </ListItem>
+    )
+};
+
+const ConnectedCurrentTimetableInformation = connect(state => ({
+    avatars: state.avatars,
+    masterdata: state.timetable.masterdata,
+}))(CurrentTimetableInformation);
+
+
 const styles = theme => ({
     table: {
         backgroundColor: theme.palette.background.default,
@@ -146,6 +180,14 @@ const styles = theme => ({
     },
     'table-footer': {
         backgroundColor: theme.palette.background.paper,
+    },
+    tableToolbar: {
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        height: 48,
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
     }
 });
 
@@ -162,15 +204,6 @@ const GrayoutTable = styled(Table) `
     width: 100%;
     height: 100%;
 `;
-
-const TableToolBar = styled.div`
-    // background-color: ${grey[200]};
-    border-bottom: 1px solid ${props => props.border};
-    height: 48px; 
-    text-align: right;
-    display: table;
-    width: 100%;
-`
 
 const Times = styled.div`
     font-size:50%;
@@ -212,8 +245,8 @@ const makeMapStateToProps = () => {
             id: state.timetable.currentTimeTableId,
             type: state.timetable.currentTimeTableType,
             showDrawer: state.browser.greaterThan.small,
-            small: state.browser.is.extraSmall || state.browser.is.medium,
-            periodsWidth: (state.browser.is.extraSmall || state.browser.is.medium) ? 20 : 70,
+            small: state.browser.lessThan.medium,
+            periodsWidth: (state.browser.lessThan.medium) ? 20 : 70,
             loading: state.timetable.loadingTimetable || state.timetable.loadingSubstitutions,
             warning: state.user.warning,
             lastCheck: state.user.lastCheck,

@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import { getSpecificSubstitutionType, WEEKDAY_NAMES, getSubstitutionsCacheKey, getTimetableCacheKey } from '../Common/const';
+import { WEEKDAY_NAMES, getSubstitutionsCacheKey, getTimetableCacheKey, specifySubstitutionType } from '../Common/const';
 import moment from 'moment';
 
 const getTimetableState = (state) => state.timetable;
@@ -62,28 +62,7 @@ function joinSubstitutions(day, subOnDay, type, id) {
                 for (let i = 0; i < lessons.length; i++) {
                     let lesson = lessons[i];
                     if (lesson.TIMETABLE_ID === substitution.TIMETABLE_ID) {
-                        let remove = !!['ROOM', 'TEACHER'].find((key) =>
-                            type === key.toLowerCase()
-                            && substitution[key + "_ID"] === lesson[key + "_ID"]
-                            && substitution[key + "_ID_NEW"]
-                            && lesson[key + "_ID"] !== substitution[key + "_ID_NEW"]
-                        );
-                        lessons[i] = {
-                            substitutionRemove: remove,
-                            substitutionType: substitution.TYPE,
-                            substitutionText: substitution.TEXT,
-                            specificSubstitutionType: getSpecificSubstitutionType(substitution),
-                            CLASS_IDS: substitution.CLASS_IDS_NEW.length ? substitution.CLASS_IDS_NEW : substitution.CLASS_IDS,
-                            CLASS_IDS_OLD: substitution.CLASS_IDS_NEW.length ? substitution.CLASS_IDS : [],
-                            CLASS_IDS_ABSENT: substitution.CLASS_IDS_ABSENT,
-                            TEACHER_ID: substitution.TEACHER_ID_NEW || lesson.TEACHER_ID,
-                            TEACHER_ID_OLD: substitution.TEACHER_ID_NEW && substitution.TEACHER_ID_NEW !== lesson.TEACHER_ID && lesson.TEACHER_ID,
-                            SUBJECT_ID: substitution.SUBJECT_ID_NEW || lesson.SUBJECT_ID,
-                            SUBJECT_ID_OLD: substitution.SUBJECT_ID_NEW && substitution.SUBJECT_ID_NEW !== lesson.SUBJECT_ID && lesson.SUBJECT_ID,
-                            ROOM_ID: substitution.ROOM_ID_NEW || lesson.ROOM_ID,
-                            ROOM_ID_OLD: substitution.ROOM_ID_NEW && substitution.ROOM_ID_NEW !== lesson.ROOM_ID && lesson.ROOM_ID
-
-                        };
+                        lessons[i] = specifySubstitutionType(id, type, substitution);
                         return;
                     }
                 }
@@ -91,26 +70,13 @@ function joinSubstitutions(day, subOnDay, type, id) {
             if (!lessons) {
                 period.lessons = lessons = [];
             }
-            lessons.push({
-                substitutionText: substitution.TEXT,
-                substitutionRemove:
-                    (type === 'teacher' && !!substitution.TEACHER_ID)
-                    || (type === 'room' && !!substitution.ROOM_ID),
-                substitutionType: substitution.TYPE,
-                CLASS_IDS: substitution.CLASS_IDS_NEW.length ? substitution.CLASS_IDS_NEW : substitution.CLASS_IDS,
-                CLASS_IDS_OLD: substitution.CLASS_IDS_NEW.length ? substitution.CLASS_IDS : [],
-                CLASS_IDS_ABSENT: substitution.CLASS_IDS_ABSENT,
-                TEACHER_ID: substitution.TEACHER_ID_NEW || substitution.TEACHER_ID,
-                TEACHER_ID_OLD: substitution.TEACHER_ID_NEW && substitution.TEACHER_ID_NEW !== substitution.TEACHER_ID && substitution.TEACHER_ID,
-                SUBJECT_ID: substitution.SUBJECT_ID_NEW || substitution.SUBJECT_ID,
-                SUBJECT_ID_OLD: substitution.SUBJECT_ID_NEW && substitution.SUBJECT_ID_NEW !== substitution.SUBJECT_ID && substitution.SUBJECT_ID,
-                ROOM_ID: substitution.ROOM_ID_NEW || substitution.ROOM_ID,
-                ROOM_ID_OLD: substitution.ROOM_ID_NEW && substitution.ROOM_ID_NEW !== substitution.ROOM_ID && substitution.ROOM_ID,
-                specificSubstitutionType: getSpecificSubstitutionType(substitution),
-            });
+            lessons.push(specifySubstitutionType(id, type, substitution));
         });
     }
     if (subOnDay.absences) {
+        if (!day.periods) {
+            day.periods = [];
+        }
         subOnDay.absences.forEach((absence) => {
             for (let i = absence.PERIOD_FROM; i <= absence.PERIOD_TO; i++) {
                 let period = day.periods[i - 1];
@@ -146,6 +112,11 @@ function compareLesson(p1, p2) {
         || p1.SUBJECT_ID !== p2.SUBJECT_ID
         || p1.ROOM_ID !== p2.ROOM_ID)
         return false;
+    if (p1.TEACHER_ID_OLD !== p2.TEACHER_ID_OLD
+        || p1.SUBJECT_ID_OLD !== p2.SUBJECT_ID_OLD
+        || p1.ROOM_ID_OLD !== p2.ROOM_ID_OLD) {
+        return false;
+    }
     let classIds1 = p1.CLASS_IDS || [];
     let classIds2 = p2.CLASS_IDS || [];
 
@@ -181,15 +152,22 @@ function skipTeacherDuplications(lessons) {
         let last = lessons[i] = { ...lessons[i] };
         last.TEACHER_IDS = [last.TEACHER_ID];
         last.TEACHER_IDS_OLD = [];
+        last.TEACHER_IDS_SUBSTITUTING = [];
+        if (last.TEACHER_ID_SUBSTITUTING) {
+            last.TEACHER_IDS_SUBSTITUTING.push(last.TEACHER_ID_SUBSTITUTING);
+        }
         if (last.TEACHER_ID_OLD) {
             last.TEACHER_IDS_OLD.push(last.TEACHER_ID_OLD);
         }
         delete last.TEACHER_ID;
         delete last.TEACHER_ID_OLD;
+        delete last.TEACHER_ID_SUBSTITUTING;
         for (let j = i + 1; j < lessons.length; j++) {
             let lesson = lessons[j];
             if (lesson.ROOM_ID === last.ROOM_ID
                 && lesson.SUBJECT_ID === last.SUBJECT_ID
+                && lesson.ROOM_ID_OLD === last.ROOM_ID_OLD
+                && lesson.SUBJECT_ID_OLD === last.SUBJECT_ID_OLD
                 && lesson.absence === last.absence
                 && equalArrays(lesson.CLASS_IDS, last.CLASS_IDS)
                 // && lesson.substitutionType === last.substitutionType
@@ -199,6 +177,9 @@ function skipTeacherDuplications(lessons) {
                 }
                 if (lesson.TEACHER_ID_OLD && !last.TEACHER_IDS_OLD.includes(lesson.TEACHER_ID_OLD)) {
                     last.TEACHER_IDS_OLD.push(lesson.TEACHER_ID_OLD);
+                }
+                if (lesson.TEACHER_ID_SUBSTITUTING && !last.TEACHER_IDS_SUBSTITUTING.includes(lesson.TEACHER_ID_SUBSTITUTING)) {
+                    last.TEACHER_IDS_SUBSTITUTING.push(lesson.TEACHER_ID_SUBSTITUTING);
                 }
                 combineSubstitutions(last, lesson);
                 lessons.splice(j, 1);
@@ -221,15 +202,15 @@ function combineSubstitutions(receiver, lesson) {
 function readTimetable(_data, day, periods, date) {
     if (!_data) return {};
     let data = [];
-    let timetableDate = moment(date).weekday(0).add(day, 'day');
+    let timetableDate = moment(date).weekday(0).startOf('day').add(day, 'day');
     for (let y = 0; y < periods.length; y++) {
         let lessons = (_data[day] || [])[y + 1] || [];
         if (lessons) {
             lessons = lessons.filter((lesson) =>
                 lesson.DATE_FROM
                 && lesson.DATE_TO
-                && moment(lesson.DATE_FROM.date).isBefore(timetableDate)
-                && moment(lesson.DATE_TO.date).isAfter(timetableDate)
+                && moment(lesson.DATE_FROM.date).isSameOrBefore(timetableDate)
+                && moment(lesson.DATE_TO.date).isSameOrAfter(timetableDate)
             );
         }
         data[y] = { lessons };
@@ -287,55 +268,37 @@ export function equalPeriods(period1, period2) {
     return false;
 }
 
-function getIrrelevanceLevel(size, lesson, type, id) {
-    let irrelevanceLevel = 0;
-    if (lesson.substitutionRemove) {
-        if (type === 'teacher' && lesson.SUBJECT_ID !== lesson.SUBJECT_ID_OLD && lesson.SUBJECT_ID_OLD) {
-            irrelevanceLevel += 2;
-        }
-        if (type === 'room' && lesson.ROOM_ID_OLD === id) {
-            irrelevanceLevel += 4;
-        }
-        if (type === 'teacher' && lesson.TEACHER_IDS.indexOf(id) === -1) {
-            irrelevanceLevel += 3;
-        }
-    }
-    if (lesson.substitutionType === 'REDUNDANCY' || lesson.substitutionType === 'ELIMINATION') {
-        irrelevanceLevel += type === 'room' ? 2 : (size > 1 ? 5 : 3);
-    }
-    if (lesson.substitutionType === 'ASSIGNMENT' && type === 'room') {
-        irrelevanceLevel += 5;
-    }
-    return irrelevanceLevel;
-}
-
 function translate(masterdata, period, id, type) {
     if (!period) return period;
     period.lessons = period.lessons.map((lesson) => ({
         reference: lesson,
-        irrelevanceLevel: getIrrelevanceLevel(period.lessons.length, lesson, type, id),
         absenceOnly: lesson.absenceOnly,
+        isOld: lesson.isOld,
+        substitutionInfo: lesson.substitutionInfo,
         substitutionText: lesson.substitutionText,
         substitutionType: lesson.substitutionType,
         specificSubstitutionType: lesson.specificSubstitutionType,
         substitutionRemove: lesson.substitutionRemove,
         absence: lesson.absence,
         teachers: {
-            new: lesson.TEACHER_IDS.map((t) => masterdata.Teacher[t]),
-            old: !!lesson.TEACHER_IDS_OLD.length && lesson.TEACHER_IDS_OLD.map((t) => masterdata.Teacher[t])
+            new: lesson.TEACHER_IDS && lesson.TEACHER_IDS.map((t) => masterdata.Teacher[t]),
+            old: lesson.TEACHER_IDS_OLD && lesson.TEACHER_IDS_OLD.map((t) => masterdata.Teacher[t]),
+            substitution: lesson.TEACHER_IDS_SUBSTITUTING && lesson.TEACHER_IDS_SUBSTITUTING.map((t) => masterdata.Teacher[t]),
         },
         subject: {
-            new: masterdata.Subject[lesson.SUBJECT_ID],
-            old: masterdata.Subject[lesson.SUBJECT_ID_OLD]
+            new: lesson.SUBJECT_ID && masterdata.Subject[lesson.SUBJECT_ID],
+            old: lesson.SUBJECT_ID_OLD && masterdata.Subject[lesson.SUBJECT_ID_OLD],
+            substitution: lesson.SUBJECT_ID_SUBSTITUTING && masterdata.Subject[lesson.SUBJECT_ID_SUBSTITUTING],
         },
         room: {
-            new: masterdata.Room[lesson.ROOM_ID],
-            old: masterdata.Room[lesson.ROOM_ID_OLD]
+            new: lesson.ROOM_ID && masterdata.Room[lesson.ROOM_ID],
+            old: lesson.ROOM_ID_OLD && masterdata.Room[lesson.ROOM_ID_OLD],
+            substitution: lesson.ROOM_ID_SUBSTITUTING && masterdata.Room[lesson.ROOM_ID_SUBSTITUTING],
         },
         classes: {
-            new: (lesson.CLASS_IDS || []).map((c) => masterdata.Class[c]),
-            old: !!(lesson.CLASS_IDS_OLD || []).length && lesson.CLASS_IDS_OLD.map((c) => masterdata.Class[c]),
-            absent: !!(lesson.CLASS_IDS_ABSENT || []).length && lesson.CLASS_IDS_ABSENT.map((c) => masterdata.Class[c])
+            new: lesson.CLASS_IDS && lesson.CLASS_IDS.map((c) => masterdata.Class[c]),
+            old: lesson.CLASS_IDS_OLD && lesson.CLASS_IDS_OLD.map((c) => masterdata.Class[c]),
+            substitution: lesson.CLASS_IDS_SUBSTITUTING && lesson.CLASS_IDS_SUBSTITUTING.map((c) => masterdata.Class[c]),
         }
     }));
     return period;

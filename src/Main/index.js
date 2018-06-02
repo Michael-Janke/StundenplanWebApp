@@ -73,7 +73,7 @@ class Main extends Component {
                             contentStyle={{
                                 color: 'red'
                             }}
-                            onRequestClose={this.props.clearErrors} />
+                            onClose={this.props.clearErrors} />
                         <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
                     </PrintProvider>
                 </div>

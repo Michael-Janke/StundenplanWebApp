@@ -101,7 +101,7 @@ class UserSettingsMenu extends React.Component {
                         aria-owns={anchorEl ? 'long-menu' : null}
                         aria-haspopup="true"
                         onClick={this.handleClick}
-                        style={{ width: 48 + 8, height: 48, paddingLeft: 8, padding: 0 }}
+                        style={{ width: 48, height: 48, padding: 0, marginLeft: 8 }}
                     >
                         <UserAvatar />
                     </IconButton>
