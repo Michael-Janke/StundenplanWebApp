@@ -25,6 +25,10 @@ export function counterChanged(counterChanged) {
     }
 }
 
+export function getSubstitutions(id, type, week, year) {
+    return { type: "GET_SUBSTITUTIONS", payload: { id, type, week, year } };
+}
+
 export function loadProfilePicture() {
     return { type: "GET_PROFILE_PICTURE" };
 }

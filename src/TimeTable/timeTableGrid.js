@@ -20,6 +20,14 @@ import { ObjectIcon } from '../Main/components/Avatars';
 
 
 class TimeTableGrid extends React.PureComponent {
+    state = {};
+
+    static getDerivedStateFromProps(props) {
+        return {
+            periodsWidth: (props.small) ? 20 : 70,
+        }
+    }
+
     renderPeriodTimes(period) {
         const lpad2 = (number) => (number < 10 ? '0' : '') + number;
         return (
@@ -78,7 +86,7 @@ class TimeTableGrid extends React.PureComponent {
             return null;
         }
         const periodColumnStyle = {
-            width: this.props.periodsWidth,
+            width: this.state.periodsWidth,
             fontSize: '100%',
             padding: 2,
         };
@@ -103,7 +111,7 @@ class TimeTableGrid extends React.PureComponent {
         );
 
         return (
-            <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
+            <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }} ref="container">
                 <div className={classes.tableToolbar + " " + classes['table-header']}>
                     {currentTimetable}
                     <IconButton onClick={this.props.setPreviousWeek}>
@@ -118,7 +126,7 @@ class TimeTableGrid extends React.PureComponent {
                         <TableHead
                             style={{ fontSize: '100%' }}>
                             <TableRow style={{ height: 48 }}>
-                                <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
+                                <TableCell style={{ ...tableHeaderStyle, width: this.state.periodsWidth, padding: 2 }} />
                                 {[1, 2, 3, 4, 5].map((day, i) => {
                                     let date = this.props.date.clone().weekday(0).add(day - 1, 'days');
                                     return (
@@ -244,9 +252,6 @@ const makeMapStateToProps = () => {
             periods: state.timetable.masterdata.Period_Time,
             id: state.timetable.currentTimeTableId,
             type: state.timetable.currentTimeTableType,
-            showDrawer: state.browser.greaterThan.small,
-            small: state.browser.lessThan.medium,
-            periodsWidth: (state.browser.lessThan.medium) ? 20 : 70,
             loading: state.timetable.loadingTimetable || state.timetable.loadingSubstitutions,
             warning: state.user.warning,
             lastCheck: state.user.lastCheck,

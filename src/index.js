@@ -15,7 +15,7 @@ let deparam = function (querystring) {
     return params;
 };
 let params = window.params = deparam(window.location.href);
-console.log(window.URLSearchParams)
+console.log(window.params)
 if (params.token) {
     provideAuthContext(new TokenAuthContext(params.token));
     runWithToken(params.token, () => {

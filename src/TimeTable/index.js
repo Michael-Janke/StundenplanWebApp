@@ -5,6 +5,7 @@ import withTheme from '@material-ui/core/styles/withTheme';
 import TimeTableGrid from './timeTableGrid';
 import indigo from '@material-ui/core/colors/indigo';
 import { Paper } from "@material-ui/core";
+import Substitutions from './Substitutions';
 
 class View extends Component {
     render() {
@@ -14,11 +15,14 @@ class View extends Component {
                 {/* {this.props.showDrawer && <Drawer>
                     <Dates />
                 </Drawer>} */}
+                {window.params.tv ? <ShadowContainer>
+                    <Substitutions />
+                </ShadowContainer> : null}
 
                 <ShadowContainer>
-                    <TimeTableGrid />
+                    <TimeTableGrid small={this.props.small || window.params.tv} />
                 </ShadowContainer>
-            </Container >
+            </Container>
         );
     }
 }
@@ -31,7 +35,7 @@ const Container = styled.div`
 `
 
 
-const ShadowContainer = styled(Paper)`
+const ShadowContainer = styled(Paper) `
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -65,20 +69,12 @@ const AppBar = styled.div`
 
 const mapDispatchToProps = dispatch => {
     return {
-        logout: () => {
-            dispatch();
-        }
     };
 };
 
 const mapStateToProps = state => {
     return {
-        masterdata: state.timetable.masterdata,
-        timetableDate: state.timetable.timetableDate,
-        periods: state.timetable.masterdata.Period_Time,
-        showPeriods: state.browser.greaterThan.small,
-        showDrawer: state.browser.greaterThan.small,
-        mediaType: state.browser.mediaType,
+        small: state.browser.lessThan.medium,
     };
 };
 

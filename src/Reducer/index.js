@@ -7,10 +7,12 @@ import error from './error';
 import avatars from './avatars';
 import timetable from './timetable';
 import dates from './dates';
+import substitutions from './substitutions';
 
 export default combineReducers({
     browser: responsiveStateReducer,
     // responsiveDrawer: responsiveDrawer,
+    substitutions,
     user,
     error,
     timetable,

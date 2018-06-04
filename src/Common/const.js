@@ -20,7 +20,7 @@ export function specifySubstitutionType(id, type, substitution) {
     let lesson = {};
     substitution = { ...substitution, id, type };
     lesson.specificSubstitutionType = getSpecificSubstitutionType(substitution);
-    if (lesson.specificSubstitutionType.mask) {
+    if (lesson.specificSubstitutionType && lesson.specificSubstitutionType.mask) {
         substitution = lesson.specificSubstitutionType.mask(substitution);
     }
     lesson.SUBJECT_ID_OLD = substitution.SUBJECT_ID;
@@ -94,7 +94,7 @@ export const SUBSTITUTION_MAP = {
         name: "Tausch"
     },
     EXTRA_LESSON: {
-        colors: colors.purple[900],
+        color: colors.purple[900],
         backgroundColor: colors.purple[50],
         name: "Zusatzstunde"
     },

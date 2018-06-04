@@ -22,6 +22,7 @@ import createTheme from '../Common/theme';
 import ReactInterval from 'react-interval';
 import { connectToServiceWorker } from '../Common/firebase';
 import PrintProvider from 'react-easy-print';
+import TvAppBar from "./components/TvAppBar";
 
 
 class Main extends Component {
@@ -43,7 +44,7 @@ class Main extends Component {
         return { theme: createTheme(nextProps.themeType) };
     }
 
-    
+
 
     componentDidUpdate(nextProps) {
         if (this.props.needsUpdate !== nextProps.needsUpdate) {
@@ -64,7 +65,7 @@ class Main extends Component {
                     backgroundColor: this.state.theme.palette.background.default
                 }}>
                     <PrintProvider>
-                        <AppBar onThemeToggle={this.onThemeToggle} />
+                        {window.params.tv ? <TvAppBar /> : <AppBar onThemeToggle={this.onThemeToggle} />}
                         <TimeTable />
                         <Snackbar
                             open={!!this.props.error}

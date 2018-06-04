@@ -128,7 +128,7 @@ function compareLesson(p1, p2) {
     return true;
 }
 
-function skipDuplications(day, periods) {
+export function skipDuplications(day, periods) {
     if (!day || !day.periods || day.holiday) {
         return;
     }
@@ -218,13 +218,13 @@ function readTimetable(_data, day, periods, date) {
     return { periods: data };
 }
 
-function translatePeriods(masterdata, day, periods, id, type) {
+export function translatePeriods(masterdata, day, periods) {
     if (day.holiday) {
         return day;
     }
     for (let y = 0; y < periods.length; y++) {
         if (day.periods[y] && day.periods[y].lessons) {
-            translate(masterdata, day.periods[y], id, type);
+            translate(masterdata, day.periods[y]);
         }
     }
 }
@@ -268,7 +268,7 @@ export function equalPeriods(period1, period2) {
     return false;
 }
 
-function translate(masterdata, period, id, type) {
+function translate(masterdata, period) {
     if (!period) return period;
     period.lessons = period.lessons.map((lesson) => ({
         reference: lesson,
