@@ -277,7 +277,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper,
         position: 'absolute',
         width: '100%',
-        maxHeight: '70vh',
+        maxHeight: 'calc(100vh - 64px - 8px)',
         opacity: 1,
         marginTop: theme.spacing.unit,
         boxShadow: theme.shadows[4],
