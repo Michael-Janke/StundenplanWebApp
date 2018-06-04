@@ -12,11 +12,16 @@ import ClassesContainer from './Fields/classes';
 const extractSubject = (name) => {
     return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
 }
+
+const ColorBar = (subject) => {
+    const object = subject.new || subject.old;
+    return object && SUBJECT_COLORS_MAP[extractSubject(object.NAME)]
+}
+
 function getStudentFields(lesson) {
     const { subject, room, teachers } = lesson;
     return {
-        colorBar: subject.new
-            && SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)],
+        colorBar: ColorBar(subject),
         fields: {
             new: !lesson.isOld && [
                 SubjectContainer('new')(subject),
@@ -25,6 +30,7 @@ function getStudentFields(lesson) {
             ],
             old: lesson.isOld && [
                 SubjectContainer('old')(subject),
+                TeachersContainer('old')(teachers),
             ]
         }
     }
@@ -33,8 +39,7 @@ function getStudentFields(lesson) {
 function getTeacherFields(lesson) {
     const { subject, room, classes, teachers } = lesson;
     return {
-        colorBar: subject.new
-            && SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)],
+        colorBar: ColorBar(subject),
         fields: {
             new: !lesson.isOld && [
                 SubjectContainer('new')(subject),
@@ -57,8 +62,7 @@ function getTeacherFields(lesson) {
 function getRoomFields(lesson) {
     const { subject, teachers, classes } = lesson;
     return {
-        colorBar: subject.new
-            && SUBJECT_COLORS_MAP[extractSubject(subject.new.NAME)],
+        colorBar: ColorBar(subject),
         fields: {
             new: !lesson.isOld && [
                 ClassesContainer('new')(classes),

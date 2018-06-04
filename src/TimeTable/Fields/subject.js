@@ -40,7 +40,8 @@ export const subjectStyles = theme => ({
     },
     'subject-old': {
         color: grey[600],
-        fontSize: '50%',
+        fontSize: '70%',
+        fontWeight: 600,
     },
     'subject-substitution': {
         color: grey[600],

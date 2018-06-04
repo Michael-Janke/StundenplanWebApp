@@ -67,7 +67,6 @@ const NewTeacher = styled(Teacher) `
 
 const OldTeacher = styled(Teacher) `
     font-size: 50%;
-    text-decoration: line-through;
 `;
 
 

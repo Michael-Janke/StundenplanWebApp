@@ -12,3 +12,30 @@ div[style*="margin: auto 16px;"] {
 html, body, div#root, .app {
   height: 100%;
 }
+
+
+::-webkit-scrollbar {
+    background: transparent;
+    height: 8px;
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background: #ddd;
+    min-height: 40px;
+}
+
+:hover::-webkit-scrollbar-thumb {
+    background: #bdbdbd
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #bdbdbd
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: #989898
+}
