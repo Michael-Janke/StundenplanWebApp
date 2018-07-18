@@ -1,22 +1,26 @@
-import { getSubstitutionsCacheKey } from "../Common/const";
 
 const initialState = {
-    substitutions: {}
+    sortBy: { type: { singular: 'class', plural: 'classes' }, fieldName: 'CLASS_IDS' },
+}
+
+const sortsBy = {
+    class: { type: { singular: 'class', plural: 'classes' }, fieldName: 'CLASS_IDS' },
+    teacher: { type: { singular: 'teacher', plural: 'teachers' }, fieldName: 'TEACHER_ID' },
 }
 
 export default function substitutionsReducer(state = initialState, action) {
     switch (action.type) {
-        case "GET_SUBSTITUTIONS_RECEIVED":
-            if (action.request.type === 'all') {
-                return {
-                    ...state,
-                    substitutions: {
-                        ...state.substitutions,
-                        [getSubstitutionsCacheKey(action.request)]: action.payload
-                    }
-                }
+        case "persist/REHYDRATE":
+            if (!action.payload || !action.payload.substitutions) return state;
+            return {
+                ...action.payload.substitutions,
+                ...state,
+            };
+        case "SET_SORT_BY":
+            return {
+                ...state,
+                sortBy: sortsBy[action.payload || 'class'],
             }
-            break;
         default: ;
     }
     return state;

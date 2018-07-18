@@ -15,9 +15,12 @@ class View extends Component {
                 {/* {this.props.showDrawer && <Drawer>
                     <Dates />
                 </Drawer>} */}
-                {window.params.tv ? <ShadowContainer>
-                    <Substitutions />
-                </ShadowContainer> : null}
+                {window.params.tv ?
+                    <ShadowContainer>
+                        <Substitutions addDays={0} />
+                        <Substitutions addDays={1} />
+                    </ShadowContainer>
+                    : null}
 
                 <ShadowContainer>
                     <TimeTableGrid small={this.props.small || window.params.tv} />
@@ -42,10 +45,11 @@ const ShadowContainer = styled(Paper) `
     margin-top: 6px;
     margin-right: 1vw;
     margin-left: 1vw;
-    margin-bottom: 1vw;
+    // margin-bottom: 1vw;
     z-index: 1;
     position: relative;
-    max-width: 1200px;
+    max-width: 1200px;  
+    height: 100%;
 `
 
 // const ShadowContainerEmu = styled.div`

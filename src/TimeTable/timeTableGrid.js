@@ -17,10 +17,18 @@ import { withStyles, IconButton, ListItemIcon, ListItem, ListItemText } from '@m
 import BackIcon from '@material-ui/icons/ArrowBack';
 import NextIcon from '@material-ui/icons/ArrowForward';
 import { ObjectIcon } from '../Main/components/Avatars';
+import RoomList from './roomlist';
 
 
-class TimeTableGrid extends React.PureComponent {
+class TimeTableGrid extends React.Component {
     state = {};
+
+    shouldComponentUpdate(nextProps) {
+        // controlled non-updating to update data in background
+        return !!nextProps.currentTimetable
+            || (nextProps.counterChanged === 'detected' && nextProps.counterChanged !== this.props.counterChanged)
+            || this.props.classes !== nextProps.classes;
+    }
 
     static getDerivedStateFromProps(props) {
         return {
@@ -35,7 +43,7 @@ class TimeTableGrid extends React.PureComponent {
                 <Time>{Math.floor(period.START_TIME / 100)}:{lpad2(period.START_TIME % 100)}</Time>
                 <Time>{Math.floor(period.END_TIME / 100)}:{lpad2(period.END_TIME % 100)}</Time>
             </Times>
-        )
+        );
     }
 
     renderPeriodHeader(period) {
@@ -72,19 +80,22 @@ class TimeTableGrid extends React.PureComponent {
                         textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
                     }}
                     rowSpan={period ? period.skip + 1 : 0}>
-                    <PeriodColumn
-                        lessons={period.lessons}
-                        type={this.props.type}
-                        small={this.props.small} />
+                    {period.freeRooms ?
+                        <RoomList
+                            rooms={period.freeRooms}
+                        />
+                        :
+                        <PeriodColumn
+                            lessons={period.lessons}
+                            type={this.props.type}
+                            small={this.props.small} />
+                    }
                 </TableCell>
             );
         }
     }
 
     renderRows() {
-        if (!this.props.id || !this.props.type || this.props.loading) {
-            return null;
-        }
         const periodColumnStyle = {
             width: this.state.periodsWidth,
             fontSize: '100%',
@@ -146,7 +157,7 @@ class TimeTableGrid extends React.PureComponent {
                     <div style={{ maxHeight: `calc(100vh - ${180}px)`, overflowY: 'auto' }}>
                         <GrayoutTable
                             className={classes.table}
-                            disabled={this.props.counterChanged}
+                            disabled={this.props.counterChanged === 'detected'}
                         >
                             <TableBody>
                                 {this.renderRows()}
@@ -162,6 +173,9 @@ class TimeTableGrid extends React.PureComponent {
 
 const CurrentTimetableInformation = ({ id, type, masterdata, avatars }) => {
     if (!masterdata || !type || !id) return null;
+    if (type === 'all') {
+        type = "room";
+    }
     let object = masterdata[type[0].toUpperCase() + type.slice(1)][id];
     if (!object) return null;
     return (
@@ -199,7 +213,7 @@ const styles = theme => ({
     }
 });
 
-const GrayoutTable = styled(Table) `
+const GrayoutTable = styled(Table)`
     ${props => props.disabled && `
         -webkit-filter: grayscale(100%);
         -moz-filter: grayscale(100%);
@@ -255,7 +269,7 @@ const makeMapStateToProps = () => {
             loading: state.timetable.loadingTimetable || state.timetable.loadingSubstitutions,
             warning: state.user.warning,
             lastCheck: state.user.lastCheck,
-            counterChanged: state.timetable.counterChanged,
+            counterChanged: state.user.counterChanged,
         }
     }
     return mapStateToProps;

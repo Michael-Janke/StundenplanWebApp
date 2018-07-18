@@ -75,7 +75,7 @@ ClassesContainer.propTypes = {
 const Container = styled.div`
     flex-direction: column;
     display: flex;
-    ${props => !props.left && `align-items: flex-end`};
+    // ${props => !props.left && `align-items: flex-end`};
 `;
 const ClassContainer = styled.div`
     display: flex;

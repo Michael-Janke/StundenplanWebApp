@@ -17,7 +17,15 @@ export const fromViewer = (substitution) => {
     const key = type.toUpperCase() + "_ID";
     const isOld = substitution[key] === id;
     const isNew = substitution[key + "_NEW"] === id || substitution[key + "_NEW"] === 0;
-    return transform(isNew ? 'new' : isOld ? 'old' : "")(substitution);
+    return transform(isNew ? 'new' : isOld ? 'old' : 'new')(substitution);
+}
+
+export const removeIf = ifType => (substitution) => {
+    const { type } = substitution;
+    if (ifType === type && substitution.isOld) {
+        return null;
+    }
+    return substitution;
 }
 
 export const addSubstitutionInformation = (substitution) => {

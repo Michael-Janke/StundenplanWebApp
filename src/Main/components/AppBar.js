@@ -71,7 +71,6 @@ class ResponsiveDrawer extends React.Component {
 
     render() {
         const { classes, theme, small, large } = this.props;
-        // const LampComponent = theme.palette.type === 'dark' ? LampOnIcon : LampIcon;
         const drawer = (
             <div>
                 <ProfilePicture />
@@ -99,7 +98,7 @@ class ResponsiveDrawer extends React.Component {
                                         </IconButton>
                                     </Tooltip>
                                 } */}
-                                
+
                                 {small ||
                                     <Tooltip id="tooltip-prev" title="Voherige Woche">
                                         <IconButton onClick={this.props.setPreviousWeek}>

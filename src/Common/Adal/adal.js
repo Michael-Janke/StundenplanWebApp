@@ -1700,7 +1700,7 @@ var _AuthenticationContext = function () {
                 ifr.setAttribute('aria-hidden', 'true');
                 ifr.style.visibility = 'hidden';
                 ifr.style.position = 'absolute';
-                ifr.style.width = ifr.style.height = ifr.borderWidth = '0px';
+                ifr.style.width = ifr.style.height = ifr.style.borderWidth = '0px';
 
                 adalFrame = document.getElementsByTagName('body')[0].appendChild(ifr);
             } else if (document.body && document.body.insertAdjacentHTML) {

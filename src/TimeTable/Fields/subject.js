@@ -34,19 +34,21 @@ export const subjectStyles = theme => ({
         fontWeight: 600,
     },
     'subject-new': {
-        color: theme.palette.type === 'dark' ? red.A700 : red[800],
+        color: theme.palette.type === 'dark' ? red[500] : red[800],
         fontWeight: 600,
         fontSize: '80%',
     },
     'subject-old': {
-        color: grey[600],
+        color: theme.palette.type === 'dark' ? grey[300] : grey[600],
         fontSize: '70%',
         fontWeight: 600,
+        textDecoration: `line-through ${theme.palette.divider}`,
     },
     'subject-substitution': {
-        color: grey[600],
+        color: theme.palette.type === 'dark' ? grey[300] : grey[600],
         fontSize: '70%',
         fontWeight: 600,
+        textDecoration: `line-through ${theme.palette.divider}`,
     }
 });
 

@@ -11,6 +11,7 @@ const initialState = {
     lastCheck: null,
     warning: true,
     notifications: false,
+    themeType: 'light',
     subjectColors: {
     }
 };
@@ -20,12 +21,22 @@ export default function userReducer(state = initialState, action = {}) {
         case "COUNTER_RECEIVED":
             return {
                 ...state,
-                counterChanged: state.counter !== action.payload.COUNTER,
+                counterChanged: state.counter !== action.payload.COUNTER ? 'detected' : 'none',
                 counter: action.payload.COUNTER,
                 lastUpdate: moment(action.payload.LAST_CHANGE.date),
                 lastCheck: moment(),
                 warning: false
             };
+        case "REFRESH_COMPLETE":
+            return {
+                ...state,
+                counterChanged: 'none',
+            }; 
+        case "REFRESH_LOADING":
+            return {
+                ...state,
+                counterChanged: 'loading',
+            }; 
         case "CHANGE_THEME":
             return {
                 ...state,
@@ -50,7 +61,7 @@ export default function userReducer(state = initialState, action = {}) {
             return {
                 ...state,
                 loading: false,
-                ...action.payload
+                ...action.payload,
             };
         case "FEEDBACK_RECEIVED":
             return {

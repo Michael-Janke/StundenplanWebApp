@@ -2,12 +2,11 @@ import React from 'react';
 import styled from "styled-components";
 import ActionInfo from '@material-ui/icons/Info';
 import indigo from '@material-ui/core/colors/indigo';
+import grey from '@material-ui/core/colors/grey';
+
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core';
-import { subjectStyles } from './Fields/subject';
-import { roomStyles } from './Fields/room';
-import { classStyles } from './Fields/classes';
-import { teacherStyles } from './Fields/teachers';
+import { styles } from './Fields';
 
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
 const BindField = (props) => field => Field.bind(null, field, props);
@@ -19,27 +18,25 @@ const SubstitutionText = ({ children }) => (
     </SubstitutionTextContainer>
 );
 
-const styles = theme => ({
-    ...subjectStyles(theme),
-    ...roomStyles(theme),
-    ...teacherStyles(theme),
-    ...classStyles(theme),
-});
+
 
 
 const AbstractLesson = (props) => {
     let { classes, theme, colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, absence, substitutionInfo } = props;
     const isNew = fields.new;
     const isOld = fields.old;
+    const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
+
+
     const BoundField = BindField({ small, themeClasses: classes });
 
     const NewFields = fields.new && fields.new.map(BoundField);
     const OldFields = fields.old && fields.old.map(BoundField);
     const SubstitutingFields = fields.substitution && fields.substitution.map(BoundField);
 
-    let substitutionTextBig = substitutionText && substitutionText.length > 16;
+    let substitutionTextBig = substitutionText && substitutionText.length > 5;
     const substitutionType = specificSubstitutionType && (
-        <SubstitutionType color={specificSubstitutionType.color}>
+        <SubstitutionType color={styles.color}>
             {(!substitutionText || substitutionTextBig) ? specificSubstitutionType.name : substitutionText}
         </SubstitutionType>
     );
@@ -53,26 +50,43 @@ const AbstractLesson = (props) => {
 
 
     let InsteadBy;
-    if (!small)
-        InsteadBy = substitutionInfo === 'instead-by' ?
-            (...fields) => (
+    if (substitutionInfo === 'instead-by') {
+        if (small) {
+            InsteadBy = (...fields) => (
+                <LessonWrapper>
+                    <InsteadInformation>durch:</InsteadInformation>
+                    {fields.map((Field, i) => <Field key={i} left />)}
+                </LessonWrapper>
+            );
+        }
+        else {
+            InsteadBy = (...fields) => (
                 <LessonContainer>
-                    durch:
+                    <InsteadInformation>durch:</InsteadInformation>
                     {fields.map((Field, i) => <Field key={i} left />)}
                 </LessonContainer>
-            )
-            : null;
+            );
+        }
+    }
 
     let InsteadOf;
-    if (!small)
-        InsteadOf = substitutionInfo === 'instead-of' ?
-            (...fields) => (
+    if (substitutionInfo === 'instead-of') {
+        if (small) {
+            InsteadOf = (...fields) => (
+                <LessonWrapper>
+                    <InsteadInformation>statt:</InsteadInformation>
+                    {fields.map((Field, i) => <Field key={i} left />)}
+                </LessonWrapper>
+            )
+        } else {
+            InsteadOf = (...fields) => (
                 <LessonContainer>
-                    statt:
+                    <InsteadInformation>statt:</InsteadInformation>
                     {fields.map((Field, i) => <Field key={i} left />)}
                 </LessonContainer>
             )
-            : null;
+        }
+    }
 
     if (isNew) {
         if (!small) {
@@ -80,7 +94,7 @@ const AbstractLesson = (props) => {
             return (
                 <Lesson
                     type={theme.palette.type}
-                    color={(specificSubstitutionType || {}).backgroundColor}
+                    color={styles.backgroundColor}
                     flex={!specificSubstitutionType || !multiple}>
                     <ColorBar lineColor={colorBar} />
                     <LessonWrapper>
@@ -106,20 +120,14 @@ const AbstractLesson = (props) => {
             return (
                 <Lesson
                     type={theme.palette.type}
-                    color={(specificSubstitutionType || {}).backgroundColor}
+                    color={styles.backgroundColor}
                     flex={last}>
                     <ColorBar lineColor={colorBar} />
                     <LessonWrapper>
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
-                        <LessonContainer>
-                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden' }}>
-                                {substitutionType}
-                                <Field1 left />
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', overflow: 'hidden', paddingLeft: 5 }}>
-                                <Field2 />
-                            </div>
-                        </LessonContainer>
+                        {substitutionType}
+                        <Field1 left />
+                        <Field2 />
                         <Field3 />
                         {InsteadBy && InsteadBy(...SubstitutingFields)}
                         {extraInfo}
@@ -128,20 +136,20 @@ const AbstractLesson = (props) => {
 
             );
         }
-    }
+    } else
     if (isOld) {
         if (!small) {
             const [Field1, Field2] = OldFields;
             return (
                 <Lesson
                     type={theme.palette.type}
-                    color={(specificSubstitutionType || {}).backgroundColor}
+                    color={styles.backgroundColor}
                     flex={!specificSubstitutionType || !multiple}>
                     <ColorBar lineColor={colorBar} />
                     <LessonWrapper>
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
+                        {substitutionType}
                         <LessonContainer>
-                            {substitutionType}
                             <Field1 left />
                             {Field2 && <Field2 left />}
                         </LessonContainer>
@@ -155,22 +163,22 @@ const AbstractLesson = (props) => {
             return (
                 <Lesson
                     type={theme.palette.type}
-                    color={(specificSubstitutionType || {}).backgroundColor}
+                    color={styles.backgroundColor}
                     flex={last}>
                     <ColorBar lineColor={colorBar} />
                     <LessonWrapper>
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
-                        <LessonContainer>
-                            {substitutionType}
-                            <Field1 left />
-                            {Field2 && <Field2 left />}
-                        </LessonContainer>
+                        {substitutionType}
+                        <Field1 left />
+                        {Field2 && <Field2 left />}
                         {InsteadBy && InsteadBy(...SubstitutingFields)}
                         {extraInfo}
                     </LessonWrapper>
                 </Lesson>
             )
         }
+    } else {
+        return null;
     }
 };
 
@@ -194,9 +202,17 @@ const SubstitutionType = styled.div`
 
 const SubstitutionTextContainer = styled.div`
     font-size: 70%;
+    overflow: hidden;
+    word-break: break-word;
     white-space: normal;
     align-items: center;
     display: flex;
+`;
+
+const InsteadInformation = styled.div`
+    font-size: 50%;
+    font-weight: 600;
+    color: ${grey[400]};
 `;
 
 const LessonContainer = styled.div`
@@ -231,8 +247,8 @@ const Lesson = styled.div`
     text-align: left;
     padding-right: 1vmin;
     flex-direction: row;
-    background-color: ${props => (props.type === 'dark' ? darken : (c) => c)((props.color) || indigo[50], 0.6
-    )};
+    background-color: ${props => props.color || darken(indigo[50], props.type === 'dark' ? 0.6 : 0)};
+
 `;
 
 export default withStyles(styles, { withTheme: true })(AbstractLesson);

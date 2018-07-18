@@ -1,5 +1,6 @@
 import * as colors from '@material-ui/core/colors';
-import { createMask, transform, fromViewer, addSubstitutionInformation } from './masks';
+import { createMask, transform, fromViewer, addSubstitutionInformation, removeIf } from './masks';
+import { darken } from '@material-ui/core/styles/colorManipulator';
 
 export const WEEKDAY_NAMES = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
 export const DRAWER_WIDTH = 300;
@@ -15,6 +16,13 @@ SUBJECTS.forEach((subject, i) => {
     SUBJECT_COLORS_MAP[subject] = SUBJECT_COLORS[i % SUBJECT_COLORS.length];
 });
 
+export function classNames(...classes) {
+    return classes.filter(e => !!e).join(" ");
+}
+
+function normalize(v) {
+    return v || (v === 0 ? 0 : undefined);
+}
 
 export function specifySubstitutionType(id, type, substitution) {
     let lesson = {};
@@ -23,19 +31,21 @@ export function specifySubstitutionType(id, type, substitution) {
     if (lesson.specificSubstitutionType && lesson.specificSubstitutionType.mask) {
         substitution = lesson.specificSubstitutionType.mask(substitution);
     }
-    lesson.SUBJECT_ID_OLD = substitution.SUBJECT_ID;
-    lesson.ROOM_ID_OLD = substitution.ROOM_ID;
-    lesson.TEACHER_ID_OLD = substitution.TEACHER_ID;
+    if (!substitution) { return null; }
+    lesson.SUBJECT_ID_OLD = normalize(substitution.SUBJECT_ID);
+    lesson.ROOM_ID_OLD = normalize(substitution.ROOM_ID);
+    lesson.TEACHER_IDS_OLD = substitution.TEACHER_ID ? [substitution.TEACHER_ID] : [];
     lesson.CLASS_IDS_OLD = substitution.CLASS_IDS;
 
-    lesson.TEACHER_ID = substitution.TEACHER_ID_NEW;
-    lesson.ROOM_ID = substitution.ROOM_ID_NEW;
-    lesson.SUBJECT_ID = substitution.SUBJECT_ID_NEW;
+    lesson.TEACHER_IDS = substitution.TEACHER_ID_NEW ? [substitution.TEACHER_ID_NEW] : [];
+    lesson.ROOM_ID = normalize(substitution.ROOM_ID_NEW);
+    lesson.SUBJECT_ID = normalize(substitution.SUBJECT_ID_NEW);
     lesson.CLASS_IDS = substitution.CLASS_IDS_NEW;
 
     lesson.SUBJECT_ID_SUBSTITUTING = substitution.SUBJECT_ID_SUBSTITUTING;
     lesson.ROOM_ID_SUBSTITUTING = substitution.ROOM_ID_SUBSTITUTING;
-    lesson.TEACHER_ID_SUBSTITUTING = substitution.TEACHER_ID_SUBSTITUTING;
+    lesson.TEACHER_IDS_SUBSTITUTING =
+        substitution.TEACHER_ID_SUBSTITUTING ? [substitution.TEACHER_ID_SUBSTITUTING] : [];
     lesson.CLASS_IDS_SUBSTITUTING = substitution.CLASS_IDS_SUBSTITUTING;
 
     lesson.substitutionType = substitution.TYPE;
@@ -49,70 +59,99 @@ export function getSpecificSubstitutionType(substitution) {
     return substitutionType;
 };
 
+
+
+
+function bgColor(type, color) {
+    return darken(color, type === 'dark' ? 0.6 : 0);
+}
+
 export const SUBSTITUTION_MAP = {
     SUBSTITUTION: {
-        color: colors.red[900],
-        backgroundColor: colors.red[50],
+        style: theme => ({
+            color: colors.red[theme.palette.type === 'dark' ? 300 : 900],
+            backgroundColor: bgColor(theme.palette.type, colors.red[50]),
+        }),
         name: "Vertretung",
         priority: 5,
-        mask: createMask(fromViewer, addSubstitutionInformation)
+        mask: createMask(fromViewer, addSubstitutionInformation, removeIf('room'))
     },
     ASSIGNMENT: {
-        color: colors.yellow[900],
-        backgroundColor: colors.yellow[50],
+        style: theme => ({
+            color: colors.yellow[900],
+            backgroundColor: bgColor(theme.palette.type, colors.yellow[50]),
+        }),
         name: "Aufgaben",
         priority: 4,
-        mask: createMask(transform('old')),
+        mask: createMask(transform('old'), removeIf('room')),
     },
     ELIMINATION: {
-        color: colors.green[900],
-        backgroundColor: colors.green[100],
+        style: theme => ({
+            color: colors.green[theme.palette.type === 'dark' ? 300 : 900],
+            backgroundColor: bgColor(theme.palette.type, colors.green[100]),
+        }),
         name: "Entfall",
-        mask: createMask(transform('old')),
+        mask: createMask(transform('old'), removeIf('room')),
     },
     CLASS_SUBSTITUTION: {
-        color: "#a7bef7",
+        style: theme => ({
+            color: "#a7bef7",
+        }),
         name: "Klasse absent",
-        mask: createMask(transform('new')),
+        mask: createMask(transform('new'), removeIf('room')),
     },
     ROOM_SUBSTITUTION: {
-        color: colors.blue[900],
-        backgroundColor: colors.lightBlue[50],
+        style: theme => ({
+            color: theme.palette.type === 'dark' ? colors.cyan[600] : colors.blue[900],
+            backgroundColor: bgColor(theme.palette.type, colors.lightBlue[50]),
+        }),
         name: "Raumvertretung",
         priority: 1,
-        mask: createMask(fromViewer)
+        mask: createMask(fromViewer, removeIf('room'))
     },
     INFORMATION: {
-        color: colors.green.A500,
-        backgroundColor: colors.green[50],
+        style: theme => ({
+            color: colors.lime[700],
+            backgroundColor: bgColor(theme.palette.type, colors.green[50]),
+        }),
         name: "Hinweis",
-        mask: createMask(transform('new')),
+        mask: createMask(transform('new'), removeIf('room')),
     },
     SWAP: {
-        color: colors.lime[900],
-        backgroundColor: colors.lime[50],
+        style: theme => ({
+            color: colors.lime[900],
+            backgroundColor: bgColor(theme.palette.type, colors.lime[50]),
+        }),
         name: "Tausch"
     },
     EXTRA_LESSON: {
-        color: colors.purple[900],
-        backgroundColor: colors.purple[50],
+        style: theme => ({
+            color: theme.palette.type === 'dark' ? colors.purple[400] : colors.purple[900],
+            backgroundColor: bgColor(theme.palette.type, colors.purple[50]),
+        }),
         name: "Zusatzstunde"
     },
     SUPERVISION: {
-        color: colors.grey[900],
-        backgroundColor: colors.red[50],
+        style: theme => ({
+            color: theme.palette.type === 'dark' ? colors.grey[300] : colors.grey[900],
+            backgroundColor: bgColor(theme.palette.type, colors.red[50]),
+        }),
         name: "Mitbetreuung",
-        mask: createMask(fromViewer, addSubstitutionInformation)
+        mask: createMask(fromViewer, addSubstitutionInformation, removeIf('room'))
     },
     REDUNDANCY: {
-        color: colors.green[900],
-        backgroundColor: colors.green[100],
+        style: theme => ({
+            color: theme.palette.type === 'dark' ? colors.green[300] : colors.green[900],
+            backgroundColor: bgColor(theme.palette.type, colors.green[100]),
+        }),
         name: "Freistellung",
-        mask: createMask(transform('old'))
+        mask: createMask(transform('old'), removeIf('room'))
     },
     UNKNOWN: {
-        color: colors.grey[600],
-        backgroundColor: colors.grey[100],
+        style: theme => ({
+            color: colors.grey[600],
+            backgroundColor: bgColor(theme.palette.type, colors.grey[100]),
+        }),
         name: "unbekannt",
     }
 };
