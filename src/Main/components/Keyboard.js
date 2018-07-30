@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, withStyles } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
+import Button from '@material-ui/core/Button';
 import BackSpace from '@material-ui/icons/Backspace';
 
 const styles = theme => ({
@@ -25,7 +26,7 @@ const Key = (props) => (
     </Button>
 );
 
-class Keyboard extends React.Component {
+class Keyboard extends React.PureComponent {
 
     onKeyPress(key) {
         this.props.onInput(name => name + key);

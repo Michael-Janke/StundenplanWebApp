@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { green } from '@material-ui/core/colors';
+import green from '@material-ui/core/colors/green';
 import easterImg from './easter.jpg';
 import bridgeImg from './bridge.jpg';
 import firstMayImg from './firstMay.jpg';
@@ -12,13 +12,13 @@ import germanImg from './german.jpg';
 import ascentionImg from './ascention.jpg';
 
 const holidayImageMap = {
-  "Oster":easterImg,
-  "Ferientag":bridgeImg,
-  "01.05":firstMayImg,
-  "Sommer":summerImg,
-  "Herbst":autumnImg,
-  "Weihn":xmasImg,
-  "Winter":winterImg,
+  "Oster": easterImg,
+  "Ferientag": bridgeImg,
+  "01.05": firstMayImg,
+  "Sommer": summerImg,
+  "Herbst": autumnImg,
+  "Weihn": xmasImg,
+  "Winter": winterImg,
   "3.10": germanImg,
   "Himmel": ascentionImg,
 }
@@ -26,8 +26,8 @@ const holidayImageMap = {
 class Holiday extends React.PureComponent {
   render() {
     var img = bridgeImg;
-    for(var key in holidayImageMap) {
-      if(this.props.holiday.indexOf(key) >= 0 || this.props.date.indexOf(key) !== -1) {
+    for (var key in holidayImageMap) {
+      if (this.props.holiday.indexOf(key) >= 0 || this.props.date.indexOf(key) !== -1) {
         img = holidayImageMap[key];
       }
     }

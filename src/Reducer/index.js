@@ -7,7 +7,12 @@ import error from './error';
 import avatars from './avatars';
 import timetable from './timetable';
 import dates from './dates';
-import substitutions from './substitutions';
+
+let substitutions;
+if(process.env.REACT_APP_MODE === 'tv'){
+    substitutions = require('./substitutions').default;
+    console.log(substitutions);
+}
 
 export default combineReducers({
     browser: responsiveStateReducer,

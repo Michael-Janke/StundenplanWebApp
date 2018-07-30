@@ -1,9 +1,17 @@
 import React from 'react';
-import { withStyles, IconButton, Input, Zoom, ClickAwayListener, ListItemIcon, ListItem, ListItemText, ListItemSecondaryAction } from '@material-ui/core';
+
+import withStyles from '@material-ui/core/styles/withStyles';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import Zoom from '@material-ui/core/Zoom';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import indigo from '@material-ui/core/colors/indigo';
-import Keyboard from './Keyboard';
 import SearchResult from './SearchResult';
 
 import { classNames } from '../../Common/const';
@@ -35,7 +43,7 @@ function fuzzysearch(needle, haystack) {
 }
 
 
-class Search extends React.Component {
+class Search extends React.PureComponent {
     state = { open: false, nonEmpty: false, value: "" };
 
     handleOpen = () => {
@@ -89,7 +97,7 @@ class Search extends React.Component {
     }
 
     render() {
-        const { classes, shrinkChildren, alwaysOpen } = this.props;
+        const { classes, shrinkChildren, alwaysOpen, Keyboard } = this.props;
         const { open, nonEmpty } = this.state;
         const isOpen = alwaysOpen || open || this.props.open;
         return (
@@ -139,7 +147,7 @@ class Search extends React.Component {
                                 classes.dropDownContainer,
                                 !open && classes.dropDownContainerClosed
                             )}>
-                            {window.params.tv &&
+                            {Keyboard &&
                                 <Keyboard
                                     className={classNames(
                                         classes.dropDown,

@@ -1,10 +1,12 @@
 import React from 'react';
 import makeGetSubstitutions from '../../Selector/substitution';
 import { connect } from 'react-redux';
-import { getSubstitutions, getTimetable } from '../../Main/actions';
+import { getSubstitutions, getTimetable, setTimeTable } from '../../Main/actions';
 import moment from 'moment';
-import { withStyles } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
+import IconButton from '@material-ui/core/IconButton';
 import grey from '@material-ui/core/colors/grey';
+import LinkIcon from '@material-ui/icons/OpenInNew';
 import SubstitutionEntry from './substitution';
 import styled from 'styled-components';
 import { ReactInterval } from 'react-interval/lib/Component';
@@ -33,11 +35,21 @@ const styles = theme => ({
         fontSize: '90%',
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
         padding: theme.spacing.unit,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     substitutionsContainer: {
         fontSize: '100%',
         padding: theme.spacing.unit,
 
+    },
+    icon: {
+        fontSize: '70%',
+    },
+    button: {
+        height: 32,
+        width: 32,
     }
 });
 
@@ -52,7 +64,7 @@ class Header extends React.Component {
             <div className={className}>
                 <div>{moment().add(addDays, 'days').format("dddd[, der ]DD.MM.")}</div>
                 {!addDays &&
-                    <LastUpdate>Letze Änderung: {moment(lastUpdate).fromNow()}</LastUpdate>}
+                    <LastUpdate>Letzte Änderung {moment(lastUpdate).fromNow()}</LastUpdate>}
                 {!addDays &&
                     <ReactInterval timeout={60 * 1000} enabled={true} callback={this.callback} />}
             </div>
@@ -92,6 +104,15 @@ class Substitutions extends React.Component {
         );
     }
 
+    handleSelectTimetable = (entry) => {
+        let object = entry.name[0];
+        if (!object) {
+            return;
+        }
+        const { singular } = this.props.sortBy.type;
+        this.props.setTimetable(singular, object[singular.toUpperCase() + "_ID"]);
+    }
+
     render() {
         console.log(this.props.substitutions);
         if (!this.props.substitutions) {
@@ -104,11 +125,17 @@ class Substitutions extends React.Component {
                     addDays={substitutions.addDays}
                     lastUpdate={lastUpdate}
                     className={classes.rootHeader}
-                    key={1}/>
+                    key={1} />
                 <div className={classes.rootContent}>
                     {substitutions.substitutions.map((entry, i) => (
                         <SubstitutionsContainer key={i}>
-                            <div className={classes.substitutionsHeader}>{this.renderName(entry)}</div>
+                            <div className={classes.substitutionsHeader}>
+                                {this.renderName(entry) || <div />}
+                                <IconButton className={classes.button}
+                                    onClick={this.handleSelectTimetable.bind(this, entry)}>
+                                    <LinkIcon className={classes.icon} />
+                                </IconButton>
+                            </div>
                             <div className={classes.substitutionsContainer}>
                                 {entry.substitutions.map((substitution, i) =>
                                     <SubstitutionEntry
@@ -150,7 +177,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     getTimetableAll: () => {
         dispatch(getTimetable(0, 'all'));
-    }
+    },
+    setTimetable: (type, id) => dispatch(setTimeTable(type, id)),
+
 });
 
 export default withStyles(styles)(connect(makeStateToProps, mapDispatchToProps)(Substitutions));

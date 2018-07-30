@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
 import indigo from '@material-ui/core/colors/indigo';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 

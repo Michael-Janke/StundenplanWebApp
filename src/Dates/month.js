@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import './month.css';
 import AppointmentDay from './day';
 import lightBlue from '@material-ui/core/colors/lightBlue';
-import { ListSubheader } from '@material-ui/core';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 const getWeeksOfMonth = (firstDayOfMonth) => {
     let weeks = [];
@@ -91,7 +91,7 @@ export default class MonthView extends Component {
     }
 }
 
-const Sticky = styled(ListSubheader) `
+const Sticky = styled(ListSubheader)`
     padding: 0px;
 `;
 

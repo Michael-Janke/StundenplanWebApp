@@ -5,7 +5,10 @@ import withTheme from '@material-ui/core/styles/withTheme';
 import TimeTableGrid from './timeTableGrid';
 import indigo from '@material-ui/core/colors/indigo';
 import { Paper } from "@material-ui/core";
-import Substitutions from './Substitutions';
+var Substitutions;
+if (process.env.REACT_APP_MODE === 'tv') {
+    Substitutions = require('./Substitutions').default;
+}
 
 class View extends Component {
     render() {
@@ -15,7 +18,7 @@ class View extends Component {
                 {/* {this.props.showDrawer && <Drawer>
                     <Dates />
                 </Drawer>} */}
-                {window.params.tv ?
+                {Substitutions ?
                     <ShadowContainer>
                         <Substitutions addDays={0} />
                         <Substitutions addDays={1} />
@@ -23,7 +26,7 @@ class View extends Component {
                     : null}
 
                 <ShadowContainer>
-                    <TimeTableGrid small={this.props.small || window.params.tv} />
+                    <TimeTableGrid small={this.props.small || Substitutions} />
                 </ShadowContainer>
             </Container>
         );
@@ -38,7 +41,7 @@ const Container = styled.div`
 `
 
 
-const ShadowContainer = styled(Paper) `
+const ShadowContainer = styled(Paper)`
     display: flex;
     flex-direction: row;
     width: 100%;

@@ -15,18 +15,18 @@ import {
     sendLoginStatistic,
     changeTheme,
     setSortBy
-} from "./actions"
+} from "./actions";
 import TimeTable from "../TimeTable"
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import AppBar from './components/AppBar';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import createTheme from '../Common/theme';
 import ReactInterval from 'react-interval';
 import { connectToServiceWorker } from '../Common/firebase';
 import PrintProvider from 'react-easy-print';
-import TvAppBar from "./components/TvAppBar";
 import ResponsiveFontSize from '../Common/ResponsiveFontSize';
 
-
+var AppBar = process.env.REACT_APP_MODE === 'tv'
+    ? require("./components/TvAppBar").default 
+    : require("./components/AppBar").default;
 
 class Main extends Component {
 
@@ -74,9 +74,7 @@ class Main extends Component {
                         backgroundColor: this.state.theme.palette.background.default
                     }}>
                         <PrintProvider>
-                            {window.params.tv ?
-                                <TvAppBar onThemeToggle={this.onThemeToggle} />
-                                : <AppBar onThemeToggle={this.onThemeToggle} />}
+                            <AppBar onThemeToggle={this.onThemeToggle} />
                             <TimeTable />
                             <Snackbar
                                 open={!!this.props.error}

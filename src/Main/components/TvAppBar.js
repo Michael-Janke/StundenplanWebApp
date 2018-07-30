@@ -1,14 +1,17 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import { connect } from 'react-redux';
+import withStyles from '@material-ui/core/styles/withStyles';
 
-import { withStyles, IconButton, Tooltip } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import indigo from '@material-ui/core/colors/indigo';
 import Search from './Search';
 
 import SvgIcon from '@material-ui/core/SvgIcon';
 import LampIcon from '@material-ui/icons/LightbulbOutline';
 import { setTimeTable } from '../actions';
+import Keyboard from './Keyboard';
 
 function LampOnIcon(props) {
     return (
@@ -46,7 +49,7 @@ class TvAppBar extends React.Component {
             <div className={classes.root}>
                 <AppBar className={classes.appBar} style={{ boxShadow: 'none' }}>
                     <div style={{ flex: 1 }} />
-                    <Search alwaysOpen open={this.props.open}>
+                    <Search alwaysOpen open={this.props.open} Keyboard={Keyboard}>
                         <Tooltip id="tooltip-theme" title="Theme ändern">
                             <IconButton onClick={this.props.onThemeToggle}>
                                 <LampComponent className={classes.icon} />

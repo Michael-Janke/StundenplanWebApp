@@ -2,7 +2,7 @@ import React from 'react';
 import { getFields, styles } from '../Fields';
 import styled from 'styled-components';
 import indigo from '@material-ui/core/colors/indigo';
-import { withStyles } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
 import grey from '@material-ui/core/colors/grey';
 import ActionInfo from '@material-ui/icons/Info';
 
@@ -14,98 +14,103 @@ const Field = (field, props, customProps) => (
 );
 const BindField = (props) => field => Field.bind(null, field, props);
 
-class SubstitutionEntry extends React.Component {
+const SubstitutionEntry = (props) => {
+    const { substitution, type, classes, theme } = props;
+    const { substitutionText, specificSubstitutionType, period, substitutionInfo } = substitution;
+    const { fields } = getFields(type)(substitution);
+    const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
+    const colorBar = styles.color;
+    const isNew = fields.new;
+    const isOld = fields.old;
 
-    render() {
-        const { substitution, type, classes, theme } = this.props;
-        const { substitutionText, specificSubstitutionType, period, substitutionInfo } = substitution;
-        let { colorBar, fields } = getFields(type)(substitution);
-        const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
-        const isNew = fields.new;
-        const isOld = fields.old;
+    const BoundField = BindField({ themeClasses: classes, left: true, small: true });
 
-        const BoundField = BindField({ themeClasses: classes, left: true, small: true });
+    const NewFields = fields.new && fields.new.map(BoundField);
+    const OldFields = fields.old && fields.old.map(BoundField);
 
-        const NewFields = fields.new && fields.new.map(BoundField);
-        const OldFields = fields.old && fields.old.map(BoundField);
+    const SubstitutingFields = fields.substitution && fields.substitution.map(BoundField);
+    let substitutionTextBig = substitutionText && substitutionText.length > 5;
 
-        const SubstitutingFields = fields.substitution && fields.substitution.map(BoundField);
-        let substitutionTextBig = substitutionText && substitutionText.length > 5;
+    const substitutionType = specificSubstitutionType && (
+        <SubstitutionType color={isOld ? grey[700] : styles.color}>
+            {(!substitutionText || substitutionTextBig) ? specificSubstitutionType.name : substitutionText}
+        </SubstitutionType>
+    );
 
-        const substitutionType = specificSubstitutionType && (
-            <SubstitutionType color={isOld ? grey[700] : styles.color}>
-                {(!substitutionText || substitutionTextBig) ? specificSubstitutionType.name : substitutionText}
-            </SubstitutionType>
-        );
+    const extraInfo = (substitutionTextBig) && (
+        <SubstitutionText>
+            {substitutionText}
+        </SubstitutionText>
+    );
 
-        const extraInfo = (substitutionTextBig) && (
-            <SubstitutionText>
-                {substitutionText}
-            </SubstitutionText>
-        );
+    let InsteadBy = substitutionInfo === 'instead-by' ?
+        (
+            <SubstitutionContent>
+                <SubstitutionField />
+                {SubstitutingFields.map((Field, i) => <Field key={i} />)}
+            </SubstitutionContent>
+        )
+        : null;
 
-        let InsteadBy = substitutionInfo === 'instead-by' ?
-            (...fields) => (
-                <SubstitutionContent>
-                    {fields.map((Field, i) => <Field key={i} />)}
-                </SubstitutionContent>
-            )
-            : null;
+    let InsteadOf = substitutionInfo === 'instead-of' ?
+        (
+            <SubstitutionContent>
+                <SubstitutionField />
+                {SubstitutingFields.map((Field, i) => <Field key={i} />)}
+            </SubstitutionContent>
+        )
+        : null;
 
-        let InsteadOf = substitutionInfo === 'instead-of' ?
-            (...fields) => (
-                <SubstitutionContent>
-                    {fields.map((Field, i) => <Field key={i} />)}
-                </SubstitutionContent>
-            )
-            : null;
-
-        const New = isNew ? (fields) => {
-            const [Field1, Field2, Field3] = fields;
-            return (
-                <SubstitutionRow>
-                    <ColorBar lineColor={colorBar} />
-                    <Period>{period}</Period>
-                    {substitutionType}
-                    <SubstitutionContent>
-                        <Field1 />
-                        <Field2 />
-                        <Field3 />
-                    </SubstitutionContent>
-                    {InsteadOf && <InsteadInformation>statt:</InsteadInformation>}
-                    {InsteadOf && InsteadOf(...SubstitutingFields)}
-                </SubstitutionRow>
-            );
-        } : null;
-
-        const Old = isOld ? (fields) => {
-            const [Field1, Field2] = fields;
-            return (
-                <SubstitutionRow>
-                    <ColorBar lineColor={colorBar} />
-                    <Period>{period}</Period>
-                    {substitutionType}
-                    <SubstitutionContent className={classes.substitutionsContentOld}>
-                        <Field1 />
-                        <Field2 />
-                    </SubstitutionContent>
-                    {InsteadBy && <InsteadInformation>durch:</InsteadInformation>}
-                    {InsteadBy && InsteadBy(...SubstitutingFields)}
-                </SubstitutionRow>
-            );
-        } : null;
-
-
+    const New = isNew ? () => {
+        const [Field1, Field2, Field3] = NewFields;
         return (
-            <SubstitutionContainer>
+            <SubstitutionRow>
+                <Period>{period}</Period>
+                {substitutionType}
+                <SubstitutionContent>
+                    <Field1 />
+                    <Field2 />
+                    <Field3 />
+                </SubstitutionContent>
+            </SubstitutionRow>
+        );
+    } : null;
 
-                {New && New(NewFields)}
-                {Old && Old(OldFields)}
+    const Old = isOld ? () => {
+        const [Field1, Field2] = OldFields;
+        return (
+            <SubstitutionRow>
+                <Period>{period}</Period>
+                {substitutionType}
+                <SubstitutionContent className={classes.substitutionsContentOld}>
+                    <Field1 />
+                    <Field2 />
+                    <SubstitutionField />
+                </SubstitutionContent>
+            </SubstitutionRow>
+        );
+    } : null;
+
+
+    return (
+        <SubstitutionRow>
+            <ColorBar lineColor={colorBar} />
+            <SubstitutionContainer>
+                <SubstitutionRow>
+                    {New && New()}
+                    {Old && Old()}
+                </SubstitutionRow>
+                <SubstitutionRow>
+                    {InsteadBy && <InsteadInformation>durch:</InsteadInformation>}
+                    {InsteadBy}
+                    {InsteadOf && <InsteadInformation>statt:</InsteadInformation>}
+                    {InsteadOf}
+                </SubstitutionRow>
                 {extraInfo}
             </SubstitutionContainer>
-        );
-    }
-}
+        </SubstitutionRow>
+    );
+};
 
 const Period = styled.div`
     font-size: 100%;
@@ -141,6 +146,7 @@ const SubstitutionContainer = styled.div`
     display: flex;
     flex-direction: column;
     font-size: inherit;
+    flex: 1;
 `;
 
 const SubstitutionField = styled.div`

@@ -49,7 +49,8 @@ export function specifySubstitutionType(id, type, substitution) {
     lesson.CLASS_IDS_SUBSTITUTING = substitution.CLASS_IDS_SUBSTITUTING;
 
     lesson.substitutionType = substitution.TYPE;
-    lesson.substitutionText = substitution.TEXT;
+    lesson.substitutionText = window.params.sortBy !== 'teacher' ?
+        substitution.TEXT : substitution.TEXT_TEACHER;
     lesson.isOld = substitution.isOld;
     lesson.substitutionInfo = substitution.substitutionInfo;
     return lesson;

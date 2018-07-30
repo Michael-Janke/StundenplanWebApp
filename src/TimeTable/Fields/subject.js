@@ -6,7 +6,7 @@ import red from '@material-ui/core/colors/red';
 
 const SubjectContainer = type => subject => (props) => {
     const { themeClasses } = props;
-    const changed = !!subject.old || subject.old === 0;
+    const changed = subject.old === 0 || subject.new === 0;
     if (type === 'new') {
         const ClassNormal = changed ? NewSubject : Subject;
         return (
@@ -19,6 +19,9 @@ const SubjectContainer = type => subject => (props) => {
         );
     }
     if (type === 'instead-by' || type === 'instead-of') {
+        if (!changed) {
+            return null;
+        }
         return (
             <Subject className={themeClasses['subject-substitution']}>
                 {subject.substitution ? subject.substitution.NAME : '-'}

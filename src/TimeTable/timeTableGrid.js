@@ -6,14 +6,18 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { grey } from '@material-ui/core/colors';
+import grey from '@material-ui/core/colors/grey';
 import PeriodColumn from './period';
 import { WEEKDAY_NAMES } from '../Common/const';
 import { Print } from 'react-easy-print';
 import { changeWeek } from '../Main/actions';
 import makeGetCurrentTimetable from '../Selector/timetable';
 import Holiday from './Holiday';
-import { withStyles, IconButton, ListItemIcon, ListItem, ListItemText } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
+import IconButton from '@material-ui/core/IconButton';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import NextIcon from '@material-ui/icons/ArrowForward';
 import { ObjectIcon } from '../Main/components/Avatars';
@@ -64,7 +68,11 @@ class TimeTableGrid extends React.Component {
             let colSpan = this.props.currentTimetable.slice(day).filter((dayX) => dayX.holiday === dayObject.holiday).length;
             let date = this.props.date.clone().weekday(0).add(day - 1, 'days');
             return (
-                <TableCell key={day} rowSpan={Object.values(this.props.periods).length} style={{ padding: 0 }} colSpan={colSpan}>
+                <TableCell
+                    key={day}
+                    rowSpan={Object.values(this.props.periods).length}
+                    style={{ padding: 0 }}
+                    colSpan={colSpan}>
                     <Holiday holiday={dayObject.holiday} date={date.format("DD.MM")} />
                 </TableCell>
             );
@@ -122,7 +130,7 @@ class TimeTableGrid extends React.Component {
         );
 
         return (
-            <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }} ref="container">
+            <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
                 <div className={classes.tableToolbar + " " + classes['table-header']}>
                     {currentTimetable}
                     <IconButton onClick={this.props.setPreviousWeek}>

@@ -5,7 +5,7 @@ import indigo from '@material-ui/core/colors/indigo';
 import grey from '@material-ui/core/colors/grey';
 
 import { darken } from '@material-ui/core/styles/colorManipulator';
-import { withStyles } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
 import { styles } from './Fields';
 
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
@@ -53,10 +53,10 @@ const AbstractLesson = (props) => {
     if (substitutionInfo === 'instead-by') {
         if (small) {
             InsteadBy = (...fields) => (
-                <LessonWrapper>
+                <LessonContainer small>
                     <InsteadInformation>durch:</InsteadInformation>
                     {fields.map((Field, i) => <Field key={i} left />)}
-                </LessonWrapper>
+                </LessonContainer>
             );
         }
         else {
@@ -73,10 +73,10 @@ const AbstractLesson = (props) => {
     if (substitutionInfo === 'instead-of') {
         if (small) {
             InsteadOf = (...fields) => (
-                <LessonWrapper>
+                <LessonContainer small>
                     <InsteadInformation>statt:</InsteadInformation>
                     {fields.map((Field, i) => <Field key={i} left />)}
-                </LessonWrapper>
+                </LessonContainer>
             )
         } else {
             InsteadOf = (...fields) => (
@@ -123,12 +123,14 @@ const AbstractLesson = (props) => {
                     color={styles.backgroundColor}
                     flex={last}>
                     <ColorBar lineColor={colorBar} />
-                    <LessonWrapper>
+                    <LessonWrapper small>
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
-                        {substitutionType}
-                        <Field1 left />
-                        <Field2 />
-                        <Field3 />
+                        <LessonContainer small>
+                            {substitutionType}
+                            <Field1 left />
+                            <Field2 />
+                            <Field3 />
+                        </LessonContainer>
                         {InsteadBy && InsteadBy(...SubstitutingFields)}
                         {extraInfo}
                     </LessonWrapper>
@@ -137,49 +139,51 @@ const AbstractLesson = (props) => {
             );
         }
     } else
-    if (isOld) {
-        if (!small) {
-            const [Field1, Field2] = OldFields;
-            return (
-                <Lesson
-                    type={theme.palette.type}
-                    color={styles.backgroundColor}
-                    flex={!specificSubstitutionType || !multiple}>
-                    <ColorBar lineColor={colorBar} />
-                    <LessonWrapper>
+        if (isOld) {
+            if (!small) {
+                const [Field1, Field2] = OldFields;
+                return (
+                    <Lesson
+                        type={theme.palette.type}
+                        color={styles.backgroundColor}
+                        flex={!specificSubstitutionType || !multiple}>
+                        <ColorBar lineColor={colorBar} />
+                        <LessonWrapper>
+                            {InsteadOf && InsteadOf(...SubstitutingFields)}
+                            <LessonContainer>
+                                {substitutionType}
+                                <Field1 left />
+                                {Field2 && <Field2 left />}
+                            </LessonContainer>
+                            {InsteadBy && InsteadBy(...SubstitutingFields)}
+                            {extraInfo}
+                        </LessonWrapper>
+                    </Lesson>
+                );
+            } else {
+                const [Field1, Field2] = OldFields;
+                return (
+                    <Lesson
+                        type={theme.palette.type}
+                        color={styles.backgroundColor}
+                        flex={last}>
+                        <ColorBar lineColor={colorBar} />
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
-                        {substitutionType}
-                        <LessonContainer>
-                            <Field1 left />
-                            {Field2 && <Field2 left />}
-                        </LessonContainer>
-                        {InsteadBy && InsteadBy(...SubstitutingFields)}
-                        {extraInfo}
-                    </LessonWrapper>
-                </Lesson>
-            );
+                        <LessonWrapper small>
+                            <LessonContainer small>
+                                {substitutionType}
+                                <Field1 left />
+                                {Field2 && <Field2 left />}
+                            </LessonContainer>
+                            {InsteadBy && InsteadBy(...SubstitutingFields)}
+                            {extraInfo}
+                        </LessonWrapper>
+                    </Lesson>
+                )
+            }
         } else {
-            const [Field1, Field2] = OldFields;
-            return (
-                <Lesson
-                    type={theme.palette.type}
-                    color={styles.backgroundColor}
-                    flex={last}>
-                    <ColorBar lineColor={colorBar} />
-                    <LessonWrapper>
-                        {InsteadOf && InsteadOf(...SubstitutingFields)}
-                        {substitutionType}
-                        <Field1 left />
-                        {Field2 && <Field2 left />}
-                        {InsteadBy && InsteadBy(...SubstitutingFields)}
-                        {extraInfo}
-                    </LessonWrapper>
-                </Lesson>
-            )
+            return null;
         }
-    } else {
-        return null;
-    }
 };
 
 
@@ -221,14 +225,14 @@ const LessonContainer = styled.div`
     width: 100%;
     ${props => (props.small ? `
         flex-direction: column;  
-        padding-top: 0.25vmin;
-        padding-bottom: 0.25vmin;
+        // padding-top: 0.25vmin;
+        // padding-bottom: 0.25vmin;
     `: `
         flex-direction: row;
         align-items: center; 
         justify-content: space-between;
-        padding-top: 0.5vmin;
-        padding-bottom: 0.5vmin;
+        // padding-top: 0.5vmin;
+        // padding-bottom: 0.5vmin;
     `)}
 `;
 
@@ -238,6 +242,13 @@ const LessonWrapper = styled.div`
     flex-direction: column;
     overflow: hidden;
     justify-content: center;
+    ${props => (props.small ? `
+        padding-top: 0.25vmin;
+        padding-bottom: 0.25vmin;
+    `: `
+        padding-top: 0.5vmin;
+        padding-bottom: 0.5vmin;
+    `)}
 `;
 
 const Lesson = styled.div`

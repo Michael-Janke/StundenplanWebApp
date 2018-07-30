@@ -21,8 +21,8 @@ import { connectToServiceWorker } from '../../Common/firebase';
 import { setNotification, showError } from '../actions';
 import { authContext } from '../../Common/Adal/adalConfig';
 import UserAvatar from './UserAvatar';
-import { withTheme } from '@material-ui/core';
-import { Tooltip } from '@material-ui/core';
+import withTheme from '@material-ui/core/styles/withTheme';
+import Tooltip from '@material-ui/core/Tooltip';
 
 class UserSettingsMenu extends React.Component {
 
