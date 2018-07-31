@@ -5,6 +5,8 @@ import withTheme from '@material-ui/core/styles/withTheme';
 import TimeTableGrid from './timeTableGrid';
 import indigo from '@material-ui/core/colors/indigo';
 import { Paper } from "@material-ui/core";
+import Dates from "../Dates";
+
 var Substitutions;
 if (process.env.REACT_APP_MODE === 'tv') {
     Substitutions = require('./Substitutions').default;
@@ -15,17 +17,17 @@ class View extends Component {
         return (
             <Container>
                 <AppBar backgroundColor={indigo[600]} />
-                {/* {this.props.showDrawer && <Drawer>
+                <ShadowContainer>
                     <Dates />
-                </Drawer>} */}
+                </ShadowContainer>
                 {Substitutions ?
-                    <ShadowContainer>
+                    <ShadowContainer fullWidth>
                         <Substitutions addDays={0} />
                         <Substitutions addDays={1} />
                     </ShadowContainer>
                     : null}
 
-                <ShadowContainer>
+                <ShadowContainer fullWidth>
                     <TimeTableGrid small={this.props.small || Substitutions} />
                 </ShadowContainer>
             </Container>
@@ -44,7 +46,7 @@ const Container = styled.div`
 const ShadowContainer = styled(Paper)`
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: ${props => props.fullWidth ? '100%' : 'unset'};
     margin-top: 6px;
     margin-right: 1vw;
     margin-left: 1vw;

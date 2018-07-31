@@ -1,29 +1,72 @@
 import React, { Component } from "react";
-import styled from "styled-components";
+import Paper from '@material-ui/core/Paper';
+import withStyles from '@material-ui/core/styles/withStyles';
+import IconButton from '@material-ui/core/IconButton';
 import moment from 'moment';
-import { Paper, withStyles } from "@material-ui/core";
 import { connect } from 'react-redux';
 import MonthView from './month';
 import { getDates, deleteDate } from "./actions";
 import makeGetCurrentDates from "../Selector/dates";
 import AddDialog from "./Dialogs/addDialog";
-import List from '@material-ui/core/List';
+import DatePickerComponent from 'material-ui-pickers/DatePicker/DatePicker';
+import { classNames } from "../Common/const";
+import { setDate } from "../Main/actions";
+import AppointmentDay from "./day";
+import datePickerEnhancer from "./datePickerEnhancer";
+
+const DatePicker = datePickerEnhancer(DatePickerComponent);
 
 const styles = theme => ({
-    root: {
-        width: '100%',
-        maxWidth: 360,
-        backgroundColor: theme.palette.background.paper,
+    datePicker: {
+        overflow: 'hidden',
+        minWidth: 310,
+    },
+    dayWrapper: {
         position: 'relative',
-        overflow: 'auto',
-        height: 500,
     },
-    listSection: {
-        backgroundColor: 'inherit',
+    root: {
+        height: '100%',
     },
-    ul: {
-        backgroundColor: 'inherit',
-        padding: 0,
+    content: {
+        height: 'calc(100vh - 498px)',
+        overflowY: 'auto',
+        padding: theme.spacing.unit,
+    },
+    day: {
+        width: 36,
+        height: 36,
+        fontSize: theme.typography.caption.fontSize,
+        margin: '0 2px',
+        color: theme.palette.text.primary,
+    },
+    customDayHighlight: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: '2px',
+        right: '2px',
+        border: `1px solid ${theme.palette.secondary.main}`,
+        borderRadius: '50%',
+    },
+    nonCurrentMonthDay: {
+        color: theme.palette.text.disabled,
+    },
+    highlightNonCurrentMonthDay: {
+        color: '#676767',
+    },
+    highlight: {
+        background: theme.palette.primary.main,
+        color: theme.palette.common.white,
+    },
+    firstHighlight: {
+        extend: 'highlight',
+        borderTopLeftRadius: '50%',
+        borderBottomLeftRadius: '50%',
+    },
+    endHighlight: {
+        extend: 'highlight',
+        borderTopRightRadius: '50%',
+        borderBottomRightRadius: '50%',
     },
 });
 
@@ -33,44 +76,16 @@ class Dates extends Component {
         super(props);
         this.props.getDates();
         this.state = {
-            ...this.calculateStartDate(props.min, props.max),
-        }
+            date: moment(),
+        };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.min !== nextProps.min || this.props.max !== nextProps.max) {
-            this.setState(this.calculateStartDate(nextProps.min, nextProps.max));
-        }
-        // if (this.props.timetableDate.week() !== nextProps.timetableDate.week()) {
-        //     let index = Math.abs(this.state.min.diff(nextProps.timetableDate.clone().startOf('month'), 'month'));
-        //     this.refs[index].scrollToMe();
-        // }
-    }
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.props.min !== nextProps.min || this.props.max !== nextProps.max) {
-            return true;
-        }
-        // dont mess with timetableDate changing 
-        if (this.props.dates !== nextProps.dates) {
-            return true;
-        }
-        return false;
-    }
-
-    calculateStartDate(min, max) {
-        if (!min || !max) {
-            return {};
-        }
-        let minMoment = moment().year(min.year).week(min.week).startOf('month');
-        let maxMoment = moment().year(max.year).week(max.week).startOf('month');
-        return {
-            min: minMoment, max: maxMoment,
-            monthCount: Math.abs(minMoment.diff(maxMoment, 'month')),
-        }
+    handleInnerRefAddDialog = (r) => {
+        this.addDialog = r;
     }
 
     handleOnEdit = (appointment) => {
-        this.refs.addDialog.getWrappedInstance().open(appointment);
+        this.addDialog.getWrappedInstance().open(appointment);
     }
 
     handleOnDelete = (appointment) => {
@@ -78,7 +93,7 @@ class Dates extends Component {
     }
 
     handleOnAdd = () => {
-        this.refs.addDialog.getWrappedInstance().open();
+        this.addDialog.getWrappedInstance().open();
     }
 
     renderMonths() {
@@ -101,36 +116,63 @@ class Dates extends Component {
         return months;
     }
 
-    render() {
+
+    renderWrappedWeekDay = (date, selectedDate, dayInCurrentMonth) => {
         const { classes } = this.props;
+        const start = selectedDate.clone().startOf('week');
+        const end = selectedDate.clone().endOf('week');
+        const dayIsBetween = date.isBetween(start, end, 'day', "[]");
+        const isFirstDay = date.isSame(start, 'day');
+        const isLastDay = date.isSame(end, 'day');
+
+        const wrapperClassName = classNames({
+            [classes.highlight]: dayIsBetween,
+            [classes.firstHighlight]: isFirstDay,
+            [classes.endHighlight]: isLastDay,
+        });
+
+        const dayClassName = classNames(classes.day, {
+            [classes.nonCurrentMonthDay]: !dayInCurrentMonth,
+            [classes.highlightNonCurrentMonthDay]: !dayInCurrentMonth && dayIsBetween,
+        });
+
         return (
-            <Container>
-                <List className={classes.root} subheader={<li />}>
-                    {this.renderMonths()}
-                </List>
-                <AddDialog ref="addDialog" />
-            </Container>
+            <div className={wrapperClassName}>
+                <IconButton className={dayClassName}>
+                    <span> {date.format('D')} </span>
+                </IconButton>
+            </div>
+        );
+    }
+
+    render() {
+        const { classes, setDate, timetableDate } = this.props;
+        const dates = this.props.dates.filter(d => d.DATE.month() === timetableDate.month());
+
+        return (
+            <Paper className={classes.root}>
+                <div className={classes.datePicker}>
+                    <DatePicker
+                        date={timetableDate}
+                        onChange={setDate}
+                        renderDay={this.renderWrappedWeekDay}
+                    />
+                </div>
+                <div className={classes.content}>
+                    {dates.map((date, i) =>
+                        <AppointmentDay
+                            key={i}
+                            date={date.DATE}
+                            onEdit={this.props.isAdmin ? this.handleOnEdit : undefined}
+                            onDelete={this.props.isAdmin ? this.handleOnDelete : undefined}
+                            appointments={date.dates} />
+                    )}
+                </div>
+                <AddDialog innerRef={this.handleInnerRefAddDialog} />
+            </Paper>
         );
     }
 }
-const Content = styled.div`
-    overflow: auto;
-    position: relative;
-    max-height: calc(100vh - 200px);
-    padding-right: 8px;
-    z-index: 0;
-
-`;
-
-
-const Container = styled(Paper) `
-    margin-left: 1vw;
-    margin-right: 1vw;
-    margin-top: 20px;
-    padding: 8px 16px;
-    padding-right: 0px;
-    z-index: 1;
-`;
 
 const makeMapStateToProps = () => {
     const getCurrentDates = makeGetCurrentDates();
@@ -147,6 +189,7 @@ const makeMapStateToProps = () => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+    setDate: (date) => dispatch(setDate(date)),
     getDates: () => dispatch(getDates()),
     deleteDate: (date) => dispatch(deleteDate(date)),
 });

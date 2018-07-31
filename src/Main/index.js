@@ -23,9 +23,12 @@ import ReactInterval from 'react-interval';
 import { connectToServiceWorker } from '../Common/firebase';
 import PrintProvider from 'react-easy-print';
 import ResponsiveFontSize from '../Common/ResponsiveFontSize';
+import MomentUtils from 'material-ui-pickers/utils/moment-utils';
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+
 
 var AppBar = process.env.REACT_APP_MODE === 'tv'
-    ? require("./components/TvAppBar").default 
+    ? require("./components/TvAppBar").default
     : require("./components/AppBar").default;
 
 class Main extends Component {
@@ -68,26 +71,28 @@ class Main extends Component {
     render() {
         return (
             <MuiThemeProvider theme={this.state.theme}>
-                <ResponsiveFontSize>
-                    <div style={{
-                        flexDirection: 'column', display: 'flex', height: '100%',
-                        backgroundColor: this.state.theme.palette.background.default
-                    }}>
-                        <PrintProvider>
-                            <AppBar onThemeToggle={this.onThemeToggle} />
-                            <TimeTable />
-                            <Snackbar
-                                open={!!this.props.error}
-                                message={"Fehler: " + this.props.error}
-                                autoHideDuration={15000}
-                                contentStyle={{
-                                    color: 'red'
-                                }}
-                                onClose={this.props.clearErrors} />
-                            <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
-                        </PrintProvider>
-                    </div>
-                </ResponsiveFontSize>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <ResponsiveFontSize>
+                        <div style={{
+                            flexDirection: 'column', display: 'flex', height: '100%',
+                            backgroundColor: this.state.theme.palette.background.default
+                        }}>
+                            <PrintProvider>
+                                <AppBar onThemeToggle={this.onThemeToggle} />
+                                <TimeTable />
+                                <Snackbar
+                                    open={!!this.props.error}
+                                    message={"Fehler: " + this.props.error}
+                                    autoHideDuration={15000}
+                                    contentStyle={{
+                                        color: 'red'
+                                    }}
+                                    onClose={this.props.clearErrors} />
+                                <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
+                            </PrintProvider>
+                        </div>
+                    </ResponsiveFontSize>
+                </MuiPickersUtilsProvider>
             </MuiThemeProvider>
         );
     }

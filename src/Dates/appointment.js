@@ -5,10 +5,14 @@ import DeleteIcon from '@material-ui/icons/DeleteForever';
 import IconButton from '@material-ui/core/IconButton';
 
 const styles = {
+    button: {
+        height: 24,
+        width: 24,
+        color: 'inherit',
+    },
     icon: {
         height: 16,
-        width: null,
-        color: 'inherit',
+        width: 16,
     }
 }
 function Appointment({ TEXT, SUBTEXT, onEdit, onDelete }) {
@@ -16,11 +20,11 @@ function Appointment({ TEXT, SUBTEXT, onEdit, onDelete }) {
         <Container>
             {onEdit &&
                 <Toolbar>
-                    <IconButton onClick={onEdit} style={styles.icon}>
-                        <EditIcon />
+                    <IconButton onClick={onEdit} style={styles.button}>
+                        <EditIcon style={styles.icon}/>
                     </IconButton>
-                    <IconButton onClick={onDelete}>
-                        <DeleteIcon style={styles.icon} />
+                    <IconButton onClick={onDelete} style={styles.button}>
+                        <DeleteIcon style={styles.icon}/>
                     </IconButton>
                 </Toolbar>
             }
@@ -55,7 +59,6 @@ const Toolbar = styled.div`
 const Header = styled.div`
     font-size: 70%;
     font-weight: 600;
-    margin-bottom: 1vmin;
 `;
 const Content = styled.div`
     font-size: 60%;
