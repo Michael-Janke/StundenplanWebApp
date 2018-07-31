@@ -1,12 +1,23 @@
 import React from 'react';
-import { withStyles, IconButton, Input, Zoom, ClickAwayListener, ListItemIcon, List, ListItem, ListItemText, ListItemSecondaryAction } from '@material-ui/core';
+
+import withStyles from '@material-ui/core/styles/withStyles';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import Zoom from '@material-ui/core/Zoom';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import indigo from '@material-ui/core/colors/indigo';
+import SearchResult from './SearchResult';
 
+import { classNames } from '../../Common/const';
 import { connect } from 'react-redux';
-import { setTimeTable, loadAvatars } from '../actions';
-import { checkAvatars, ObjectIcon } from './Avatars';
+import { setTimeTable } from '../actions';
+import { ObjectIcon } from './Avatars';
 
 function fuzzysearch(needle, haystack) {
     needle = needle.toLowerCase();
@@ -32,7 +43,7 @@ function fuzzysearch(needle, haystack) {
 }
 
 
-class Search extends React.Component {
+class Search extends React.PureComponent {
     state = { open: false, nonEmpty: false, value: "" };
 
     handleOpen = () => {
@@ -81,18 +92,26 @@ class Search extends React.Component {
             this.setState({ open: false, value: "", nonEmpty: false });
         }
     }
+    handleKeyboardInput = (transform) => {
+        this.handleInput({ target: { value: transform(this.state.value) } });
+    }
+
     render() {
-        const { classes, shrinkChildren, alwaysOpen } = this.props;
+        const { classes, shrinkChildren, alwaysOpen, Keyboard } = this.props;
         const { open, nonEmpty } = this.state;
-        const isOpen = alwaysOpen || open;
+        const isOpen = alwaysOpen || open || this.props.open;
         return (
             <div className={classes.root}>
-                <ClickAwayListener onClickAway={this.handleClickAway}>
+                <ClickAwayListener mouseEvent="onClick" onClickAway={this.handleClickAway}>
                     <div className={classes.searchbarWrapper}>
-                        <div className={classes.searchbar +
-                            (!isOpen ? " " + classes.searchbarClosed : "")}>
-                            <div className={classes.inputField +
-                                (isOpen ? " " + classes.inputFieldOpen : "")}>
+                        <div className={classNames(
+                            classes.searchbar,
+                            !isOpen && classes.searchbarClosed
+                        )}>
+                            <div className={classNames(
+                                classes.inputField,
+                                isOpen && classes.inputFieldOpen
+                            )}>
                                 <Input
                                     inputRef={this.handleInputRef}
                                     placeholder="Suchen"
@@ -105,29 +124,49 @@ class Search extends React.Component {
                                     onKeyUp={this.handleKeyUp}
                                 />
                             </div>
-                            <IconButton onClick={this.handleOpen} className={
-                                classes.icon
-                                + " " + classes.searchIcon
-                                + (nonEmpty ? " " + classes.iconHidden : "")
-                                + (!isOpen ? " " + classes.searchIconActive : "")
-                            }>
+                            <IconButton onClick={this.handleOpen}
+                                className={classNames(
+                                    classes.icon,
+                                    classes.searchIcon,
+                                    nonEmpty && classes.iconHidden,
+                                    !isOpen && classes.searchIconActive
+                                )}>
                                 <SearchIcon />
                             </IconButton>
-                            <IconButton onClick={this.handleClear} className={
-                                classes.icon
-                                + " " + classes.closeIcon
-                                + (!nonEmpty ? " " + classes.iconHidden : "")
-                            }>
+                            <IconButton onClick={this.handleClear}
+                                className={classNames(
+                                    classes.icon,
+                                    classes.closeIcon,
+                                    !nonEmpty && classes.iconHidden
+                                )}>
                                 <ClearIcon />
                             </IconButton>
                         </div>
-                        <div className={classes.dropDown + (!open ? " " + classes.dropDownClosed : "")}>
+                        <div
+                            className={classNames(
+                                classes.dropDownContainer,
+                                !open && classes.dropDownContainerClosed
+                            )}>
+                            {Keyboard &&
+                                <Keyboard
+                                    className={classNames(
+                                        classes.dropDown,
+                                        classes.keyboard,
+                                        !open && classes.dropDownClosed
+                                    )}
+                                    onInput={this.handleKeyboardInput}>
+                                </Keyboard>
+                            }
                             {this.state.result && !!this.state.result.length &&
-                                <List
-                                    className={classes.list}
-                                    component="div">
-                                    {this.state.result
-                                        .map((object, i) =>
+                                <SearchResult
+                                    results={this.state.result}
+                                    className={classNames(
+                                        classes.dropDown,
+                                        classes.list,
+                                        !open && classes.dropDownClosed
+                                    )}>
+                                    {(result, avatars) => (
+                                        result.map((object, i) =>
                                             (
                                                 <ListItem
                                                     key={object.id + object.type}
@@ -138,7 +177,7 @@ class Search extends React.Component {
                                                     <ListItemIcon>
                                                         <ObjectIcon
                                                             type={object.type}
-                                                            avatars={object.upn && this.props.avatars}
+                                                            avatars={object.upn && avatars}
                                                             upn={object.upn}
                                                         />
                                                     </ListItemIcon>
@@ -150,14 +189,18 @@ class Search extends React.Component {
                                                     </ListItemSecondaryAction>
                                                 </ListItem>
                                             )
-                                        )}
-                                </List>}
+                                        )
+                                    )}
+                                </SearchResult>
+                            }
                         </div>
                     </div>
                 </ClickAwayListener>
 
-                <div className={classes.children
-                    + (isOpen && shrinkChildren ? " " + classes.childrenOpen : "")}>
+                <div className={classNames(
+                    classes.children,
+                    isOpen && shrinkChildren && classes.childrenOpen
+                )}>
                     {React.Children.map(this.props.children, child => {
                         if (!child) return;
                         return (
@@ -175,18 +218,33 @@ class Search extends React.Component {
 }
 
 Search.getDerivedStateFromProps = (props, state) => {
-    console.log(state);
-    const { masterdata, avatars } = props;
+    const { masterdata } = props;
     const { value } = state;
+    const sortName = (o1, o2) => (o1.LASTNAME || o1.NAME).localeCompare(o2.LASTNAME || o2.NAME);
+
     let data = [
-        ...Object.values(masterdata.Class).map((entry) => ({
+        {
+            searchString: "Freie Räume",
+            type: "all",
+            id: -1,
+            text: "Freie Räume",
+            secondary: "Raum",
+        },
+        ...Object.values(masterdata.Class).sort(sortName).map((entry) => ({
             searchString: "Klasse " + entry.NAME,
             type: "class",
             id: entry.CLASS_ID,
             text: entry.NAME,
             secondary: "Klasse",
         })),
-        ...Object.values(masterdata.Teacher).map((entry) => ({
+        ...Object.values(masterdata.Room).sort(sortName).map((entry) => ({
+            searchString: "Raum " + entry.NAME,
+            type: "room",
+            id: entry.ROOM_ID,
+            text: entry.NAME,
+            secondary: "Klasse",
+        })),
+        ...Object.values(masterdata.Teacher).sort(sortName).map((entry) => ({
             searchString: `Lehrer ${entry.FIRSTNAME} ${entry.LASTNAME}`,
             upn: entry.UPN,
             type: "teacher",
@@ -194,7 +252,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             text: entry.FIRSTNAME[0] + '. ' + entry.LASTNAME,
             secondary: "Lehrer",
         })),
-        ...Object.values(masterdata.Student).map((entry) => ({
+        ...Object.values(masterdata.Student).sort(sortName).map((entry) => ({
             searchString: `Schüler ${entry.FIRSTNAME} ${entry.LASTNAME}`,
             upn: entry.UPN,
             type: "student",
@@ -202,23 +260,12 @@ Search.getDerivedStateFromProps = (props, state) => {
             text: entry.FIRSTNAME + " " + entry.LASTNAME,
             secondary: "Schüler",
         })),
-        ...Object.values(masterdata.Room).map((entry) => ({
-            searchString: "Raum " + entry.NAME,
-            type: "room",
-            id: entry.ROOM_ID,
-            text: entry.NAME,
-            secondary: "Klasse",
-        })),
     ];
+
     let filtered;
     filtered = data
-        .filter(obj => fuzzysearch(value, obj.searchString))
-        .slice(0, 20);
-    checkAvatars(
-        filtered.map((e) => e.upn),
-        avatars,
-        props.loadAvatars
-    );
+        .filter(obj => fuzzysearch(value, obj.searchString));
+
     return { data, result: filtered };
 }
 
@@ -232,8 +279,7 @@ const styles = theme => ({
     listItemSelected: {
         backgroundColor: 'rgba(0, 0, 0, 0.08)'
     },
-    list: {
-    },
+
     iconHidden: {
         transform: 'scale(0,0)',
     },
@@ -273,28 +319,49 @@ const styles = theme => ({
         display: 'flex',
         justifyContent: 'flex-end',
     },
-    dropDown: {
-        backgroundColor: theme.palette.background.paper,
+    dropDownContainer: {
         position: 'absolute',
         width: '100%',
+<<<<<<< HEAD
+=======
+        display: 'flex',
+        flexDirection: 'column',
+>>>>>>> tv
         maxHeight: 'calc(100vh - 64px - 8px)',
         opacity: 1,
+
+        transition: theme.transitions.create(['opacity']),
+        WebkitTransition: theme.transitions.create(['opacity']),
+    },
+    dropDownContainerClosed: {
+        opacity: 0,
+        pointerEvents: 'none',
+
+    },
+    dropDown: {
         marginTop: theme.spacing.unit,
         boxShadow: theme.shadows[4],
         borderRadius: 2,
         transition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
         WebkitTransition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
         willChange: 'opacity, transform',
-        overflowY: 'auto',
         transform: 'translate3d(0,0,0)',
     },
     dropDownClosed: {
         // overflow: 'hidden',
         // maxHeight: '0%',
-        pointerEvents: 'none',
-        opacity: 0,
         boxShadow: 'none',
         transform: 'translate3d(0,-8px,0)',
+    },
+    list: {
+        backgroundColor: theme.palette.background.paper,
+        overflowY: 'auto',
+        // height: '100%',
+        flex: 1,
+    },
+    keyboard: {
+        backgroundColor: theme.palette.background.paper,
+        height: '100%',
     },
     searchbarClosed: {
         backgroundSize: '100%',
@@ -303,6 +370,7 @@ const styles = theme => ({
     },
     nativeInput: {
         width: '100%',
+        color: 'rgba(0, 0, 0, 0.87)',
         // remove clear icon on edge
         '&::-ms-clear': {
             display: 'none',
@@ -338,12 +406,10 @@ const styles = theme => ({
 
 const mapStateToProps = (state) => ({
     masterdata: state.timetable.masterdata,
-    avatars: state.avatars,
 });
 
 const mapDispatchToProps = dispatch => ({
     setTimetable: (object) => dispatch(setTimeTable(object.type, object.id)),
-    loadAvatars: (upns) => { dispatch(loadAvatars(upns)); },
 });
 
 

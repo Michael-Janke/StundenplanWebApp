@@ -13,28 +13,34 @@ const TeachersContainer = type => teachers => ({ small, left, themeClasses }) =>
     if (type === 'new') {
         const NormalTeacher = !!teachers.old ? NewTeacher : Teacher;
         return teachers.new.map((teacher, i) =>
-            <NormalTeacher className={themeClasses.teacher[!!teachers.old ? 'teacher-new' : 'teacher-normal']} key={i}>
+            <NormalTeacher
+                left={left}
+                className={themeClasses[!!teachers.old ? 'teacher-new' : 'teacher-normal']} key={i}>
                 {teacherToName(teacher, small)}
             </NormalTeacher>
         )
     }
     if (type === 'old') {
         return teachers.old.map((teacher, i) =>
-            <OldTeacher className={themeClasses['teacher-old']} key={"o" + i}>
+            <OldTeacher
+                left={left}
+                className={themeClasses['teacher-old']} key={"o" + i}>
                 {teacherToName(teacher, small)}
             </OldTeacher>
         );
     }
     if (type === 'instead-of' || type === 'instead-by') {
         return teachers.substitution.map((teacher, i) =>
-            <Teacher className={themeClasses.teacher[!!teachers.old ? 'teacher-new' : 'teacher-normal']} key={i}>
+            <Teacher
+                left={left}
+                className={themeClasses[!!teachers.old ? 'teacher-new' : 'teacher-normal']} key={i}>
                 {teacherToName(teacher, small)}
             </Teacher>
         );
     }
 }
 
-export const teacherStyles = () => ({
+export const teacherStyles = theme => ({
     'teacher': {
 
     }
@@ -60,8 +66,13 @@ const Teacher = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+<<<<<<< HEAD
     width: 100%;
     text-align: right;
+=======
+    // width: 100%;
+    // text-align: ${props => props.left ? 'left' : 'right'};
+>>>>>>> tv
 `;
 
 const NewTeacher = styled(Teacher) `

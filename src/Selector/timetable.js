@@ -30,24 +30,55 @@ const getCurrentSubstitutionsSelector = createSelector(
     (substitutions, type, id, week, year) => substitutions[getSubstitutionsCacheKey({ type, id, week, year })]
 );
 
+function freeRooms(masterdata, day, periods) {
+    if (day.holiday) {
+        return;
+    }
+    for (let y = 0; y < periods.length; y++) {
+        const period = day.periods[y];
+        if (!period) {
+            continue;
+        }
+        const lessons = period.lessons.map(lesson => lesson.room);
+        delete period.lessons;
+        const rooms = Object.values(masterdata.Room);
+        period.freeRooms = lessons.reduce((prev, current) => {
+            if (current.new) {
+                const index = prev.findIndex(room => room.ROOM_ID === current.new.ROOM_ID);
+                if (index !== -1) {
+                    prev.splice(index, 1);
+                }
+            }
+            return prev;
+        }, rooms);
+    }
+}
 
-
+export function translateDay(masterdata, timetable, x, substitutions, periods, type, id, date) {
+    let day = readTimetable(timetable, x, periods, date);
+    if (substitutions) {
+        joinSubstitutions(day, substitutions.substitutions[x], type, id);
+    }
+    if (type !== 'all') {
+        skipDuplications(day, periods);
+    }
+    translatePeriods(masterdata, day, periods, id, type);
+    if (type === 'all') {
+        freeRooms(masterdata, day, periods);
+    }
+    return day;
+}
 
 function translateTimetable(masterdata, timetable, substitutions, periods, type, id, date) {
     if (!timetable || !masterdata || !substitutions) return null;
     periods = Object.values(periods);
     let data = [];
     for (let x = 0; x < WEEKDAY_NAMES.length; x++) {
-        let day = readTimetable(timetable, x, periods, date);
-        if (substitutions) {
-            joinSubstitutions(day, substitutions.substitutions[x], type, id);
-        }
-        skipDuplications(day, periods);
-        translatePeriods(masterdata, day, periods, id, type);
-        data[x] = day;
+        data[x] = translateDay(masterdata, timetable, x, substitutions, periods, type, id, date);
     }
     return data;
 }
+
 function joinSubstitutions(day, subOnDay, type, id) {
     if (!subOnDay) return;
     if (subOnDay.holiday) {
@@ -58,19 +89,18 @@ function joinSubstitutions(day, subOnDay, type, id) {
             let period = day.periods[substitution.PERIOD - 1];
             if (!period) return;
             let lessons = period.lessons;
-            if (lessons) {
-                for (let i = 0; i < lessons.length; i++) {
-                    let lesson = lessons[i];
-                    if (lesson.TIMETABLE_ID === substitution.TIMETABLE_ID) {
-                        lessons[i] = specifySubstitutionType(id, type, substitution);
-                        return;
-                    }
-                }
-            }
+            const lesson = specifySubstitutionType(id, type, substitution);
             if (!lessons) {
                 period.lessons = lessons = [];
             }
-            lessons.push(specifySubstitutionType(id, type, substitution));
+            const index = lessons.findIndex((lesson) => lesson.TIMETABLE_ID === substitution.TIMETABLE_ID);
+            if (index !== -1) {
+                lessons[index] = lesson;
+                period.lessons = lessons.filter(c => c);
+
+            } else if (lesson) {
+                lessons.push(lesson);
+            }
         });
     }
     if (subOnDay.absences) {
@@ -108,11 +138,11 @@ function comparePeriod(current, next) {
     return next.length === 0;
 }
 function compareLesson(p1, p2) {
-    if (p1.TEACHER_ID !== p2.TEACHER_ID
+    if (!equalArrays(p1.TEACHER_IDS, p2.TEACHER_IDS)
         || p1.SUBJECT_ID !== p2.SUBJECT_ID
         || p1.ROOM_ID !== p2.ROOM_ID)
         return false;
-    if (p1.TEACHER_ID_OLD !== p2.TEACHER_ID_OLD
+    if (!equalArrays(p1.TEACHER_IDS_OLD, p2.TEACHER_IDS_OLD)
         || p1.SUBJECT_ID_OLD !== p2.SUBJECT_ID_OLD
         || p1.ROOM_ID_OLD !== p2.ROOM_ID_OLD) {
         return false;
@@ -128,7 +158,7 @@ function compareLesson(p1, p2) {
     return true;
 }
 
-function skipDuplications(day, periods) {
+export function skipDuplications(day, periods) {
     if (!day || !day.periods || day.holiday) {
         return;
     }
@@ -150,18 +180,6 @@ function skipDuplications(day, periods) {
 function skipTeacherDuplications(lessons) {
     for (let i = 0; i < lessons.length; i++) {
         let last = lessons[i] = { ...lessons[i] };
-        last.TEACHER_IDS = [last.TEACHER_ID];
-        last.TEACHER_IDS_OLD = [];
-        last.TEACHER_IDS_SUBSTITUTING = [];
-        if (last.TEACHER_ID_SUBSTITUTING) {
-            last.TEACHER_IDS_SUBSTITUTING.push(last.TEACHER_ID_SUBSTITUTING);
-        }
-        if (last.TEACHER_ID_OLD) {
-            last.TEACHER_IDS_OLD.push(last.TEACHER_ID_OLD);
-        }
-        delete last.TEACHER_ID;
-        delete last.TEACHER_ID_OLD;
-        delete last.TEACHER_ID_SUBSTITUTING;
         for (let j = i + 1; j < lessons.length; j++) {
             let lesson = lessons[j];
             if (lesson.ROOM_ID === last.ROOM_ID
@@ -169,18 +187,22 @@ function skipTeacherDuplications(lessons) {
                 && lesson.ROOM_ID_OLD === last.ROOM_ID_OLD
                 && lesson.SUBJECT_ID_OLD === last.SUBJECT_ID_OLD
                 && lesson.absence === last.absence
-                && equalArrays(lesson.CLASS_IDS, last.CLASS_IDS)
+                // && equalArrays(lesson.CLASS_IDS, last.CLASS_IDS)
                 // && lesson.substitutionType === last.substitutionType
             ) {
-                if (!last.TEACHER_IDS.includes(lesson.TEACHER_ID)) {
-                    last.TEACHER_IDS.push(lesson.TEACHER_ID);
-                }
-                if (lesson.TEACHER_ID_OLD && !last.TEACHER_IDS_OLD.includes(lesson.TEACHER_ID_OLD)) {
-                    last.TEACHER_IDS_OLD.push(lesson.TEACHER_ID_OLD);
-                }
-                if (lesson.TEACHER_ID_SUBSTITUTING && !last.TEACHER_IDS_SUBSTITUTING.includes(lesson.TEACHER_ID_SUBSTITUTING)) {
-                    last.TEACHER_IDS_SUBSTITUTING.push(lesson.TEACHER_ID_SUBSTITUTING);
-                }
+                if (lesson.TEACHER_IDS)
+                    last.TEACHER_IDS ? lesson.TEACHER_IDS.forEach(item =>
+                        last.TEACHER_IDS.includes(item) ? null : last.TEACHER_IDS.push(item))
+                        : last.TEACHER_IDS = lesson.TEACHER_IDS;
+                if (lesson.TEACHER_IDS_OLD)
+                    last.TEACHER_IDS_OLD ? lesson.TEACHER_IDS_OLD.forEach(item =>
+                        last.TEACHER_IDS_OLD.includes(item) ? null : last.TEACHER_IDS_OLD.push(item))
+                        : last.TEACHER_IDS_OLD = lesson.TEACHER_IDS_OLD;
+                if (lesson.TEACHER_IDS_SUBSTITUTING)
+                    last.TEACHER_IDS_SUBSTITUTING ? lesson.TEACHER_IDS_SUBSTITUTING.forEach(item =>
+                        last.TEACHER_IDS_SUBSTITUTING.includes(item) ? null : last.TEACHER_IDS_SUBSTITUTING.push(item))
+                        : last.TEACHER_IDS_SUBSTITUTING = lesson.TEACHER_IDS_SUBSTITUTING;
+
                 combineSubstitutions(last, lesson);
                 lessons.splice(j, 1);
             }
@@ -206,7 +228,11 @@ function readTimetable(_data, day, periods, date) {
     for (let y = 0; y < periods.length; y++) {
         let lessons = (_data[day] || [])[y + 1] || [];
         if (lessons) {
-            lessons = lessons.filter((lesson) =>
+            lessons = lessons.map((lesson) => ({
+                ...lesson,
+                TEACHER_IDS: lesson.TEACHER_ID ? [lesson.TEACHER_ID] : [],
+                TEACHER_ID: undefined,
+            })).filter((lesson) =>
                 lesson.DATE_FROM
                 && lesson.DATE_TO
                 && moment(lesson.DATE_FROM.date).isSameOrBefore(timetableDate)
@@ -218,13 +244,13 @@ function readTimetable(_data, day, periods, date) {
     return { periods: data };
 }
 
-function translatePeriods(masterdata, day, periods, id, type) {
+export function translatePeriods(masterdata, day, periods) {
     if (day.holiday) {
         return day;
     }
     for (let y = 0; y < periods.length; y++) {
         if (day.periods[y] && day.periods[y].lessons) {
-            translate(masterdata, day.periods[y], id, type);
+            translate(masterdata, day.periods[y]);
         }
     }
 }
@@ -232,6 +258,9 @@ function translatePeriods(masterdata, day, periods, id, type) {
 function equalArrays(array1, array2) {
     if (array1 === array2) {
         return true;
+    }
+    if (!array1 || !array2) {
+        return false;
     }
     if (array1.length !== array2.length) {
         return false;
@@ -248,8 +277,8 @@ function equalArrays(array1, array2) {
 
 export function equalPeriods(period1, period2) {
 
-    if (
-        ((!!period1.TIMETABLE_ID) ? (period1.TIMETABLE_ID === period2.TIMETABLE_ID && period1.absence === period2.absence) : false)
+    if (((!!period1.TIMETABLE_ID)
+        ? (period1.TIMETABLE_ID === period2.TIMETABLE_ID && period1.absence === period2.absence) : false)
         || (period1.absence === period2.absence
             && period1.absenceOnly === period2.absenceOnly
             && period1.substitutionText === period2.substitutionText
@@ -267,10 +296,13 @@ export function equalPeriods(period1, period2) {
     }
     return false;
 }
+function translate(masterdata, period) {
+    if (!period) return null;
+    period.lessons = period.lessons.map(translateLesson.bind(null, masterdata));
+}
 
-function translate(masterdata, period, id, type) {
-    if (!period) return period;
-    period.lessons = period.lessons.map((lesson) => ({
+export function translateLesson(masterdata, lesson) {
+    return {
         reference: lesson,
         absenceOnly: lesson.absenceOnly,
         isOld: lesson.isOld,
@@ -300,8 +332,7 @@ function translate(masterdata, period, id, type) {
             old: lesson.CLASS_IDS_OLD && lesson.CLASS_IDS_OLD.map((c) => masterdata.Class[c]),
             substitution: lesson.CLASS_IDS_SUBSTITUTING && lesson.CLASS_IDS_SUBSTITUTING.map((c) => masterdata.Class[c]),
         }
-    }));
-    return period;
+    }
 }
 
 const makeGetCurrentTimetable = () => {

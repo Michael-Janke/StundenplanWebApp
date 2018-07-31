@@ -123,22 +123,11 @@ export default function timetableReducer(state = initialState, action = {}) {
                 },
             }
         case "COUNTER_CHANGED":
-            let { currentTimeTableId, currentTimeTableType, timetableDate } = state;
-            let year = moment(timetableDate).year();
-            let week = moment(timetableDate).week();
-            let substitutionsKey = getSubstitutionsCacheKey({ id: currentTimeTableId, type: currentTimeTableType, year, week });
-            let timetableKey = getTimetableCacheKey({ id: currentTimeTableId, type: currentTimeTableType });
+            // remove everything
             return {
                 ...state,
-                ...(action.payload && {
-                    substitutions: {
-                        [substitutionsKey]: state.substitutions[substitutionsKey]
-                    },
-                    timetables: {
-                        [timetableKey]: state.timetables[timetableKey]
-                    },
-                }),
-                counterChanged: action.payload,
+                substitutions: {},
+                timetables: {},
             };
         default:
             return state;

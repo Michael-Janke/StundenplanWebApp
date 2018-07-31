@@ -1,31 +1,39 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Dialog from '@material-ui/core/Dialog';
-import { Button, TextField } from '@material-ui/core';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import withStyles from '@material-ui/core/styles/withStyles';
+import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Create';
 import grey from '@material-ui/core/colors/grey';
-import purple from '@material-ui/core/colors/purple';
 import MenuItem from '@material-ui/core/MenuItem';
 import Day from '../day';
 import { addDate, editDate } from '../actions';
 import moment from 'moment';
+import SelectField from '@material-ui/core/Select';
+import DatePickerComponent from 'material-ui-pickers/DatePicker';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import datePickerEnhancer from '../datePickerEnhancer';
 
-let DateTimeFormat;
+const DatePicker = datePickerEnhancer(DatePickerComponent);
 
-/**
- * Use the native Intl.DateTimeFormat if available, or a polyfill if not.
- */
-// if (areIntlLocalesSupported(['fr', 'fa-IR'])) {
-DateTimeFormat = global.Intl.DateTimeFormat;
-// } else {
-//     const IntlPolyfill = require('intl');
-//     DateTimeFormat = IntlPolyfill.DateTimeFormat;
-//     require('intl/locale-data/jsonp/fr');
-//     require('intl/locale-data/jsonp/fa-IR');
-// }
-
+const styles = theme => ({
+    root: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 120,
+    },
+});
 
 export class AddDialog extends Component {
     constructor(props) {
@@ -47,8 +55,8 @@ export class AddDialog extends Component {
             ...(appointment && {
                 appointment: {
                     ...appointment,
-                    DATE_FROM: new Date(appointment.DATE_FROM.date),
-                    DATE_TO: new Date(appointment.DATE_TO.date)
+                    DATE_FROM: moment(appointment.DATE_FROM.date),
+                    DATE_TO: moment(appointment.DATE_TO.date)
                 }
             })
         });
@@ -67,10 +75,11 @@ export class AddDialog extends Component {
         } else {
             this.props.addDate(appointment);
         }
+        this.handleClose();
     }
 
-    handleTypeInputChange = (event, index, value) => {
-        this.setState(prevState => ({ appointment: { ...prevState.appointment, TYPE: value } }));
+    handleTypeInputChange = (event) => {
+        this.setState(prevState => ({ appointment: { ...prevState.appointment, TYPE: event.target.value } }));
     }
 
     handleSubTextChange = (event) => {
@@ -83,125 +92,131 @@ export class AddDialog extends Component {
         this.setState(prevState => ({ appointment: { ...prevState.appointment, TEXT: value } }));
     }
 
-    handleFromDateChange = (event, date) => {
-        this.setState(prevState => ({ appointment: { ...prevState.appointment, DATE_FROM: date } }));
+    handleFromDateChange = (date) => {
+        this.setState(prevState => ({ appointment: { ...prevState.appointment, DATE_FROM: date, DATE_TO: date } }));
     }
 
-    handleToDateChange = (event, date) => {
+    handleToDateChange = (date) => {
         this.setState(prevState => ({ appointment: { ...prevState.appointment, DATE_TO: date } }));
     }
 
     render() {
         const { edit } = this.state;
-
-        const actions = [
-            <Button
-                label="Abbrechen"
-                primary={true}
-                onClick={this.handleClose}
-            />,
-            <Button
-                label="Absenden"
-                primary={true}
-                keyboardFocused={true}
-                onClick={this.handleAddAppointment}
-            />,
-        ];
-
-        const customContentStyle = {
-        };
+        const { classes } = this.props;
         const Icon = edit ? EditIcon : AddIcon;
 
         return (
             <Dialog
-                title={<Title><Icon color={grey[400]} style={{ marginRight: '1vmin' }} />{"Termin " + (edit ? "editieren" : "hinzufügen")}</Title>}
-                actions={actions}
-                modal={false}
-                contentStyle={customContentStyle}
                 open={this.state.open}
-                onRequestClose={this.handleClose}
+                onClose={this.handleClose}
             >
-                <Container>
-                    <Form>
-                        {/* <DatePicker
-                            container="inline"
-                            hintText="Von Datum"
-                            fullWidth
-                            locale="de"
-                            DateTimeFormat={DateTimeFormat}
-                            errorText={!this.state.appointment.DATE_FROM && "Bitte wähle einen Zeitraum aus"}
-                            value={this.state.appointment.DATE_FROM}
-                            onChange={this.handleFromDateChange}
-                            errorStyle={{ color: purple[600] }}
-                        />
-                        <DatePicker
-                            container="inline"
-                            hintText="Zu Datum"
-                            fullWidth
-                            locale="de"
-                            DateTimeFormat={DateTimeFormat}
-                            errorText={!this.state.appointment.DATE_TO && "Bitte wähle einen Zeitraum aus"}
-                            value={this.state.appointment.DATE_TO}
-                            onChange={this.handleToDateChange}
-                            errorStyle={{ color: purple[600] }}
-                        /> */}
-                        {/* <SelectField
-                            errorText={!this.state.appointment.TYPE && "Bitte wähle einen Typ aus"}
-                            floatingLabelText="Typ"
-                            fullWidth
-                            name="select"
-                            ref="typeInput"
-                            errorStyle={{ color: purple[600] }}
-                            value={this.state.appointment.TYPE}
-                            onChange={this.handleTypeInputChange}
-                        >
-                            <MenuItem value={"NORMAL"} primaryText="Normal" />
-                            <MenuItem value={"EXKURSION"} primaryText="Exkursion" />
-                        </SelectField> */}
-                        <TextField
-                            name="text"
-                            errorText={!this.state.appointment.TEXT && "Bitte schreibe eine Nachricht"}
-                            fullWidth
-                            floatingLabelText="Titel"
-                            value={this.state.appointment.TEXT}
-                            onChange={this.handleTextChange}
-                            errorStyle={{ color: purple[600] }}
-                            hintStyle={{ color: purple[600] }}
-                            floatingLabelFocusStyle={{ color: purple[600] }}
-                        />
-                        <TextField
-                            name="subText"
-                            errorText={!this.state.appointment.SUBTEXT && "Bitte schreibe eine Nachricht"}
-                            fullWidth
-                            multiLine
-                            floatingLabelText="Text"
-                            rows={4}
-                            value={this.state.appointment.SUBTEXT}
-                            onChange={this.handleSubTextChange}
-                            errorStyle={{ color: purple[600] }}
-                            hintStyle={{ color: purple[600] }}
-                            floatingLabelFocusStyle={{ color: purple[600] }}
-                        />
-                    </Form>
-                    <Preview>
-                        <PreviewHeader>
-                            Vorschau
-                        </PreviewHeader>
-                        <PreviewContainer>
-                            <Day date={moment(this.state.appointment.DATE_FROM)}
-                                appointments={[this.state.appointment]} />
-                        </PreviewContainer>
-                    </Preview>
-                </Container>
+                <DialogTitle>
+                    <Icon color={grey[400]} style={{ marginRight: '1vmin' }} />
+                    {"Termin " + (edit ? "editieren" : "hinzufügen")}
+                </DialogTitle>
+                <DialogContent>
+                    <Container>
+                        <Form>
+                            <FormControl className={classes.formControl}
+                                error={!this.state.appointment.DATE_FROM}>
+                                <DatePicker
+                                    autoOk
+                                    label="von Datum"
+                                    value={this.state.appointment.DATE_FROM}
+                                    onChange={this.handleFromDateChange}
+                                    format="DD.MM.YYYY"
+                                    keyboard
+                                    mask={value => (value ?
+                                        [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/] : [])}
+                                />
+                            </FormControl>
+                            <FormControl className={classes.formControl}
+                                error={!this.state.appointment.DATE_TO}>
+                                <DatePicker
+                                    autoOk
+                                    clearable
+                                    label="bis Datum"
+                                    value={this.state.appointment.DATE_TO}
+                                    onChange={this.handleToDateChange}
+                                    format="DD.MM.YYYY"
+                                    keyboard
+                                    mask={value => (value ?
+                                        [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/] : [])}
+                                />
+                            </FormControl>
+                            <FormControl className={classes.formControl} error={!this.state.appointment.TYPE}>
+                                <InputLabel htmlFor="type">Typ</InputLabel>
+                                <SelectField
+                                    inputProps={{ name: 'type', id: 'type' }}
+                                    fullWidth
+                                    value={this.state.appointment.TYPE}
+                                    onChange={this.handleTypeInputChange}
+                                >
+                                    <MenuItem value={"NORMAL"}>
+                                        Normal
+                                    </MenuItem>
+                                    <MenuItem value={"EXKURSION"}>
+                                        Exkursion
+                                    </MenuItem>
+                                </SelectField>
+                                <FormHelperText>Bitte wähle einen Typ aus</FormHelperText>
+                            </FormControl>
+                            <FormControl className={classes.formControl} error={!this.state.appointment.TEXT}>
+                                <InputLabel htmlFor="title">Text</InputLabel>
+                                <Input
+                                    id="title"
+                                    name="text"
+                                    fullWidth
+                                    value={this.state.appointment.TEXT}
+                                    onChange={this.handleTextChange}
+                                />
+                                <FormHelperText>Bitte schreibe eine Nachricht</FormHelperText>
+                            </FormControl>
+                            <FormControl className={classes.formControl} error={!this.state.appointment.SUBTEXT}>
+                                <InputLabel htmlFor="sub-title">SubText</InputLabel>
+                                <Input
+                                    id="sub-title"
+                                    name="text"
+                                    multiline
+                                    rows={4}
+                                    fullWidth
+                                    value={this.state.appointment.SUBTEXT}
+                                    onChange={this.handleSubTextChange}
+                                />
+                                <FormHelperText>Bitte schreibe eine Nachricht</FormHelperText>
+                            </FormControl>
+                        </Form>
+                        <Preview>
+                            <PreviewHeader>
+                                Vorschau
+                            </PreviewHeader>
+                            <PreviewContainer>
+                                <Day date={moment(this.state.appointment.DATE_FROM)}
+                                    appointments={[this.state.appointment]} />
+                            </PreviewContainer>
+                        </Preview>
+                    </Container>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        color="primary"
+                        onClick={this.handleClose}
+                    >
+                        Abbrechen
+                    </Button>
+                    <Button
+                        color="primary"
+                        keyboardFocused={true}
+                        onClick={this.handleAddAppointment}
+                    >
+                        Absenden
+                    </Button>
+                </DialogActions>
             </Dialog>
         )
     }
 }
 
-const Title = styled.div`
-    display: flex;
-    align-items: center;
-`;
 
 const Form = styled.div`
     flex: 1;
@@ -238,4 +253,4 @@ const mapDispatchToProps = (dispatch) => ({
     editDate: (date) => dispatch(editDate(date)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AddDialog);
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(AddDialog));

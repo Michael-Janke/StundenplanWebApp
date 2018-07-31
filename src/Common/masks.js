@@ -17,7 +17,15 @@ export const fromViewer = (substitution) => {
     const key = type.toUpperCase() + "_ID";
     const isOld = substitution[key] === id;
     const isNew = substitution[key + "_NEW"] === id || substitution[key + "_NEW"] === 0;
-    return transform(isNew ? 'new' : isOld ? 'old' : "")(substitution);
+    return transform(isNew ? 'new' : isOld ? 'old' : 'new')(substitution);
+}
+
+export const removeIf = ifType => (substitution) => {
+    const { type } = substitution;
+    if (ifType === type && substitution.isOld) {
+        return null;
+    }
+    return substitution;
 }
 
 export const addSubstitutionInformation = (substitution) => {
@@ -36,7 +44,7 @@ function transformOld(substitution) {
         TEACHER_ID: substitution.TEACHER_ID || substitution.TEACHER_ID_NEW,
         ROOM_ID: substitution.ROOM_ID || substitution.ROOM_ID_NEW,
         CLASS_IDS: (substitution.CLASS_IDS && substitution.CLASS_IDS.length && substitution.CLASS_IDS) || substitution.CLASS_IDS_NEW,
-        SUBJECT_ID_NEW: substitution.SUBJECT_ID_NEW ? 0 : null,
+        SUBJECT_ID_NEW: substitution.SUBJECT_ID_NEW !== substitution.SUBJECT_ID ? 0 : null,
         CLASS_IDS_NEW: substitution.CLASS_IDS_NEW ? 0 : null,
         TEACHER_ID_NEW: substitution.TEACHER_ID_NEW ? 0 : null,
         ROOM_ID_NEW: substitution.ROOM_ID_NEW ? 0 : null,

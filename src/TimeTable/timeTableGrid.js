@@ -6,20 +6,40 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { grey } from '@material-ui/core/colors';
+import grey from '@material-ui/core/colors/grey';
 import PeriodColumn from './period';
 import { WEEKDAY_NAMES } from '../Common/const';
 import { Print } from 'react-easy-print';
 import { changeWeek } from '../Main/actions';
 import makeGetCurrentTimetable from '../Selector/timetable';
 import Holiday from './Holiday';
-import { withStyles, IconButton, ListItemIcon, ListItem, ListItemText } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
+import IconButton from '@material-ui/core/IconButton';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import NextIcon from '@material-ui/icons/ArrowForward';
 import { ObjectIcon } from '../Main/components/Avatars';
+import RoomList from './roomlist';
 
 
-class TimeTableGrid extends React.PureComponent {
+class TimeTableGrid extends React.Component {
+    state = {};
+
+    shouldComponentUpdate(nextProps) {
+        // controlled non-updating to update data in background
+        return !!nextProps.currentTimetable
+            || (nextProps.counterChanged === 'detected' && nextProps.counterChanged !== this.props.counterChanged)
+            || this.props.classes !== nextProps.classes;
+    }
+
+    static getDerivedStateFromProps(props) {
+        return {
+            periodsWidth: (props.small) ? 20 : 70,
+        }
+    }
+
     renderPeriodTimes(period) {
         const lpad2 = (number) => (number < 10 ? '0' : '') + number;
         return (
@@ -27,7 +47,7 @@ class TimeTableGrid extends React.PureComponent {
                 <Time>{Math.floor(period.START_TIME / 100)}:{lpad2(period.START_TIME % 100)}</Time>
                 <Time>{Math.floor(period.END_TIME / 100)}:{lpad2(period.END_TIME % 100)}</Time>
             </Times>
-        )
+        );
     }
 
     renderPeriodHeader(period) {
@@ -48,7 +68,11 @@ class TimeTableGrid extends React.PureComponent {
             let colSpan = this.props.currentTimetable.slice(day).filter((dayX) => dayX.holiday === dayObject.holiday).length;
             let date = this.props.date.clone().weekday(0).add(day - 1, 'days');
             return (
-                <TableCell key={day} rowSpan={Object.values(this.props.periods).length} style={{ padding: 0 }} colSpan={colSpan}>
+                <TableCell
+                    key={day}
+                    rowSpan={Object.values(this.props.periods).length}
+                    style={{ padding: 0 }}
+                    colSpan={colSpan}>
                     <Holiday holiday={dayObject.holiday} date={date.format("DD.MM")} />
                 </TableCell>
             );
@@ -64,21 +88,24 @@ class TimeTableGrid extends React.PureComponent {
                         textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
                     }}
                     rowSpan={period ? period.skip + 1 : 0}>
-                    <PeriodColumn
-                        lessons={period.lessons}
-                        type={this.props.type}
-                        small={this.props.small} />
+                    {period.freeRooms ?
+                        <RoomList
+                            rooms={period.freeRooms}
+                        />
+                        :
+                        <PeriodColumn
+                            lessons={period.lessons}
+                            type={this.props.type}
+                            small={this.props.small} />
+                    }
                 </TableCell>
             );
         }
     }
 
     renderRows() {
-        if (!this.props.id || !this.props.type || this.props.loading) {
-            return null;
-        }
         const periodColumnStyle = {
-            width: this.props.periodsWidth,
+            width: this.state.periodsWidth,
             fontSize: '100%',
             padding: 2,
         };
@@ -118,7 +145,7 @@ class TimeTableGrid extends React.PureComponent {
                         <TableHead
                             style={{ fontSize: '100%' }}>
                             <TableRow style={{ height: 48 }}>
-                                <TableCell style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
+                                <TableCell style={{ ...tableHeaderStyle, width: this.state.periodsWidth, padding: 2 }} />
                                 {[1, 2, 3, 4, 5].map((day, i) => {
                                     let date = this.props.date.clone().weekday(0).add(day - 1, 'days');
                                     return (
@@ -138,7 +165,7 @@ class TimeTableGrid extends React.PureComponent {
                     <div style={{ maxHeight: `calc(100vh - ${180}px)`, overflowY: 'auto' }}>
                         <GrayoutTable
                             className={classes.table}
-                            disabled={this.props.counterChanged}
+                            disabled={this.props.counterChanged === 'detected'}
                         >
                             <TableBody>
                                 {this.renderRows()}
@@ -154,6 +181,9 @@ class TimeTableGrid extends React.PureComponent {
 
 const CurrentTimetableInformation = ({ id, type, masterdata, avatars }) => {
     if (!masterdata || !type || !id) return null;
+    if (type === 'all') {
+        type = "room";
+    }
     let object = masterdata[type[0].toUpperCase() + type.slice(1)][id];
     if (!object) return null;
     return (
@@ -191,7 +221,7 @@ const styles = theme => ({
     }
 });
 
-const GrayoutTable = styled(Table) `
+const GrayoutTable = styled(Table)`
     ${props => props.disabled && `
         -webkit-filter: grayscale(100%);
         -moz-filter: grayscale(100%);
@@ -244,13 +274,10 @@ const makeMapStateToProps = () => {
             periods: state.timetable.masterdata.Period_Time,
             id: state.timetable.currentTimeTableId,
             type: state.timetable.currentTimeTableType,
-            showDrawer: state.browser.greaterThan.small,
-            small: state.browser.lessThan.medium,
-            periodsWidth: (state.browser.lessThan.medium) ? 20 : 70,
             loading: state.timetable.loadingTimetable || state.timetable.loadingSubstitutions,
             warning: state.user.warning,
             lastCheck: state.user.lastCheck,
-            counterChanged: state.timetable.counterChanged,
+            counterChanged: state.user.counterChanged,
         }
     }
     return mapStateToProps;

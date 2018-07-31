@@ -4,23 +4,29 @@ import PersonIcon from "@material-ui/icons/Person";
 import ClassIcon from '@material-ui/icons/Group';
 import RoomIcon from '@material-ui/icons/Room';
 import moment from 'moment';
+import createStore from '../../store';
 
-export const checkAvatars = (upns, avatars, loadAvatars) => {
+const { store } = createStore();
+
+export const checkAvatars = (upns, loadAvatars) => {
+    const { avatars } = store.getState();
     const r = upns.filter((upn) => {
         if (!upn || !avatars) return false;
         const avatar = avatars[upn];
         return !avatar || moment(avatar.expires).isBefore(moment())
     });
     if (r.length) {
-        loadAvatars(r);
+        loadAvatars(r.slice(0, 10));
     }
 };
+
+
 
 export const ObjectIcon = ({ type, upn, avatars, size, outline, ...other }) => {
     if (type === 'class') {
         return <ClassIcon {...other} />;
     }
-    if (type === 'room') {
+    if (type === 'room' || type === 'all') {
         return <RoomIcon {...other} />;
     }
     return ProfilePicture(upn, avatars, size, outline, other);

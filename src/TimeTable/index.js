@@ -5,20 +5,32 @@ import withTheme from '@material-ui/core/styles/withTheme';
 import TimeTableGrid from './timeTableGrid';
 import indigo from '@material-ui/core/colors/indigo';
 import { Paper } from "@material-ui/core";
+import Dates from "../Dates";
+
+var Substitutions;
+if (process.env.REACT_APP_MODE === 'tv') {
+    Substitutions = require('./Substitutions').default;
+}
 
 class View extends Component {
     render() {
         return (
             <Container>
                 <AppBar backgroundColor={indigo[600]} />
-                {/* {this.props.showDrawer && <Drawer>
-                    <Dates />
-                </Drawer>} */}
-
                 <ShadowContainer>
-                    <TimeTableGrid />
+                    <Dates />
                 </ShadowContainer>
-            </Container >
+                {Substitutions ?
+                    <ShadowContainer fullWidth>
+                        <Substitutions addDays={0} />
+                        <Substitutions addDays={1} />
+                    </ShadowContainer>
+                    : null}
+
+                <ShadowContainer fullWidth>
+                    <TimeTableGrid small={this.props.small || Substitutions} />
+                </ShadowContainer>
+            </Container>
         );
     }
 }
@@ -34,14 +46,15 @@ const Container = styled.div`
 const ShadowContainer = styled(Paper)`
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: ${props => props.fullWidth ? '100%' : 'unset'};
     margin-top: 6px;
     margin-right: 1vw;
     margin-left: 1vw;
-    margin-bottom: 1vw;
+    // margin-bottom: 1vw;
     z-index: 1;
     position: relative;
-    max-width: 1200px;
+    max-width: 1200px;  
+    height: 100%;
 `
 
 // const ShadowContainerEmu = styled.div`
@@ -65,20 +78,12 @@ const AppBar = styled.div`
 
 const mapDispatchToProps = dispatch => {
     return {
-        logout: () => {
-            dispatch();
-        }
     };
 };
 
 const mapStateToProps = state => {
     return {
-        masterdata: state.timetable.masterdata,
-        timetableDate: state.timetable.timetableDate,
-        periods: state.timetable.masterdata.Period_Time,
-        showPeriods: state.browser.greaterThan.small,
-        showDrawer: state.browser.greaterThan.small,
-        mediaType: state.browser.mediaType,
+        small: state.browser.lessThan.medium,
     };
 };
 

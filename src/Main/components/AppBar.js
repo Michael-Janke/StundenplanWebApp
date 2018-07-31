@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import Drawer from '@material-ui/core/SwipeableDrawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,10 +18,11 @@ import { changeWeek, showError } from '../actions';
 import styled from 'styled-components';
 import UserSettingsMenu from './UserSettingsMenu';
 import grey from '@material-ui/core/colors/grey';
-import { DRAWER_WIDTH } from '../../Common/const';
 import ProfilePicture from './ProfilePicture';
 import Feedback from './Feedback';
 import indigo from '@material-ui/core/colors/indigo';
+import OfficeIcons from '../../Common/office-icons';
+import Waffle from './Waffle.js';
 
 const Tooltip = ({ children }) => children;
 
@@ -35,12 +36,23 @@ const styles = theme => ({
         backgroundColor: indigo[600],
     },
     toolbar: theme.mixins.toolbar,
-    drawerPaper: {
-        width: DRAWER_WIDTH,
+    drawer: {
+        width: 300,
 
     },
     icon: {
         color: grey[100]
+    },
+    links: {
+        padding: theme.spacing.unit * 2,
+    },
+    linksHeader: {
+        color: grey[600],
+        paddingBottom: theme.spacing.unit,
+    },
+    linksList: {
+        display: 'flex',
+        flexWrap: 'wrap',
     }
 });
 
@@ -70,12 +82,27 @@ class ResponsiveDrawer extends React.Component {
     }
 
     render() {
-        const { classes, theme, small, large } = this.props;
-        // const LampComponent = theme.palette.type === 'dark' ? LampOnIcon : LampIcon;
+        const { classes, theme, small } = this.props;
+
+        const links = (
+            <div className={classes.links}>
+                <div className={classes.linksHeader}>
+                    Apps
+                </div>
+                <div className={classes.linksList}>
+                    {Object.entries(OfficeIcons).map(([key, value], i) => {
+                        return (
+                            <Waffle name={key} waffle={value} key={i} />
+                        );
+                    })}
+                </div>
+            </div>
+        );
         const drawer = (
-            <div>
+            <div className={classes.drawer}>
                 <ProfilePicture />
                 <Divider />
+                {links}
             </div>
         );
         return (
@@ -91,7 +118,7 @@ class ResponsiveDrawer extends React.Component {
                         </IconButton>
 
                         <Icons>
-                            <Search shrinkChildren={small} alwaysOpen={large}>
+                            <Search shrinkChildren={small} alwaysOpen={!small}>
                                 {/* {small ||
                                     <Tooltip id="tooltip-theme" title="Theme ändern">
                                         <IconButton onClick={this.props.onThemeToggle}>
@@ -99,7 +126,7 @@ class ResponsiveDrawer extends React.Component {
                                         </IconButton>
                                     </Tooltip>
                                 } */}
-                                
+
                                 {small ||
                                     <Tooltip id="tooltip-prev" title="Voherige Woche">
                                         <IconButton onClick={this.props.setPreviousWeek}>
@@ -145,9 +172,7 @@ class ResponsiveDrawer extends React.Component {
                     open={this.state.mobileOpen}
                     onClose={this.handleDrawerToggle}
                     onOpen={this.handleDrawerToggle}
-                    classes={{
-                        paper: classes.drawerPaper,
-                    }}
+
                     ModalProps={{
                         keepMounted: true, // Better open performance on mobile.
                     }}
@@ -184,7 +209,6 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
     return {
         small: state.browser.lessThan.medium,
-        large: state.browser.greaterThan.large,
     };
 };
 

@@ -2,12 +2,11 @@ import React from 'react';
 import styled from "styled-components";
 import ActionInfo from '@material-ui/icons/Info';
 import indigo from '@material-ui/core/colors/indigo';
+import grey from '@material-ui/core/colors/grey';
+
 import { darken } from '@material-ui/core/styles/colorManipulator';
-import { withStyles } from '@material-ui/core';
-import { subjectStyles } from './Fields/subject';
-import { roomStyles } from './Fields/room';
-import { classStyles } from './Fields/classes';
-import { teacherStyles } from './Fields/teachers';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { styles } from './Fields';
 
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
 const BindField = (props) => field => Field.bind(null, field, props);
@@ -19,27 +18,25 @@ const SubstitutionText = ({ children }) => (
     </SubstitutionTextContainer>
 );
 
-const styles = theme => ({
-    ...subjectStyles(theme),
-    ...roomStyles(theme),
-    ...teacherStyles(theme),
-    ...classStyles(theme),
-});
+
 
 
 const AbstractLesson = (props) => {
     let { classes, theme, colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, absence, substitutionInfo } = props;
     const isNew = fields.new;
     const isOld = fields.old;
+    const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
+
+
     const BoundField = BindField({ small, themeClasses: classes });
 
     const NewFields = fields.new && fields.new.map(BoundField);
     const OldFields = fields.old && fields.old.map(BoundField);
     const SubstitutingFields = fields.substitution && fields.substitution.map(BoundField);
 
-    let substitutionTextBig = substitutionText && substitutionText.length > 16;
+    let substitutionTextBig = substitutionText && substitutionText.length > 5;
     const substitutionType = specificSubstitutionType && (
-        <SubstitutionType color={specificSubstitutionType.color}>
+        <SubstitutionType color={styles.color}>
             {(!substitutionText || substitutionTextBig) ? specificSubstitutionType.name : substitutionText}
         </SubstitutionType>
     );
@@ -53,26 +50,43 @@ const AbstractLesson = (props) => {
 
 
     let InsteadBy;
-    if (!small)
-        InsteadBy = substitutionInfo === 'instead-by' ?
-            (...fields) => (
-                <LessonContainer>
-                    durch:
+    if (substitutionInfo === 'instead-by') {
+        if (small) {
+            InsteadBy = (...fields) => (
+                <LessonContainer small>
+                    <InsteadInformation>durch:</InsteadInformation>
                     {fields.map((Field, i) => <Field key={i} left />)}
                 </LessonContainer>
-            )
-            : null;
+            );
+        }
+        else {
+            InsteadBy = (...fields) => (
+                <LessonContainer>
+                    <InsteadInformation>durch:</InsteadInformation>
+                    {fields.map((Field, i) => <Field key={i} left />)}
+                </LessonContainer>
+            );
+        }
+    }
 
     let InsteadOf;
-    if (!small)
-        InsteadOf = substitutionInfo === 'instead-of' ?
-            (...fields) => (
-                <LessonContainer>
-                    statt:
+    if (substitutionInfo === 'instead-of') {
+        if (small) {
+            InsteadOf = (...fields) => (
+                <LessonContainer small>
+                    <InsteadInformation>statt:</InsteadInformation>
                     {fields.map((Field, i) => <Field key={i} left />)}
                 </LessonContainer>
             )
-            : null;
+        } else {
+            InsteadOf = (...fields) => (
+                <LessonContainer>
+                    <InsteadInformation>statt:</InsteadInformation>
+                    {fields.map((Field, i) => <Field key={i} left />)}
+                </LessonContainer>
+            )
+        }
+    }
 
     if (isNew) {
         if (!small) {
@@ -80,7 +94,7 @@ const AbstractLesson = (props) => {
             return (
                 <Lesson
                     type={theme.palette.type}
-                    color={(specificSubstitutionType || {}).backgroundColor}
+                    color={styles.backgroundColor}
                     flex={!specificSubstitutionType || !multiple}>
                     <ColorBar lineColor={colorBar} />
                     <LessonWrapper>
@@ -106,21 +120,17 @@ const AbstractLesson = (props) => {
             return (
                 <Lesson
                     type={theme.palette.type}
-                    color={(specificSubstitutionType || {}).backgroundColor}
+                    color={styles.backgroundColor}
                     flex={last}>
                     <ColorBar lineColor={colorBar} />
-                    <LessonWrapper>
+                    <LessonWrapper small>
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
-                        <LessonContainer>
-                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden' }}>
-                                {substitutionType}
-                                <Field1 left />
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', overflow: 'hidden', paddingLeft: 5 }}>
-                                <Field2 />
-                            </div>
+                        <LessonContainer small>
+                            {substitutionType}
+                            <Field1 left />
+                            <Field2 />
+                            <Field3 />
                         </LessonContainer>
-                        <Field3 />
                         {InsteadBy && InsteadBy(...SubstitutingFields)}
                         {extraInfo}
                     </LessonWrapper>
@@ -128,50 +138,52 @@ const AbstractLesson = (props) => {
 
             );
         }
-    }
-    if (isOld) {
-        if (!small) {
-            const [Field1, Field2] = OldFields;
-            return (
-                <Lesson
-                    type={theme.palette.type}
-                    color={(specificSubstitutionType || {}).backgroundColor}
-                    flex={!specificSubstitutionType || !multiple}>
-                    <ColorBar lineColor={colorBar} />
-                    <LessonWrapper>
+    } else
+        if (isOld) {
+            if (!small) {
+                const [Field1, Field2] = OldFields;
+                return (
+                    <Lesson
+                        type={theme.palette.type}
+                        color={styles.backgroundColor}
+                        flex={!specificSubstitutionType || !multiple}>
+                        <ColorBar lineColor={colorBar} />
+                        <LessonWrapper>
+                            {InsteadOf && InsteadOf(...SubstitutingFields)}
+                            <LessonContainer>
+                                {substitutionType}
+                                <Field1 left />
+                                {Field2 && <Field2 left />}
+                            </LessonContainer>
+                            {InsteadBy && InsteadBy(...SubstitutingFields)}
+                            {extraInfo}
+                        </LessonWrapper>
+                    </Lesson>
+                );
+            } else {
+                const [Field1, Field2] = OldFields;
+                return (
+                    <Lesson
+                        type={theme.palette.type}
+                        color={styles.backgroundColor}
+                        flex={last}>
+                        <ColorBar lineColor={colorBar} />
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
-                        <LessonContainer>
-                            {substitutionType}
-                            <Field1 left />
-                            {Field2 && <Field2 left />}
-                        </LessonContainer>
-                        {InsteadBy && InsteadBy(...SubstitutingFields)}
-                        {extraInfo}
-                    </LessonWrapper>
-                </Lesson>
-            );
+                        <LessonWrapper small>
+                            <LessonContainer small>
+                                {substitutionType}
+                                <Field1 left />
+                                {Field2 && <Field2 left />}
+                            </LessonContainer>
+                            {InsteadBy && InsteadBy(...SubstitutingFields)}
+                            {extraInfo}
+                        </LessonWrapper>
+                    </Lesson>
+                )
+            }
         } else {
-            const [Field1, Field2] = OldFields;
-            return (
-                <Lesson
-                    type={theme.palette.type}
-                    color={(specificSubstitutionType || {}).backgroundColor}
-                    flex={last}>
-                    <ColorBar lineColor={colorBar} />
-                    <LessonWrapper>
-                        {InsteadOf && InsteadOf(...SubstitutingFields)}
-                        <LessonContainer>
-                            {substitutionType}
-                            <Field1 left />
-                            {Field2 && <Field2 left />}
-                        </LessonContainer>
-                        {InsteadBy && InsteadBy(...SubstitutingFields)}
-                        {extraInfo}
-                    </LessonWrapper>
-                </Lesson>
-            )
+            return null;
         }
-    }
 };
 
 
@@ -194,9 +206,17 @@ const SubstitutionType = styled.div`
 
 const SubstitutionTextContainer = styled.div`
     font-size: 70%;
+    overflow: hidden;
+    word-break: break-word;
     white-space: normal;
     align-items: center;
     display: flex;
+`;
+
+const InsteadInformation = styled.div`
+    font-size: 50%;
+    font-weight: 600;
+    color: ${grey[400]};
 `;
 
 const LessonContainer = styled.div`
@@ -205,14 +225,14 @@ const LessonContainer = styled.div`
     width: 100%;
     ${props => (props.small ? `
         flex-direction: column;  
-        padding-top: 0.25vmin;
-        padding-bottom: 0.25vmin;
+        // padding-top: 0.25vmin;
+        // padding-bottom: 0.25vmin;
     `: `
         flex-direction: row;
         align-items: center; 
         justify-content: space-between;
-        padding-top: 0.5vmin;
-        padding-bottom: 0.5vmin;
+        // padding-top: 0.5vmin;
+        // padding-bottom: 0.5vmin;
     `)}
 `;
 
@@ -222,6 +242,13 @@ const LessonWrapper = styled.div`
     flex-direction: column;
     overflow: hidden;
     justify-content: center;
+    ${props => (props.small ? `
+        padding-top: 0.25vmin;
+        padding-bottom: 0.25vmin;
+    `: `
+        padding-top: 0.5vmin;
+        padding-bottom: 0.5vmin;
+    `)}
 `;
 
 const Lesson = styled.div`
@@ -231,8 +258,8 @@ const Lesson = styled.div`
     text-align: left;
     padding-right: 1vmin;
     flex-direction: row;
-    background-color: ${props => (props.type === 'dark' ? darken : (c) => c)((props.color) || indigo[50], 0.6
-    )};
+    background-color: ${props => props.color || darken(indigo[50], props.type === 'dark' ? 0.6 : 0)};
+
 `;
 
 export default withStyles(styles, { withTheme: true })(AbstractLesson);

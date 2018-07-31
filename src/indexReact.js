@@ -9,6 +9,16 @@ import firebase from 'firebase';
 import moment from 'moment';
 import 'moment/locale/de';
 moment.locale('de')
+moment.now = function () {
+    return +new Date().setMonth(5);
+}
+
+console.log("REACT_APP_MODE: " + process.env.REACT_APP_MODE);
+
+if (process.env.NODE_ENV !== 'production') {
+    const { whyDidYouUpdate } = require('why-did-you-update');
+    whyDidYouUpdate(React);
+}
 
 reactTabEventPlugin();
 firebase.initializeApp({
@@ -18,6 +28,6 @@ firebase.messaging().usePublicVapidKey("BFM3t4WACinSsfYyZfnlLtYmDsEk8Uk-TXHh-fNn
 
 
 var App = require('./App').default;
-ReactDOM.render(<App/>, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
 
 registerServiceWorker();

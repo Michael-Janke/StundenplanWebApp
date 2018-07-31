@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import blue from '@material-ui/core/colors/blue';
 import grey from '@material-ui/core/colors/grey';
+import cyan from '@material-ui/core/colors/cyan';
 
 
 const RoomContainer = type => room => ({ small, themeClasses }) => {
@@ -35,7 +36,7 @@ export const roomStyles = (theme) => ({
 
     },
     'room-new': {
-        color: blue[theme.palette.type === 'dark' ? 400 : 800],
+        color: theme.palette.type === 'dark' ? cyan[400] : blue[600],
     },
     'room-old': {
         color: grey[600],
@@ -59,7 +60,6 @@ const Room = styled.div`
 
 const NewRoom = styled(Room) `
     font-weight: 600;
-    font-size: 65%;
 `;
 
 const OldRoom = styled(Room) `
