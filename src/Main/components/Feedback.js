@@ -20,7 +20,6 @@ export class Feedback extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: false,
             messageText: ""
         };
     }
@@ -29,12 +28,8 @@ export class Feedback extends Component {
         this.setState({ error: null });
     }
 
-    open() {
-        this.setState({ open: true });
-    }
-
     handleClose = () => {
-        this.setState({ open: false });
+        this.props.onClose();
     }
 
     handleChange = name => event => {
@@ -64,7 +59,7 @@ export class Feedback extends Component {
         };
         return (
             <Dialog
-                open={this.state.open}
+                open={this.props.open}
                 onClose={this.handleClose}
                 TransitionComponent={Transition}
             >
@@ -122,4 +117,4 @@ const mapDispatchToProps = (dispatch) => ({
     sendFeedback: (feedback) => dispatch(sendFeedback(feedback))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(Feedback);
+export default connect(mapStateToProps, mapDispatchToProps)(Feedback);

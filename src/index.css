@@ -3,6 +3,7 @@ body {
   padding: 0;
   font-family: "Roboto";
   height: 100vh !important;
+  overscroll-behavior: contain; /* disable pull-to-refresh */
 }
 
 

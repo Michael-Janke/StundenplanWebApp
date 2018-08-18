@@ -60,6 +60,7 @@ class ResponsiveDrawer extends React.Component {
     state = {
         mobileOpen: false,
         searchOpen: false,
+        feedbackOpen: false,
     };
 
     handleDrawerToggle = () => {
@@ -74,9 +75,11 @@ class ResponsiveDrawer extends React.Component {
         this.refs.calendar.getWrappedInstance().open();
     }
 
-    handleFeedback = () => {
-        this.refs.feedback.getWrappedInstance().open();
+    handleFeedback = (open) => {
+        this.setState({ feedbackOpen: !!open });
     }
+
+
     handleSearch = () => {
         this.setState({ searchOpen: !this.state.searchOpen });
     }
@@ -164,7 +167,7 @@ class ResponsiveDrawer extends React.Component {
                             </Search>
                         </Icons>
                     </Toolbar>
-                    <Feedback ref="feedback" />
+                    <Feedback open={this.state.feedbackOpen} onClose={this.handleFeedback} />
                 </AppBar>
                 <Drawer
                     variant="temporary"

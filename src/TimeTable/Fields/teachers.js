@@ -66,13 +66,8 @@ const Teacher = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-<<<<<<< HEAD
-    width: 100%;
-    text-align: right;
-=======
     // width: 100%;
     // text-align: ${props => props.left ? 'left' : 'right'};
->>>>>>> tv
 `;
 
 const NewTeacher = styled(Teacher) `

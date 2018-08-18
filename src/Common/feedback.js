@@ -1,8 +1,9 @@
 
 export const createFeedbackMail = (feedback) => {
+    const subject = feedback.subject + " (" + process.env.REACT_APP_VERSION + ")";
     return {
         "message": {
-            "subject": feedback.subject,
+            "subject": subject,
             "body": {
                 "contentType": "Text",
                 "content": feedback.content
@@ -10,7 +11,7 @@ export const createFeedbackMail = (feedback) => {
             "toRecipients": [
                 {
                     "emailAddress": {
-                        "address": "feedback-new-app@wgmail.onmicrosoft.com"
+                        "address": "thomas.janke@wgmail.de"
                     }
                 }
             ],
