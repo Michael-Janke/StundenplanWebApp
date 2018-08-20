@@ -1,6 +1,8 @@
 import { createSelector } from 'reselect'
 import { WEEKDAY_NAMES, getSubstitutionsCacheKey, getTimetableCacheKey, specifySubstitutionType } from '../Common/const';
 import moment from 'moment';
+import store from '../store';
+import { showError } from '../Main/actions';
 
 const getTimetableState = (state) => state.timetable;
 const getMasterdata = createSelector(getTimetableState, (state) => state.masterdata);
@@ -97,10 +99,19 @@ function joinSubstitutions(day, subOnDay, type, id) {
             if (index !== -1) {
                 lessons[index] = lesson;
                 period.lessons = lessons.filter(c => c);
-
             } else if (lesson) {
                 lessons.push(lesson);
             }
+        });
+    }
+    if (subOnDay.supervisions) {
+        subOnDay.supervisions.forEach((supervision) => {
+            const period = day.periods[supervision.PERIOD - 1];
+            if (!period) {
+                store.dispatch(showError("Supervision period"));
+                return;
+            }
+            period.supervision = supervision;
         });
     }
     if (subOnDay.absences) {
@@ -168,8 +179,13 @@ export function skipDuplications(day, periods) {
         while (y + 1 < periods.length
             && comparePeriod(current.lessons, day.periods[y + 1].lessons)) {
             y++;
-            delete day.periods[y];
-            current.skip++;
+            let period = day.periods[y];
+            if (period.supervision) {
+                period.continueation = true; 
+            } else {
+                delete day.periods[y];
+                current.skip++;
+            }
         }
         if (current.lessons) {
             skipTeacherDuplications(current.lessons);

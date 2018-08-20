@@ -22,7 +22,7 @@ import BackIcon from '@material-ui/icons/ArrowBack';
 import NextIcon from '@material-ui/icons/ArrowForward';
 import { ObjectIcon } from '../Main/components/Avatars';
 import RoomList from './roomlist';
-
+import Supervision from './supervision';
 
 class TimeTableGrid extends React.Component {
     state = {};
@@ -88,12 +88,16 @@ class TimeTableGrid extends React.Component {
                         textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
                     }}
                     rowSpan={period ? period.skip + 1 : 0}>
+                    {period.supervision &&
+                        <Supervision supervision={period.supervision}/>
+                    }
                     {period.freeRooms ?
                         <RoomList
                             rooms={period.freeRooms}
                         />
                         :
                         <PeriodColumn
+                            continueation={period.continueation}
                             lessons={period.lessons}
                             type={this.props.type}
                             small={this.props.small} />
@@ -162,7 +166,7 @@ class TimeTableGrid extends React.Component {
                             </TableRow>
                         </TableHead>
                     </Table>
-                    <div style={{ maxHeight: `calc(100vh - ${180}px)`, overflowY: 'auto' }}>
+                    <div style={{ maxHeight: `calc(100vh - ${180}px)`, overflow: 'hidden auto' }}>
                         <GrayoutTable
                             className={classes.table}
                             disabled={this.props.counterChanged === 'detected'}
@@ -201,8 +205,12 @@ const ConnectedCurrentTimetableInformation = connect(state => ({
 
 
 const styles = theme => ({
+    timetable: {
+        display: 'flex',
+    },
     table: {
         backgroundColor: theme.palette.background.default,
+        flexShrink: 0,
     },
     'table-header': {
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
@@ -270,6 +278,7 @@ const makeMapStateToProps = () => {
     const mapStateToProps = (state, props) => {
         return {
             currentTimetable: getCurrentTimetable(state),
+            direction: state.timetable.timetableDate.diff(props.date),
             date: state.timetable.timetableDate,
             periods: state.timetable.masterdata.Period_Time,
             id: state.timetable.currentTimeTableId,

@@ -45,19 +45,25 @@ const SubstitutionEntry = (props) => {
 
     let InsteadBy = substitutionInfo === 'instead-by' ?
         (
-            <SubstitutionContent>
-                <SubstitutionField />
-                {SubstitutingFields.map((Field, i) => <Field key={i} />)}
-            </SubstitutionContent>
+            <SubstitutionRow>
+                <InsteadInformation>durch:</InsteadInformation>
+                <SubstitutionContent>
+                    {SubstitutingFields.map((Field, i) => <Field key={i} />)}
+                    <SubstitutionField />
+                </SubstitutionContent>
+            </SubstitutionRow>
         )
         : null;
 
     let InsteadOf = substitutionInfo === 'instead-of' ?
         (
-            <SubstitutionContent>
-                <SubstitutionField />
-                {SubstitutingFields.map((Field, i) => <Field key={i} />)}
-            </SubstitutionContent>
+            <SubstitutionRow>
+                <InsteadInformation>statt:</InsteadInformation>
+                <SubstitutionContent>
+                    {SubstitutingFields.map((Field, i) => <Field key={i} />)}
+                    <SubstitutionField />
+                </SubstitutionContent>
+            </SubstitutionRow>
         )
         : null;
 
@@ -65,8 +71,6 @@ const SubstitutionEntry = (props) => {
         const [Field1, Field2, Field3] = NewFields;
         return (
             <SubstitutionRow>
-                <Period>{period}</Period>
-                {substitutionType}
                 <SubstitutionContent>
                     <Field1 />
                     <Field2 />
@@ -80,8 +84,6 @@ const SubstitutionEntry = (props) => {
         const [Field1, Field2] = OldFields;
         return (
             <SubstitutionRow>
-                <Period>{period}</Period>
-                {substitutionType}
                 <SubstitutionContent className={classes.substitutionsContentOld}>
                     <Field1 />
                     <Field2 />
@@ -95,17 +97,13 @@ const SubstitutionEntry = (props) => {
     return (
         <SubstitutionRow>
             <ColorBar lineColor={colorBar} />
+            <Period>{period}</Period>
+            {substitutionType}
             <SubstitutionContainer>
-                <SubstitutionRow>
-                    {New && New()}
-                    {Old && Old()}
-                </SubstitutionRow>
-                <SubstitutionRow>
-                    {InsteadBy && <InsteadInformation>durch:</InsteadInformation>}
-                    {InsteadBy}
-                    {InsteadOf && <InsteadInformation>statt:</InsteadInformation>}
-                    {InsteadOf}
-                </SubstitutionRow>
+                {New && New()}
+                {InsteadOf}
+                {Old && Old()}
+                {InsteadBy}
                 {extraInfo}
             </SubstitutionContainer>
         </SubstitutionRow>
@@ -163,6 +161,7 @@ const SubstitutionRow = styled.div`
     flex: 1;
     justify-content: center;
     align-items: center;
+    margin-top: 2px;
 `;
 
 const SubstitutionContent = styled.div`

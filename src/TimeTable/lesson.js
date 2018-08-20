@@ -13,7 +13,7 @@ const BindField = (props) => field => Field.bind(null, field, props);
 
 const SubstitutionText = ({ children }) => (
     <SubstitutionTextContainer>
-        <ActionInfo style={{ width: 16, height: 16, marginRight: '0.3vmin' }} />
+        <ActionInfo style={{ width: 12, height: 12, marginRight: '0.2vmin' }} />
         <div style={{ flex: 1 }}>{children}</div>
     </SubstitutionTextContainer>
 );
@@ -22,10 +22,20 @@ const SubstitutionText = ({ children }) => (
 
 
 const AbstractLesson = (props) => {
-    let { classes, theme, colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, absence, substitutionInfo } = props;
+    let { classes, theme, colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, absence, substitutionInfo, continueation } = props;
+    const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
+    if (continueation) {
+        return (
+            <Lesson
+                type={theme.palette.type}
+                color={styles.backgroundColor}
+                flex={!specificSubstitutionType || !multiple}>
+                <ColorBar lineColor={colorBar} />
+            </Lesson>
+        );
+    }
     const isNew = fields.new;
     const isOld = fields.old;
-    const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
 
 
     const BoundField = BindField({ small, themeClasses: classes });
@@ -53,7 +63,7 @@ const AbstractLesson = (props) => {
     if (substitutionInfo === 'instead-by') {
         if (small) {
             InsteadBy = (...fields) => (
-                <LessonContainer small>
+                <LessonContainer tab small>
                     <InsteadInformation>durch:</InsteadInformation>
                     {fields.map((Field, i) => <Field key={i} left />)}
                 </LessonContainer>
@@ -61,7 +71,7 @@ const AbstractLesson = (props) => {
         }
         else {
             InsteadBy = (...fields) => (
-                <LessonContainer>
+                <LessonContainer tab>
                     <InsteadInformation>durch:</InsteadInformation>
                     {fields.map((Field, i) => <Field key={i} left />)}
                 </LessonContainer>
@@ -73,14 +83,14 @@ const AbstractLesson = (props) => {
     if (substitutionInfo === 'instead-of') {
         if (small) {
             InsteadOf = (...fields) => (
-                <LessonContainer small>
+                <LessonContainer tab small>
                     <InsteadInformation>statt:</InsteadInformation>
                     {fields.map((Field, i) => <Field key={i} left />)}
                 </LessonContainer>
             )
         } else {
             InsteadOf = (...fields) => (
-                <LessonContainer>
+                <LessonContainer tab>
                     <InsteadInformation>statt:</InsteadInformation>
                     {fields.map((Field, i) => <Field key={i} left />)}
                 </LessonContainer>
@@ -234,6 +244,9 @@ const LessonContainer = styled.div`
         // padding-top: 0.5vmin;
         // padding-bottom: 0.5vmin;
     `)}
+    ${props => props.tab && props.small && `
+        padding-left: 0.5vmin;
+    `}
 `;
 
 const LessonWrapper = styled.div`

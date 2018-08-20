@@ -11,7 +11,7 @@ export const createFeedbackMail = (feedback) => {
             "toRecipients": [
                 {
                     "emailAddress": {
-                        "address": "thomas.janke@wgmail.de"
+                        "address": "feedback-new-app@wgmail.onmicrosoft.com"
                     }
                 }
             ],

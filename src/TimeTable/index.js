@@ -21,13 +21,13 @@ class View extends Component {
                     <Dates />
                 </ShadowContainer>
                 {Substitutions ?
-                    <ShadowContainer fullWidth>
+                    <ShadowContainer>
                         <Substitutions addDays={0} />
                         <Substitutions addDays={1} />
                     </ShadowContainer>
                     : null}
 
-                <ShadowContainer fullWidth>
+                <ShadowContainer>
                     <TimeTableGrid small={this.props.small || Substitutions} />
                 </ShadowContainer>
             </Container>
@@ -46,7 +46,7 @@ const Container = styled.div`
 const ShadowContainer = styled(Paper)`
     display: flex;
     flex-direction: row;
-    width: ${props => props.fullWidth ? '100%' : 'unset'};
+    width: $100%;
     margin-top: 6px;
     margin-right: 1vw;
     margin-left: 1vw;

@@ -7,14 +7,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
-import BackIcon from '@material-ui/icons/ArrowBack';
 import CalendarIcon from '@material-ui/icons/Event';
-import NextIcon from '@material-ui/icons/ArrowForward';
 import FeedbackIcon from '@material-ui/icons/Feedback';
 import PrintIcon from '@material-ui/icons/Print';
 import Search from './Search.js';
 import { connect } from 'react-redux';
-import { changeWeek, showError } from '../actions';
+import { showError } from '../actions';
 import styled from 'styled-components';
 import UserSettingsMenu from './UserSettingsMenu';
 import grey from '@material-ui/core/colors/grey';
@@ -129,25 +127,10 @@ class ResponsiveDrawer extends React.Component {
                                         </IconButton>
                                     </Tooltip>
                                 } */}
-
-                                {small ||
-                                    <Tooltip id="tooltip-prev" title="Voherige Woche">
-                                        <IconButton onClick={this.props.setPreviousWeek}>
-                                            <BackIcon className={classes.icon} />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
                                 {small &&
                                     <Tooltip id="tooltip-calendar" title="Kalendar öffnen">
                                         <IconButton>
                                             <CalendarIcon className={classes.icon} />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                                {small ||
-                                    <Tooltip id="tooltip-next" title="Nächste Woche">
-                                        <IconButton onClick={this.props.setNextWeek}>
-                                            <NextIcon className={classes.icon} />
                                         </IconButton>
                                     </Tooltip>
                                 }
@@ -204,8 +187,6 @@ ResponsiveDrawer.propTypes = {
 const mapDispatchToProps = dispatch => {
     return {
         showError: (text) => { dispatch(showError(text)); },
-        setNextWeek: () => dispatch(changeWeek(1)),
-        setPreviousWeek: () => dispatch(changeWeek(-1)),
     };
 };
 

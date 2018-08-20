@@ -17,7 +17,7 @@ if(process.env.REACT_APP_MODE === 'tv'){
 export default combineReducers({
     browser: responsiveStateReducer,
     // responsiveDrawer: responsiveDrawer,
-    substitutions,
+    ...(substitutions && {substitutions}),
     user,
     error,
     timetable,
