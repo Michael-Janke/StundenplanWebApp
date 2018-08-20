@@ -26,10 +26,7 @@ class RoomList extends React.Component {
                     <div key={i} className={classes.wrapper}>
                         <div className={classes.floor}>{key}</div>
                         <div className={classes.numbers}>
-                            {entry.map((number, j) => (
-                                <div className={classes.number} key={j}>{number}
-                                    {(j < entry.length - 1) ? ", " : ""}</div>
-                            ))}
+                            {entry.join(', ')}
                         </div>
                     </div>
                 ))}

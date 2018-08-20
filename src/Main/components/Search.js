@@ -322,11 +322,8 @@ const styles = theme => ({
     dropDownContainer: {
         position: 'absolute',
         width: '100%',
-<<<<<<< HEAD
-=======
         display: 'flex',
         flexDirection: 'column',
->>>>>>> tv
         maxHeight: 'calc(100vh - 64px - 8px)',
         opacity: 1,
 
