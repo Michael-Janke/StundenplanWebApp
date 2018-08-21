@@ -1,8 +1,6 @@
 import { createSelector } from 'reselect'
 import { WEEKDAY_NAMES, getSubstitutionsCacheKey, getTimetableCacheKey, specifySubstitutionType } from '../Common/const';
 import moment from 'moment';
-import store from '../store';
-import { showError } from '../Main/actions';
 
 const getTimetableState = (state) => state.timetable;
 const getMasterdata = createSelector(getTimetableState, (state) => state.masterdata);
@@ -86,7 +84,9 @@ function joinSubstitutions(day, subOnDay, type, id) {
     if (subOnDay.holiday) {
         day.holiday = subOnDay.holiday;
         day.periods = undefined;
-    } else if (subOnDay.substitutions && day.periods) {
+        return;
+    }
+    if (subOnDay.substitutions && day.periods) {
         subOnDay.substitutions.forEach((substitution) => {
             let period = day.periods[substitution.PERIOD - 1];
             if (!period) return;
@@ -107,10 +107,6 @@ function joinSubstitutions(day, subOnDay, type, id) {
     if (subOnDay.supervisions) {
         subOnDay.supervisions.forEach((supervision) => {
             const period = day.periods[supervision.PERIOD - 1];
-            if (!period) {
-                store.dispatch(showError("Supervision period"));
-                return;
-            }
             period.supervision = supervision;
         });
     }
