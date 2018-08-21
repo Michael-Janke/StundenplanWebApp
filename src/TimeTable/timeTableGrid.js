@@ -18,6 +18,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import NextIcon from '@material-ui/icons/ArrowForward';
 import { ObjectIcon } from '../Main/components/Avatars';
@@ -117,7 +118,7 @@ class TimeTableGrid extends React.Component {
             <TableRow key={i}>
                 <TableCell style={periodColumnStyle}>
                     <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
-                        {!this.props.small && this.renderPeriodTimes(period)}
+                        {this.props.small || this.renderPeriodTimes(period)}
                         {this.renderPeriodHeader(period)}
                     </div>
                 </TableCell>
@@ -193,7 +194,14 @@ const CurrentTimetableInformation = ({ id, type, masterdata, avatars }) => {
     return (
         <ListItem>
             <ListItemIcon><ObjectIcon avatars={avatars} upn={object.UPN} type={type} /></ListItemIcon>
-            <ListItemText>{object.LASTNAME ? object.FIRSTNAME + " " + object.LASTNAME : object.NAME}</ListItemText>
+            <ListItemText 
+                style={{width: 0}}
+                disableTypography
+                primary={
+                    <Typography type="body2" style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
+                    {object.LASTNAME ? object.FIRSTNAME + " " + object.LASTNAME : object.NAME}
+                    </Typography>
+                } />
         </ListItem>
     )
 };
@@ -287,6 +295,7 @@ const makeMapStateToProps = () => {
             warning: state.user.warning,
             lastCheck: state.user.lastCheck,
             counterChanged: state.user.counterChanged,
+            small: state.browser.lessThan.medium,
         }
     }
     return mapStateToProps;

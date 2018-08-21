@@ -11,15 +11,11 @@ import { styles } from './Fields';
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
 const BindField = (props) => field => Field.bind(null, field, props);
 
-const SubstitutionText = ({ children }) => (
+const SubstitutionText = ({ left, children }) => (
     <SubstitutionTextContainer>
-        <ActionInfo style={{ width: 12, height: 12, marginRight: '0.2vmin' }} />
-        <div style={{ flex: 1 }}>{children}</div>
+        <div style={{ flex: 1, textAlign: left ? 'left' : 'center' }}>({children})</div>
     </SubstitutionTextContainer>
 );
-
-
-
 
 const AbstractLesson = (props) => {
     let { classes, theme, colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, absence, substitutionInfo, continueation } = props;
@@ -52,12 +48,10 @@ const AbstractLesson = (props) => {
     );
 
     const extraInfo = (substitutionTextBig || absence) && (
-        <SubstitutionText>
+        <SubstitutionText left={small}>
             {substitutionText ? substitutionText + (absence ? ` (${absence.TEXT})` : "") : absence.TEXT}
         </SubstitutionText>
     );
-
-
 
     let InsteadBy;
     if (substitutionInfo === 'instead-by') {
@@ -111,7 +105,6 @@ const AbstractLesson = (props) => {
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
                         <LessonContainer>
                             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden' }}>
-                                {substitutionType}
                                 <Field1 left />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', overflow: 'hidden', paddingLeft: 5 }}>
@@ -136,10 +129,9 @@ const AbstractLesson = (props) => {
                     <LessonWrapper small>
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
                         <LessonContainer small>
-                            {substitutionType}
                             <Field1 left />
-                            <Field2 />
-                            <Field3 />
+                            <Field2 left/>
+                            <Field3 left/>
                         </LessonContainer>
                         {InsteadBy && InsteadBy(...SubstitutingFields)}
                         {extraInfo}
@@ -161,9 +153,8 @@ const AbstractLesson = (props) => {
                         <LessonWrapper>
                             {InsteadOf && InsteadOf(...SubstitutingFields)}
                             <LessonContainer>
-                                {substitutionType}
                                 <Field1 left />
-                                {Field2 && <Field2 left />}
+                                {Field2 && <Field2 />}
                             </LessonContainer>
                             {InsteadBy && InsteadBy(...SubstitutingFields)}
                             {extraInfo}
@@ -181,8 +172,7 @@ const AbstractLesson = (props) => {
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
                         <LessonWrapper small>
                             <LessonContainer small>
-                                {substitutionType}
-                                <Field1 left />
+                                <Field1 left/>
                                 {Field2 && <Field2 left />}
                             </LessonContainer>
                             {InsteadBy && InsteadBy(...SubstitutingFields)}
@@ -195,9 +185,6 @@ const AbstractLesson = (props) => {
             return null;
         }
 };
-
-
-
 
 const ColorBar = styled.div`
     width: 3%;

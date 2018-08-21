@@ -55,18 +55,10 @@ export const subjectStyles = theme => ({
     }
 });
 
-// const Container = styled.div`
-//     flex-direction: row;
-//     display: flex;
-//     align-items: center;
-// `;
-
 const Subject = 'div';
 
 const NewSubject = Subject;
 
 const OldSubject = Subject;
-
-
 
 export default SubjectContainer;

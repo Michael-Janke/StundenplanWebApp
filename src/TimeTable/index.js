@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import withTheme from '@material-ui/core/styles/withTheme';
@@ -12,14 +12,17 @@ if (process.env.REACT_APP_MODE === 'tv') {
     Substitutions = require('./Substitutions').default;
 }
 
-class View extends Component {
+class View extends PureComponent {
     render() {
+        const {showCalendar} = this.props;
         return (
             <Container>
                 <AppBar backgroundColor={indigo[600]} />
-                <ShadowContainer>
-                    <Dates />
-                </ShadowContainer>
+                {showCalendar || 
+                    <ShadowContainer>
+                        <Dates />
+                    </ShadowContainer>
+                }
                 {Substitutions ?
                     <ShadowContainer>
                         <Substitutions addDays={0} />
@@ -41,8 +44,6 @@ const Container = styled.div`
     display: flex;
     background-color: ${props => props.backgroundColor};
 `
-
-
 const ShadowContainer = styled(Paper)`
     display: flex;
     flex-direction: row;
@@ -56,14 +57,6 @@ const ShadowContainer = styled(Paper)`
     max-width: 1200px;  
     height: 100%;
 `
-
-// const ShadowContainerEmu = styled.div`
-//     margin-left: ${DRAWER_WIDTH}px;
-//     margin-right: 1vw;
-//     max-width: 1200px;
-//     width:100%;
-//     height: 1px;
-// `
 const AppBar = styled.div`
     display: flex;
     flex-direction: row;
@@ -74,8 +67,6 @@ const AppBar = styled.div`
     background-color: ${props => props.backgroundColor};
 
 `
-
-
 const mapDispatchToProps = dispatch => {
     return {
     };
@@ -83,7 +74,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        small: state.browser.lessThan.medium,
+        showCalendar: state.browser.lessThan.large,
     };
 };
 

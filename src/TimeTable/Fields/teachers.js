@@ -51,23 +51,13 @@ TeachersContainer.propTypes = {
     small: PropTypes.bool,
 };
 
-// const Container = styled.div`
-//     flex-direction: column;
-//     display: flex;
-//     width: 100%;
-//     ${props => !props.left && `
-//         align-items: flex-end; 
-//         text-align: right;
-//     `};
-// `;
-
 const Teacher = styled.div`
     font-size: 70%;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    // width: 100%;
-    // text-align: ${props => props.left ? 'left' : 'right'};
+    width: 100%;
+    text-align: ${props => props.left ? 'left' : 'right'};
 `;
 
 const NewTeacher = styled(Teacher) `
