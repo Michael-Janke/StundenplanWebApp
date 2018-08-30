@@ -7,6 +7,10 @@ export function sendFeedback(feedback) {
     return { type: "SEND_FEEDBACK", payload: feedback };
 }
 
+export function updateRemindSettings(settings) {
+    return { type: "PATCH_REMIND_SETTINGS", payload: settings };
+}
+
 export function checkCounter() {
     return { type: "GET_COUNTER" };
 }

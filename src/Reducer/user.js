@@ -63,6 +63,11 @@ export default function userReducer(state = initialState, action = {}) {
                 loading: false,
                 ...action.payload,
             };
+        case "PATCH_REMIND_SETTINGS":
+            return {
+                ...state,
+                loading: true
+            };
         case "FEEDBACK_RECEIVED":
             return {
                 ...state,

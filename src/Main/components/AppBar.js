@@ -8,7 +8,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import CalendarIcon from '@material-ui/icons/Event';
-import FeedbackIcon from '@material-ui/icons/Feedback';
 import PrintIcon from '@material-ui/icons/Print';
 import Search from './Search.js';
 import { connect } from 'react-redux';
@@ -17,7 +16,6 @@ import styled from 'styled-components';
 import UserSettingsMenu from './UserSettingsMenu';
 import grey from '@material-ui/core/colors/grey';
 import ProfilePicture from './ProfilePicture';
-import Feedback from './Feedback';
 import indigo from '@material-ui/core/colors/indigo';
 import OfficeIcons from '../../Common/office-icons';
 import Waffle from './Waffle.js';
@@ -58,7 +56,6 @@ class ResponsiveDrawer extends React.Component {
     state = {
         mobileOpen: false,
         searchOpen: false,
-        feedbackOpen: false,
     };
 
     handleDrawerToggle = () => {
@@ -72,11 +69,6 @@ class ResponsiveDrawer extends React.Component {
     handleCalendar = () => {
         this.refs.calendar.getWrappedInstance().open();
     }
-
-    handleFeedback = (open) => {
-        this.setState({ feedbackOpen: !!open });
-    }
-
 
     handleSearch = () => {
         this.setState({ searchOpen: !this.state.searchOpen });
@@ -134,11 +126,6 @@ class ResponsiveDrawer extends React.Component {
                                         </IconButton>
                                     </Tooltip>
                                 }
-                                <Tooltip id="tooltip-feedback" title="Feedback">
-                                    <IconButton onClick={this.handleFeedback}>
-                                        <FeedbackIcon className={classes.icon} />
-                                    </IconButton>
-                                </Tooltip>
                                 {small ||
                                     <Tooltip id="tooltip-print" title="Stundenplan drucken">
                                         <IconButton onClick={this.onPrintTimetable}>
@@ -150,7 +137,6 @@ class ResponsiveDrawer extends React.Component {
                             </Search>
                         </Icons>
                     </Toolbar>
-                    <Feedback open={this.state.feedbackOpen} onClose={this.handleFeedback} />
                 </AppBar>
                 <Drawer
                     variant="temporary"
@@ -184,16 +170,10 @@ ResponsiveDrawer.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        showError: (text) => { dispatch(showError(text)); },
-    };
-};
-
 const mapStateToProps = state => {
     return {
         small: state.browser.lessThan.medium,
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { withTheme: true })(ResponsiveDrawer));
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(ResponsiveDrawer));

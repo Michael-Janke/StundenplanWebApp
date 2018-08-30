@@ -62,6 +62,7 @@ export class Feedback extends Component {
                 open={this.props.open}
                 onClose={this.handleClose}
                 TransitionComponent={Transition}
+                fullScreen={this.props.small}
             >
                 <DialogTitle>
                     <FeedbackTitle>
@@ -110,7 +111,7 @@ const FeedbackTitle = styled.div`
 `;
 
 const mapStateToProps = (state) => ({
-
+    small: state.browser.lessThan.medium
 });
 
 const mapDispatchToProps = (dispatch) => ({
