@@ -11,7 +11,6 @@ import CalendarIcon from '@material-ui/icons/Event';
 import PrintIcon from '@material-ui/icons/Print';
 import Search from './Search.js';
 import { connect } from 'react-redux';
-import { showError } from '../actions';
 import styled from 'styled-components';
 import UserSettingsMenu from './UserSettingsMenu';
 import grey from '@material-ui/core/colors/grey';

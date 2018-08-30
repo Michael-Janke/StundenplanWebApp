@@ -61,16 +61,20 @@ export default function timetableReducer(state = initialState, action = {}) {
             let { id, type } = action.payload;
             const min = moment()
                 .year(state.masterdata.minMaxDates.min.year)
-                .week(state.masterdata.minMaxDates.min.week)
-                .add(-1, 'week');
+                .week(state.masterdata.minMaxDates.min.week);
             const max = moment()
                 .year(state.masterdata.minMaxDates.max.year)
-                .week(state.masterdata.minMaxDates.max.week)
-                .add(1, 'week');
-            let newDate = (action.payload.direction || action.payload.date) ?
-                (action.payload.direction ? moment(state.timetableDate).add(action.payload.direction, 'week') : moment(action.payload.date))
-                : (moment().isoWeekday() >= 5) ? moment().add(1, 'week') : moment();
-            newDate = moment(state.timetableDate).startOf('week').diff(newDate.startOf('week'), 'week') !== 0 ? newDate : state.timetableDate;
+                .week(state.masterdata.minMaxDates.max.week);
+            
+            let newDate;
+            if(action.payload.direction && action.payload.direction !== "now") {
+                newDate = moment(state.timetableDate).add(action.payload.direction, 'week')
+            } else if (action.payload.date) {
+                newDate = moment(action.payload.date)
+            } else {
+                newDate = (moment().isoWeekday() >= 5) ? moment().add(1, 'week') : moment();
+            }
+
             return {
                 ...state,
                 currentTimeTableId: id || state.currentTimeTableId,

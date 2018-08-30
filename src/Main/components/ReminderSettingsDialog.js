@@ -32,7 +32,7 @@ export class ReminderSettings extends Component {
     state = {}
 
     static getDerivedStateFromProps(nextProps, prevState){
-        if(prevState.loading && !nextProps.loading || prevState.loading === undefined)
+        if((prevState.loading && !nextProps.loading) || prevState.loading === undefined)
             return {
                 ...prevState,
                 remind: nextProps.remind === undefined ? true : nextProps.remind,
@@ -235,6 +235,6 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(ReminderSettings);
 
 function validateEmail(email) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }

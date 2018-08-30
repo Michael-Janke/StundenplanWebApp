@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from "styled-components";
-import ActionInfo from '@material-ui/icons/Info';
 import indigo from '@material-ui/core/colors/indigo';
 import grey from '@material-ui/core/colors/grey';
 
@@ -41,11 +40,6 @@ const AbstractLesson = (props) => {
     const SubstitutingFields = fields.substitution && fields.substitution.map(BoundField);
 
     let substitutionTextBig = substitutionText && substitutionText.length > 5;
-    const substitutionType = specificSubstitutionType && (
-        <SubstitutionType color={styles.color}>
-            {(!substitutionText || substitutionTextBig) ? specificSubstitutionType.name : substitutionText}
-        </SubstitutionType>
-    );
 
     const extraInfo = (substitutionTextBig || absence) && (
         <SubstitutionText left={small}>
@@ -104,7 +98,7 @@ const AbstractLesson = (props) => {
                     <LessonWrapper>
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
                         <LessonContainer>
-                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden', flex: 'none' }}>
                                 <Field1 left />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', overflow: 'hidden', paddingLeft: 5 }}>
@@ -190,15 +184,6 @@ const ColorBar = styled.div`
     width: 3%;
     margin-right:5px;
     background-color: ${props => props.lineColor || indigo[100]};
-`;
-
-const SubstitutionType = styled.div`
-    font-size: 60%;
-    font-weight: 600;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    color: ${props => props.color};
 `;
 
 const SubstitutionTextContainer = styled.div`

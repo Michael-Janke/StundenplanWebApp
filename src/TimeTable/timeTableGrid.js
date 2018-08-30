@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import grey from '@material-ui/core/colors/grey';
 import PeriodColumn from './period';
 import { WEEKDAY_NAMES } from '../Common/const';
-import { Print } from 'react-easy-print';
+import { Print, NoPrint } from 'react-easy-print';
 import { changeWeek } from '../Main/actions';
 import makeGetCurrentTimetable from '../Selector/timetable';
 import Holiday from './Holiday';
@@ -21,6 +21,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import NextIcon from '@material-ui/icons/ArrowForward';
+import ResetIcon from '@material-ui/icons/ArrowDownward';
 import { ObjectIcon } from '../Main/components/Avatars';
 import RoomList from './roomlist';
 import Supervision from './supervision';
@@ -135,17 +136,27 @@ class TimeTableGrid extends React.Component {
         );
 
         return (
-            <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
-                <div className={classes.tableToolbar + " " + classes['table-header']}>
-                    {currentTimetable}
-                    <IconButton onClick={this.props.setPreviousWeek}>
-                        <BackIcon />
-                    </IconButton>
-                    <IconButton onClick={this.props.setNextWeek}>
-                        <NextIcon />
-                    </IconButton>
-                </div>
-                <Print main name="TimeTable">
+            <Print main name="TimeTable">
+                <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
+                    <div className={classes.tableToolbar + " " + classes['table-header']}>
+                        {currentTimetable}
+                            <NoPrint>
+                                <IconButton onClick={this.props.setPreviousWeek}>
+                                    <BackIcon />
+                                </IconButton>
+                            </NoPrint>
+                            {this.props.small || 
+                                <NoPrint>
+                                    <IconButton onClick={this.props.setThisWeek}>
+                                        <ResetIcon />
+                                    </IconButton>
+                                </NoPrint>}
+                            <NoPrint>
+                                <IconButton onClick={this.props.setNextWeek}>
+                                    <NextIcon />
+                                </IconButton>
+                            </NoPrint>
+                    </div>
                     <Table className={classes['table-header']}>
                         <TableHead
                             style={{ fontSize: '100%' }}>
@@ -177,8 +188,8 @@ class TimeTableGrid extends React.Component {
                             </TableBody>
                         </GrayoutTable>
                     </div>
-                </Print>
-            </div>
+                </div>
+            </Print>
         );
     }
 }
@@ -201,7 +212,8 @@ const CurrentTimetableInformation = ({ id, type, masterdata, avatars }) => {
                     <Typography type="body2" style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
                     {object.LASTNAME ? object.FIRSTNAME + " " + object.LASTNAME : object.NAME}
                     </Typography>
-                } />
+                } 
+            />
         </ListItem>
     )
 };
@@ -277,6 +289,7 @@ const Period = styled.div`
 const mapDispatchToProps = dispatch => {
     return {
         setNextWeek: () => dispatch(changeWeek(1)),
+        setThisWeek: () => dispatch(changeWeek('now')),
         setPreviousWeek: () => dispatch(changeWeek(-1)),
     };
 };
