@@ -51,7 +51,7 @@ function extract(type, fieldName, data, masterdata) {
     const isValid = (field) => !!field && (Array.isArray(field) ? !!field.length : true);
     const getName = (field) => field ? field.LASTNAME || field.NAME : "";
 
-    if (!masterdata.Subject) return [];
+    if (!masterdata.Subject || !data.substitutions) return [];
     data.substitutions.forEach(substitution => {
         let value;
         if (isValid(substitution[fieldName + "_NEW"])) {

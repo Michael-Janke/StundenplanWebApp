@@ -14,11 +14,11 @@ if (process.env.REACT_APP_MODE === 'tv') {
 
 class View extends PureComponent {
     render() {
-        const {showCalendar} = this.props;
+        const { showCalendar } = this.props;
         return (
             <Container>
                 <AppBar backgroundColor={indigo[600]} />
-                {showCalendar || 
+                {showCalendar &&
                     <ShadowContainer>
                         <Dates />
                     </ShadowContainer>
@@ -31,7 +31,7 @@ class View extends PureComponent {
                     : null}
 
                 <ShadowContainer>
-                    <TimeTableGrid small={this.props.small || Substitutions} />
+                    <TimeTableGrid />
                 </ShadowContainer>
             </Container>
         );
@@ -47,7 +47,6 @@ const Container = styled.div`
 const ShadowContainer = styled(Paper)`
     display: flex;
     flex-direction: row;
-    width: $100%;
     margin-top: 6px;
     margin-right: 1vw;
     margin-left: 1vw;
@@ -74,7 +73,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        showCalendar: state.browser.lessThan.large,
+        showCalendar: state.browser.greaterThan.medium && process.env.REACT_APP_MODE !== 'tv',
     };
 };
 
