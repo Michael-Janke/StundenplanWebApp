@@ -17,7 +17,6 @@ class SearchResult extends React.PureComponent {
         return results;
     }
 
-
     static getDerivedStateFromProps(props, state) {
         return {
             results: props.results,

@@ -221,20 +221,28 @@ Search.getDerivedStateFromProps = (props, state) => {
     const { masterdata } = props;
     const { value } = state;
     const sortName = (o1, o2) => (o1.LASTNAME || o1.NAME).localeCompare(o2.LASTNAME || o2.NAME);
-
+    const user = props.user;
     let data = [
         {
-            searchString: "Freie Räume",
+            searchString: "",
             type: "all",
             id: -1,
             text: "Freie Räume",
-            secondary: "Raum",
+            secondary: "",
+        },
+        {
+            searchString: "",
+            upn: user.upn,
+            type: user.type,
+            id: user.id,
+            text: `${user.firstname} ${user.lastname}`,
+            secondary: "",
         },
         ...Object.values(masterdata.Class).sort(sortName).map((entry) => ({
-            searchString: "Klasse " + entry.NAME,
+            searchString: entry.NAME === "07-12" ? "" : "Klasse " + entry.NAME,
             type: "class",
             id: entry.CLASS_ID,
-            text: entry.NAME,
+            text: entry.NAME === "07-12" ? "Nachschreiben" : entry.NAME,
             secondary: "Klasse",
         })),
         ...Object.values(masterdata.Room).sort(sortName).map((entry) => ({
@@ -242,7 +250,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             type: "room",
             id: entry.ROOM_ID,
             text: entry.NAME,
-            secondary: "Klasse",
+            secondary: "Raum",
         })),
         ...Object.values(masterdata.Teacher).sort(sortName).map((entry) => ({
             searchString: `Lehrer ${entry.FIRSTNAME} ${entry.LASTNAME}`,
@@ -403,6 +411,7 @@ const styles = theme => ({
 
 const mapStateToProps = (state) => ({
     masterdata: state.timetable.masterdata,
+    user: state.user
 });
 
 const mapDispatchToProps = dispatch => ({
