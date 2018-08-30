@@ -138,7 +138,7 @@ export class ReminderSettings extends Component {
                                 <span>Empfänger:</span>
                                 <List>
                                     {remindEMails.map((email) =>
-                                    <ListItem>
+                                    <ListItem key={email}>
                                         <ListItemText primary={email} />
                                         <ListItemSecondaryAction>
                                             <IconButton 

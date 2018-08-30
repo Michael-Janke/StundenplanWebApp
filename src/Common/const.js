@@ -3,7 +3,6 @@ import { createMask, transform, fromViewer, addSubstitutionInformation, removeIf
 import { darken } from '@material-ui/core/styles/colorManipulator';
 
 export const WEEKDAY_NAMES = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
-export const DRAWER_WIDTH = 300;
 
 const colorsArray = ["red", "pink", "purple", "deepPurple", "indigo", "blue", "cyan", "teal", "green", "lime", "yellow", "amber", "orange", "deepOrange", "brown", "blueGrey", "grey"];
 

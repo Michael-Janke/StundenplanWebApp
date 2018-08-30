@@ -11,7 +11,7 @@ const styles = theme => ({
         justifyContent: 'center',
     },
     supervision: {
-        marginTop: '-12px',
+        marginTop: 'calc(-8px + -0.5vmin)',
         fontSize: '70%',
         height: 16,
         backgroundColor: green[600],

@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-// import { responsiveDrawer } from 'material-ui-responsive-drawer';
 import { responsiveStateReducer } from 'redux-responsive';
 
 import user from './user';
@@ -16,7 +15,6 @@ if(process.env.REACT_APP_MODE === 'tv'){
 
 export default combineReducers({
     browser: responsiveStateReducer,
-    // responsiveDrawer: responsiveDrawer,
     ...(substitutions && {substitutions}),
     user,
     error,

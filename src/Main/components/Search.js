@@ -196,6 +196,9 @@ class Search extends React.PureComponent {
                         </div>
                     </div>
                 </ClickAwayListener>
+                <div style={{flex:1}}>
+
+                </div>
 
                 <div className={classNames(
                     classes.children,

@@ -6,7 +6,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
-import MenuIcon from '@material-ui/icons/Menu';
+import MenuIcon from '@material-ui/icons/Apps';
 import CalendarIcon from '@material-ui/icons/Event';
 import PrintIcon from '@material-ui/icons/Print';
 import Search from './Search.js';
@@ -74,7 +74,7 @@ class ResponsiveDrawer extends React.Component {
     }
 
     render() {
-        const { classes, theme, small } = this.props;
+        const { classes, theme, small, large } = this.props;
 
         const links = (
             <div className={classes.links}>
@@ -109,15 +109,8 @@ class ResponsiveDrawer extends React.Component {
                             <MenuIcon />
                         </IconButton>
 
-                        <Icons>
+                        <Icons style={{marginLeft: large  ? "calc(238px + 3vw)" : undefined}}>
                             <Search shrinkChildren={small} alwaysOpen={!small}>
-                                {/* {small ||
-                                    <Tooltip id="tooltip-theme" title="Theme ändern">
-                                        <IconButton onClick={this.props.onThemeToggle}>
-                                            <LampComponent className={classes.icon} />
-                                        </IconButton>
-                                    </Tooltip>
-                                } */}
                                 {small &&
                                     <Tooltip id="tooltip-calendar" title="Kalendar öffnen">
                                         <IconButton>
@@ -163,7 +156,6 @@ const Icons = styled.div`
     align-items: center;
 `;
 
-
 ResponsiveDrawer.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
@@ -172,6 +164,7 @@ ResponsiveDrawer.propTypes = {
 const mapStateToProps = state => {
     return {
         small: state.browser.lessThan.medium,
+        large: state.browser.greaterThan.medium,
     };
 };
 

@@ -20,8 +20,6 @@ export const checkAvatars = (upns, loadAvatars) => {
     }
 };
 
-
-
 export const ObjectIcon = ({ type, upn, avatars, size, outline, ...other }) => {
     if (type === 'class') {
         return <ClassIcon {...other} />;
@@ -33,7 +31,7 @@ export const ObjectIcon = ({ type, upn, avatars, size, outline, ...other }) => {
 }
 
 export const ProfilePicture = (upn, avatars, size = 24, outline = false, other) =>
-    (avatars[upn] && avatars[upn].img
+    (avatars && avatars[upn] && avatars[upn].img
         ? <Avatar src={"data:image/jpg;base64," + avatars[upn].img}
             style={{ height: size, width: size }}
             {...other} />
