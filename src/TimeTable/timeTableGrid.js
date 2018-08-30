@@ -130,7 +130,7 @@ class TimeTableGrid extends React.Component {
 
     render() {
         const { classes, id, type } = this.props;
-        const tableHeaderStyle = { fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
+        const tableHeaderStyle = { fontSize: '85%', textAlign: 'center', padding: 0 };
         const currentTimetable = (
             <ConnectedCurrentTimetableInformation id={id} type={type} />
         );
@@ -160,7 +160,7 @@ class TimeTableGrid extends React.Component {
                     <Table className={classes['table-header']}>
                         <TableHead
                             style={{ fontSize: '100%' }}>
-                            <TableRow style={{ height: 48 }}>
+                            <TableRow style={{ height: this.props.small ? 28 : 48 }}>
                                 <TableCell style={{ ...tableHeaderStyle, width: this.state.periodsWidth, padding: 2 }} />
                                 {[1, 2, 3, 4, 5].map((day, i) => {
                                     let date = this.props.date.clone().weekday(0).add(day - 1, 'days');
@@ -169,8 +169,8 @@ class TimeTableGrid extends React.Component {
                                             key={i}
                                             style={tableHeaderStyle}
                                         >
-                                            {date.format(this.props.small ? 'dd' : 'dddd')}
-                                            <br />
+                                            {this.props.small || date.format('dddd')}
+                                            {this.props.small || <br /> }
                                             {date.format('DD.MM.')}
                                         </TableCell>
                                     );

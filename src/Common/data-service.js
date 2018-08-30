@@ -106,9 +106,9 @@ const dataService = store => next => action => {
 			return requestApiGenerator(next)(API_URL, 'notifications', { type: 'SET_NOTIFICATION' },
 				'POST', JSON.stringify(action.payload));
 		case 'GET_PROFILE_PICTURE':
-			return getImageGenerator(next)(GRAPH_URL, '/beta/me/photo/$value', { type: 'PROFILE_PICTURE' });
+			return getImageGenerator(next)(GRAPH_URL, 'beta/me/photo/$value', { type: 'PROFILE_PICTURE' });
 		case 'GET_PROFILE_PICTURE_SMALL':
-			return getImageGenerator(next)(GRAPH_URL, '/beta/me/photos/48x48/$value', { type: 'PROFILE_PICTURE_SMALL' });
+			return getImageGenerator(next)(GRAPH_URL, 'beta/me/photos/48x48/$value', { type: 'PROFILE_PICTURE_SMALL' });
 		default:
 			break
 	}

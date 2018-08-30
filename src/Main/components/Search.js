@@ -246,7 +246,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             type: "class",
             id: entry.CLASS_ID,
             text: entry.NAME === "07-12" ? "Nachschreiben" : entry.NAME,
-            secondary: "Klasse",
+            secondary: entry.NAME === "07-12" ? "Klasse" : undefined,
         })),
         ...Object.values(masterdata.Room).sort(sortName).map((entry) => ({
             searchString: "Raum " + entry.NAME,
@@ -264,12 +264,12 @@ Search.getDerivedStateFromProps = (props, state) => {
             secondary: "Lehrer",
         })),
         ...Object.values(masterdata.Student).sort(sortName).map((entry) => ({
-            searchString: `Schüler ${entry.FIRSTNAME} ${entry.LASTNAME}`,
+            searchString: `Schüler ${entry.FIRSTNAME} ${entry.LASTNAME} ` + (masterdata.Class[entry.CLASS_ID] || {}).NAME,
             upn: entry.UPN,
             type: "student",
             id: entry.STUDENT_ID,
             text: entry.FIRSTNAME + " " + entry.LASTNAME,
-            secondary: "Schüler",
+            secondary: "Schüler (" + (masterdata.Class[entry.CLASS_ID] || {}).NAME + ")",
         })),
     ];
 

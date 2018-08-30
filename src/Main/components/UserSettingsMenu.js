@@ -98,7 +98,7 @@ class UserSettingsMenu extends React.Component {
         authContext.logOut();
     }
 
-    openReminderSettings = () => {
+    openFeedback = () => {
         this.setState({feedbackOpen: true});
         this.handleClose();
     }
@@ -125,7 +125,10 @@ class UserSettingsMenu extends React.Component {
                     open={this.state.reminderOpen} 
                     onClose={this.closeReminderSettings} 
                 />
-                <Feedback open={this.state.feedbackOpen} onClose={this.closeFeedback} />
+                <Feedback 
+                    open={this.state.feedbackOpen} 
+                    onClose={this.closeFeedback}
+                />
                 <Tooltip id="tooltip-settings" title="Benutzereinstellungen">
                     <IconButton
                         aria-label="More"

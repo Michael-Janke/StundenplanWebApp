@@ -21,7 +21,7 @@ class ProfilePicture extends Component {
     render() {
         return (
             <Wrapper>
-                {!this.props.user.profilePicture
+                {this.props.user.profilePicture
                     ?<ProfileImg src={this.props.user.profilePicture} />
                     :<div style={{height:100, padding:20}}>Lade doch ein Profilfoto hoch.</div>}
                 <IconButton

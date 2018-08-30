@@ -66,13 +66,13 @@ export class Feedback extends Component {
             >
                 <DialogTitle>
                     <FeedbackTitle>
-                        <FeedbackIcon color='secondary' style={{ marginRight: '1vmin' }} />{"Feedback geben"}
+                        <FeedbackIcon color='primary' style={{ marginRight: '1vmin' }} />{"Feedback geben"}
                     </FeedbackTitle>
                 </DialogTitle>
                 <DialogContent style={customContentStyle}>
                     <DialogContentText>
                         Danke, dass du diese App verwendest.
-                        Hier kannst du Verbesserungsvorschläge vorschlagen
+                        Ideen, Wünsche, Anregungen? Schreib sie uns gerne!
                     </DialogContentText>
                     <TextField
                         onFocus={this.clearError}
