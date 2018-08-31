@@ -23,7 +23,7 @@ export default function avatarsReducer(state = { loading: false }, action = {}) 
                 {
                     ...state,
                     [upn]: {
-                        expires: moment().add('30', 'seconds')
+                        expires: moment().add('7', 'days')
                     }
                 }), state);
         case "BATCH_AVATARS_RECEIVED":
@@ -40,9 +40,7 @@ export default function avatarsReducer(state = { loading: false }, action = {}) 
                 ...filtered
             };
         case "BATCH_AVATARS_ERROR":
-            return {
-                ...state
-            };
+            return state;
         default:
             return state;
     }

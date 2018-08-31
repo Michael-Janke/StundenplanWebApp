@@ -22,9 +22,12 @@ import Typography from '@material-ui/core/Typography';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import NextIcon from '@material-ui/icons/ArrowForward';
 import ResetIcon from '@material-ui/icons/ArrowDownward';
+import WarnIcon from '@material-ui/icons/Warning';
+import Tooltip from '@material-ui/core/Tooltip';
 import { ObjectIcon } from '../Main/components/Avatars';
 import RoomList from './roomlist';
 import Supervision from './supervision';
+import moment from 'moment';
 
 class TimeTableGrid extends React.Component {
     state = {};
@@ -129,33 +132,32 @@ class TimeTableGrid extends React.Component {
     }
 
     render() {
-        const { classes, id, type } = this.props;
+        const { classes, id, type, warning, lastCheck } = this.props;
         const tableHeaderStyle = { fontSize: '85%', textAlign: 'center', padding: 0 };
-        const currentTimetable = (
-            <ConnectedCurrentTimetableInformation id={id} type={type} />
-        );
-
         return (
             <Print main name="TimeTable">
                 <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
                     <div className={classes.tableToolbar + " " + classes['table-header']}>
-                        {currentTimetable}
+                        {warning && <Tooltip title={"Letzte Verbindung " + moment(lastCheck).fromNow()}>
+                            <WarnIcon color="error" />
+                        </Tooltip>}
+                        <ConnectedCurrentTimetableInformation id={id} type={type} />
+                        <NoPrint>
+                            <IconButton onClick={this.props.setPreviousWeek}>
+                                <BackIcon />
+                            </IconButton>
+                        </NoPrint>
+                        {this.props.small || 
                             <NoPrint>
-                                <IconButton onClick={this.props.setPreviousWeek}>
-                                    <BackIcon />
+                                <IconButton onClick={this.props.setThisWeek}>
+                                    <ResetIcon />
                                 </IconButton>
-                            </NoPrint>
-                            {this.props.small || 
-                                <NoPrint>
-                                    <IconButton onClick={this.props.setThisWeek}>
-                                        <ResetIcon />
-                                    </IconButton>
-                                </NoPrint>}
-                            <NoPrint>
-                                <IconButton onClick={this.props.setNextWeek}>
-                                    <NextIcon />
-                                </IconButton>
-                            </NoPrint>
+                            </NoPrint>}
+                        <NoPrint>
+                            <IconButton onClick={this.props.setNextWeek}>
+                                <NextIcon />
+                            </IconButton>
+                        </NoPrint>
                     </div>
                     <Table className={classes['table-header']}>
                         <TableHead

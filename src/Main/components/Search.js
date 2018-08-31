@@ -246,7 +246,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             type: "class",
             id: entry.CLASS_ID,
             text: entry.NAME === "07-12" ? "Nachschreiben" : entry.NAME,
-            secondary: entry.NAME === "07-12" ? "Klasse" : undefined,
+            secondary: entry.NAME === "07-12" ? undefined : "Klasse",
         })),
         ...Object.values(masterdata.Room).sort(sortName).map((entry) => ({
             searchString: "Raum " + entry.NAME,

@@ -11,7 +11,6 @@ import {
     setNotification,
     showError,
     setMyTimetable,
-    counterChanged,
     sendLoginStatistic,
     changeTheme,
     setSortBy
@@ -25,7 +24,6 @@ import PrintProvider from 'react-easy-print';
 import ResponsiveFontSize from '../Common/ResponsiveFontSize';
 import MomentUtils from 'material-ui-pickers/utils/moment-utils';
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
-
 
 var AppBar = process.env.REACT_APP_MODE === 'tv'
     ? require("./components/TvAppBar").default
@@ -57,16 +55,9 @@ class Main extends Component {
         return {};
     }
 
-
-
-    componentDidUpdate(nextProps) {
-
-    }
-
     onThemeToggle = () => {
         this.props.changeTheme(this.props.themeType === 'dark' ? 'light' : 'dark');
     }
-
 
     render() {
         return (
@@ -83,8 +74,8 @@ class Main extends Component {
                                 <Snackbar
                                     open={!!this.props.error}
                                     message={"Fehler: " + this.props.error}
-                                    autoHideDuration={15000}
-                                    contentStyle={{
+                                    autoHideDuration={5000}
+                                    style={{
                                         color: 'red'
                                     }}
                                     onClose={this.props.clearErrors} />
@@ -102,7 +93,6 @@ const mapDispatchToProps = dispatch => {
     return {
         setMyTimetable: () => { dispatch(setMyTimetable()) },
         sendLoginStatistic: () => { dispatch(sendLoginStatistic()) },
-        counterChanged: (changed) => dispatch(counterChanged(changed)),
         checkCounter: () => { dispatch(checkCounter()); },
         clearErrors: () => { dispatch(clearErrors()); },
         showError: (text) => { dispatch(showError(text)); },
@@ -115,7 +105,6 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
     return {
         loading: state.user.loading,
-        counter: state.user.counterChanged,
         type: state.user.type,
         id: state.user.id,
         error: state.error.error,

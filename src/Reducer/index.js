@@ -10,7 +10,6 @@ import dates from './dates';
 let substitutions;
 if(process.env.REACT_APP_MODE === 'tv'){
     substitutions = require('./substitutions').default;
-    console.log(substitutions);
 }
 
 export default combineReducers({

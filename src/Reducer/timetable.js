@@ -72,7 +72,7 @@ export default function timetableReducer(state = initialState, action = {}) {
             } else if (action.payload.date) {
                 newDate = moment(action.payload.date)
             } else {
-                newDate = (moment().isoWeekday() >= 5) ? moment().add(1, 'week') : moment();
+                newDate = (moment().isoWeekday() >= 6) ? moment().add(1, 'week') : moment();
             }
 
             return {
@@ -86,10 +86,7 @@ export default function timetableReducer(state = initialState, action = {}) {
                 )
             };
         case "GET_TIMETABLE":
-            return {
-                ...state,
-                // timetables: { ...state.timetables, [getTimetableCacheKey(action.payload)]: null },
-            };
+            return state;
         case "GET_TIMETABLE_ERROR":
             return {
                 ...state,
