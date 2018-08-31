@@ -4,7 +4,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import MonthView from './month';
 import { getDates, deleteDate } from "./actions";
 import makeGetCurrentDates from "../Selector/dates";
 import AddDialog from "./Dialogs/addDialog";
@@ -94,26 +93,6 @@ class Dates extends Component {
 
     handleOnAdd = () => {
         this.addDialog.getWrappedInstance().open();
-    }
-
-    renderMonths() {
-        let months = [];
-        const props = { isAdmin: this.props.isAdmin };
-        for (let i = 0; i < this.state.monthCount; i++) {
-            months.push(
-                <li
-                    key={i}
-                >
-                    <MonthView
-                        ref={i}
-                        startMonth={this.state.min}
-                        index={i}
-                        dates={this.props.dates}
-                        {...props} />
-                </li>
-            )
-        }
-        return months;
     }
 
 
