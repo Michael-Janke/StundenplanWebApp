@@ -45,12 +45,16 @@ class TimeTableGrid extends React.Component {
         }
     }
 
-    renderPeriodTimes(period) {
+    periodTime(timeAsNumber){
         const lpad2 = (number) => (number < 10 ? '0' : '') + number;
+        return Math.floor(timeAsNumber / 100) + ':' + lpad2(timeAsNumber % 100);
+    }
+
+    renderPeriodTimes(period) {
         return (
             <Times key={period.PERIOD_TIME_ID}>
-                <Time>{Math.floor(period.START_TIME / 100)}:{lpad2(period.START_TIME % 100)}</Time>
-                <Time>{Math.floor(period.END_TIME / 100)}:{lpad2(period.END_TIME % 100)}</Time>
+                <Time>{this.periodTime(period.START_TIME)}</Time>
+                <Time>{this.periodTime(period.END_TIME)}</Time>
             </Times>
         );
     }
@@ -58,7 +62,11 @@ class TimeTableGrid extends React.Component {
     renderPeriodHeader(period) {
         return (
             <Periods key={-period.PERIOD_TIME_ID}>
-                <Period>{period.PERIOD_TIME_ID - 1}.</Period>
+                <Tooltip 
+                    placement="right" 
+                    title={this.periodTime(period.START_TIME) + ' - ' + this.periodTime(period.END_TIME)}>
+                    <Period>{period.PERIOD_TIME_ID - 1}.</Period>
+                </Tooltip>
             </Periods>
         )
     }
