@@ -132,6 +132,7 @@ class ResponsiveDrawer extends React.Component {
                 </AppBar>
                 <Drawer
                     variant="temporary"
+                    swipeAreaWidth="10px"
                     anchor={theme.direction === 'rtl' ? 'right' : 'left'}
                     open={this.state.mobileOpen}
                     onClose={this.handleDrawerToggle}

@@ -140,7 +140,7 @@ class TimeTableGrid extends React.Component {
     }
 
     render() {
-        const { classes, id, type, warning, lastCheck } = this.props;
+        const { classes, id, type, warning, lastCheck, small } = this.props;
         const tableHeaderStyle = { fontSize: '85%', textAlign: 'center', padding: 0 };
         return (
             <Print main name="TimeTable">
@@ -188,7 +188,7 @@ class TimeTableGrid extends React.Component {
                             </TableRow>
                         </TableHead>
                     </Table>
-                    <div style={{ maxHeight: `calc(100vh - ${180}px)`, overflow: 'hidden auto' }}>
+                    <div style={{ maxHeight: small ? undefined : `calc(100vh - ${180}px)`, overflow: 'hidden auto' }}>
                         <GrayoutTable
                             className={classes.table}
                             disabled={this.props.counterChanged === 'detected'}

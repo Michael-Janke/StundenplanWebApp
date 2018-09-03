@@ -45,13 +45,13 @@ export const subjectStyles = theme => ({
         color: theme.palette.type === 'dark' ? grey[300] : grey[600],
         fontSize: '70%',
         fontWeight: 600,
-        textDecoration: `line-through ${theme.palette.divider}`,
+        textDecoration: 'line-through ' + (theme.palette.type === 'dark' ? "white" : "black"),
     },
     'subject-substitution': {
         color: theme.palette.type === 'dark' ? grey[300] : grey[600],
         fontSize: '70%',
         fontWeight: 600,
-        textDecoration: `line-through ${theme.palette.divider}`,
+        textDecoration: 'line-through ' + (theme.palette.type === 'dark' ? "white" : "black"),
     }
 });
 

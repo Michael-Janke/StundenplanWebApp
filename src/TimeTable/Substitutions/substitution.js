@@ -194,7 +194,7 @@ const ColorBar = styled.div`
 const extendStyles = (theme) => ({
     ...(styles(theme)),
     substitutionsContentOld: {
-        textDecoration: `line-through ${theme.palette.divider}`,
+        textDecoration: 'line-through ' + (theme.palette.type === 'dark' ? "white" : "black"),
     }
 })
 

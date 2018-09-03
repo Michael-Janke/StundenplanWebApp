@@ -96,10 +96,4 @@ const Class = styled.div`
     white-space: nowrap;
 `;
 
-// const OldClass = styled(Class) `
-//     font-size: 70%;
-//     text-decoration: line-through;
-// `;
-
-
 export default ClassesContainer;
