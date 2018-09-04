@@ -32,7 +32,7 @@ class Period extends React.Component {
             <PeriodsContainer>
                 {lessons.map((lesson, i) => {
                     let { classes, subject, teachers, room, ...other } = lesson;
-                    if (other.absenceOnly) {
+                    if (other.absenceOnly || (other.absence && other.type)) {
                         return (
                             <Absence
                                 {...other}

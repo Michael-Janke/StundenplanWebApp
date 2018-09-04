@@ -237,7 +237,7 @@ const LessonWrapper = styled.div`
 `;
 
 const Lesson = styled.div`
-    flex: ${props => props.flex ? 1 : 'none'};
+    flex: ${props => props.flex ? 'auto' : 'none'};
     display: flex;
     overflow: hidden;
     text-align: left;
