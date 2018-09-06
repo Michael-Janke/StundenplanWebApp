@@ -1,0 +1,235 @@
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import withStyles from '@material-ui/core/styles/withStyles';
+import Button from '@material-ui/core/Button';
+import { connect } from 'react-redux';
+import CalendarIcon from '@material-ui/icons/Event';
+import grey from '@material-ui/core/colors/grey';
+import MenuItem from '@material-ui/core/MenuItem';
+import DateComponent from './Date';
+import { addDate, editDate } from './actions';
+import moment from 'moment';
+import SelectField from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import {DateFormatInput, TimeFormatInput} from 'material-ui-next-pickers';
+
+
+const styles = theme => ({
+    root: {
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    row:{
+        display: 'flex',
+        flexDirection: 'row'        
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 140,
+    },
+});
+
+function parseISOLocal(s) {
+    var b = s.split(/\D/);
+    return new Date(b[0], b[1]-1, b[2], b[3], b[4], b[5]);
+}
+
+export class AddDialog extends Component {
+    
+    state = {}
+
+    static getDerivedStateFromProps(props, state) {
+        if(!state.open && props.open) {
+            let date = props.date || {};
+            return {
+                open: true,
+                DATE_ID: date.DATE_ID,
+                TEXT: date.TEXT || "",
+                SUBTEXT: date.SUBTEXT || "",
+                TYPE: date.TYPE || "NORMAL",
+                DATE_FROM: date.DATE_FROM
+                    ? parseISOLocal(date.DATE_FROM.date) : 
+                    moment().startOf('day').toDate(),
+                DATE_TO: date.DATE_TO 
+                    ? parseISOLocal(date.DATE_TO.date) : 
+                    moment().startOf('day').toDate(),
+            }
+        }
+        return state;
+    }
+
+    handleChange = (key) => (event) => {
+        this.setState({[key]: event.target.value});
+    }
+
+    handleFromDateChange = (date) => {
+        this.setState({ 
+            DATE_FROM: date,
+            DATE_TO: this.state.DATE_TO || date
+        });
+    }
+
+    handleToDateChange = (date) => {
+        this.setState({ 
+            DATE_TO: date
+        });
+    }
+
+    handleClose = (abort = false) => () => {
+        this.setState({ 
+            open: false
+        });
+        this.props.handleClose(abort ? undefined : {
+            DATE_ID: this.state.DATE_ID,
+            DATE_FROM: moment(this.state.DATE_FROM).format(),
+            DATE_TO: moment(this.state.DATE_TO).format(),
+            TYPE: this.state.TYPE,
+            TEXT: this.state.TEXT,
+            SUBTEXT: this.state.SUBTEXT,
+        });
+    }
+
+    render() {
+        const { edit, classes } = this.props;
+
+        return (
+            <Dialog
+                open={this.props.open}
+                onClose={this.handleClose(true)}
+            >
+                <DialogTitle>
+                    <CalendarIcon color={grey[400]} style={{ marginRight: '1vmin' }} />
+                    {"Termin " + (edit ? "editieren" : "hinzufügen")}
+                </DialogTitle>
+                <DialogContent className={classes.root}>
+                    <div className={classes.row}>
+                        
+                        <FormControl className={classes.formControl}
+                        error={!this.state.DATE_FROM}>
+                            <h4>Von</h4>
+                            <DateFormatInput 
+                                value={this.state.DATE_FROM} 
+                                onChange={(date) => this.handleFromDateChange(date)}
+                                />
+                            <TimeFormatInput 
+                                value={this.state.DATE_FROM} 
+                                onChange={(date) => this.handleFromDateChange(date)}
+                            />
+                        </FormControl>
+                        
+                        <FormControl className={classes.formControl}
+                        error={!this.state.DATE_TO}>
+                            <h4>Bis</h4>
+                            <DateFormatInput 
+                                value={this.state.DATE_TO} 
+                                onChange={(date) => this.handleToDateChange(date)}
+                                />
+                            <TimeFormatInput 
+                                value={this.state.DATE_TO} 
+                                onChange={(date) => this.handleToDateChange(date)}
+                            />
+                        </FormControl>
+                    </div>                    
+                    <FormControl className={classes.formControl} error={!this.state.TYPE}>
+                        <InputLabel htmlFor="type">Typ</InputLabel>
+                        <SelectField
+                            inputProps={{ name: 'type', id: 'type' }}
+                            fullWidth
+                            value={this.state.TYPE}
+                            onChange={this.handleChange("TYPE")}
+                        >
+                            <MenuItem value={"NORMAL"}>
+                                Normal
+                            </MenuItem>
+                            <MenuItem value={"EXAM"}>
+                                Prüfung
+                            </MenuItem>
+                            <MenuItem value={"EXKURSION"}>
+                                Exkursion
+                            </MenuItem>
+                        </SelectField>
+                    </FormControl>
+                    <FormControl className={classes.formControl} error={!this.state.TEXT}>
+                        <InputLabel htmlFor="title">Text</InputLabel>
+                        <Input
+                            id="title"
+                            name="text"
+                            fullWidth
+                            value={this.state.TEXT}
+                            onChange={this.handleChange("TEXT")}
+                        />
+                    </FormControl>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel htmlFor="sub-title">Beschreibung</InputLabel>
+                        <Input
+                            id="sub-title"
+                            name="text"
+                            multiline
+                            rows={2}
+                            fullWidth
+                            value={this.state.SUBTEXT}
+                            onChange={this.handleChange("SUBTEXT")}
+                        />
+                    </FormControl>
+ 
+                    <Preview>
+                        <PreviewHeader>
+                            Vorschau
+                        </PreviewHeader>
+                        <PreviewContainer>
+                            <DateComponent date={this.state} />
+                        </PreviewContainer>
+                    </Preview>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        color="primary"
+                        onClick={this.handleClose(true)}
+                    >
+                        Abbrechen
+                    </Button>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={this.handleClose()}
+                    >
+                        Absenden
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        )
+    }
+}
+
+
+const PreviewHeader = styled.div`
+    font-size: 100%;
+    font-weight: 600;
+`;
+
+const Preview = styled.div`
+    width: 300px;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+`;
+
+const PreviewContainer = styled.div`
+    width: 100%;
+`;
+
+const mapStateToProps = (state) => ({
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    addDate: (date) => dispatch(addDate(date)),
+    editDate: (date) => dispatch(editDate(date)),
+});
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(AddDialog));

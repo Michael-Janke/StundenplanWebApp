@@ -14,10 +14,10 @@ const styles = theme => ({
             fontSize: 17,
         },
         [theme.breakpoints.up('lg')]: {
-            fontSize: 18,
+            fontSize: 17,
         },
         [theme.breakpoints.up('xl')]: {
-            fontSize: 18,
+            fontSize: 17.5,
         },
     },
 });

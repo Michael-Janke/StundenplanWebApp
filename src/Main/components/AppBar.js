@@ -29,6 +29,8 @@ const styles = theme => ({
     },
     appBar: {
         backgroundColor: indigo[600],
+        paddingLeft: 10,
+        paddingRight: 10,
     },
     toolbar: theme.mixins.toolbar,
     drawer: {
@@ -100,7 +102,9 @@ class ResponsiveDrawer extends React.Component {
         return (
             <div className={classes.root}>
                 <AppBar className={classes.appBar} style={{ boxShadow: 'none' }}>
-                    <Toolbar>
+                    <Toolbar
+                        disableGutters={true}
+                    >
                         <IconButton
                             color="inherit"
                             aria-label="open drawer"
@@ -109,7 +113,7 @@ class ResponsiveDrawer extends React.Component {
                             <MenuIcon />
                         </IconButton>
 
-                        <Icons style={{marginLeft: large  ? "calc(238px + 3vw)" : undefined}}>
+                        <Icons style={{marginLeft: large  ? "calc(300px + 2vw - 58px)" : undefined}}>
                             <Search shrinkChildren={small} alwaysOpen={!small}>
                                 {small &&
                                     <Tooltip id="tooltip-calendar" title="Kalendar öffnen">

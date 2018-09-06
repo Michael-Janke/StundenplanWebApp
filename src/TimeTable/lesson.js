@@ -40,6 +40,11 @@ const AbstractLesson = (props) => {
     const SubstitutingFields = fields.substitution && fields.substitution.map(BoundField);
 
     let substitutionTextBig = substitutionText && substitutionText.length > 5;
+    const substitutionType = specificSubstitutionType && (
+        <SubstitutionType color={styles.color}>
+            {(!substitutionText || substitutionTextBig) ? specificSubstitutionType.name : substitutionText}
+        </SubstitutionType>
+    );
 
     const extraInfo = (substitutionTextBig || absence) && (
         <SubstitutionText left={small}>
@@ -85,6 +90,7 @@ const AbstractLesson = (props) => {
             )
         }
     }
+    InsteadOf=undefined; //todo as popover
 
     if (isNew) {
         if (!small) {
@@ -99,6 +105,7 @@ const AbstractLesson = (props) => {
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
                         <LessonContainer>
                             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden', flex: 'none' }}>
+                                {substitutionType}
                                 <Field1 left />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', overflow: 'hidden', paddingLeft: 5 }}>
@@ -123,6 +130,7 @@ const AbstractLesson = (props) => {
                     <LessonWrapper small>
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
                         <LessonContainer small>
+                            {substitutionType}
                             <Field1 left />
                             <Field2 left/>
                             <Field3 left/>
@@ -147,6 +155,7 @@ const AbstractLesson = (props) => {
                         <LessonWrapper>
                             {InsteadOf && InsteadOf(...SubstitutingFields)}
                             <LessonContainer>
+                                {substitutionType}
                                 <Field1 left />
                                 {Field2 && <Field2 />}
                             </LessonContainer>
@@ -166,6 +175,7 @@ const AbstractLesson = (props) => {
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
                         <LessonWrapper small>
                             <LessonContainer small>
+                                {substitutionType}
                                 <Field1 left/>
                                 {Field2 && <Field2 left />}
                             </LessonContainer>
@@ -193,6 +203,15 @@ const SubstitutionTextContainer = styled.div`
     white-space: normal;
     align-items: center;
     display: flex;
+`;
+
+const SubstitutionType = styled.div`
+    font-size: 60%;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: ${props => props.color};
 `;
 
 const InsteadInformation = styled.div`

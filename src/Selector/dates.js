@@ -1,22 +1,12 @@
 import { createSelector } from 'reselect'
-import moment from 'moment';
 
 const getDates = (state) => state.dates.dates;
 
 const getMappedDates = (dates) => {
-    let array = [];
-    dates.forEach(element => {
-        let startDate = moment(element.DATE_FROM.date);
-        let object = array.find((element) => element.DATE.diff(startDate, 'days') === 0);
-        if (!object) {
-            object = { DATE: startDate, dates: [] };
-            array.push(object);
-        }
-        object.dates.push(element);
-    });
+    let array = [...dates.filter((e)=> e && e.DATE_FROM)];
+    array.sort((a,b) => a.DATE_FROM.date < b.DATE_FROM.date ? -1 : a.DATE_FROM.date > b.DATE_FROM.date ? 1 : 0);
     return array;
 };
-
 
 const makeGetCurrentDates = () => {
     return createSelector(

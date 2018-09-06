@@ -6,6 +6,7 @@ import TimeTableGrid from './timeTableGrid';
 import indigo from '@material-ui/core/colors/indigo';
 import { Paper } from "@material-ui/core";
 import Dates from "../Dates";
+import ErrorBoundary from "../Common/ErrorBoundary";
 
 var Substitutions;
 if (process.env.REACT_APP_MODE === 'tv') {
@@ -19,8 +20,10 @@ class View extends PureComponent {
             <Container>
                 <AppBar backgroundColor={indigo[600]} />
                 {showCalendar &&
-                    <ShadowContainer>
-                        <Dates />
+                    <ShadowContainer style={{width:300, flex:'none'}}>
+                        <ErrorBoundary>
+                            <Dates />
+                        </ErrorBoundary>
                     </ShadowContainer>
                 }
                 {Substitutions ?
@@ -30,8 +33,10 @@ class View extends PureComponent {
                     </ShadowContainer>
                     : null}
 
-                <ShadowContainer>
-                    <TimeTableGrid />
+                <ShadowContainer style={{marginRight: '1vw'}}>
+                    <ErrorBoundary>
+                        <TimeTableGrid />
+                    </ErrorBoundary>    
                 </ShadowContainer>
             </Container>
         );
@@ -47,13 +52,9 @@ const Container = styled.div`
 const ShadowContainer = styled(Paper)`
     display: flex;
     flex-direction: row;
-    margin-top: 6px;
-    margin-right: 1vw;
     margin-left: 1vw;
-    // margin-bottom: 1vw;
-    z-index: 1;
     position: relative;
-    max-width: 1200px;  
+    max-width: 800px;  
     height: 100%;
 `
 const AppBar = styled.div`
