@@ -15,11 +15,11 @@ if (process.env.REACT_APP_MODE === 'tv') {
 
 class View extends PureComponent {
     render() {
-        const { showCalendar } = this.props;
+        const { showCalendar, small } = this.props;
         return (
             <Container>
                 <AppBar backgroundColor={indigo[600]} />
-                {showCalendar &&
+                {showCalendar && !small &&
                     <ShadowContainer style={{width:300, flex:'none'}}>
                         <ErrorBoundary>
                             <Dates />
@@ -32,12 +32,20 @@ class View extends PureComponent {
                         <Substitutions addDays={1} />
                     </ShadowContainer>
                     : null}
-
-                <ShadowContainer style={{marginRight: '1vw'}}>
-                    <ErrorBoundary>
-                        <TimeTableGrid />
-                    </ErrorBoundary>    
-                </ShadowContainer>
+                <Column>
+                    <ShadowContainer style={{marginRight: '1vw'}}>
+                        <ErrorBoundary>
+                            <TimeTableGrid />
+                        </ErrorBoundary>    
+                    </ShadowContainer>
+                    {showCalendar && small &&
+                        <ShadowContainer>
+                            <ErrorBoundary>
+                                <Dates singleMonth />
+                            </ErrorBoundary>
+                        </ShadowContainer>
+                    }
+                </Column>
             </Container>
         );
     }
@@ -49,13 +57,18 @@ const Container = styled.div`
     display: flex;
     background-color: ${props => props.backgroundColor};
 `
+const Column = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+
 const ShadowContainer = styled(Paper)`
     display: flex;
     flex-direction: row;
     margin-left: 1vw;
     position: relative;
     max-width: 800px;  
-    height: 100%;
+    margin-bottom: 10px;
 `
 const AppBar = styled.div`
     display: flex;
@@ -74,7 +87,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        showCalendar: state.browser.greaterThan.medium && process.env.REACT_APP_MODE !== 'tv',
+        showCalendar: process.env.REACT_APP_MODE !== 'tv',
+        small: state.browser.lessThan.medium
     };
 };
 

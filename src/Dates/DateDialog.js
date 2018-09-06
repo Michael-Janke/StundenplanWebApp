@@ -59,6 +59,7 @@ export class AddDialog extends Component {
                 DATE_TO: date.DATE_TO 
                     ? parseISOLocal(date.DATE_TO.date) : 
                     moment().startOf('day').toDate(),
+                timeEdit: date.DATE_FROM && parseISOLocal(date.DATE_FROM.date).getHours() !== 0
             }
         }
         return state;
@@ -81,22 +82,40 @@ export class AddDialog extends Component {
         });
     }
 
+    extractDate(dbFormat) {
+        return {
+            DATE_ID: this.state.DATE_ID,
+            DATE_FROM: dbFormat ? {date: this.state.DATE_FROM} : moment(this.state.DATE_FROM).format(),
+            DATE_TO: dbFormat ? {date: this.state.DATE_TO} : moment(this.state.DATE_TO).format(),
+            TYPE: this.state.TYPE,
+            TEXT: this.state.TEXT,
+            SUBTEXT: this.state.SUBTEXT,
+        }
+    }
+
     handleClose = (abort = false) => () => {
         this.setState({ 
             open: false
         });
-        this.props.handleClose(abort ? undefined : {
-            DATE_ID: this.state.DATE_ID,
-            DATE_FROM: moment(this.state.DATE_FROM).format(),
-            DATE_TO: moment(this.state.DATE_TO).format(),
-            TYPE: this.state.TYPE,
-            TEXT: this.state.TEXT,
-            SUBTEXT: this.state.SUBTEXT,
+        this.props.handleClose(abort ? undefined : this.extractDate());
+    }
+
+    editTime = (timeEdit) => {
+        let resetTime = {};
+        if(!timeEdit) {
+            let DATE_FROM = moment(this.state.DATE_FROM).startOf('day').toDate();
+            let DATE_TO = moment(this.state.DATE_TO).startOf('day').toDate();
+            resetTime = {DATE_FROM, DATE_TO}
+        }
+        this.setState({
+            timeEdit,
+            ...resetTime
         });
     }
 
     render() {
         const { edit, classes } = this.props;
+        const { timeEdit } = this.state;
 
         return (
             <Dialog
@@ -117,10 +136,12 @@ export class AddDialog extends Component {
                                 value={this.state.DATE_FROM} 
                                 onChange={(date) => this.handleFromDateChange(date)}
                                 />
-                            <TimeFormatInput 
+                            {!timeEdit && <Button onClick={() => this.editTime(true)}>Zeit hinzufügen</Button>}
+                            {timeEdit && <TimeFormatInput 
                                 value={this.state.DATE_FROM} 
                                 onChange={(date) => this.handleFromDateChange(date)}
-                            />
+                            />}
+                            {timeEdit && <Button onClick={() => this.editTime(false)}>Zeit entfernen</Button>}
                         </FormControl>
                         
                         <FormControl className={classes.formControl}
@@ -130,10 +151,10 @@ export class AddDialog extends Component {
                                 value={this.state.DATE_TO} 
                                 onChange={(date) => this.handleToDateChange(date)}
                                 />
-                            <TimeFormatInput 
+                            {timeEdit &&<TimeFormatInput 
                                 value={this.state.DATE_TO} 
                                 onChange={(date) => this.handleToDateChange(date)}
-                            />
+                            />}
                         </FormControl>
                     </div>                    
                     <FormControl className={classes.formControl} error={!this.state.TYPE}>
@@ -183,7 +204,7 @@ export class AddDialog extends Component {
                             Vorschau
                         </PreviewHeader>
                         <PreviewContainer>
-                            <DateComponent date={this.state} />
+                            <DateComponent date={this.extractDate(true)} />
                         </PreviewContainer>
                     </Preview>
                 </DialogContent>

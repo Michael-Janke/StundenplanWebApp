@@ -119,16 +119,19 @@ class Dates extends Component {
     monthRefs={};
 
     scrollToMonth = () => {
+        if(this.props.singleMonth) return;
         const selectedMonth =  this.props.timetableDate.format("MMMM YY");
         this.monthRefs[selectedMonth] 
             && this.monthRefs[selectedMonth].scrollIntoView({block: 'start', behavior: 'smooth'});
     }
 
     render() {
-        const { classes, isAdmin} = this.props;
+        const { classes, isAdmin, timetableDate, singleMonth} = this.props;
         const { editMode } = this.state;
         
-        const dates = this.props.dates;
+        const dates = singleMonth 
+            ? this.props.dates.filter((date = {}) => moment(date.DATE_FROM.date).month() === timetableDate.month())
+            : this.props.dates;
 
         return (
             <Paper square={true} className={classes.root}>
@@ -160,17 +163,17 @@ class Dates extends Component {
                                     onDelete={isAdmin && editMode && date.DATE_ID > 0 ? () => this.deleteDate() : undefined}
                                 />
                     )}
-                    <div className={classes.buffer}>
+                    {!singleMonth && <div className={classes.buffer}>
                         {!dates && "Keine Termine eingetragen"}
-                    </div>
+                    </div>}
                 </List>
 
-                <DateDialog 
+                {isAdmin && <DateDialog 
                     open={this.state.dialogOpen} 
                     handleClose={this.handleDateAddEdit} 
                     date={this.state.selectedDate} 
                     edit={this.state.edit}
-                />
+                />}
                 {editMode && 
                     <Button 
                         variant="fab" 
