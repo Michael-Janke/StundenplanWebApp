@@ -173,11 +173,12 @@ class TimeTableGrid extends React.Component {
                             <TableRow style={{ height: this.props.small ? 28 : 48 }}>
                                 <TableCell style={{ ...tableHeaderStyle, width: this.state.periodsWidth, padding: 2 }} />
                                 {[1, 2, 3, 4, 5].map((day, i) => {
-                                    let date = this.props.date.clone().weekday(0).add(day - 1, 'days');
+                                    let date = this.props.date.clone().startOf('day').weekday(0).add(day - 1, 'days');
                                     return (
                                         <TableCell
                                             key={i}
                                             style={tableHeaderStyle}
+                                            className={moment().startOf('day').diff(date, 'days') === 0 ? classes.today : ""}
                                         >
                                             {this.props.small || date.format('dddd')}
                                             {this.props.small || <br /> }
@@ -256,6 +257,9 @@ const styles = theme => ({
         display: 'flex',
         justifyContent: 'flex-end',
         alignItems: 'center',
+    },
+    today: {
+        backgroundColor: grey[400],
     }
 });
 

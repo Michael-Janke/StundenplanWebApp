@@ -356,15 +356,12 @@ const styles = theme => ({
         transform: 'translate3d(0,0,0)',
     },
     dropDownClosed: {
-        // overflow: 'hidden',
-        // maxHeight: '0%',
         boxShadow: 'none',
         transform: 'translate3d(0,-8px,0)',
     },
     list: {
         backgroundColor: theme.palette.background.paper,
         overflowY: 'auto',
-        // height: '100%',
         flex: 1,
     },
     keyboard: {
