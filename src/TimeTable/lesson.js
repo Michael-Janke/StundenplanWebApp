@@ -12,7 +12,7 @@ const BindField = (props) => field => Field.bind(null, field, props);
 
 const SubstitutionText = ({ left, children }) => (
     <SubstitutionTextContainer>
-        <div style={{ flex: 1, textAlign: left ? 'left' : 'center' }}>({children})</div>
+        ({children})
     </SubstitutionTextContainer>
 );
 
@@ -25,7 +25,7 @@ const AbstractLesson = (props) => {
                 type={theme.palette.type}
                 color={styles.backgroundColor}
                 flex={!specificSubstitutionType || !multiple}>
-                <ColorBar lineColor={colorBar} />
+                <ColorBar lineColor={styles.color} />
             </Lesson>
         );
     }
@@ -46,11 +46,10 @@ const AbstractLesson = (props) => {
         </SubstitutionType>
     );
 
-    const extraInfo = (substitutionTextBig || absence) && (
+    const extraInfo = substitutionText &&
         <SubstitutionText left={small}>
-            {substitutionText ? substitutionText + (absence ? ` (${absence.TEXT})` : "") : absence.TEXT}
-        </SubstitutionText>
-    );
+            {substitutionText}
+        </SubstitutionText>;
 
     let InsteadBy;
     if (substitutionInfo === 'instead-by') {
@@ -100,7 +99,7 @@ const AbstractLesson = (props) => {
                     type={theme.palette.type}
                     color={styles.backgroundColor}
                     flex={!specificSubstitutionType || !multiple}>
-                    <ColorBar lineColor={colorBar} />
+                    <ColorBar lineColor={styles.color} />
                     <LessonWrapper>
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
                         <LessonContainer>
@@ -126,7 +125,7 @@ const AbstractLesson = (props) => {
                     type={theme.palette.type}
                     color={styles.backgroundColor}
                     flex={last}>
-                    <ColorBar lineColor={colorBar} />
+                    <ColorBar lineColor={styles.color} />
                     <LessonWrapper small>
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
                         <LessonContainer small>
@@ -151,7 +150,7 @@ const AbstractLesson = (props) => {
                         type={theme.palette.type}
                         color={styles.backgroundColor}
                         flex={!specificSubstitutionType || !multiple}>
-                        <ColorBar lineColor={colorBar} />
+                        <ColorBar lineColor={styles.color} />
                         <LessonWrapper>
                             {InsteadOf && InsteadOf(...SubstitutingFields)}
                             <LessonContainer>
@@ -171,7 +170,7 @@ const AbstractLesson = (props) => {
                         type={theme.palette.type}
                         color={styles.backgroundColor}
                         flex={last}>
-                        <ColorBar lineColor={colorBar} />
+                        <ColorBar lineColor={styles.color} />
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
                         <LessonWrapper small>
                             <LessonContainer small>
@@ -197,7 +196,8 @@ const ColorBar = styled.div`
 `;
 
 const SubstitutionTextContainer = styled.div`
-    font-size: 70%;
+    font-size: 60%;
+    color: ${grey[500]};
     overflow: hidden;
     word-break: break-word;
     white-space: normal;
@@ -226,14 +226,10 @@ const LessonContainer = styled.div`
     width: 100%;
     ${props => (props.small ? `
         flex-direction: column;  
-        // padding-top: 0.25vmin;
-        // padding-bottom: 0.25vmin;
     `: `
         flex-direction: row;
         align-items: center; 
         justify-content: space-between;
-        // padding-top: 0.5vmin;
-        // padding-bottom: 0.5vmin;
     `)}
     ${props => props.tab && props.small && `
         padding-left: 0.5vmin;

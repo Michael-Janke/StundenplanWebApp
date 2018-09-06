@@ -1,11 +1,9 @@
-
 export function createMask(...masks) {
     return (substitution) =>
         masks.reduce((prev, current) => {
             return current(prev);
         }, substitution);
 }
-
 
 export const transform = (variant) => variant === 'old' ? transformOld : variant === 'new' ? transformNew : null;
 
