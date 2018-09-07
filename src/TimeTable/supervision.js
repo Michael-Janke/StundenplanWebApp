@@ -18,6 +18,11 @@ const styles = theme => ({
     },
     'supervision-normal': {
         maxWidth: '100%'
+    },
+    label: {
+        display:'block',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
     }
 });
 
@@ -29,9 +34,11 @@ class Supervision extends React.Component {
             <div className={classes.root}>
                 <Chip
                     label={supervision.LOCATION || "Aufsicht"}
+                    classes={{label: classes.label}}
                     style={{
                         backgroundColor: (supervision.TYPE === "NORMAL" ? "rgba(67, 160, 71, 0.85)" : "rgba(229, 57, 53, 0.85)"),
                         textDecorationLine: (supervision.TYPE === "ELIMINATION" ? "line-through" : ""),
+                        maxWidth: '100%',
                     }}
                     className={classes.supervision}
                 />

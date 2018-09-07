@@ -180,8 +180,8 @@ class TimeTableGrid extends React.Component {
                                             style={tableHeaderStyle}
                                             className={moment().startOf('day').diff(date, 'days') === 0 ? classes.today : ""}
                                         >
-                                            {this.props.small || date.format('dddd')}
-                                            {this.props.small || <br /> }
+                                            {!small && date.format('dddd')}
+                                            {!small && <br /> }
                                             {date.format('DD.MM.')}
                                         </TableCell>
                                     );
