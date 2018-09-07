@@ -22,9 +22,10 @@ class SearchResult extends React.PureComponent {
     static getDerivedStateFromProps(props, state) {
         if (!props.open || !props.results) {
             // do nothing if closing
-            return {};
+            return { open: props.open };
         }
         return {
+            open: props.open,
             results: props.results,
             elements: (props.results !== state.results) ?
                 SearchResult.getResults(props, 0, 15) : state.elements,
@@ -38,7 +39,7 @@ class SearchResult extends React.PureComponent {
     }
 
     onScroll = () => {
-        if (!this.state.elements) {
+        if (!this.state.elements || !this.state.open) {
             return;
         }
         if (this.scroll.scrollTop + this.scroll.clientHeight >=
@@ -60,7 +61,7 @@ class SearchResult extends React.PureComponent {
     }
 
     render() {
-        
+
         const { className } = this.props;
         return (
             <div ref={node => this.scroll = node} className={className}>
