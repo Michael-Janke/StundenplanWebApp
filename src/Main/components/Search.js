@@ -139,8 +139,8 @@ class Search extends React.PureComponent {
     };
 
     render() {
-        const { classes, shrinkChildren, alwaysOpen, Keyboard } = this.props;
-        const { open, nonEmpty } = this.state;
+        const { classes, shrinkChildren, alwaysOpen, Keyboard, small } = this.props;
+        const { open, nonEmpty, value } = this.state;
         const isOpen = alwaysOpen || open || this.props.open;
         return (
             <div className={classes.root}>
@@ -199,7 +199,7 @@ class Search extends React.PureComponent {
                                     onInput={this.handleKeyboardInput}>
                                 </Keyboard>
                             }
-                            {this.state.result && !!this.state.result.length &&
+                            {this.state.open &&
                                 <SearchResult
                                     results={this.state.result}
                                     className={classNames(
@@ -207,7 +207,7 @@ class Search extends React.PureComponent {
                                         classes.list,
                                         !open && classes.dropDownClosed
                                     )}
-                                    filterBar={this.renderFilterBar()}>
+                                    filterBar={small ? null : this.renderFilterBar()}>
                                     {(result, avatars) => (
                                         result.map((object, i) =>
                                             <ListItem
@@ -263,7 +263,7 @@ class Search extends React.PureComponent {
 }
 
 Search.getDerivedStateFromProps = (props, state) => {
-    const { masterdata, favorites } = props;
+    const { masterdata, favorites, small } = props;
     const { selectedFilter, value } = state;
     const sortName = (o1, o2) => (o1.LASTNAME || o1.NAME).localeCompare(o2.LASTNAME || o2.NAME);
     const user = props.user;
@@ -331,9 +331,13 @@ Search.getDerivedStateFromProps = (props, state) => {
     filtered = data
         .filter(obj => selectedFilter || value !== "" || obj.favorite)
         .filter(obj => !selectedFilter || obj.filterType === selectedFilter)
-        .filter(obj => fuzzysearch(value, obj.searchString));
+        .filter(obj => value === "" || fuzzysearch(value, obj.searchString));
 
-    return { data, result: filtered };
+    return { 
+        data, 
+        result: filtered,
+        selectedFilter: small ? "" : selectedFilter
+    };
 }
 
 const styles = theme => ({
@@ -475,7 +479,8 @@ const styles = theme => ({
 const mapStateToProps = (state) => ({
     masterdata: state.timetable.masterdata,
     user: state.user,
-    favorites: state.favorites.favorites || []
+    favorites: state.favorites.favorites || [],
+    small: state.browser.lessThan.medium,
 });
 
 const mapDispatchToProps = dispatch => ({
