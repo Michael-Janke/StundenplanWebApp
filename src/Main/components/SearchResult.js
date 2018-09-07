@@ -7,6 +7,8 @@ import List from '@material-ui/core/List';
 
 class SearchResult extends React.PureComponent {
 
+
+
     state = {};
     static getResults(props, start, end) {
         const results = props.results.slice(start, end);
@@ -18,6 +20,10 @@ class SearchResult extends React.PureComponent {
     }
 
     static getDerivedStateFromProps(props, state) {
+        if (!props.open || !props.results) {
+            // do nothing if closing
+            return {};
+        }
         return {
             results: props.results,
             elements: (props.results !== state.results) ?
@@ -32,6 +38,9 @@ class SearchResult extends React.PureComponent {
     }
 
     onScroll = () => {
+        if (!this.state.elements) {
+            return;
+        }
         if (this.scroll.scrollTop + this.scroll.clientHeight >=
             (this.scroll.scrollHeight || this.scroll.clientHeight) - 20) {
             if (this.props.results.length > this.state.elements.length) {
@@ -51,13 +60,16 @@ class SearchResult extends React.PureComponent {
     }
 
     render() {
+        
         const { className } = this.props;
         return (
             <div ref={node => this.scroll = node} className={className}>
-                <List component="div">
-                    {this.props.filterBar}
-                    {this.props.children(this.state.elements, this.props.avatars)}
-                </List>
+                {this.state.elements &&
+                    <List component="div">
+                        {this.props.filterBar}
+                        {this.props.children(this.state.elements, this.props.avatars)}
+                    </List>
+                }
             </div>
         )
     }

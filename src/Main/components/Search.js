@@ -103,30 +103,32 @@ class Search extends React.PureComponent {
     }
 
     setFilter(selectedFilter) {
-        this.setState({selectedFilter: (this.state.selectedFilter === selectedFilter) 
-                                                                  ? "" 
-                                                                  : selectedFilter});
+        this.setState({
+            selectedFilter: (this.state.selectedFilter === selectedFilter)
+                ? ""
+                : selectedFilter
+        });
     }
 
     toggleFavorite(object) {
         object.favorite
-            ?   this.props.removeFavorite(object.type+object.id)
-            :   this.props.addFavorite(object.type+object.id)
+            ? this.props.removeFavorite(object.type + object.id)
+            : this.props.addFavorite(object.type + object.id)
     }
 
     renderFilterBar = () => {
-        const {classes} = this.props;
-        const { selectedFilter} = this.state;
+        const { classes } = this.props;
+        const { selectedFilter } = this.state;
         const filter = ["Lehrer", "Schüler", "Raum", "Klasse"];
         return <ListItem
-                key={"Filter"}
-            >
+            key={"Filter"}
+        >
             <ListItemIcon>
                 <FilterIcon />
             </ListItemIcon>
             <ListItemText className={classes.buttonGroup}>
                 {filter.map((type) =>
-                    <Button 
+                    <Button
                         key={type}
                         className={classes.button}
                         onClick={() => this.setFilter(type)}
@@ -161,7 +163,7 @@ class Search extends React.PureComponent {
                                     disableUnderline
                                     onFocus={this.handleFocus}
                                     onChange={this.handleInput}
-                                    value={this.state.value}
+                                    value={value}
                                     inputProps={{ className: classes.nativeInput }}
                                     onKeyUp={this.handleKeyUp}
                                 />
@@ -199,48 +201,44 @@ class Search extends React.PureComponent {
                                     onInput={this.handleKeyboardInput}>
                                 </Keyboard>
                             }
-                            {this.state.open &&
-                                <SearchResult
-                                    results={this.state.result}
-                                    className={classNames(
-                                        classes.dropDown,
-                                        classes.list,
-                                        !open && classes.dropDownClosed
-                                    )}
-                                    filterBar={small ? null : this.renderFilterBar()}>
-                                    {(result, avatars) => (
-                                        result.map((object, i) =>
-                                            <ListItem
-                                                dense={true}
-                                                key={object.id + object.type}
-                                                button
-                                                onClick={this.handleClick.bind(null, object)}
-                                                {...(i === 0 && { className: classes.listItemSelected })}
-                                            >
-                                                <ListItemIcon>
-                                                    <ObjectIcon
-                                                        type={object.type}
-                                                        avatars={object.upn && avatars}
-                                                        upn={object.upn}
-                                                    />
-                                                </ListItemIcon>
-                                                <ListItemText inset primary={object.text} secondary={object.secondary}/>
-                                                <ListItemSecondaryAction>
-                                                    {object.secondary && <IconButton onClick={() => this.toggleFavorite(object)}>
-                                                        {object.favorite ? <StarIcon /> : <StarBorderIcon />}
-                                                    </IconButton>}
-                                                </ListItemSecondaryAction>
-                                            </ListItem>
-                                        )
-                                    )}
-                                </SearchResult>
-                            }
+                            <SearchResult
+                                open={this.state.open}
+                                results={this.state.result}
+                                className={classNames(
+                                    classes.dropDown,
+                                    classes.list,
+                                    !open && classes.dropDownClosed
+                                )}
+                                filterBar={small ? null : this.renderFilterBar()}>
+                                {(result, avatars) => (
+                                    result.map((object, i) =>
+                                        <ListItem
+                                            dense={true}
+                                            key={object.id + object.type}
+                                            button
+                                            onClick={this.handleClick.bind(null, object)}
+                                            {...(i === 0 && { className: classes.listItemSelected })}
+                                        >
+                                            <ListItemIcon>
+                                                <ObjectIcon
+                                                    type={object.type}
+                                                    avatars={object.upn && avatars}
+                                                    upn={object.upn}
+                                                />
+                                            </ListItemIcon>
+                                            <ListItemText inset primary={object.text} secondary={object.secondary} />
+                                            <ListItemSecondaryAction>
+                                                {object.secondary && <IconButton onClick={() => this.toggleFavorite(object)}>
+                                                    {object.favorite ? <StarIcon /> : <StarBorderIcon />}
+                                                </IconButton>}
+                                            </ListItemSecondaryAction>
+                                        </ListItem>
+                                    )
+                                )}
+                            </SearchResult>
                         </div>
                     </div>
                 </ClickAwayListener>
-                <div style={{flex:1}}>
-
-                </div>
 
                 <div className={classNames(
                     classes.children,
@@ -275,7 +273,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             favorite: true,
             text: "Freie Räume",
             secondary: "",
-            filterType:"Raum",
+            filterType: "Raum",
         },
         {
             searchString: "",
@@ -285,7 +283,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             favorite: true,
             text: `${user.firstname} ${user.lastname}`,
             secondary: "",
-            filterType:"",
+            filterType: "",
         },
         ...Object.values(masterdata.Class).filter((o) => o.NAME !== "07-08").sort(sortName).map((entry) => ({
             searchString: entry.NAME === "07-12" ? "" : "Klasse " + entry.NAME,
@@ -294,7 +292,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             favorite: favorites.indexOf("class" + entry.CLASS_ID) >= 0,
             text: entry.NAME === "07-12" ? "Nachschreiben" : entry.NAME,
             secondary: entry.NAME === "07-12" ? undefined : "Klasse",
-            filterType:"Klasse",
+            filterType: "Klasse",
         })),
         ...Object.values(masterdata.Room).sort(sortName).map((entry) => ({
             searchString: "Raum " + entry.NAME,
@@ -303,7 +301,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             favorite: favorites.indexOf("room" + entry.ROOM_ID) >= 0,
             text: entry.NAME,
             secondary: "Raum",
-            filterType:"Raum",
+            filterType: "Raum",
         })),
         ...Object.values(masterdata.Teacher).sort(sortName).map((entry) => ({
             searchString: `Lehrer ${entry.FIRSTNAME} ${entry.LASTNAME}`,
@@ -313,7 +311,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             favorite: favorites.indexOf("teacher" + entry.TEACHER_ID) >= 0,
             text: entry.FIRSTNAME[0] + '. ' + entry.LASTNAME,
             secondary: "Lehrer",
-            filterType:"Lehrer",
+            filterType: "Lehrer",
         })),
         ...Object.values(masterdata.Student).sort(sortName).map((entry) => ({
             searchString: `Schüler ${entry.FIRSTNAME} ${entry.LASTNAME} ` + (masterdata.Class[entry.CLASS_ID] || {}).NAME,
@@ -323,7 +321,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             favorite: favorites.indexOf("student" + entry.STUDENT_ID) >= 0,
             text: entry.FIRSTNAME + " " + entry.LASTNAME,
             secondary: "Schüler (" + (masterdata.Class[entry.CLASS_ID] || {}).NAME + ")",
-            filterType:"Schüler",
+            filterType: "Schüler",
         })),
     ];
 
@@ -333,8 +331,8 @@ Search.getDerivedStateFromProps = (props, state) => {
         .filter(obj => !selectedFilter || obj.filterType === selectedFilter)
         .filter(obj => value === "" || fuzzysearch(value, obj.searchString));
 
-    return { 
-        data, 
+    return {
+        data,
         result: filtered,
         selectedFilter: small ? "" : selectedFilter
     };
