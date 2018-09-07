@@ -139,6 +139,13 @@ export const SUBSTITUTION_MAP = {
         }),
         name: "Zusatzstunde"
     },
+    METH_COMP: {
+        style: theme => ({
+            color: theme.palette.type === 'dark' ? colors.purple[400] : colors.purple[900],
+            backgroundColor: bgColor(theme.palette.type, colors.purple[50]),
+        }),
+        name: "Methodenkompetenz"
+    },
     SUPERVISION: {
         style: theme => ({
             color: theme.palette.type === 'dark' ? colors.grey[300] : colors.grey[900],

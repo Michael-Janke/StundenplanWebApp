@@ -103,7 +103,7 @@ const AbstractLesson = (props) => {
                     <LessonWrapper>
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
                         <LessonContainer>
-                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden', flex: 'none' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', flex: 'none' }}>
                                 {substitutionType}
                                 <Field1 left />
                             </div>
@@ -143,6 +143,7 @@ const AbstractLesson = (props) => {
         }
     } else
         if (isOld) {
+            if(InsteadBy) return null;
             if (!small) {
                 const [Field1, Field2] = OldFields;
                 return (
@@ -155,8 +156,10 @@ const AbstractLesson = (props) => {
                             {InsteadOf && InsteadOf(...SubstitutingFields)}
                             <LessonContainer>
                                 {substitutionType}
-                                <Field1 left />
-                                {Field2 && <Field2 />}
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', overflow: 'hidden', paddingLeft: 5 }}>
+                                    <Field1/>
+                                    {Field2 && <Field2 />}
+                                </div>
                             </LessonContainer>
                             {InsteadBy && InsteadBy(...SubstitutingFields)}
                             {extraInfo}
@@ -208,8 +211,7 @@ const SubstitutionTextContainer = styled.div`
 const SubstitutionType = styled.div`
     font-size: 60%;
     font-weight: 600;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    width: 30px;
     white-space: nowrap;
     color: ${props => props.color};
 `;
@@ -259,7 +261,6 @@ const Lesson = styled.div`
     padding-right: 1vmin;
     flex-direction: row;
     background-color: ${props => props.color || darken(indigo[50], props.type === 'dark' ? 0.6 : 0)};
-
 `;
 
 export default withStyles(styles, { withTheme: true })(AbstractLesson);

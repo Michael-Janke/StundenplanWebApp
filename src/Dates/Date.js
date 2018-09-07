@@ -81,19 +81,19 @@ const DateTo = styled.div`
 `;
 
 const Text = styled.div`
-    margin-left: 5px;
+    margin-left: 10px;
     display: flex;
     flex:1;
     flex-direction: column;
 `;
 
 const Primary = styled.div`
-    font-size: 80%;
+    font-size: 70%;
     word-break: break-word;
 `;
 
 const Secundary = styled.div`
-    font-size: 70%;
+    font-size: 60%;
     color: grey;
 `;
 

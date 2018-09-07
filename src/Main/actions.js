@@ -3,6 +3,14 @@ export function loadMe() {
     return { type: "GET_ME" };
 }
 
+export function addFavorite(key) {
+    return { type: "ADD_FAVORITE", payload: key };
+}
+
+export function removeFavorite(key) {
+    return { type: "REMOVE_FAVORITE", payload: key };
+}
+
 export function sendFeedback(feedback) {
     return { type: "SEND_FEEDBACK", payload: feedback };
 }

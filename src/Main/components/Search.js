@@ -2,6 +2,7 @@ import React from 'react';
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import Zoom from '@material-ui/core/Zoom';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -11,12 +12,17 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
+import FilterIcon from '@material-ui/icons/FilterList';
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+
+import grey from '@material-ui/core/colors/grey';
 import indigo from '@material-ui/core/colors/indigo';
 import SearchResult from './SearchResult';
 
 import { classNames } from '../../Common/const';
 import { connect } from 'react-redux';
-import { setTimeTable } from '../actions';
+import { setTimeTable, addFavorite, removeFavorite } from '../actions';
 import { ObjectIcon } from './Avatars';
 
 function fuzzysearch(needle, haystack) {
@@ -96,6 +102,42 @@ class Search extends React.PureComponent {
         this.handleInput({ target: { value: transform(this.state.value) } });
     }
 
+    setFilter(selectedFilter) {
+        this.setState({selectedFilter: (this.state.selectedFilter === selectedFilter) 
+                                                                  ? "" 
+                                                                  : selectedFilter});
+    }
+
+    toggleFavorite(object) {
+        object.favorite
+            ?   this.props.removeFavorite(object.type+object.id)
+            :   this.props.addFavorite(object.type+object.id)
+    }
+
+    renderFilterBar = () => {
+        const {classes} = this.props;
+        const { selectedFilter} = this.state;
+        const filter = ["Lehrer", "Schüler", "Raum", "Klasse"];
+        return <ListItem
+                key={"Filter"}
+            >
+            <ListItemIcon>
+                <FilterIcon />
+            </ListItemIcon>
+            <ListItemText className={classes.buttonGroup}>
+                {filter.map((type) =>
+                    <Button 
+                        key={type}
+                        className={classes.button}
+                        onClick={() => this.setFilter(type)}
+                        variant={selectedFilter === type ? "contained" : "outlined"}>
+                        {type}
+                    </Button>
+                )}
+            </ListItemText>
+        </ListItem>
+    };
+
     render() {
         const { classes, shrinkChildren, alwaysOpen, Keyboard } = this.props;
         const { open, nonEmpty } = this.state;
@@ -164,31 +206,31 @@ class Search extends React.PureComponent {
                                         classes.dropDown,
                                         classes.list,
                                         !open && classes.dropDownClosed
-                                    )}>
+                                    )}
+                                    filterBar={this.renderFilterBar()}>
                                     {(result, avatars) => (
                                         result.map((object, i) =>
-                                            (
-                                                <ListItem
-                                                    key={object.id + object.type}
-                                                    button
-                                                    onClick={this.handleClick.bind(null, object)}
-                                                    {...(i === 0 && { className: classes.listItemSelected })}
-                                                >
-                                                    <ListItemIcon>
-                                                        <ObjectIcon
-                                                            type={object.type}
-                                                            avatars={object.upn && avatars}
-                                                            upn={object.upn}
-                                                        />
-                                                    </ListItemIcon>
-                                                    <ListItemText inset primary={object.text} secondary={object.secondary} />
-                                                    <ListItemSecondaryAction>
-                                                        <IconButton>
-                                                            <SearchIcon onClick={this.onSearch} />
-                                                        </IconButton>
-                                                    </ListItemSecondaryAction>
-                                                </ListItem>
-                                            )
+                                            <ListItem
+                                                dense={true}
+                                                key={object.id + object.type}
+                                                button
+                                                onClick={this.handleClick.bind(null, object)}
+                                                {...(i === 0 && { className: classes.listItemSelected })}
+                                            >
+                                                <ListItemIcon>
+                                                    <ObjectIcon
+                                                        type={object.type}
+                                                        avatars={object.upn && avatars}
+                                                        upn={object.upn}
+                                                    />
+                                                </ListItemIcon>
+                                                <ListItemText inset primary={object.text} secondary={object.secondary}/>
+                                                <ListItemSecondaryAction>
+                                                    {object.secondary && <IconButton onClick={() => this.toggleFavorite(object)}>
+                                                        {object.favorite ? <StarIcon /> : <StarBorderIcon />}
+                                                    </IconButton>}
+                                                </ListItemSecondaryAction>
+                                            </ListItem>
                                         )
                                     )}
                                 </SearchResult>
@@ -221,8 +263,8 @@ class Search extends React.PureComponent {
 }
 
 Search.getDerivedStateFromProps = (props, state) => {
-    const { masterdata } = props;
-    const { value } = state;
+    const { masterdata, favorites } = props;
+    const { selectedFilter, value } = state;
     const sortName = (o1, o2) => (o1.LASTNAME || o1.NAME).localeCompare(o2.LASTNAME || o2.NAME);
     const user = props.user;
     let data = [
@@ -230,51 +272,65 @@ Search.getDerivedStateFromProps = (props, state) => {
             searchString: "",
             type: "all",
             id: -1,
+            favorite: true,
             text: "Freie Räume",
             secondary: "",
+            filterType:"Raum",
         },
         {
             searchString: "",
             upn: user.upn,
             type: user.type,
             id: user.id,
+            favorite: true,
             text: `${user.firstname} ${user.lastname}`,
             secondary: "",
+            filterType:"",
         },
-        ...Object.values(masterdata.Class).sort(sortName).map((entry) => ({
+        ...Object.values(masterdata.Class).filter((o) => o.NAME !== "07-08").sort(sortName).map((entry) => ({
             searchString: entry.NAME === "07-12" ? "" : "Klasse " + entry.NAME,
             type: "class",
             id: entry.CLASS_ID,
+            favorite: favorites.indexOf("class" + entry.CLASS_ID) >= 0,
             text: entry.NAME === "07-12" ? "Nachschreiben" : entry.NAME,
             secondary: entry.NAME === "07-12" ? undefined : "Klasse",
+            filterType:"Klasse",
         })),
         ...Object.values(masterdata.Room).sort(sortName).map((entry) => ({
             searchString: "Raum " + entry.NAME,
             type: "room",
             id: entry.ROOM_ID,
+            favorite: favorites.indexOf("room" + entry.ROOM_ID) >= 0,
             text: entry.NAME,
             secondary: "Raum",
+            filterType:"Raum",
         })),
         ...Object.values(masterdata.Teacher).sort(sortName).map((entry) => ({
             searchString: `Lehrer ${entry.FIRSTNAME} ${entry.LASTNAME}`,
             upn: entry.UPN,
             type: "teacher",
             id: entry.TEACHER_ID,
+            favorite: favorites.indexOf("teacher" + entry.TEACHER_ID) >= 0,
             text: entry.FIRSTNAME[0] + '. ' + entry.LASTNAME,
             secondary: "Lehrer",
+            filterType:"Lehrer",
         })),
         ...Object.values(masterdata.Student).sort(sortName).map((entry) => ({
             searchString: `Schüler ${entry.FIRSTNAME} ${entry.LASTNAME} ` + (masterdata.Class[entry.CLASS_ID] || {}).NAME,
             upn: entry.UPN,
             type: "student",
             id: entry.STUDENT_ID,
+            favorite: favorites.indexOf("student" + entry.STUDENT_ID) >= 0,
             text: entry.FIRSTNAME + " " + entry.LASTNAME,
             secondary: "Schüler (" + (masterdata.Class[entry.CLASS_ID] || {}).NAME + ")",
+            filterType:"Schüler",
         })),
     ];
 
     let filtered;
     filtered = data
+        .filter(obj => selectedFilter || value !== "" || obj.favorite)
+        .filter(obj => !selectedFilter || obj.filterType === selectedFilter)
         .filter(obj => fuzzysearch(value, obj.searchString));
 
     return { data, result: filtered };
@@ -406,16 +462,26 @@ const styles = theme => ({
     },
     child: {
         width: '100%',
+    },
+    type: {
+        color: grey[500]
+    },
+    name: {
+        minWidth: 100,
+        display: 'inline-block'
     }
 });
 
 const mapStateToProps = (state) => ({
     masterdata: state.timetable.masterdata,
-    user: state.user
+    user: state.user,
+    favorites: state.favorites.favorites || []
 });
 
 const mapDispatchToProps = dispatch => ({
     setTimetable: (object) => dispatch(setTimeTable(object.type, object.id)),
+    addFavorite: (key) => dispatch(addFavorite(key)),
+    removeFavorite: (key) => dispatch(removeFavorite(key)),
 });
 
 
