@@ -33,13 +33,13 @@ const SubjectContainer = type => subject => (props) => {
 
 export const subjectStyles = theme => ({
     'subject-normal': {
-        fontSize: '75%',
+        fontSize: '72%',
         fontWeight: 600,
     },
     'subject-new': {
         color: theme.palette.type === 'dark' ? red[500] : red[800],
         fontWeight: 600,
-        fontSize: '80%',
+        fontSize: '72%',
     },
     'subject-old': {
         color: theme.palette.type === 'dark' ? grey[300] : grey[600],
