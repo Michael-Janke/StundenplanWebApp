@@ -39,7 +39,7 @@ const AbstractLesson = (props) => {
     const OldFields = fields.old && fields.old.map(BoundField);
     const SubstitutingFields = fields.substitution && fields.substitution.map(BoundField);
 
-    let substitutionTextBig = substitutionText && substitutionText.length > 5;
+    let substitutionTextBig = substitutionText && substitutionText.length > 10;
     const substitutionType = specificSubstitutionType && (
         <SubstitutionType color={styles.color}>
             {(!substitutionText || substitutionTextBig) ? specificSubstitutionType.name : substitutionText}
@@ -56,7 +56,6 @@ const AbstractLesson = (props) => {
         if (small) {
             InsteadBy = (...fields) => (
                 <LessonContainer tab small>
-                    <InsteadInformation>durch:</InsteadInformation>
                     {fields.map((Field, i) => <Field key={i} left />)}
                 </LessonContainer>
             );
@@ -64,7 +63,6 @@ const AbstractLesson = (props) => {
         else {
             InsteadBy = (...fields) => (
                 <LessonContainer tab>
-                    <InsteadInformation>durch:</InsteadInformation>
                     {fields.map((Field, i) => <Field key={i} left />)}
                 </LessonContainer>
             );
@@ -143,7 +141,6 @@ const AbstractLesson = (props) => {
         }
     } else
         if (isOld) {
-            if(InsteadBy) return null;
             if (!small) {
                 const [Field1, Field2] = OldFields;
                 return (
@@ -254,7 +251,7 @@ const LessonWrapper = styled.div`
 `;
 
 const Lesson = styled.div`
-    flex: ${props => props.flex ? 'auto' : 'none'};
+    flex: ${props => props.flex ? 'auto' : 'auto'};
     display: flex;
     overflow: hidden;
     text-align: left;

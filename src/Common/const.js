@@ -34,10 +34,17 @@ function normalize(v) {
 export function specifySubstitutionType(id, type, substitution) {
     let lesson = {};
     substitution = { ...substitution, id, type };
+    
+    if(!substitution.isOld && substitution.TEXT === "Methodenkompetenz") {
+        substitution.TYPE = "METH_COMP";
+        substitution.TEXT = "";
+    }
     lesson.specificSubstitutionType = getSpecificSubstitutionType(substitution);
     if (lesson.specificSubstitutionType && lesson.specificSubstitutionType.mask) {
         substitution = lesson.specificSubstitutionType.mask(substitution);
+        lesson.specificSubstitutionType = getSpecificSubstitutionType(substitution);
     }
+
     if (!substitution) { return null; }
     lesson.SUBJECT_ID_OLD = normalize(substitution.SUBJECT_ID);
     lesson.ROOM_ID_OLD = normalize(substitution.ROOM_ID);
@@ -67,9 +74,6 @@ export function getSpecificSubstitutionType(substitution) {
     return substitutionType;
 };
 
-
-
-
 function bgColor(type, color) {
     return darken(color, type === 'dark' ? 0.6 : 0);
 }
@@ -83,6 +87,13 @@ export const SUBSTITUTION_MAP = {
         name: "Vertretung",
         priority: 5,
         mask: createMask(fromViewer, addSubstitutionInformation, removeIf('room'))
+    },
+    INSTEAD_OF: {
+        style: theme => ({
+            color: colors.grey[600],
+            backgroundColor: bgColor(theme.palette.type, colors.grey[100]),
+        }),
+        name: "vertreten durch",
     },
     ASSIGNMENT: {
         style: theme => ({
@@ -144,7 +155,8 @@ export const SUBSTITUTION_MAP = {
             color: theme.palette.type === 'dark' ? colors.purple[400] : colors.purple[900],
             backgroundColor: bgColor(theme.palette.type, colors.purple[50]),
         }),
-        name: "Methodenkompetenz"
+        name: "Methodenkompetenz",
+        mask: createMask(fromViewer, addSubstitutionInformation, removeIf('room'))
     },
     SUPERVISION: {
         style: theme => ({
