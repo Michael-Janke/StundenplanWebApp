@@ -96,7 +96,7 @@ const AbstractLesson = (props) => {
                 <Lesson
                     type={theme.palette.type}
                     color={styles.backgroundColor}
-                    flex={!specificSubstitutionType || !multiple}>
+                    flex={last}>
                     <ColorBar lineColor={styles.color} />
                     <LessonWrapper>
                         {InsteadOf && InsteadOf(...SubstitutingFields)}
@@ -147,7 +147,7 @@ const AbstractLesson = (props) => {
                     <Lesson
                         type={theme.palette.type}
                         color={styles.backgroundColor}
-                        flex={!specificSubstitutionType || !multiple}>
+                        flex={last}>
                         <ColorBar lineColor={styles.color} />
                         <LessonWrapper>
                             {InsteadOf && InsteadOf(...SubstitutingFields)}

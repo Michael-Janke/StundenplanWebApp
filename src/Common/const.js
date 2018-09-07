@@ -42,7 +42,8 @@ export function specifySubstitutionType(id, type, substitution) {
     lesson.specificSubstitutionType = getSpecificSubstitutionType(substitution);
     if (lesson.specificSubstitutionType && lesson.specificSubstitutionType.mask) {
         substitution = lesson.specificSubstitutionType.mask(substitution);
-        lesson.specificSubstitutionType = getSpecificSubstitutionType(substitution);
+        if(substitution)
+            lesson.specificSubstitutionType = getSpecificSubstitutionType(substitution);
     }
 
     if (!substitution) { return null; }
