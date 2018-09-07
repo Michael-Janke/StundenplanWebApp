@@ -154,11 +154,12 @@ function compareLesson(p1, p2) {
         || p1.ROOM_ID_OLD !== p2.ROOM_ID_OLD) {
         return false;
     }
-    let classIds1 = p1.CLASS_IDS || [];
-    let classIds2 = p2.CLASS_IDS || [];
-
-    if (!(classIds1.length === classIds2.length && classIds1.every((v, i) => classIds2.indexOf(v) >= 0)))
+    if (!equalArrays(p1.CLASS_IDS, p2.CLASS_IDS)) {
         return false;
+    }
+    if (!equalArrays(p1.CLASS_IDS_OLD, p2.CLASS_IDS_OLD)) {
+        return false;
+    }
     if (p1.substitutionType !== p2.substitutionType) {
         return false;
     }
@@ -177,7 +178,7 @@ export function skipDuplications(day, periods) {
             y++;
             let period = day.periods[y];
             if (period.supervision) {
-                period.continueation = true; 
+                period.continueation = true;
             } else {
                 delete day.periods[y];
                 current.skip++;
