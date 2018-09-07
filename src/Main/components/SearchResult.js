@@ -5,10 +5,9 @@ import { loadAvatars } from '../actions';
 import makeGetEffectiveAvatars from '../../Selector/avatars';
 import List from '@material-ui/core/List';
 
+const growthFactor = 18;
+
 class SearchResult extends React.PureComponent {
-
-
-
     state = {};
     static getResults(props, start, end) {
         const results = props.results.slice(start, end);
@@ -24,15 +23,21 @@ class SearchResult extends React.PureComponent {
             // do nothing if closing
             return { open: props.open };
         }
+        const resultChanged = (
+            props.results && state.results
+            && !props.results.every((v, i) => (state.results[i] || {}).id === v.id)
+        ) || props.open !== state.open;
+
         return {
             open: props.open,
             results: props.results,
+            resultChanged: resultChanged,
             elements: (props.results !== state.results) ?
-                SearchResult.getResults(props, 0, 15) : state.elements,
+                SearchResult.getResults(props, 0, !resultChanged && state.elements ? state.elements.length : growthFactor) : state.elements,
         }
     }
     componentDidUpdate(prevState, prevProps) {
-        if (this.props.results !== prevProps.results) {
+        if (this.state.resultChanged) {
             this.scroll.scrollTop = 0;
         }
         this.onScroll();
@@ -46,7 +51,7 @@ class SearchResult extends React.PureComponent {
             (this.scroll.scrollHeight || this.scroll.clientHeight) - 20) {
             if (this.props.results.length > this.state.elements.length) {
                 this.setState({
-                    elements: SearchResult.getResults(this.props, 0, this.state.elements.length + 15)
+                    elements: SearchResult.getResults(this.props, 0, this.state.elements.length + growthFactor)
                 });
             }
         }
