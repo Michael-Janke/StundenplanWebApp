@@ -8,7 +8,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import CalendarIcon from '@material-ui/icons/Event';
-import grey from '@material-ui/core/colors/grey';
 import MenuItem from '@material-ui/core/MenuItem';
 import DateComponent from './Date';
 import { addDate, editDate } from './actions';
@@ -17,17 +16,35 @@ import SelectField from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
-import {DateFormatInput, TimeFormatInput} from 'material-ui-next-pickers';
+// import {DateFormatInput, TimeFormatInput} from 'material-ui-next-pickers';
 
+import { InlineDatePicker } from 'material-ui-pickers/DatePicker';
+import { InlineDateTimePicker } from 'material-ui-pickers/DateTimePicker';
+
+import datePickerEnhancer from './datePickerEnhancer';
+import PeriodRangePicker from './PeriodRangePicker';
+
+const EnhancedInlineDatePicker = datePickerEnhancer(InlineDatePicker);
+const EnhancedInlineDateTimePicker = datePickerEnhancer(InlineDateTimePicker);
+
+const DateTimeMask = {
+    format: "DD.MM.YYYY HH:mm",
+    mask: value => (value ? [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/] : [])
+};
+
+const DateMask = {
+    format: "DD.MM.YYYY",
+    mask: value => (value ? [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/] : [])
+};
 
 const styles = theme => ({
     root: {
         display: 'flex',
         flexDirection: 'column'
     },
-    row:{
+    row: {
         display: 'flex',
-        flexDirection: 'row'        
+        flexDirection: 'row'
     },
     formControl: {
         margin: theme.spacing.unit,
@@ -37,15 +54,15 @@ const styles = theme => ({
 
 function parseISOLocal(s) {
     var b = s.split(/\D/);
-    return new Date(b[0], b[1]-1, b[2], b[3], b[4], b[5]);
+    return new Date(b[0], b[1] - 1, b[2], b[3], b[4], b[5]);
 }
 
 export class AddDialog extends Component {
-    
+
     state = {}
 
     static getDerivedStateFromProps(props, state) {
-        if(!state.open && props.open) {
+        if (!state.open && props.open) {
             let date = props.date || {};
             return {
                 open: true,
@@ -54,10 +71,10 @@ export class AddDialog extends Component {
                 SUBTEXT: date.SUBTEXT || "",
                 TYPE: date.TYPE || "NORMAL",
                 DATE_FROM: date.DATE_FROM
-                    ? parseISOLocal(date.DATE_FROM.date) : 
+                    ? parseISOLocal(date.DATE_FROM.date) :
                     moment().startOf('day').toDate(),
-                DATE_TO: date.DATE_TO 
-                    ? parseISOLocal(date.DATE_TO.date) : 
+                DATE_TO: date.DATE_TO
+                    ? parseISOLocal(date.DATE_TO.date) :
                     moment().startOf('day').toDate(),
                 timeEdit: date.DATE_FROM && parseISOLocal(date.DATE_FROM.date).getHours() !== 0
             }
@@ -66,27 +83,33 @@ export class AddDialog extends Component {
     }
 
     handleChange = (key) => (event) => {
-        this.setState({[key]: event.target.value});
+        this.setState({ [key]: event.target.value });
     }
 
     handleFromDateChange = (date) => {
-        this.setState({ 
+        this.setState({
             DATE_FROM: date,
-            DATE_TO: this.state.DATE_TO || date
+            DATE_TO: date
         });
     }
 
     handleToDateChange = (date) => {
-        this.setState({ 
+        this.setState({
             DATE_TO: date
+        });
+    }
+    handleDateChange = (from, to) => {
+        this.setState({
+            DATE_FROM: from,
+            DATE_TO: to,
         });
     }
 
     extractDate(dbFormat) {
         return {
             DATE_ID: this.state.DATE_ID,
-            DATE_FROM: dbFormat ? {date: this.state.DATE_FROM} : moment(this.state.DATE_FROM).format(),
-            DATE_TO: dbFormat ? {date: this.state.DATE_TO} : moment(this.state.DATE_TO).format(),
+            DATE_FROM: dbFormat ? { date: this.state.DATE_FROM } : moment(this.state.DATE_FROM).format(),
+            DATE_TO: dbFormat ? { date: this.state.DATE_TO } : moment(this.state.DATE_TO).format(),
             TYPE: this.state.TYPE,
             TEXT: this.state.TEXT,
             SUBTEXT: this.state.SUBTEXT,
@@ -94,7 +117,7 @@ export class AddDialog extends Component {
     }
 
     handleClose = (abort = false) => () => {
-        this.setState({ 
+        this.setState({
             open: false
         });
         this.props.handleClose(abort ? undefined : this.extractDate());
@@ -102,10 +125,10 @@ export class AddDialog extends Component {
 
     editTime = (timeEdit) => {
         let resetTime = {};
-        if(!timeEdit) {
+        if (!timeEdit) {
             let DATE_FROM = moment(this.state.DATE_FROM).startOf('day').toDate();
             let DATE_TO = moment(this.state.DATE_TO).startOf('day').toDate();
-            resetTime = {DATE_FROM, DATE_TO}
+            resetTime = { DATE_FROM, DATE_TO }
         }
         this.setState({
             timeEdit,
@@ -116,6 +139,8 @@ export class AddDialog extends Component {
     render() {
         const { edit, classes } = this.props;
         const { timeEdit } = this.state;
+        const DateTimePicker = timeEdit ? EnhancedInlineDateTimePicker : EnhancedInlineDatePicker;
+        const mask = timeEdit ? DateTimeMask : DateMask;
 
         return (
             <Dialog
@@ -123,40 +148,45 @@ export class AddDialog extends Component {
                 onClose={this.handleClose(true)}
             >
                 <DialogTitle>
-                    <CalendarIcon color={grey[400]} style={{ marginRight: '1vmin' }} />
+                    <CalendarIcon color="primary" style={{ marginRight: '1vmin' }} />
                     {"Termin " + (edit ? "editieren" : "hinzufügen")}
                 </DialogTitle>
                 <DialogContent className={classes.root}>
                     <div className={classes.row}>
-                        
+
                         <FormControl className={classes.formControl}
-                        error={!this.state.DATE_FROM}>
+                            error={!this.state.DATE_FROM}>
                             <h4>Von</h4>
-                            <DateFormatInput 
-                                value={this.state.DATE_FROM} 
+                            <DateTimePicker
+                                value={this.state.DATE_FROM}
                                 onChange={(date) => this.handleFromDateChange(date)}
-                                />
+                                {...mask}
+                                keyboard
+                                ampm={false}
+                            />
                             {!timeEdit && <Button onClick={() => this.editTime(true)}>Zeit hinzufügen</Button>}
-                            {timeEdit && <TimeFormatInput 
-                                value={this.state.DATE_FROM} 
-                                onChange={(date) => this.handleFromDateChange(date)}
-                            />}
+
                             {timeEdit && <Button onClick={() => this.editTime(false)}>Zeit entfernen</Button>}
                         </FormControl>
-                        
+
                         <FormControl className={classes.formControl}
-                        error={!this.state.DATE_TO}>
+                            error={!this.state.DATE_TO}>
                             <h4>Bis</h4>
-                            <DateFormatInput 
-                                value={this.state.DATE_TO} 
+                            <DateTimePicker
+                                value={this.state.DATE_TO}
                                 onChange={(date) => this.handleToDateChange(date)}
-                                />
-                            {timeEdit &&<TimeFormatInput 
-                                value={this.state.DATE_TO} 
-                                onChange={(date) => this.handleToDateChange(date)}
+                                {...mask}
+                                keyboard
+                                ampm={false}
+                            />
+
+                            {timeEdit && <PeriodRangePicker
+                                from={this.state.DATE_FROM}
+                                to={this.state.DATE_TO}
+                                onChange={(from, to) => this.handleDateChange(from, to)}
                             />}
                         </FormControl>
-                    </div>                    
+                    </div>
                     <FormControl className={classes.formControl} error={!this.state.TYPE}>
                         <InputLabel htmlFor="type">Typ</InputLabel>
                         <SelectField
@@ -198,7 +228,7 @@ export class AddDialog extends Component {
                             onChange={this.handleChange("SUBTEXT")}
                         />
                     </FormControl>
- 
+
                     <Preview>
                         <PreviewHeader>
                             Vorschau
