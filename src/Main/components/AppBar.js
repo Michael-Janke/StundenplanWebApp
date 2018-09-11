@@ -115,13 +115,6 @@ class ResponsiveDrawer extends React.Component {
 
                         <Icons style={{marginLeft: large  ? "calc(300px + 2vw - 58px)" : undefined}}>
                             <Search shrinkChildren={small} alwaysOpen={!small}>
-                                {small &&
-                                    <Tooltip id="tooltip-calendar" title="Kalendar öffnen">
-                                        <IconButton>
-                                            <CalendarIcon className={classes.icon} />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
                                 {small ||
                                     <Tooltip id="tooltip-print" title="Stundenplan drucken">
                                         <IconButton onClick={this.onPrintTimetable}>

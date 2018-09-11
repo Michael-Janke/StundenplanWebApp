@@ -240,6 +240,8 @@ class Search extends React.PureComponent {
                     </div>
                 </ClickAwayListener>
 
+                <div style={{flex:1}} />
+
                 <div className={classNames(
                     classes.children,
                     isOpen && shrinkChildren && classes.childrenOpen

@@ -206,7 +206,7 @@ class TimeTableGrid extends React.Component {
 }
 
 
-const CurrentTimetableInformation = ({ id, type, masterdata, avatars }) => {
+const CurrentTimetableInformation = ({ id, type, masterdata, avatars, lastUpdate, small }) => {
     if (!masterdata || !type || !id) return null;
     if (type === 'all') {
         type = "room";
@@ -220,10 +220,13 @@ const CurrentTimetableInformation = ({ id, type, masterdata, avatars }) => {
                 style={{width: 0}}
                 disableTypography
                 primary={
-                    <Typography type="body2" style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
+                    <Typography variant="body2" noWrap>
                     {object.LASTNAME ? object.FIRSTNAME + " " + object.LASTNAME : object.NAME}
                     </Typography>
-                } 
+                }
+                secondary={<Typography variant="caption" noWrap>
+                    {(small ? "Akt. " : "Letzte Änderung ") + moment(lastUpdate).fromNow()}
+                </Typography>}
             />
         </ListItem>
     )
@@ -232,6 +235,8 @@ const CurrentTimetableInformation = ({ id, type, masterdata, avatars }) => {
 const ConnectedCurrentTimetableInformation = connect(state => ({
     avatars: state.avatars,
     masterdata: state.timetable.masterdata,
+    lastUpdate: state.user.lastUpdate,
+    small: state.browser.lessThan.medium,
 }))(CurrentTimetableInformation);
 
 
