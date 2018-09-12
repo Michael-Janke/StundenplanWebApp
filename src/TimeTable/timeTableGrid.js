@@ -127,7 +127,7 @@ class TimeTableGrid extends React.Component {
             padding: 2,
         };
         return Object.values(this.props.periods).map((period, i) => (
-            <TableRow key={i}>
+            <TableRow style={{height:"100%"}} key={i}>
                 <TableCell style={periodColumnStyle}>
                     <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
                         {this.props.small || this.renderPeriodTimes(period)}
