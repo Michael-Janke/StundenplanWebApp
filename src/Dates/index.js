@@ -1,13 +1,56 @@
 import React, { Component } from "react";
-import styled from "styled-components";
-import muiThemeable from 'material-ui/styles/muiThemeable';
-import moment from 'moment';
-import { Paper } from "material-ui";
+import Paper from '@material-ui/core/Paper';
+import withStyles from '@material-ui/core/styles/withStyles';
+import IconButton from '@material-ui/core/IconButton';
 import { connect } from 'react-redux';
-import MonthView from './month';
-import { getDates, deleteDate } from "./actions";
+import { getDates, deleteDate, editDate, addDate} from "./actions";
 import makeGetCurrentDates from "../Selector/dates";
-import AddDialog from "./Dialogs/addDialog";
+import DateDialog from "./DateDialog";
+import Date from "./Date";
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import grey from '@material-ui/core/colors/grey';
+import CalendarIcon from '@material-ui/icons/Event';
+import EditIcon from '@material-ui/icons/Create';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import moment from 'moment';
+
+const styles = theme => ({
+    fabButton: {
+        position: "absolute",
+        right: theme.spacing.unit * 2,
+        bottom: theme.spacing.unit * 2,
+        zIndex: 2,
+    },
+    header: {
+        backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
+        paddingTop: 0,
+        paddingBottom: 0,
+    },
+    root: {
+        height: '100%',
+        display: "flex",
+        width: "100%",
+        flexDirection: "column",
+    },
+    list:{
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: '75vh',
+        paddingTop: 0,
+    },
+    subheader:{
+        backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
+    },
+    buffer:{
+        height: '75vh'
+    }
+});
 
 class Dates extends Component {
 
@@ -15,119 +58,135 @@ class Dates extends Component {
         super(props);
         this.props.getDates();
         this.state = {
-            ...this.calculateStartDate(props.min, props.max),
-        }
+            selectedDate: {},
+            dialogOpen: false,
+            editMode: false
+        };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.min !== nextProps.min || this.props.max !== nextProps.max) {
-            this.setState(this.calculateStartDate(nextProps.min, nextProps.max));
-        }
-        if (this.props.timetableDate.week() !== nextProps.timetableDate.week()) {
-            let index = Math.abs(this.state.min.diff(nextProps.timetableDate.clone().startOf('month'), 'month'));
-            this.refs[index].scrollToMe();
-        }
-    }
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.props.min !== nextProps.min || this.props.max !== nextProps.max) {
-            return true;
-        }
-        // dont mess with timetableDate changing 
-        if (this.props.dates !== nextProps.dates) {
-            return true;
-        }
-        return false;
+    handleDateAddEdit = (date) => {
+        this.setState({
+            dialogOpen: false, 
+            selectedDate: {}
+        });
+        if(!date) return;
+        if(date.DATE_ID) {
+            this.props.editDate(date);
+        } else {
+            this.props.addDate(date);
+        }            
     }
 
-    calculateStartDate(min, max) {
-        if (!min || !max) {
-            return {};
+    openDialog = (date) => {
+        this.setState({
+            selectedDate: date || {},
+            edit: !!date,
+            dialogOpen: true
+        });
+    }
+
+    deleteDate = (date) => {
+        this.props.deleteDate(date);
+    }
+
+    setEditMode = () => {
+        this.setState({editMode: !this.state.editMode});
+    }
+
+    renderDates = (dates, header, date) => {
+        let array = [];
+        let prev;
+        for(let i = 0; i<dates.length; i++) {
+            let mDate = moment(dates[i].DATE_FROM.date);
+            if(!prev || moment(prev.DATE_FROM.date).month() !== mDate.month()) {
+                array.push(header(mDate.format("MMMM YY")))
+            }
+            array.push(date(dates[i]));
+            prev = dates[i];
         }
-        let minMoment = moment().year(min.year).week(min.week).startOf('month');
-        let maxMoment = moment().year(max.year).week(max.week).startOf('month');
-        return {
-            min: minMoment, max: maxMoment,
-            monthCount: Math.abs(minMoment.diff(maxMoment, 'month')),
-        }
+        return array;
+
     }
 
-    handleOnEdit = (appointment) => {
-        this.refs.addDialog.getWrappedInstance().open(appointment);
+    componentDidMount() {
+        this.scrollToMonth();
     }
 
-    handleOnDelete = (appointment) => {
-        this.props.deleteDate(appointment);
+    componentDidUpdate(){
+        this.scrollToMonth();
     }
 
-    handleOnAdd = () => {
-        this.refs.addDialog.getWrappedInstance().open();
-    }
+    monthRefs={};
 
-    renderMonths() {
-        let months = [];
-        const props = { isAdmin: this.props.isAdmin };
-        for (let i = 0; i < this.state.monthCount; i++) {
-            months.push(
-                <MonthView
-                    ref={i}
-                    startMonth={this.state.min}
-                    index={i}
-                    dates={this.props.dates}
-                    key={i}
-                    {...props} />
-            )
-        }
-        return months;
+    scrollToMonth = () => {
+        if(this.props.singleMonth) return;
+        const selectedMonth =  this.props.timetableDate.format("MMMM YY");
+        this.monthRefs[selectedMonth] 
+            && this.monthRefs[selectedMonth].scrollIntoView({block: 'start', behavior: 'smooth'});
     }
 
     render() {
+        const { classes, isAdmin, timetableDate, singleMonth} = this.props;
+        const { editMode } = this.state;
+        
+        const dates = singleMonth 
+            ? this.props.dates.filter((date = {}) => moment(date.DATE_FROM.date).month() === timetableDate.month())
+            : this.props.dates;
+
         return (
-            <Container>
-                <Content className="scroll-area">
-                    {this.renderMonths()}
-                </Content>
-                <AddDialog ref="addDialog" />
-            </Container>
+            <Paper square={true} className={classes.root}>
+                <List className={classes.header}>
+                    <ListItem>
+                        <ListItemIcon>
+                            <CalendarIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Termine" />
+                        <ListItemSecondaryAction>
+                            {isAdmin && <IconButton onClick={this.setEditMode}><EditIcon/></IconButton>}
+                        </ListItemSecondaryAction>
+                    </ListItem>
+                </List>
+
+                <List className={classes.list}>
+                    {dates && this.renderDates(dates, 
+                        (title) => <ListSubheader 
+                                        className={classes.subheader}  
+                                        key={title}
+                                    >   <div
+                                            ref={ (node) => this.monthRefs[title] = node}>
+                                            {title}
+                                        </div></ListSubheader>,
+                        (date) => <Date 
+                                    date={date} 
+                                    key={date.DATE_ID} 
+                                    onEdit={isAdmin && editMode && date.DATE_ID > 0 ? () => this.openDialog(date) : undefined}
+                                    onDelete={isAdmin && editMode && date.DATE_ID > 0 ? () => this.deleteDate() : undefined}
+                                />
+                    )}
+                    {!singleMonth && <div className={classes.buffer}>
+                        {!dates && "Keine Termine eingetragen"}
+                    </div>}
+                </List>
+
+                {isAdmin && <DateDialog 
+                    open={this.state.dialogOpen} 
+                    handleClose={this.handleDateAddEdit} 
+                    date={this.state.selectedDate} 
+                    edit={this.state.edit}
+                />}
+                {editMode && 
+                    <Button 
+                        variant="fab" 
+                        mini
+                        className={classes.fabButton} 
+                        color="primary"
+                        onClick={() => this.openDialog()} >
+                        <AddIcon />
+                    </Button>}
+            </Paper>
         );
     }
 }
-const Content = styled.div`
-    overflow: auto;
-    position: relative;
-    max-height: calc(100vh - 200px);
-    padding-right: 8px;
-    z-index: 0;
-    /* width */
-    ::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-    
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-        background: #888;
-        margin-top: 100px;
-    }
-
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
-`;
-
-
-const Container = styled(Paper) `
-    margin-left: 1vw;
-    margin-right: 1vw;
-    margin-top: 20px;
-    padding: 8px 16px;
-    padding-right: 0px;
-    z-index: 1;
-`;
 
 const makeMapStateToProps = () => {
     const getCurrentDates = makeGetCurrentDates();
@@ -146,6 +205,8 @@ const makeMapStateToProps = () => {
 const mapDispatchToProps = (dispatch) => ({
     getDates: () => dispatch(getDates()),
     deleteDate: (date) => dispatch(deleteDate(date)),
+    addDate: (date) => dispatch(addDate(date)),
+    editDate: (date) => dispatch(editDate(date)),
 });
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(muiThemeable()(Dates)); 
+export default connect(makeMapStateToProps, mapDispatchToProps)(withStyles(styles)(Dates)); 

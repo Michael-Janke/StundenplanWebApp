@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.AuthenticationContext = undefined;
 exports.adalGetToken = adalGetToken;
 exports.runWithAdal = runWithAdal;
+exports.runWithToken = runWithToken;
 exports.adalFetch = adalFetch;
 
 var _adal = require('./adal');
@@ -26,7 +27,9 @@ function adalGetToken(authContext, resourceGuiId) {
     });
   });
 }
-
+function runWithToken(authContext, app) {
+  app();
+};
 
 function runWithAdal(authContext, app) {
   //it must run in iframe to for refreshToken (parsing hash and get token)
@@ -37,7 +40,7 @@ function runWithAdal(authContext, app) {
   window.addEventListener("hashchange", () => {
     authContext.handleWindowCallback.bind(authContext)();
     window.setTimeout(() => {
-      if(window.document.getElementById("root").childElementCount == 0) {
+      if (window.document.getElementById("root").childElementCount == 0) {
         window.location.reload();
       }
     }, 100);

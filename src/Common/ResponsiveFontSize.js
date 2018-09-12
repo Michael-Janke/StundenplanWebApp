@@ -1,24 +1,34 @@
 import React from "react";
-import { connect } from "react-redux";
+import { withStyles } from "@material-ui/core";
+
+const styles = theme => ({
+    root: {
+        height: '100%',
+        [theme.breakpoints.down('xs')]: {
+            fontSize: 15,
+        },
+        [theme.breakpoints.down('sm')]: {
+            fontSize: 16,
+        },
+        [theme.breakpoints.up('md')]: {
+            fontSize: 17,
+        },
+        [theme.breakpoints.up('lg')]: {
+            fontSize: 17,
+        },
+        [theme.breakpoints.up('xl')]: {
+            fontSize: 17.5,
+        },
+    },
+});
 
 const ResponsiveFontSize = (props) => {
-    const fontSize = {
-        extraSmall: 14,
-        small: 15,
-        medium: 16,
-        large: 17,
-        infinity: 18
-    }[props.mediaType];
+    const { classes } = props;
     return (
-        <div style={{ fontSize, height: '100%' }}>
+        <div className={classes.root}>
             {props.children}
         </div>
     );
 }
-const mapStateToProps = state => {
-    return {
-        mediaType: state.browser.mediaType
-    };
-};
 
-export default connect(mapStateToProps)(ResponsiveFontSize);
+export default withStyles(styles)(ResponsiveFontSize);

@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
-import { green100 } from 'material-ui/styles/colors';
+import green from '@material-ui/core/colors/green';
 import easterImg from './easter.jpg';
 import bridgeImg from './bridge.jpg';
 import firstMayImg from './firstMay.jpg';
@@ -9,23 +9,25 @@ import autumnImg from './autumn.jpg';
 import xmasImg from './xmas.jpg';
 import winterImg from './winter.jpg';
 import germanImg from './german.jpg';
+import ascentionImg from './ascention.jpg';
 
 const holidayImageMap = {
-  "Oster":easterImg,
-  "Ferientag":bridgeImg,
-  "1.5.":firstMayImg,
-  "Sommer":summerImg,
-  "Herbst":autumnImg,
-  "Weihn":xmasImg,
-  "Winter":winterImg,
-  "3.10":germanImg,
+  "Oster": easterImg,
+  "Ferientag": bridgeImg,
+  "01.05": firstMayImg,
+  "Sommer": summerImg,
+  "Herbst": autumnImg,
+  "Weihn": xmasImg,
+  "Winter": winterImg,
+  "3.10": germanImg,
+  "Himmel": ascentionImg,
 }
 
-class Holiday extends Component {
+class Holiday extends React.PureComponent {
   render() {
     var img = bridgeImg;
-    for(var key in holidayImageMap) {
-      if(this.props.holiday.indexOf(key) >= 0 || this.props.date.indexOf(key) !== -1) {
+    for (var key in holidayImageMap) {
+      if (this.props.holiday.indexOf(key) >= 0 || this.props.date.indexOf(key) !== -1) {
         img = holidayImageMap[key];
       }
     }
@@ -38,7 +40,7 @@ class Holiday extends Component {
 }
 
 const Container = styled.div`
-    background-color: ${green100};
+    background-color: ${green[100]};
     display: flex;
     height: 100%; 
     background: url(${(props) => props.img}) no-repeat center center; 

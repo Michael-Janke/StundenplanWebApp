@@ -10,7 +10,7 @@ export default function errorReducer(state = { error: null }, action = {}) {
         } else if (action.payload.response) {
             error = action.payload.response.statusCode + ' | ' + action.payload.response.text;
         };
-        return { error }
+        return { error: action.type + ':' + error }
     } else {
         return state;
     }

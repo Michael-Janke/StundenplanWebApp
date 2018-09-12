@@ -1,32 +1,50 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Dialog from 'material-ui/Dialog';
-import { FlatButton, TextField } from 'material-ui';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 import { sendFeedback } from '../actions';
-import FeedbackIcon from 'material-ui/svg-icons/action/feedback';
-import { grey400 } from 'material-ui/styles/colors';
-import { purple600 } from 'material-ui/styles/colors';
+import FeedbackIcon from '@material-ui/icons/Feedback';
+import Slide from '@material-ui/core/Slide';
+
+function Transition(props) {
+    return <Slide direction="up" {...props} />;
+}
 
 export class Feedback extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: false,
+            messageText: ""
         };
     }
 
-    open() {
-        this.setState({ open: true });
+    clearError = () => {
+        this.setState({ error: null });
     }
 
     handleClose = () => {
-        this.setState({ open: false });
+        this.props.onClose();
     }
 
+    handleChange = name => event => {
+        this.setState({
+            [name]: event.target.value,
+        });
+    };
+
     handleSendFeedback = () => {
+        const content = this.state.messageText;
+        if (content.length === 0) {
+            this.setState({ error: true });
+            return;
+        }
         this.handleClose();
-        const content = this.refs.textField.getValue();
         this.props.sendFeedback({
             subject: "User Feedback",
             content,
@@ -34,44 +52,54 @@ export class Feedback extends Component {
     }
 
     render() {
-        const actions = [
-            <FlatButton
-                label="Abbrechen"
-                primary={true}
-                onClick={this.handleClose}
-            />,
-            <FlatButton
-                label="Absenden"
-                primary={true}
-                keyboardFocused={true}
-                onClick={this.handleSendFeedback}
-            />,
-        ];
+
         const customContentStyle = {
             maxWidth: 500,
+            overflowY: 'auto',
         };
         return (
             <Dialog
-                title={<FeedbackTitle><FeedbackIcon color={grey400} style={{ marginRight: '1vmin' }} />{"Feedback geben"}</FeedbackTitle>}
-                actions={actions}
-                modal={false}
-                contentStyle={customContentStyle}
-                open={this.state.open}
-                onRequestClose={this.handleClose}
+                open={this.props.open}
+                onClose={this.handleClose}
+                TransitionComponent={Transition}
+                fullScreen={this.props.small}
             >
-                Danke, dass du diese App verwendest.
-                Hier kannst du Verbesserungsvorschläge vorschlagen
-                <TextField
-                    name="text"
-                    ref="textField"
-                    fullWidth
-                    multiLine
-                    floatingLabelText="Schreibe eine Nachricht"
-                    rows={4}
-                    errorStyle={{ color: purple600 }}
-                    hintStyle={{ color: purple600 }}
-                    floatingLabelFocusStyle={{ color: purple600 }}
-                />
+                <DialogTitle>
+                    <FeedbackTitle>
+                        <FeedbackIcon color='primary' style={{ marginRight: '1vmin' }} />{"Feedback geben"}
+                    </FeedbackTitle>
+                </DialogTitle>
+                <DialogContent style={customContentStyle}>
+                    <DialogContentText>
+                        Danke, dass du diese App verwendest.
+                        Ideen, Wünsche, Anregungen? Schreib sie uns gerne!
+                    </DialogContentText>
+                    <TextField
+                        onFocus={this.clearError}
+                        error={!!this.state.error}
+                        name="text"
+                        value={this.state.name}
+                        onChange={this.handleChange('messageText')}
+                        fullWidth
+                        multiline
+                        label="Schreibe eine Nachricht"
+                        rows={4}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={this.handleClose}
+                        color="secondary"
+                    >
+                        Abbrechen
+                    </Button>
+                    <Button
+                        onClick={this.handleSendFeedback}
+                        color="primary"
+                    >
+                        Absenden
+                    </Button>
+                </DialogActions>
             </Dialog>
         )
     }
@@ -83,11 +111,11 @@ const FeedbackTitle = styled.div`
 `;
 
 const mapStateToProps = (state) => ({
-
+    small: state.browser.lessThan.medium
 });
 
 const mapDispatchToProps = (dispatch) => ({
     sendFeedback: (feedback) => dispatch(sendFeedback(feedback))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(Feedback);
+export default connect(mapStateToProps, mapDispatchToProps)(Feedback);

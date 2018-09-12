@@ -7,13 +7,14 @@ import thunk from 'redux-thunk';
 import dataService from './Common/data-service'
 import actionRedirector from './Common/action-redirects';
 import cacheService from './Common/cache-service';
+import counterChanged from './Common/counter';
 import profilePictureService from './Common/profilePictureService'
 import { responsiveStoreEnhancer } from 'redux-responsive'
 
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['browser', 'responsiveDrawer', 'error']
+  blacklist: ['browser', 'error']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -25,6 +26,7 @@ const store = createStore(persistedReducer,
       cacheService,
       dataService,
       profilePictureService,
+      counterChanged,
       thunk),
     responsiveStoreEnhancer)
 );

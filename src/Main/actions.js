@@ -3,8 +3,20 @@ export function loadMe() {
     return { type: "GET_ME" };
 }
 
+export function addFavorite(key) {
+    return { type: "ADD_FAVORITE", payload: key };
+}
+
+export function removeFavorite(key) {
+    return { type: "REMOVE_FAVORITE", payload: key };
+}
+
 export function sendFeedback(feedback) {
     return { type: "SEND_FEEDBACK", payload: feedback };
+}
+
+export function updateRemindSettings(settings) {
+    return { type: "PATCH_REMIND_SETTINGS", payload: settings };
 }
 
 export function checkCounter() {
@@ -15,6 +27,10 @@ export function sendLoginStatistic() {
     return { type: "SEND_LOGIN_STATISTIC" };
 }
 
+export function setSortBy(sortBy) {
+    return { type: 'SET_SORT_BY', payload: sortBy };
+}
+
 export function counterChanged(counterChanged) {
     return (dispatch) => {
         dispatch({ type: "COUNTER_CHANGED", payload: counterChanged });
@@ -23,6 +39,14 @@ export function counterChanged(counterChanged) {
             dispatch(loadMasterData());
         }
     }
+}
+
+export function getSubstitutions(id, type, week, year) {
+    return { type: "GET_SUBSTITUTIONS", payload: { id, type, week, year } };
+}
+
+export function getTimetable(id, type) {
+    return { type: "GET_TIMETABLE", payload: { id, type } };
 }
 
 export function loadProfilePicture() {
@@ -47,6 +71,10 @@ export function clearErrors() {
 
 export function setTimeTable(type, id) {
     return { type: "SET_TIMETABLE", payload: { type, id } };
+}
+
+export function changeTheme(type) {
+    return { type: 'CHANGE_THEME', payload: type };
 }
 
 export function setNotification({ newToken, oldToken }) {

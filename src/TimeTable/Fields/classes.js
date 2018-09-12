@@ -20,42 +20,52 @@ const extractClasses = (classes) => {
     }, {});
 }
 
-const combine = (oldClasses, newClasses) => {
-    Object.keys(oldClasses).forEach((key) => {
-        let oldElem = oldClasses[key];
-        let elem = newClasses[key];
-        oldElem.letters.forEach((letter) => {
-            letter.remove = elem.letters.filter(newLetter => newLetter.letter === letter.letter).length === 0;
-            letter.add = oldElem.letters.filter(oldLetter => letter.letter === oldLetter.letter).length === 0;
-        });
-    });
-};
+// const combine = (oldClasses, newClasses) => {
+//     Object.keys(oldClasses).forEach((key) => {
+//         let oldElem = oldClasses[key];
+//         let elem = newClasses[key];
+//         oldElem.letters.forEach((letter) => {
+//             letter.remove = elem.letters.filter(newLetter => newLetter.letter === letter.letter).length === 0;
+//             letter.add = oldElem.letters.filter(oldLetter => letter.letter === oldLetter.letter).length === 0;
+//         });
+//     });
+// };
 
 
-function ClassesContainer({ classes, small }) {
-    let extracted = extractClasses(classes.new);
-    let oldExtracted = classes.old && extractClasses(classes.old);
-    if (oldExtracted) {
-        combine(oldExtracted, extracted);
-    }
-    let extractedClasses = oldExtracted || extracted;
-    return (
-        <Container small={small}>
-            {Object.keys(extractedClasses).map((key, i) => {
-                let classes = extractedClasses[key];
+const ClassesContainer = type => classes => ({ small, left, themeClasses }) => {
+    const Classes = (e) => (
+        <Container left={left} className={themeClasses['classes']}>
+            {Object.keys(e).map((key, i) => {
+                let classes = e[key];
                 return (
                     <ClassContainer key={i}>
                         <Grade>{key}</Grade>
-                        {classes.letters.map((letter, i) => letter.remove
-                            ? <OldClass key={i}>{letter.letter}</OldClass>
-                            : <Class key={i}>{letter.letter}</Class>
-                        )}
+                        {classes.letters.map((letter, i) => <Class key={i}>{letter.letter}</Class>)}
                     </ClassContainer>
                 )
             })}
         </Container>
-    )
+    );
+    if (type === 'new') {
+        let extracted = classes.new && extractClasses(classes.new);
+        return Classes(extracted);
+    }
+    if (type === 'old') {
+        let extracted = classes.old && extractClasses(classes.old);
+        return Classes(extracted);
+    }
+    if (type === 'instead-of' || type === 'instead-by') {
+        let extracted = classes.substitution && extractClasses(classes.substitution);
+        return Classes(extracted);
+    }
+
 }
+
+export const classStyles = theme => ({
+    'classes': {
+
+    },
+});
 
 ClassesContainer.propTypes = {
     Classes: PropTypes.object,
@@ -65,7 +75,7 @@ ClassesContainer.propTypes = {
 const Container = styled.div`
     flex-direction: column;
     display: flex;
-    ${props => !props.small && `align-items: flex-end`};
+    // ${props => !props.left && `align-items: flex-end`};
 `;
 const ClassContainer = styled.div`
     display: flex;
@@ -85,11 +95,5 @@ const Class = styled.div`
     overflow: hidden;
     white-space: nowrap;
 `;
-
-const OldClass = styled(Class) `
-    font-size: 70%;
-    text-decoration: line-through;
-`;
-
 
 export default ClassesContainer;

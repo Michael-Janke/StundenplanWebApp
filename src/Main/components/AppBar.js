@@ -1,115 +1,169 @@
-import React, { Component } from "react";
-import styled from "styled-components";
-import { connect } from "react-redux";
-
-import AppBar from 'material-ui/AppBar';
-import IconButton from 'material-ui/IconButton';
-import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
-import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
-import PrintIcon from 'material-ui/svg-icons/action/print';
-import CalendarIcon from 'material-ui/svg-icons/action/event';
-import FeedbackIcon from 'material-ui/svg-icons/action/feedback';
+import React from 'react';
+import PropTypes from 'prop-types';
+import withStyles from '@material-ui/core/styles/withStyles';
+import Drawer from '@material-ui/core/SwipeableDrawer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Divider from '@material-ui/core/Divider';
+import MenuIcon from '@material-ui/icons/Apps';
+import CalendarIcon from '@material-ui/icons/Event';
+import PrintIcon from '@material-ui/icons/Print';
+import Search from './Search.js';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
 import UserSettingsMenu from './UserSettingsMenu';
-import Drawer from './Drawer';
-import SearchBar from './SearchBar';
-import { showError, changeWeek } from '../actions';
+import grey from '@material-ui/core/colors/grey';
+import ProfilePicture from './ProfilePicture';
+import indigo from '@material-ui/core/colors/indigo';
+import OfficeIcons from '../../Common/office-icons';
+import Waffle from './Waffle.js';
 
-import { grey100 } from 'material-ui/styles/colors';
-import { DRAWER_WIDTH } from '../../Common/const';
-import Calendar from "./Calendar";
-import Feedback from './Feedback';
+const Tooltip = ({ children }) => children;
 
-class WGAppBar extends Component {
+const styles = theme => ({
+    root: {
+        overflow: 'hidden',
+        display: 'flex',
+        width: '100%',
+    },
+    appBar: {
+        backgroundColor: indigo[600],
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    toolbar: theme.mixins.toolbar,
+    drawer: {
+        width: 300,
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            open: false,
-        }
+    },
+    icon: {
+        color: grey[100]
+    },
+    links: {
+        padding: theme.spacing.unit * 2,
+    },
+    linksHeader: {
+        color: grey[600],
+        paddingBottom: theme.spacing.unit,
+    },
+    linksList: {
+        display: 'flex',
+        flexWrap: 'wrap',
     }
+});
 
-    openDrawer = () => {
-        this.setState({ open: true });
-    }
+class ResponsiveDrawer extends React.Component {
+    state = {
+        mobileOpen: false,
+        searchOpen: false,
+    };
+
+    handleDrawerToggle = () => {
+        this.setState({ mobileOpen: !this.state.mobileOpen });
+    };
 
     onPrintTimetable = () => {
         window.setTimeout(window.print, 0);
-    }
-    
-    onCloseDrawer = (open) => {
-        this.setState({ open });
     }
 
     handleCalendar = () => {
         this.refs.calendar.getWrappedInstance().open();
     }
 
-    handleFeedback = () => {
-        this.refs.feedback.getWrappedInstance().open();
+    handleSearch = () => {
+        this.setState({ searchOpen: !this.state.searchOpen });
     }
 
     render() {
-        const small = this.props.small;
+        const { classes, theme, small, large } = this.props;
+
+        const links = (
+            <div className={classes.links}>
+                <div className={classes.linksHeader}>
+                    Apps
+                </div>
+                <div className={classes.linksList}>
+                    {Object.entries(OfficeIcons).map(([key, value], i) => {
+                        return (
+                            <Waffle name={key} waffle={value} key={i} />
+                        );
+                    })}
+                </div>
+            </div>
+        );
+        const drawer = (
+            <div className={classes.drawer}>
+                <ProfilePicture />
+                <Divider />
+                {links}
+            </div>
+        );
         return (
-            <AppBar
-                titleStyle={{
-                    maxWidth: small ? 0 : DRAWER_WIDTH - 64,
-                    flex: 1
-                }}
-                title={small ? "" : "Stundenplan"}
-                style={{ boxShadow: 'none' }}
-                onLeftIconButtonClick={this.openDrawer}
-            >
-                <Calendar ref="calendar"/>
-                <SearchBar
-                    anchorIfSmall={this} />
-                <Icons>
-                    {small || <IconButton tooltip="Voherige Woche" onClick={this.props.setPreviousWeek}>
-                        <BackIcon color={grey100} />
-                    </IconButton>}
-                    {small || <IconButton tooltip="Nächste Woche" onClick={this.props.setNextWeek}>
-                        <NextIcon color={grey100} />
-                    </IconButton>}
-                    <IconButton tooltip="Kalendar öffnen">
-                        <CalendarIcon color={grey100} onClick={this.handleCalendar} />
-                    </IconButton>
-                    <IconButton tooltip="Feedback geben">
-                        <FeedbackIcon color={grey100} onClick={this.handleFeedback} />
-                    </IconButton>
-                    {small || <IconButton tooltip="Stundenplan drucken" onClick={this.onPrintTimetable}>
-                        <PrintIcon color={grey100} />
-                    </IconButton>}
-                    <UserSettingsMenu />
-                </Icons>
-                <Feedback ref="feedback"/>
+            <div className={classes.root}>
+                <AppBar className={classes.appBar} style={{ boxShadow: 'none' }}>
+                    <Toolbar
+                        disableGutters={true}
+                    >
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={this.handleDrawerToggle}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+
+                        <Icons style={{marginLeft: large  ? "calc(300px + 2vw - 58px)" : undefined}}>
+                            <Search shrinkChildren={small} alwaysOpen={!small}>
+                                {small ||
+                                    <Tooltip id="tooltip-print" title="Stundenplan drucken">
+                                        <IconButton onClick={this.onPrintTimetable}>
+                                            <PrintIcon className={classes.icon} />
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                                <UserSettingsMenu />
+                            </Search>
+                        </Icons>
+                    </Toolbar>
+                </AppBar>
                 <Drawer
-                    open={this.state.open}
-                    onClose={this.onCloseDrawer}
-                />
-            </AppBar>
-        )
+                    variant="temporary"
+                    swipeAreaWidth={10}
+                    anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                    open={this.state.mobileOpen}
+                    onClose={this.handleDrawerToggle}
+                    onOpen={this.handleDrawerToggle}
+
+                    ModalProps={{
+                        keepMounted: true, // Better open performance on mobile.
+                    }}
+                >
+                    {drawer}
+                </Drawer>
+                <div className={classes.toolbar} />
+            </div >
+        );
     }
 }
+
 const Icons = styled.div`
+    width: 100%;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-`
+`;
 
-const mapDispatchToProps = dispatch => {
-    return {
-        showError: (text) => { dispatch(showError(text)); },
-        setNextWeek: () => dispatch(changeWeek(1)),
-        setPreviousWeek: () => dispatch(changeWeek(-1)),
-    };
+ResponsiveDrawer.propTypes = {
+    classes: PropTypes.object.isRequired,
+    theme: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
     return {
-        avatars: state.avatars,
-        upn: state.user.upn,
-        small: state.browser.lessThan.medium
+        small: state.browser.lessThan.medium,
+        large: state.browser.greaterThan.medium,
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(WGAppBar);
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(ResponsiveDrawer));

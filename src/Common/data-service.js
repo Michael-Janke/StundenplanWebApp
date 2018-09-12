@@ -98,15 +98,17 @@ const dataService = store => next => action => {
 		case "SEND_FEEDBACK":
 			return requestApiGenerator(next)(GRAPH_URL, 'beta/me/sendMail', { type: 'FEEDBACK' }, 'POST',
 				JSON.stringify(createFeedbackMail(action.payload)));
+		case "PATCH_REMIND_SETTINGS":
+			return requestApiGenerator(next)(API_URL, 'me', { type: 'GET_ME' }, 'PATCH', JSON.stringify(action.payload));
 		case 'GET_COUNTER':
 			return requestApiGenerator(next)(API_URL, 'counter', { type: 'COUNTER' });
 		case 'SET_NOTIFICATION':
 			return requestApiGenerator(next)(API_URL, 'notifications', { type: 'SET_NOTIFICATION' },
 				'POST', JSON.stringify(action.payload));
 		case 'GET_PROFILE_PICTURE':
-			return getImageGenerator(next)(GRAPH_URL, '/beta/me/photo/$value', { type: 'PROFILE_PICTURE' });
+			return getImageGenerator(next)(GRAPH_URL, 'beta/me/photo/$value', { type: 'PROFILE_PICTURE' });
 		case 'GET_PROFILE_PICTURE_SMALL':
-			return getImageGenerator(next)(GRAPH_URL, '/beta/me/photos/48x48/$value', { type: 'PROFILE_PICTURE_SMALL' });
+			return getImageGenerator(next)(GRAPH_URL, 'beta/me/photos/48x48/$value', { type: 'PROFILE_PICTURE_SMALL' });
 		default:
 			break
 	}

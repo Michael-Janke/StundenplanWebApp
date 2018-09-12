@@ -1,50 +1,64 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import ArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
-import { red800 } from 'material-ui/styles/colors';
-import { grey600 } from 'material-ui/styles/colors';
+// import styled from 'styled-components';
+import grey from '@material-ui/core/colors/grey';
+import red from '@material-ui/core/colors/red';
 
-function SubjectContainer({ subject, small }) {
-    const changed = !!subject.old;
-    const ClassNormal = changed ? NewSubject : Subject;
-    const Arrow = changed && <ArrowForward style={{ height: 10, width: null }}/>;
-    return (
-        <Container>
-            {!small && subject.old && <OldSubject>{subject.old.NAME}</OldSubject>}
-            {!small && Arrow}
-            <ClassNormal>{subject.new ? subject.new.NAME : '-'}</ClassNormal>
-        </Container>
-    )
-}
 
-SubjectContainer.propTypes = {
-    subject: PropTypes.object,
-    small: PropTypes.bool,
+const SubjectContainer = type => subject => (props) => {
+    const { themeClasses } = props;
+    const changed = subject.old === 0 || subject.new === 0;
+    if (type === 'new') {
+        const ClassNormal = changed ? NewSubject : Subject;
+        return (
+            <ClassNormal className={themeClasses[changed ? 'subject-new' : 'subject-normal']}>{subject.new ? subject.new.NAME : '-'}</ClassNormal>
+        );
+    }
+    if (type === 'old') {
+        return (
+            <OldSubject className={themeClasses['subject-old']}>{subject.old.NAME}</OldSubject>
+        );
+    }
+    if (type === 'instead-by' || type === 'instead-of') {
+        if (!changed) {
+            return null;
+        }
+        return (
+            <Subject className={themeClasses['subject-substitution']}>
+                {subject.substitution ? subject.substitution.NAME : '-'}
+            </Subject>
+        );
+    }
 };
 
-const Container = styled.div`
-    flex-direction: row;
-    display: flex;
-    align-items: center;
-`;
 
-const Subject = styled.div`
-    font-size: 75%;
-    font-weight: 600;
-`;
+export const subjectStyles = theme => ({
+    'subject-normal': {
+        fontSize: '72%',
+        fontWeight: 600,
+    },
+    'subject-new': {
+        color: theme.palette.type === 'dark' ? red[500] : red[800],
+        fontWeight: 600,
+        fontSize: '72%',
+    },
+    'subject-old': {
+        color: theme.palette.type === 'dark' ? grey[300] : grey[600],
+        fontSize: '70%',
+        fontWeight: 600,
+        textDecoration: 'line-through ' + (theme.palette.type === 'dark' ? "white" : "black"),
+    },
+    'subject-substitution': {
+        color: theme.palette.type === 'dark' ? grey[300] : grey[600],
+        fontSize: '70%',
+        fontWeight: 600,
+        textDecoration: 'line-through ' + (theme.palette.type === 'dark' ? "white" : "black"),
+    }
+});
 
-const NewSubject = styled(Subject) `
-    color: ${red800};
-    font-weight: 600;
-    font-size: 80%;
-`;
+const Subject = 'div';
 
-const OldSubject = styled(Subject) `
-    color: ${grey600};
-    font-size: 50%;
-`;
+const NewSubject = Subject;
 
-
+const OldSubject = Subject;
 
 export default SubjectContainer;

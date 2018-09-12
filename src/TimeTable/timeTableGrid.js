@@ -1,59 +1,93 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-    TableFooter
-} from 'material-ui/Table';
-import { grey200, grey600 } from 'material-ui/styles/colors';
-import IconButton from 'material-ui/IconButton';
-import BackIcon from 'material-ui/svg-icons/navigation/arrow-back';
-import NextIcon from 'material-ui/svg-icons/navigation/arrow-forward';
-import { NoPrint, Print } from 'react-easy-print';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import grey from '@material-ui/core/colors/grey';
+import PeriodColumn from './period';
 import { WEEKDAY_NAMES } from '../Common/const';
-
+import { Print, NoPrint } from 'react-easy-print';
 import { changeWeek } from '../Main/actions';
 import makeGetCurrentTimetable from '../Selector/timetable';
 import Holiday from './Holiday';
-import PeriodColumn from './period';
+import withStyles from '@material-ui/core/styles/withStyles';
+import IconButton from '@material-ui/core/IconButton';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
+import BackIcon from '@material-ui/icons/ArrowBack';
+import NextIcon from '@material-ui/icons/ArrowForward';
+import ResetIcon from '@material-ui/icons/ArrowDownward';
+import WarnIcon from '@material-ui/icons/Warning';
+import Tooltip from '@material-ui/core/Tooltip';
+import { ObjectIcon } from '../Main/components/Avatars';
+import RoomList from './roomlist';
+import Supervision from './supervision';
+import moment from 'moment';
 
-class TimeTableGrid extends Component {
+class TimeTableGrid extends React.Component {
+    state = {};
+
+    shouldComponentUpdate(nextProps) {
+        // controlled non-updating to update data in background
+        return !!nextProps.currentTimetable
+            || (nextProps.counterChanged === 'detected' && nextProps.counterChanged !== this.props.counterChanged)
+            || this.props.classes !== nextProps.classes;
+    }
+
+    static getDerivedStateFromProps(props) {
+        return {
+            periodsWidth: (props.small) ? 20 : 70,
+        }
+    }
+
+    periodTime(timeAsNumber){
+        const lpad2 = (number) => (number < 10 ? '0' : '') + number;
+        return Math.floor(timeAsNumber / 100) + ':' + lpad2(timeAsNumber % 100);
+    }
 
     renderPeriodTimes(period) {
-        const lpad2 = (number) => (number < 10 ? '0' : '') + number;
         return (
             <Times key={period.PERIOD_TIME_ID}>
-                <Time>{Math.floor(period.START_TIME / 100)}:{lpad2(period.START_TIME % 100)}</Time>
-                <Time>{Math.floor(period.END_TIME / 100)}:{lpad2(period.END_TIME % 100)}</Time>
+                <Time>{this.periodTime(period.START_TIME)}</Time>
+                <Time>{this.periodTime(period.END_TIME)}</Time>
             </Times>
-        )
+        );
     }
 
     renderPeriodHeader(period) {
         return (
             <Periods key={-period.PERIOD_TIME_ID}>
-                <Period>{period.PERIOD_TIME_ID - 1}.</Period>
+                <Tooltip 
+                    placement="right" 
+                    title={this.periodTime(period.START_TIME) + ' - ' + this.periodTime(period.END_TIME)}>
+                    <Period>{period.PERIOD_TIME_ID - 1}.</Period>
+                </Tooltip>
             </Periods>
         )
     }
 
     renderPeriodsColumn(day, periodNumber) {
-        if (!this.props.currentTimetable) { return <TableRowColumn key={day} />; }
+        if (!this.props.currentTimetable) { return <TableCell key={day} />; }
         let dayObject = this.props.currentTimetable[day];
         if (dayObject.holiday) {
             if (periodNumber !== 1) return;
             let isNextDay = (this.props.currentTimetable[day - 1] || {}).holiday === dayObject.holiday;
             if (isNextDay) return;
             let colSpan = this.props.currentTimetable.slice(day).filter((dayX) => dayX.holiday === dayObject.holiday).length;
+            let date = this.props.date.clone().weekday(0).add(day - 1, 'days');
             return (
-                <TableRowColumn key={day} rowSpan={Object.values(this.props.periods).length} style={{ padding: 0 }} colSpan = {colSpan}>
-                    <Holiday holiday={dayObject.holiday} date={dayObject.date.format("dd.mm")} />
-                </TableRowColumn>
+                <TableCell
+                    key={day}
+                    rowSpan={Object.values(this.props.periods).length}
+                    style={{ padding: 0 }}
+                    colSpan={colSpan}>
+                    <Holiday holiday={dayObject.holiday} date={date.format("DD.MM")} />
+                </TableCell>
             );
         } else {
             let period = dayObject.periods[periodNumber - 1];
@@ -61,110 +95,180 @@ class TimeTableGrid extends Component {
                 return null;
             }
             return (
-                <TableRowColumn
+                <TableCell
                     key={day}
                     style={{
                         textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
                     }}
                     rowSpan={period ? period.skip + 1 : 0}>
-                    <PeriodColumn
-                        lessons={period.lessons}
-                        type={this.props.type}
-                        avatars={this.props.avatars}
-                        small={this.props.small} />
-                </TableRowColumn>
+                    {period.supervision &&
+                        <Supervision supervision={period.supervision}/>
+                    }
+                    {period.freeRooms ?
+                        <RoomList
+                            rooms={period.freeRooms}
+                        />
+                        :
+                        <PeriodColumn
+                            continueation={period.continueation}
+                            lessons={period.lessons}
+                            type={this.props.type}
+                            small={this.props.small} />
+                    }
+                </TableCell>
             );
         }
     }
 
     renderRows() {
-        if (!this.props.id || !this.props.type || this.props.loading) {
-            return null;
-        }
         const periodColumnStyle = {
-            width: this.props.periodsWidth,
+            width: this.state.periodsWidth,
             fontSize: '100%',
             padding: 2,
         };
         return Object.values(this.props.periods).map((period, i) => (
             <TableRow key={i}>
-                <TableRowColumn style={periodColumnStyle}>
+                <TableCell style={periodColumnStyle}>
                     <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
-                        {!this.props.small && this.renderPeriodTimes(period)}
+                        {this.props.small || this.renderPeriodTimes(period)}
                         {this.renderPeriodHeader(period)}
                     </div>
-                </TableRowColumn>
+                </TableCell>
                 {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
             </TableRow>
         ));
     }
 
     render() {
-        const tableHeaderStyle = { color: grey600, fontSize: '85%', textAlign: 'center', padding: 0, height: 42 };
-        const headerHeight = !this.props.showDrawer ? 128 : 82;
+        const { classes, id, type, warning, lastCheck, small } = this.props;
+        const tableHeaderStyle = { fontSize: '85%', textAlign: 'center', padding: 0 };
         return (
-            <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
-                {!this.props.showDrawer ? <TableToolBar>
-                    <IconButton primary={true} onClick={this.props.setPreviousWeek}>
-                        <BackIcon />
-                    </IconButton>
-                    <IconButton primary={true} onClick={this.props.setNextWeek}>
-                        <NextIcon />
-                    </IconButton>
-                </TableToolBar> : null}
-                <Print main name="TimeTable">
-                    <GrayoutTable
-                        disabled={this.props.counterChanged}
-                        selectable={false}
-                        wrapperStyle={{ flexDirection: 'column', display: 'flex', height: '100%', flex: 1, maxHeight: `calc(100vh - ${headerHeight}px)` }}
-                    >
-                        <TableHeader
-                            style={{ backgroundColor: grey200, fontSize: '100%' }}
-                            displaySelectAll={false}
-                            adjustForCheckbox={false}>
-                            <TableRow>
-                                <TableHeaderColumn style={{ ...tableHeaderStyle, width: this.props.periodsWidth, padding: 2 }} />
-                                {this.props.currentTimetable && this.props.currentTimetable.map((day, i) => (
-                                    <TableHeaderColumn
-                                        key={i}
-                                        style={tableHeaderStyle}>
-                                        {day.date.format(this.props.small ? 'dd' : 'dddd')}
-                                        <br />
-                                        {day.date.format('DD.MM.')}
-                                    </TableHeaderColumn>
-                                ))}
+            <Print main name="TimeTable">
+                <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
+                    <div className={classes.tableToolbar + " " + classes['table-header']}>
+                        {warning && <Tooltip title={"Letzte Verbindung " + moment(lastCheck).fromNow()}>
+                            <WarnIcon color="error" />
+                        </Tooltip>}
+                        <ConnectedCurrentTimetableInformation id={id} type={type} />
+                        <NoPrint>
+                            <IconButton onClick={this.props.setPreviousWeek}>
+                                <BackIcon />
+                            </IconButton>
+                        </NoPrint>
+                        {this.props.small || 
+                            <NoPrint>
+                                <IconButton onClick={this.props.setThisWeek}>
+                                    <ResetIcon />
+                                </IconButton>
+                            </NoPrint>}
+                        <NoPrint>
+                            <IconButton onClick={this.props.setNextWeek}>
+                                <NextIcon />
+                            </IconButton>
+                        </NoPrint>
+                    </div>
+                    <Table className={classes['table-header']}>
+                        <TableHead
+                            style={{ fontSize: '100%' }}>
+                            <TableRow style={{ height: this.props.small ? 28 : 48 }}>
+                                <TableCell style={{ ...tableHeaderStyle, width: this.state.periodsWidth, padding: 2 }} />
+                                {[1, 2, 3, 4, 5].map((day, i) => {
+                                    let date = this.props.date.clone().startOf('day').weekday(0).add(day - 1, 'days');
+                                    return (
+                                        <TableCell
+                                            key={i}
+                                            style={tableHeaderStyle}
+                                            className={moment().startOf('day').diff(date, 'days') === 0 ? classes.today : ""}
+                                        >
+                                            {!small && date.format('dddd')}
+                                            {!small && <br /> }
+                                            {date.format('DD.MM.')}
+                                        </TableCell>
+                                    );
+                                })}
                             </TableRow>
-                        </TableHeader>
-                        <TableBody
-                            displayRowCheckbox={false}>
-                            {this.renderRows()}
-                        </TableBody>
-
-                        {this.props.showDrawer && <TableFooter
-                            adjustForCheckbox={false}
+                        </TableHead>
+                    </Table>
+                    <div style={{ maxHeight: small ? undefined : `calc(100vh - ${180}px)`, overflow: 'hidden auto' }}>
+                        <GrayoutTable
+                            className={classes.table}
+                            disabled={this.props.counterChanged === 'detected'}
                         >
-                            <TableRow>
-                                <TableRowColumn colSpan="6" style={{ textAlign: 'right' }} >
-                                    <NoPrint>
-                                        <IconButton onClick={this.props.setPreviousWeek}>
-                                            <BackIcon />
-                                        </IconButton>
-                                        <IconButton onClick={this.props.setNextWeek}>
-                                            <NextIcon />
-                                        </IconButton>
-                                    </NoPrint>
-                                </TableRowColumn>
-                            </TableRow>
-                        </TableFooter>}
-
-                    </GrayoutTable>
-                </Print>
-            </div>
+                            <TableBody>
+                                {this.renderRows()}
+                            </TableBody>
+                        </GrayoutTable>
+                    </div>
+                </div>
+            </Print>
         );
     }
 }
 
-const GrayoutTable = styled(Table) `
+
+const CurrentTimetableInformation = ({ id, type, masterdata, avatars, lastUpdate, small }) => {
+    if (!masterdata || !type || !id) return null;
+    if (type === 'all') {
+        type = "room";
+    }
+    let object = masterdata[type[0].toUpperCase() + type.slice(1)][id];
+    if (!object) return null;
+    return (
+        <ListItem>
+            <ListItemIcon><ObjectIcon avatars={avatars} upn={object.UPN} type={type} /></ListItemIcon>
+            <ListItemText 
+                style={{width: 0}}
+                disableTypography
+                primary={
+                    <Typography variant="body2" noWrap>
+                    {object.LASTNAME ? object.FIRSTNAME + " " + object.LASTNAME : object.NAME}
+                    </Typography>
+                }
+                secondary={<Typography variant="caption" noWrap>
+                    {(small ? "Akt. " : "Letzte Änderung ") + moment(lastUpdate).fromNow()}
+                </Typography>}
+            />
+        </ListItem>
+    )
+};
+
+const ConnectedCurrentTimetableInformation = connect(state => ({
+    avatars: state.avatars,
+    masterdata: state.timetable.masterdata,
+    lastUpdate: state.user.lastUpdate,
+    small: state.browser.lessThan.medium,
+}))(CurrentTimetableInformation);
+
+
+const styles = theme => ({
+    timetable: {
+        display: 'flex',
+    },
+    table: {
+        backgroundColor: theme.palette.background.default,
+        flexShrink: 0,
+    },
+    'table-header': {
+        backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
+        tableLayout: 'fixed',
+    },
+    'table-footer': {
+        backgroundColor: theme.palette.background.paper,
+    },
+    tableToolbar: {
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        height: 48,
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+    today: {
+        backgroundColor: grey[400],
+    }
+});
+
+const GrayoutTable = styled(Table)`
     ${props => props.disabled && `
         -webkit-filter: grayscale(100%);
         -moz-filter: grayscale(100%);
@@ -173,16 +277,10 @@ const GrayoutTable = styled(Table) `
         filter: grayscale(100%);
         filter: gray;`
     }
-`;
-
-const TableToolBar = styled.div`
-    background-color: ${grey200};
-    border-bottom: 1px solid rgb(224, 224, 224);
-    height: 48px; 
-    text-align: right;
-    display: table;
+    table-layout: fixed;
     width: 100%;
-`
+    height: 100%;
+`;
 
 const Times = styled.div`
     font-size:50%;
@@ -210,6 +308,7 @@ const Period = styled.div`
 const mapDispatchToProps = dispatch => {
     return {
         setNextWeek: () => dispatch(changeWeek(1)),
+        setThisWeek: () => dispatch(changeWeek('now')),
         setPreviousWeek: () => dispatch(changeWeek(-1)),
     };
 };
@@ -218,23 +317,21 @@ const makeMapStateToProps = () => {
     const getCurrentTimetable = makeGetCurrentTimetable()
     const mapStateToProps = (state, props) => {
         return {
-            currentTimetable: getCurrentTimetable(state, props),
+            currentTimetable: getCurrentTimetable(state),
+            direction: state.timetable.timetableDate.diff(props.date),
             date: state.timetable.timetableDate,
             periods: state.timetable.masterdata.Period_Time,
             id: state.timetable.currentTimeTableId,
             type: state.timetable.currentTimeTableType,
-            showDrawer: state.browser.greaterThan.small,
-            small: state.browser.is.extraSmall || state.browser.is.medium,
-            periodsWidth: (state.browser.is.extraSmall || state.browser.is.medium) ? 20 : 70,
             loading: state.timetable.loadingTimetable || state.timetable.loadingSubstitutions,
-            avatars: state.avatars,
             warning: state.user.warning,
             lastCheck: state.user.lastCheck,
-            counterChanged: state.timetable.counterChanged,
+            counterChanged: state.user.counterChanged,
+            small: state.browser.lessThan.medium,
         }
     }
     return mapStateToProps;
 }
 
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(TimeTableGrid);
+export default connect(makeMapStateToProps, mapDispatchToProps)(withStyles(styles, { withTheme: true })(TimeTableGrid));

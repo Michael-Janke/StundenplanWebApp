@@ -1,26 +1,39 @@
 import React from 'react';
 import firebase from 'firebase';
 import { connect } from "react-redux";
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import MenuItem from 'material-ui/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
 
-import ProfilePicIcon from 'material-ui/svg-icons/action/account-circle';
-import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
-import KeyIcon from 'material-ui/svg-icons/communication/vpn-key';
-import NotificationsOn from 'material-ui/svg-icons/social/notifications-active';
-import NotificationsOff from 'material-ui/svg-icons/social/notifications-off';
-import LogOutIcon from 'material-ui/svg-icons/action/exit-to-app';
+import ProfilePicIcon from '@material-ui/icons/AccountCircle';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import KeyIcon from '@material-ui/icons/VpnKey';
+import FeedbackIcon from '@material-ui/icons/Feedback';
+import NotificationsOn from '@material-ui/icons/NotificationsActive';
+import NotificationsOff from '@material-ui/icons/NotificationsOff';
+import LogOutIcon from '@material-ui/icons/ExitToApp';
+import MailIcon from '@material-ui/icons/Mail';
 
 import { purge } from '../../store';
 import { unregister } from '../../registerServiceWorker';
 import { connectToServiceWorker } from '../../Common/firebase';
-import { setNotification, showError } from '../actions';
+import { setNotification, showError, loadMe } from '../actions';
 import { authContext } from '../../Common/Adal/adalConfig';
 import UserAvatar from './UserAvatar';
+import withTheme from '@material-ui/core/styles/withTheme';
+import Tooltip from '@material-ui/core/Tooltip';
+import ReminderSettingsDialog from './ReminderSettingsDialog';
+import Feedback from './Feedback';
 
 class UserSettingsMenu extends React.Component {
+
+    state = {
+        reminderOpen: false,
+        feedbackOpen: false,
+    };
 
     profilePicChange = () => {
         window.open("https://outlook.office365.com/ecp/PersonalSettings/EditAccount.aspx?chgPhoto=1&e" +
@@ -73,45 +86,126 @@ class UserSettingsMenu extends React.Component {
         }
     }
 
+    handleClick = event => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+
+    handleClose = () => {
+        this.setState({ anchorEl: null });
+    };
+
     logout = () => {
         authContext.logOut();
     }
 
+    openFeedback = () => {
+        this.setState({feedbackOpen: true});
+        this.handleClose();
+    }
+
+    openReminderSettings = () => {
+        this.props.loadMe();
+        this.setState({reminderOpen: true});
+        this.handleClose();
+    }
+
+    closeReminderSettings = () => {
+        this.setState({reminderOpen: false});
+    }
+
+    closeFeedback = () => {
+        this.setState({feedbackOpen: false });
+    }
+
     render() {
+        const { anchorEl } = this.state;
         return (
-            <IconMenu
-                iconButtonElement={
-                    <IconButton
-                        tooltipPosition="bottom-left"
-                        tooltip="Benutzereinstellungen"
-                        style={{ width: 48 + 8, height: 48, paddingLeft: 8, padding: 0 }}>
-                        <UserAvatar />
-                    </IconButton>}
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-            >
-                <MenuItem
-                    primaryText="Profilbild ändern"
-                    rightIcon={<ProfilePicIcon />}
-                    onClick={this.profilePicChange} />
-                <MenuItem
-                    primaryText="Passwort ändern"
-                    rightIcon={<KeyIcon />}
-                    onClick={this.passwordChange} />
-                <MenuItem
-                    primaryText="Reset"
-                    rightIcon={<RefreshIcon />}
-                    onClick={this.reset} />
-                <MenuItem
-                    primaryText={"Benachrichtigungen " + (this.props.notificationToken ? "ausschalten" : "anschalten")}
-                    rightIcon={this.props.notificationToken ? <NotificationsOff /> : <NotificationsOn />}
-                    onClick={this.setNotification}
+            <div>
+                <ReminderSettingsDialog 
+                    open={this.state.reminderOpen} 
+                    onClose={this.closeReminderSettings} 
                 />
-                <MenuItem
-                    primaryText="Logout"
-                    rightIcon={<LogOutIcon />}
-                    onClick={this.logout} />
-            </IconMenu>
+                <Feedback 
+                    open={this.state.feedbackOpen} 
+                    onClose={this.closeFeedback}
+                />
+                <Tooltip id="tooltip-settings" title="Benutzereinstellungen">
+                    <IconButton
+                        aria-label="More"
+                        aria-owns={anchorEl ? 'long-menu' : null}
+                        aria-haspopup="true"
+                        onClick={this.handleClick}
+                        style={{ width: 48, height: 48, padding: 0, marginLeft: 8 }}
+                    >
+                        <UserAvatar />
+                    </IconButton>
+                </Tooltip>
+                <Menu
+                    id="long-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={this.handleClose}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                    getContentAnchorEl={undefined}
+                >
+                    <MenuItem
+                        onClick={this.openFeedback} >
+                        <ListItemIcon>
+                            <FeedbackIcon />
+                        </ListItemIcon>
+                        <ListItemText inset primary="Feedback senden" />
+                    </MenuItem>
+                    <MenuItem
+                        onClick={this.profilePicChange} >
+                        <ListItemIcon>
+                            <ProfilePicIcon />
+                        </ListItemIcon>
+                        <ListItemText inset primary="Profilbild ändern" />
+                    </MenuItem>
+                    <MenuItem
+                        onClick={this.passwordChange}>
+                        <ListItemIcon>
+                            <KeyIcon />
+                        </ListItemIcon>
+                        <ListItemText inset primary="Passwort ändern" />
+                    </MenuItem>
+                    <MenuItem
+                        onClick={this.openReminderSettings}>
+                        <ListItemIcon>
+                            <MailIcon />
+                        </ListItemIcon>
+                        <ListItemText inset primary="E-Mail-Erinnerungen" />
+                    </MenuItem>
+                    <MenuItem
+                        onClick={this.reset}>
+                        <ListItemIcon>
+                            <RefreshIcon />
+                        </ListItemIcon>
+                        <ListItemText inset primary="Reset" />
+                    </MenuItem>
+                    {false && <MenuItem
+                        onClick={this.setNotification}>
+                        <ListItemIcon>
+                            {this.props.notificationToken ? <NotificationsOff /> : <NotificationsOn />}
+                        </ListItemIcon>
+                        <ListItemText inset primary={"Benachrichtigungen " + (this.props.notificationToken ? "ausschalten" : "anschalten")} />
+                    </MenuItem>}
+                    <MenuItem
+                        onClick={this.logout}>
+                        <ListItemIcon>
+                            <LogOutIcon />
+                        </ListItemIcon>
+                        <ListItemText inset primary="Logout" />
+                    </MenuItem>
+                </Menu>
+            </div>
         );
     }
 }
@@ -120,6 +214,7 @@ const mapDispatchToProps = dispatch => {
     return {
         setNotification: (newToken, oldToken) => { dispatch(setNotification(newToken, oldToken)); },
         showError: (text) => { dispatch(showError(text)); },
+        loadMe: () => { dispatch(loadMe()); },
     };
 };
 
@@ -130,7 +225,7 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserSettingsMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme()(UserSettingsMenu));
 
 
 

@@ -1,4 +1,3 @@
-import { AuthenticationContext, adalFetch } from './react-adal';
 
 export const adalConfig = {
   tenant: '778d176d-0f75-472a-afcc-a85553ab06dd',
@@ -12,7 +11,8 @@ export const adalConfig = {
   postLogoutRedirectUri: 'https://www.wolkenberg-gymnasium.de'
 };
 
-export const authContext = new AuthenticationContext(adalConfig);
 
-export const adalApiFetch = (fetch, url, options) =>
-  adalFetch(authContext, adalConfig.endpoints.api, fetch, url, options);
+export let authContext;
+export let provideAuthContext = (authCtx) => {
+  authContext = authCtx;
+}

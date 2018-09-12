@@ -1,70 +1,74 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { DRAWER_WIDTH } from "../Common/const";
-import { grey600 } from 'material-ui/styles/colors';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from '@material-ui/core/styles/withTheme';
 import TimeTableGrid from './timeTableGrid';
-import Dates from '../Dates';
+import indigo from '@material-ui/core/colors/indigo';
+import { Paper } from "@material-ui/core";
+import Dates from "../Dates";
+import ErrorBoundary from "../Common/ErrorBoundary";
 
-class View extends Component {
+var Substitutions;
+if (process.env.REACT_APP_MODE === 'tv') {
+    Substitutions = require('./Substitutions').default;
+}
+
+class View extends PureComponent {
     render() {
-        const drawerMargin = this.props.showDrawer ? undefined : '1vw';
+        const { showCalendar, small } = this.props;
         return (
             <Container>
-                <AppBar style={{ backgroundColor: this.props.muiTheme.palette.primary1Color }}>
-                    <ShadowContainerEmu />
-                </AppBar>
-
-                {this.props.showDrawer &&
-                    <Drawer>
-                        <Dates />
-                    </Drawer>
+                <AppBar backgroundColor={indigo[600]} />
+                {showCalendar && !small &&
+                    <ShadowContainer style={{width:300, flex:'none'}}>
+                        <ErrorBoundary>
+                            <Dates />
+                        </ErrorBoundary>
+                    </ShadowContainer>
                 }
-                <ShadowContainer style={{ marginLeft: drawerMargin, marginRight: drawerMargin }}>
-                    <ShadowBox>
-                        <TimeTableGrid />
-                    </ShadowBox>
-                </ShadowContainer>
+                {Substitutions ?
+                    <ShadowContainer>
+                        <Substitutions addDays={0} />
+                        <Substitutions addDays={1} />
+                    </ShadowContainer>
+                    : null}
+                <Column>
+                    <ShadowContainer style={{marginRight: '1vw'}}>
+                        <ErrorBoundary>
+                            <TimeTableGrid />
+                        </ErrorBoundary>    
+                    </ShadowContainer>
+                    {showCalendar && small &&
+                        <ShadowContainer>
+                            <ErrorBoundary>
+                                <Dates singleMonth />
+                            </ErrorBoundary>
+                        </ShadowContainer>
+                    }
+                </Column>
             </Container>
         );
     }
 }
 
 const Container = styled.div`
-    display: flex;
-    align-items: stretch;
     width: 100%;
-    height: 100%;
     position: relative;
-    color: ${grey600};
+    display: flex;
+    background-color: ${props => props.backgroundColor};
+`
+const Column = styled.div`
+    display: flex;
+    flex-direction: column;
 `
 
-const Drawer = styled.div`
-    min-width: ${DRAWER_WIDTH}px;
-    z-index: 1;
-`
-
-const ShadowContainer = styled.div`
+const ShadowContainer = styled(Paper)`
     display: flex;
     flex-direction: row;
-    width: 100%;
-    margin-top: 6px;
-    margin-right: 1vw;
-    margin-bottom: 1vw;
-    z-index: 1;
-`
-const ShadowBox = styled.div`
-    background-color: white;
-    box-shadow: rgba(0,0,0,0.3) 0px 0px 10px;
-    max-width: 1200px;
-`
-const ShadowContainerEmu = styled.div`
-    margin-left: ${DRAWER_WIDTH}px;
-    margin-right: 1vw;
-    max-width: 1200px;
-    width:100%;
-    height: 1px;
+    margin-left: 1vw;
+    position: relative;
+    max-width: 800px;  
+    margin-bottom: 10px;
 `
 const AppBar = styled.div`
     display: flex;
@@ -73,26 +77,19 @@ const AppBar = styled.div`
     width: 100%;
     height: 104px;
     position: absolute;
+    background-color: ${props => props.backgroundColor};
+
 `
-
-
 const mapDispatchToProps = dispatch => {
     return {
-        logout: () => {
-            dispatch();
-        }
     };
 };
 
 const mapStateToProps = state => {
     return {
-        masterdata: state.timetable.masterdata,
-        timetableDate: state.timetable.timetableDate,
-        periods: state.timetable.masterdata.Period_Time,
-        showPeriods: state.browser.greaterThan.small,
-        showDrawer: state.browser.greaterThan.small,
-        mediaType: state.browser.mediaType,
+        showCalendar: process.env.REACT_APP_MODE !== 'tv',
+        small: state.browser.lessThan.medium
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(muiThemeable()(View));
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme()(View));

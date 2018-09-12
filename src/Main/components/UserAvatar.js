@@ -1,38 +1,15 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import moment from "moment";
 import { loadAvatars } from '../actions';
 
-import Avatar from 'material-ui/Avatar';
-import PersonIcon from 'material-ui/svg-icons/social/person';
+import { ProfilePicture, checkAvatars } from "./Avatars";
+import makeGetEffectiveAvatars from "../../Selector/avatars";
 
-class UserAvatar extends Component {
-
-    constructor(props) {
-        super(props);
-        this.checkAvatar(props)
-    }
-
-    componentWillReceiveProps(props) {
-        this.checkAvatar(props)
-    }
-
-    checkAvatar(props) {
-        if (!props.upn) return;
-        if (!props.avatars) return;
-        const avatar = props.avatars[props.upn];
-        if (!avatar || moment(avatar.expires).isBefore(moment())) {
-            props.loadAvatars([props.upn]);
-        }
-    }
-
+class UserAvatar extends React.Component {
     render() {
-        const avatar = (this.props.avatars || {})[this.props.upn];
-        return <Avatar
-            src={avatar && avatar.img && ("data:image/jpg;base64," + avatar.img)}
-            size={48}
-            icon={<PersonIcon />}
-        />
+        const { upn } = this.props;
+        checkAvatars([upn], this.props.loadAvatars);
+        return ProfilePicture(upn, this.props.avatars, 48, true);
     }
 }
 
@@ -42,11 +19,12 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-const mapStateToProps = state => {
-    return {
-        avatars: state.avatars,
+const makeMapStateToProps = () => {
+    const getEffectiveAvatars = makeGetEffectiveAvatars();
+    return (state) => ({
+        avatars: getEffectiveAvatars(state),
         upn: state.user.upn,
-    };
-};
+    });
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserAvatar);
+export default connect(makeMapStateToProps, mapDispatchToProps)(UserAvatar);

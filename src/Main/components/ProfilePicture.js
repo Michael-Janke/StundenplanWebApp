@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { loadProfilePicture } from "../actions"
-import IconButton from 'material-ui/IconButton'
-import EditIcon from 'material-ui/svg-icons/content/create';
+import IconButton from '@material-ui/core/IconButton'
+import EditIcon from '@material-ui/icons/Create';
 
 class ProfilePicture extends Component {
 
@@ -21,7 +21,9 @@ class ProfilePicture extends Component {
     render() {
         return (
             <Wrapper>
-                <ProfileImg src={this.props.user.profilePicture} />
+                {this.props.user.profilePicture
+                    ?<ProfileImg src={this.props.user.profilePicture} />
+                    :<div style={{height:100, padding:20}}>Lade doch ein Profilfoto hoch.</div>}
                 <IconButton
                     onClick={this.profilePicChange}
                     style={{ right: 0, top: 0, position: 'absolute' }}
@@ -33,7 +35,7 @@ class ProfilePicture extends Component {
                     &nbsp;
                     {this.props.user.lastname}
                     <br />
-                    <Type>{{ TEACHER: "Lehrer", STUDENT: "Schüler", "": "" }[this.props.user.type || ""]}</Type>
+                    <Type>{{ teacher: "Lehrer", student: "Schüler", "": "" }[this.props.user.type || ""]}</Type>
                 </Name>
             </Wrapper>
         );
@@ -47,20 +49,20 @@ const ProfileImg = styled.img`
     width:100%;
 `
 const Name = styled.div`
-    bottom: 5px;
+    bottom: 0;
     left: 0;
     width: 100%;
     background: rgba(0,0,0,0.7);
     padding: 5px 10px;
     color: white;
     font-weight: 300;
-    font-size: 90%;
+    font-size: 125%;
     position: absolute;
     text-align: right;
     box-sizing: border-box;
 `
 const Type = styled.div`
-    font-size:75%;
+    font-size:80%;
 `
 const mapDispatchToProps = dispatch => {
     return {

@@ -4,69 +4,87 @@ import React, {
 import {
     connect
 } from "react-redux";
-import Snackbar from 'material-ui/Snackbar';
+import Snackbar from '@material-ui/core/Snackbar';
 import {
     clearErrors,
     checkCounter,
     setNotification,
     showError,
     setMyTimetable,
-    counterChanged,
-    sendLoginStatistic
-} from "./actions"
+    sendLoginStatistic,
+    changeTheme,
+    setSortBy
+} from "./actions";
 import TimeTable from "../TimeTable"
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from './components/AppBar';
-import Theme from '../Common/theme';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import createTheme from '../Common/theme';
 import ReactInterval from 'react-interval';
 import { connectToServiceWorker } from '../Common/firebase';
 import PrintProvider from 'react-easy-print';
+import ResponsiveFontSize from '../Common/ResponsiveFontSize';
+import MomentUtils from 'material-ui-pickers/utils/moment-utils';
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
 
+var AppBar = process.env.REACT_APP_MODE === 'tv'
+    ? require("./components/TvAppBar").default
+    : require("./components/AppBar").default;
 
 class Main extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+        };
+        if (window.params) {
+            this.props.changeTheme(window.params.theme || 'light');
+            this.props.setSortBy(window.params.sortBy || 'class');
+        }
         props.checkCounter();
         this.props.setMyTimetable();
         this.props.sendLoginStatistic();
-        props.needsUpdate && props.counterChanged(true);
         if (this.props.notificationToken) {
             connectToServiceWorker(this.props.setNotification, this.props.notificationToken);
         }
     }
 
-    componentWillUpdate(nextProps) {
-        if (this.props.needsUpdate !== nextProps.needsUpdate) {
-            nextProps.counterChanged(nextProps.needsUpdate);
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (!prevState.theme
+            || (nextProps.themeType && prevState.theme.palette.type !== nextProps.themeType)) {
+            return { theme: createTheme(nextProps.themeType) };
         }
+        return {};
     }
 
-    componentWillMount() {
-        if (this.props.notificationToken && navigator.serviceWorker) {
-        }
+    onThemeToggle = () => {
+        this.props.changeTheme(this.props.themeType === 'dark' ? 'light' : 'dark');
     }
-
 
     render() {
         return (
-            <PrintProvider>
-                <MuiThemeProvider muiTheme={Theme}>
-                    <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
-                        <AppBar />
-                        <TimeTable />
-                        <Snackbar
-                            open={!!this.props.error}
-                            message={"Fehler: " + this.props.error}
-                            autoHideDuration={15000}
-                            contentStyle={{
-                                color: 'red'
-                            }}
-                            onRequestClose={this.props.clearErrors} />
-                        <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
-                    </div>
-                </MuiThemeProvider>
-            </PrintProvider>
+            <MuiThemeProvider theme={this.state.theme}>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <ResponsiveFontSize>
+                        <div style={{
+                            flexDirection: 'column', display: 'flex', height: '100%',
+                            backgroundColor: this.state.theme.palette.background.default
+                        }}>
+                            <PrintProvider>
+                                <AppBar onThemeToggle={this.onThemeToggle} />
+                                <TimeTable />
+                                <Snackbar
+                                    open={!!this.props.error}
+                                    message={"Fehler: " + this.props.error}
+                                    autoHideDuration={5000}
+                                    style={{
+                                        color: 'red'
+                                    }}
+                                    onClose={this.props.clearErrors} />
+                                <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
+                            </PrintProvider>
+                        </div>
+                    </ResponsiveFontSize>
+                </MuiPickersUtilsProvider>
+            </MuiThemeProvider>
         );
     }
 }
@@ -75,22 +93,23 @@ const mapDispatchToProps = dispatch => {
     return {
         setMyTimetable: () => { dispatch(setMyTimetable()) },
         sendLoginStatistic: () => { dispatch(sendLoginStatistic()) },
-        counterChanged: (changed) => dispatch(counterChanged(changed)),
         checkCounter: () => { dispatch(checkCounter()); },
         clearErrors: () => { dispatch(clearErrors()); },
         showError: (text) => { dispatch(showError(text)); },
-        setNotification: (token) => { dispatch(setNotification(token)); }
+        setNotification: (token) => { dispatch(setNotification(token)); },
+        changeTheme: (type) => { dispatch(changeTheme(type)); },
+        setSortBy: (sortBy) => { dispatch(setSortBy(sortBy)); },
     };
 };
 
 const mapStateToProps = state => {
     return {
         loading: state.user.loading,
-        needsUpdate: state.user.counterChanged,
         type: state.user.type,
         id: state.user.id,
         error: state.error.error,
-        notificationToken: state.user.notificationToken
+        notificationToken: state.user.notificationToken,
+        themeType: state.user.themeType,
     };
 };
 

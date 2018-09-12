@@ -9,37 +9,55 @@ const teacherToName = (teacher, small) =>
             : (teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME
         : '-';
 
-function TeachersContainer({ teachers, small }) {
-    const NormalTeacher = !!teachers.old ? NewTeacher : Teacher;
-    return (
-        <Container small={small}>
-            {teachers.new.map((teacher, i) => <NormalTeacher key={i}>{teacherToName(teacher, small)}</NormalTeacher>)}
-            {teachers.old && teachers.old.map((teacher, i) => <OldTeacher key={"o" + i}>{teacherToName(teacher, small)}</OldTeacher>)}
-        </Container>
-    )
+const TeachersContainer = type => teachers => ({ small, left, themeClasses }) => {
+    if (type === 'new') {
+        const NormalTeacher = !!teachers.old ? NewTeacher : Teacher;
+        return teachers.new.map((teacher, i) =>
+            <NormalTeacher
+                left={left}
+                className={themeClasses[!!teachers.old ? 'teacher-new' : 'teacher-normal']} key={i}>
+                {teacherToName(teacher, small)}
+            </NormalTeacher>
+        )
+    }
+    if (type === 'old') {
+        return teachers.old.map((teacher, i) =>
+            <OldTeacher
+                left={left}
+                className={themeClasses['teacher-old']} key={"o" + i}>
+                {teacherToName(teacher, small)}
+            </OldTeacher>
+        );
+    }
+    if (type === 'instead-of' || type === 'instead-by') {
+        return teachers.substitution.map((teacher, i) =>
+            <Teacher
+                left={left}
+                className={themeClasses[!!teachers.old ? 'teacher-new' : 'teacher-normal']} key={i}>
+                {teacherToName(teacher, small)}
+            </Teacher>
+        );
+    }
 }
+
+export const teacherStyles = theme => ({
+    'teacher': {
+
+    }
+});
 
 TeachersContainer.propTypes = {
     teachers: PropTypes.object,
     small: PropTypes.bool,
 };
 
-const Container = styled.div`
-    flex-direction: column;
-    display: flex;
-    width: 100%;
-    ${props => !props.small && `
-        align-items: flex-end; 
-        text-align: right;
-    `};
-`;
-
 const Teacher = styled.div`
-    width: 100%;
     font-size: 70%;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    width: 100%;
+    text-align: ${props => props.left ? 'left' : 'right'};
 `;
 
 const NewTeacher = styled(Teacher) `
@@ -47,7 +65,6 @@ const NewTeacher = styled(Teacher) `
 
 const OldTeacher = styled(Teacher) `
     font-size: 50%;
-    text-decoration: line-through;
 `;
 
 
