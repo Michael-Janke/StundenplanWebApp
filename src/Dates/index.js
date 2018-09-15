@@ -160,7 +160,7 @@ class Dates extends Component {
                                     date={date} 
                                     key={date.DATE_ID} 
                                     onEdit={isAdmin && editMode && date.DATE_ID > 0 ? () => this.openDialog(date) : undefined}
-                                    onDelete={isAdmin && editMode && date.DATE_ID > 0 ? () => this.deleteDate() : undefined}
+                                    onDelete={isAdmin && editMode && date.DATE_ID > 0 ? () => this.deleteDate(date) : undefined}
                                 />
                     )}
                     {!singleMonth && <div className={classes.buffer}>

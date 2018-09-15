@@ -3,7 +3,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
-import reactTabEventPlugin from 'react-tap-event-plugin';
 import firebase from 'firebase';
 import moment from 'moment';
 import 'moment/locale/de';
@@ -16,7 +15,6 @@ if (process.env.NODE_ENV !== 'production') {
     //whyDidYouUpdate(React);
 }
 
-reactTabEventPlugin();
 firebase.initializeApp({
     'messagingSenderId': '1089330166521'
 });
