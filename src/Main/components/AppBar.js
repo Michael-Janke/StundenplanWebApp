@@ -7,7 +7,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Apps';
-import CalendarIcon from '@material-ui/icons/Event';
 import PrintIcon from '@material-ui/icons/Print';
 import Search from './Search.js';
 import { connect } from 'react-redux';
@@ -31,8 +30,11 @@ const styles = theme => ({
         backgroundColor: indigo[600],
         paddingLeft: 10,
         paddingRight: 10,
+        zIndex: theme.zIndex.modal,
     },
-    toolbar: theme.mixins.toolbar,
+    toolbar: {
+        minHeight: 64,
+    },
     drawer: {
         width: 300,
 
@@ -102,9 +104,7 @@ class ResponsiveDrawer extends React.Component {
         return (
             <div className={classes.root}>
                 <AppBar className={classes.appBar} style={{ boxShadow: 'none' }}>
-                    <Toolbar
-                        disableGutters={true}
-                    >
+                    <Toolbar disableGutters variant="dense" className={classes.toolbar}>
                         <IconButton
                             color="inherit"
                             aria-label="open drawer"
@@ -113,7 +113,7 @@ class ResponsiveDrawer extends React.Component {
                             <MenuIcon />
                         </IconButton>
 
-                        <Icons style={{marginLeft: large  ? "calc(300px + 2vw - 58px)" : undefined}}>
+                        <Icons style={{ marginLeft: large ? "calc(300px + 2vw - 58px)" : undefined }}>
                             <Search shrinkChildren={small} alwaysOpen={!small}>
                                 {small ||
                                     <Tooltip id="tooltip-print" title="Stundenplan drucken">
