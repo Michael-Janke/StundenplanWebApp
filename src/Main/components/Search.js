@@ -240,9 +240,6 @@ class Search extends React.PureComponent {
                         </div>
                     </div>
                 </ClickAwayListener>
-
-                <div style={{flex:1}} />
-
                 <div className={classNames(
                     classes.children,
                     isOpen && shrinkChildren && classes.childrenOpen
@@ -368,7 +365,7 @@ const styles = theme => ({
     root: {
         flex: 1,
         display: 'flex',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
 
     },
     rootClosed: {
@@ -398,7 +395,6 @@ const styles = theme => ({
         flexDirection: 'column',
         maxHeight: 'calc(100vh - 64px - 8px)',
         opacity: 1,
-
         transition: theme.transitions.create(['opacity']),
         WebkitTransition: theme.transitions.create(['opacity']),
     },

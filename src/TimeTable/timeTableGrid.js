@@ -34,9 +34,13 @@ class TimeTableGrid extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         // controlled non-updating to update data in background
-        return !!nextProps.currentTimetable
-            || (nextProps.counterChanged === 'detected' && nextProps.counterChanged !== this.props.counterChanged)
-            || this.props.classes !== nextProps.classes;
+        const nextDetected = nextProps.counterChanged === 'detected';
+        const nowDetected = this.props.counterChanged === 'detected';
+        return (
+            !!nextProps.currentTimetable
+            || (nextDetected && !nowDetected)
+            || (!nowDetected && nextProps.currentTimetable !== this.props.currentTimetable)
+        );
     }
 
     static getDerivedStateFromProps(props) {
@@ -45,7 +49,7 @@ class TimeTableGrid extends React.Component {
         }
     }
 
-    periodTime(timeAsNumber){
+    periodTime(timeAsNumber) {
         const lpad2 = (number) => (number < 10 ? '0' : '') + number;
         return Math.floor(timeAsNumber / 100) + ':' + lpad2(timeAsNumber % 100);
     }
@@ -62,8 +66,8 @@ class TimeTableGrid extends React.Component {
     renderPeriodHeader(period) {
         return (
             <Periods key={-period.PERIOD_TIME_ID}>
-                <Tooltip 
-                    placement="right" 
+                <Tooltip
+                    placement="right"
                     title={this.periodTime(period.START_TIME) + ' - ' + this.periodTime(period.END_TIME)}>
                     <Period>{period.PERIOD_TIME_ID - 1}.</Period>
                 </Tooltip>
@@ -102,7 +106,7 @@ class TimeTableGrid extends React.Component {
                     }}
                     rowSpan={period ? period.skip + 1 : 0}>
                     {period.supervision &&
-                        <Supervision supervision={period.supervision}/>
+                        <Supervision supervision={period.supervision} />
                     }
                     {period.freeRooms ?
                         <RoomList
@@ -155,7 +159,7 @@ class TimeTableGrid extends React.Component {
                                 <BackIcon />
                             </IconButton>
                         </NoPrint>
-                        {this.props.small || 
+                        {this.props.small ||
                             <NoPrint>
                                 <IconButton onClick={this.props.setThisWeek}>
                                     <ResetIcon />
@@ -181,7 +185,7 @@ class TimeTableGrid extends React.Component {
                                             className={moment().startOf('day').diff(date, 'days') === 0 ? classes.today : ""}
                                         >
                                             {!small && date.format('dddd')}
-                                            {!small && <br /> }
+                                            {!small && <br />}
                                             {date.format('DD.MM.')}
                                         </TableCell>
                                     );
@@ -216,8 +220,8 @@ const CurrentTimetableInformation = ({ id, type, masterdata, avatars, lastUpdate
     return (
         <ListItem>
             <ListItemIcon><ObjectIcon avatars={avatars} upn={object.UPN} type={type} /></ListItemIcon>
-            <ListItemText 
-                style={{width: 0}}
+            <ListItemText
+                style={{ width: 0 }}
                 disableTypography
                 primary={
                     <Typography variant="body2" noWrap>

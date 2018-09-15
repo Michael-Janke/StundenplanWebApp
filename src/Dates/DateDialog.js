@@ -38,17 +38,14 @@ const DateMask = {
 };
 
 const styles = theme => ({
-    root: {
-        display: 'flex',
-        flexDirection: 'column'
-    },
     row: {
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     formControl: {
         margin: theme.spacing.unit,
         minWidth: 140,
+        width: '100%',
     },
 });
 
@@ -137,7 +134,7 @@ export class AddDialog extends Component {
     }
 
     render() {
-        const { edit, classes } = this.props;
+        const { edit, classes, small } = this.props;
         const { timeEdit } = this.state;
         const DateTimePicker = timeEdit ? EnhancedInlineDateTimePicker : EnhancedInlineDatePicker;
         const mask = timeEdit ? DateTimeMask : DateMask;
@@ -146,14 +143,14 @@ export class AddDialog extends Component {
             <Dialog
                 open={this.props.open}
                 onClose={this.handleClose(true)}
+                fullScreen={small}
             >
                 <DialogTitle>
                     <CalendarIcon color="primary" style={{ marginRight: '1vmin' }} />
                     {"Termin " + (edit ? "editieren" : "hinzufügen")}
                 </DialogTitle>
-                <DialogContent className={classes.root}>
+                <DialogContent>
                     <div className={classes.row}>
-
                         <FormControl className={classes.formControl}
                             error={!this.state.DATE_FROM}>
                             <h4>Von</h4>
@@ -276,6 +273,7 @@ const PreviewContainer = styled.div`
 `;
 
 const mapStateToProps = (state) => ({
+    small: state.browser.lessThan.medium
 });
 
 const mapDispatchToProps = (dispatch) => ({
