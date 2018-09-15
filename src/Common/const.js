@@ -181,6 +181,7 @@ export const SUBSTITUTION_MAP = {
             backgroundColor: bgColor(theme.palette.type, colors.grey[100]),
         }),
         name: "unbekannt",
+        mask: createMask(transform('old'), removeIf('room'))
     }
 };
 
