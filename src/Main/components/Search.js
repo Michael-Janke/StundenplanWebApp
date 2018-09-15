@@ -189,7 +189,8 @@ class Search extends React.PureComponent {
                         <div
                             className={classNames(
                                 classes.dropDownContainer,
-                                !open && classes.dropDownContainerClosed
+                                !open && classes.dropDownContainerClosed,
+                                small && classes.dropDownContainerFullscreen,
                             )}>
                             {Keyboard &&
                                 <Keyboard
@@ -400,6 +401,12 @@ const styles = theme => ({
 
         transition: theme.transitions.create(['opacity']),
         WebkitTransition: theme.transitions.create(['opacity']),
+    },
+    dropDownContainerFullscreen: {
+        position: 'fixed',
+        right: 0,
+        left: 0,
+        height: '100vh',
     },
     dropDownContainerClosed: {
         opacity: 0,
