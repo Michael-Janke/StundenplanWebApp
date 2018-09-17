@@ -229,7 +229,7 @@ const CurrentTimetableInformation = ({ id, type, masterdata, avatars, lastUpdate
                     </Typography>
                 }
                 secondary={<Typography variant="caption" noWrap>
-                    {(small ? "Akt. " : "Letzte Änderung ") + moment(lastUpdate).fromNow()}
+                    {(small ? "" : "Letzte Änderung ") + lastUpdate}
                 </Typography>}
             />
         </ListItem>
@@ -239,7 +239,7 @@ const CurrentTimetableInformation = ({ id, type, masterdata, avatars, lastUpdate
 const ConnectedCurrentTimetableInformation = connect(state => ({
     avatars: state.avatars,
     masterdata: state.timetable.masterdata,
-    lastUpdate: state.user.lastUpdate,
+    lastUpdate:  moment(state.user.lastUpdate).fromNow(),
     small: state.browser.lessThan.medium,
 }))(CurrentTimetableInformation);
 
