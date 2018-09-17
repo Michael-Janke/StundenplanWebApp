@@ -10,6 +10,7 @@ import xmasImg from './xmas.jpg';
 import winterImg from './winter.jpg';
 import germanImg from './german.jpg';
 import ascentionImg from './ascention.jpg';
+import flowerImg from './flower.jpg';
 
 const holidayImageMap = {
   "Oster": easterImg,
@@ -21,6 +22,7 @@ const holidayImageMap = {
   "Winter": winterImg,
   "3.10": germanImg,
   "Himmel": ascentionImg,
+  "Pfings": flowerImg,
 }
 
 class Holiday extends React.PureComponent {
