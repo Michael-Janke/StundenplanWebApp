@@ -27,7 +27,10 @@ class Holiday extends React.PureComponent {
   render() {
     var img = bridgeImg;
     for (var key in holidayImageMap) {
-      if (this.props.holiday.indexOf(key) >= 0 || this.props.date.indexOf(key) !== -1) {
+      if (this.props.holiday.indexOf(key) >= 0) {
+        img = holidayImageMap[key];
+      }
+      if (this.props.date && this.props.date.indexOf(key) >= 0) {
         img = holidayImageMap[key];
       }
     }

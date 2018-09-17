@@ -83,7 +83,7 @@ class TimeTableGrid extends React.Component {
             let isNextDay = (this.props.currentTimetable[day - 1] || {}).holiday === dayObject.holiday;
             if (isNextDay) return;
             let colSpan = this.props.currentTimetable.slice(day).filter((dayX) => dayX.holiday === dayObject.holiday).length;
-            let date = this.props.date.clone().weekday(0).add(day - 1, 'days');
+            let date = this.props.date.clone().weekday(0).add(day, 'days');
             return (
                 <TableCell
                     key={day}
