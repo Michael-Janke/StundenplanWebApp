@@ -12,8 +12,7 @@ const initialState = {
     warning: true,
     notifications: false,
     themeType: 'light',
-    subjectColors: {
-    }
+    favorites: null,
 };
 
 export default function userReducer(state = initialState, action = {}) {
@@ -88,6 +87,17 @@ export default function userReducer(state = initialState, action = {}) {
                 ...state,
                 notificationToken: action.payload.newToken && action.payload.newToken.TOKEN
             };
+        case "ADD_FAVORITE":
+            return {
+                ...state,
+                favorites: [...state.favorites, action.payload]
+            };
+        case "REMOVE_FAVORITE":
+            return {
+                ...state,
+                favorites: [...state.favorites.filter((fav) => fav !== action.payload)]
+            };
+ 
         default:
             return state;
     }

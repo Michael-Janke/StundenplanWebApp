@@ -112,8 +112,8 @@ class Search extends React.PureComponent {
 
     toggleFavorite(object) {
         object.favorite
-            ? this.props.removeFavorite(object.type + object.id)
-            : this.props.addFavorite(object.type + object.id)
+            ? this.props.removeFavorite(object.upn || object.text)
+            : this.props.addFavorite(object.upn || object.text)
     }
 
     renderFilterBar = () => {
@@ -289,7 +289,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             searchString: entry.NAME === "07-12" ? "" : "Klasse " + entry.NAME,
             type: "class",
             id: entry.CLASS_ID,
-            favorite: favorites.indexOf("class" + entry.CLASS_ID) >= 0,
+            favorite: favorites.indexOf(entry.NAME) >= 0,
             text: entry.NAME === "07-12" ? "Nachschreiben" : entry.NAME,
             secondary: entry.NAME === "07-12" ? undefined : "Klasse",
             filterType: "Klasse",
@@ -298,7 +298,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             searchString: "Raum " + entry.NAME,
             type: "room",
             id: entry.ROOM_ID,
-            favorite: favorites.indexOf("room" + entry.ROOM_ID) >= 0,
+            favorite: favorites.indexOf(entry.NAME) >= 0,
             text: entry.NAME,
             secondary: "Raum",
             filterType: "Raum",
@@ -308,7 +308,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             upn: entry.UPN,
             type: "teacher",
             id: entry.TEACHER_ID,
-            favorite: favorites.indexOf("teacher" + entry.TEACHER_ID) >= 0,
+            favorite: favorites.indexOf(entry.UPN) >= 0,
             text: entry.FIRSTNAME[0] + '. ' + entry.LASTNAME,
             secondary: "Lehrer",
             filterType: "Lehrer",
@@ -318,7 +318,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             upn: entry.UPN,
             type: "student",
             id: entry.STUDENT_ID,
-            favorite: favorites.indexOf("student" + entry.STUDENT_ID) >= 0,
+            favorite: favorites.indexOf(entry.UPN) >= 0,
             text: entry.FIRSTNAME + " " + entry.LASTNAME,
             secondary: "Schüler (" + (masterdata.Class[entry.CLASS_ID] || {}).NAME + ")",
             filterType: "Schüler",
@@ -482,7 +482,7 @@ const styles = theme => ({
 const mapStateToProps = (state) => ({
     masterdata: state.timetable.masterdata,
     user: state.user,
-    favorites: state.favorites.favorites || [],
+    favorites: state.user.favorites || "",
     small: state.browser.lessThan.medium,
 });
 

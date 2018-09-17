@@ -14,7 +14,7 @@ import { responsiveStoreEnhancer } from 'redux-responsive'
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['browser', 'error']
+  blacklist: ['browser', 'error', 'favorites']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

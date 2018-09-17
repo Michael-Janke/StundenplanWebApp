@@ -100,6 +100,8 @@ const dataService = store => next => action => {
 				JSON.stringify(createFeedbackMail(action.payload)));
 		case "PATCH_REMIND_SETTINGS":
 			return requestApiGenerator(next)(API_URL, 'me', { type: 'GET_ME' }, 'PATCH', JSON.stringify(action.payload));
+		case "ADD_FAVORITE": case "REMOVE_FAVORITE":
+			return requestApiGenerator(next)(API_URL, 'me', { type: 'GET_ME' }, 'PATCH', JSON.stringify({favorites: store.getState().user.favorites}));
 		case 'GET_COUNTER':
 			return requestApiGenerator(next)(API_URL, 'counter', { type: 'COUNTER' });
 		case 'SET_NOTIFICATION':

@@ -6,7 +6,6 @@ import error from './error';
 import avatars from './avatars';
 import timetable from './timetable';
 import dates from './dates';
-import favorites from './favorites';
 
 let substitutions;
 if(process.env.REACT_APP_MODE === 'tv'){
@@ -21,5 +20,4 @@ export default combineReducers({
     timetable,
     avatars,
     dates,
-    favorites,
 });
