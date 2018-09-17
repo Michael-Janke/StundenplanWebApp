@@ -22,7 +22,7 @@ import SearchResult from './SearchResult';
 
 import { classNames } from '../../Common/const';
 import { connect } from 'react-redux';
-import { setTimeTable, addFavorite, removeFavorite } from '../actions';
+import { setTimeTable, addFavorite, removeFavorite, loadMe } from '../actions';
 import { ObjectIcon } from './Avatars';
 
 function fuzzysearch(needle, haystack) {
@@ -56,7 +56,8 @@ class Search extends React.PureComponent {
         if (!this.state.open) {
             this.input.focus();
         }
-        this.setState({ open: !this.state.open, value: "" });
+        this.setState({ open: true, value: "" });
+        this.props.loadMe();
     }
 
     handleFocus = () => {
@@ -117,7 +118,7 @@ class Search extends React.PureComponent {
     }
 
     renderFilterBar = () => {
-        const { classes } = this.props;
+        const { classes, small } = this.props;
         const { selectedFilter } = this.state;
         const filter = ["Lehrer", "Schüler", "Raum", "Klasse"];
         return <ListItem
@@ -130,6 +131,7 @@ class Search extends React.PureComponent {
                 {filter.map((type) =>
                     <Button
                         key={type}
+                        size={small ? "small" : "medium"}
                         className={classes.button}
                         onClick={() => this.setFilter(type)}
                         variant={selectedFilter === type ? "contained" : "outlined"}>
@@ -210,7 +212,7 @@ class Search extends React.PureComponent {
                                     classes.list,
                                     !open && classes.dropDownClosed
                                 )}
-                                filterBar={small ? null : this.renderFilterBar()}>
+                                filterBar={this.renderFilterBar()}>
                                 {(result, avatars) => (
                                     result.map((object, i) =>
                                         <ListItem
@@ -334,7 +336,7 @@ Search.getDerivedStateFromProps = (props, state) => {
     return {
         data,
         result: filtered,
-        selectedFilter: small ? "" : selectedFilter
+        selectedFilter
     };
 }
 
@@ -490,6 +492,7 @@ const mapDispatchToProps = dispatch => ({
     setTimetable: (object) => dispatch(setTimeTable(object.type, object.id)),
     addFavorite: (key) => dispatch(addFavorite(key)),
     removeFavorite: (key) => dispatch(removeFavorite(key)),
+    loadMe: () => dispatch(loadMe()),
 });
 
 

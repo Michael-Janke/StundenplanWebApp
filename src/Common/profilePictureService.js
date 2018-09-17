@@ -20,7 +20,10 @@ const getBatchGenerator = next => (payload, name) => {
 					type: name + '_RECEIVED',
 					payload: res.responses.reduce((acc, response) => ({
 						...acc,
-						[response.id]: { img: response.body, expires: moment().add(7, 'days')}
+						[response.id]: { 
+							img: response.body.error ? null : response.body,
+							expires: moment().add('7', 'days')
+						}
 					}), {})
 				})
 			)

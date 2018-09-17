@@ -48,8 +48,8 @@ export default function timetableReducer(state = initialState, action = {}) {
         case "GET_ME_RECEIVED":
             return {
                 ...state,
-                currentTimeTableType: action.payload.type,
-                currentTimeTableId: action.payload.id,
+                currentTimeTableType: state.currentTimeTableType || action.payload.type,
+                currentTimeTableId: state.currentTimeTableId || action.payload.id,
             };
         case "SET_TIMETABLE":
             return {
