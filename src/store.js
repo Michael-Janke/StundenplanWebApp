@@ -4,11 +4,10 @@ import storage from 'redux-persist/lib/storage' // defaults to localStorage for 
 import { composeWithDevTools } from 'redux-devtools-extension'
 import rootReducer from './Reducer'
 import thunk from 'redux-thunk';
-import dataService from './Common/data-service'
+import services from './Common/services';
 import actionRedirector from './Common/action-redirects';
 import cacheService from './Common/cache-service';
 import counterChanged from './Common/counter';
-import profilePictureService from './Common/profilePictureService'
 import { responsiveStoreEnhancer } from 'redux-responsive'
 
 const persistConfig = {
@@ -24,8 +23,7 @@ const store = createStore(persistedReducer,
     applyMiddleware(
       actionRedirector,
       cacheService,
-      dataService,
-      profilePictureService,
+      ...services,
       counterChanged,
       thunk),
     responsiveStoreEnhancer)
