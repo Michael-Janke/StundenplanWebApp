@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Description from './description';
 
 const extractClasses = (classes) => {
     classes = classes.map((_class) => {
         let split = _class.NAME.match(/[a-zA-Z]+|[0-9]+/g)
         return {
             grade: parseInt(split[0], 10),
-            letter: { letter: split[1] }
+            letter: { letter: split[1], id: _class},
         }
     });
     return classes.reduce((prev, current) => {
@@ -32,7 +33,7 @@ const extractClasses = (classes) => {
 // };
 
 
-const ClassesContainer = type => classes => ({ small, left, themeClasses }) => {
+const ClassesContainer = type => classes => ({ small, left, themeClasses, description, setTimeTable }) => {
     const Classes = (e) => (
         <Container left={left} className={themeClasses['classes']}>
             {Object.keys(e).map((key, i) => {
@@ -40,25 +41,33 @@ const ClassesContainer = type => classes => ({ small, left, themeClasses }) => {
                 return (
                     <ClassContainer key={i}>
                         <Grade>{key}</Grade>
-                        {classes.letters.map((letter, i) => <Class key={i}>{letter.letter}</Class>)}
+                        {classes.letters.map((letter, i) =>
+                            <Class key={i} onClick={description && (() => (setTimeTable('class', letter.id.CLASS_ID)))}>
+                                {letter.letter}
+                            </Class>
+                        )}
                     </ClassContainer>
                 )
             })}
         </Container>
     );
+    let extracted;
     if (type === 'new') {
-        let extracted = classes.new && extractClasses(classes.new);
-        return Classes(extracted);
+        extracted = classes.new && extractClasses(classes.new);
     }
     if (type === 'old') {
-        let extracted = classes.old && extractClasses(classes.old);
-        return Classes(extracted);
+        extracted = classes.old && extractClasses(classes.old);
     }
     if (type === 'instead-of' || type === 'instead-by') {
-        let extracted = classes.substitution && extractClasses(classes.substitution);
-        return Classes(extracted);
+        extracted = classes.substitution && extractClasses(classes.substitution);
     }
-
+    const output = Classes(extracted);
+    const classCount = Object.values(extracted).reduce((prev, e) => prev + e.letters.length, 0);
+    return description ?
+        <Description classes={themeClasses} label={"Klasse" + (classCount > 1 ? 'n' : '')}>
+            {output}
+        </Description>
+        : output;
 }
 
 export const classStyles = theme => ({
@@ -94,6 +103,7 @@ const Class = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    ${props => props.onClick && `cursor: pointer;`}
 `;
 
 export default ClassesContainer;

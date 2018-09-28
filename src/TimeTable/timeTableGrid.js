@@ -10,7 +10,7 @@ import grey from '@material-ui/core/colors/grey';
 import PeriodColumn from './period';
 import { WEEKDAY_NAMES } from '../Common/const';
 import { Print, NoPrint } from 'react-easy-print';
-import { changeWeek } from '../Main/actions';
+import { changeWeek, setTimeTable } from '../Main/actions';
 import makeGetCurrentTimetable from '../Selector/timetable';
 import Holiday from './Holiday';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -28,6 +28,7 @@ import { ObjectIcon } from '../Main/components/Avatars';
 import RoomList from './roomlist';
 import Supervision from './supervision';
 import moment from 'moment';
+import Absence from './absence';
 
 class TimeTableGrid extends React.Component {
     state = {};
@@ -104,7 +105,7 @@ class TimeTableGrid extends React.Component {
                     style={{
                         textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
                     }}
-                    rowSpan={period ? period.skip + 1 : 0}>
+                    rowSpan={(period.skip || 0) + 1}>
                     {period.supervision &&
                         <Supervision supervision={period.supervision} />
                     }
@@ -117,7 +118,8 @@ class TimeTableGrid extends React.Component {
                             continueation={period.continueation}
                             lessons={period.lessons}
                             type={this.props.type}
-                            small={this.props.small} />
+                            small={this.props.small}
+                            setTimeTable={this.props.setTimeTable}/>
                     }
                 </TableCell>
             );
@@ -130,17 +132,50 @@ class TimeTableGrid extends React.Component {
             fontSize: '100%',
             padding: 2,
         };
-        return Object.values(this.props.periods).map((period, i) => (
-            <TableRow style={{height:"100%"}} key={i}>
-                <TableCell style={periodColumnStyle}>
-                    <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
-                        {this.props.small || this.renderPeriodTimes(period)}
-                        {this.renderPeriodHeader(period)}
-                    </div>
-                </TableCell>
-                {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
+        return [
+            this.renderAbsences(),
+            ...Object.values(this.props.periods).map((period, i) => (
+                <TableRow style={{ height: "100%" }} key={i}>
+                    <TableCell style={periodColumnStyle}>
+                        <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
+                            {this.props.small || this.renderPeriodTimes(period)}
+                            {this.renderPeriodHeader(period)}
+                        </div>
+                    </TableCell>
+                    {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
+                </TableRow>
+            ))];
+    }
+
+    renderAbsences() {
+        const timetable = this.props.currentTimetable;
+        if (!timetable) {
+            return null;
+        }
+        const absences = WEEKDAY_NAMES.map((name, i) => timetable[i]);
+        if (absences.every(day => !day.absences)) {
+            return null;
+        }
+        const periodColumnStyle = {
+            width: this.state.periodsWidth,
+            fontSize: '100%',
+            padding: 2,
+        };
+        return (
+            <TableRow style={{ height: 'unset' }} key={-1}>
+                <TableCell style={periodColumnStyle}></TableCell>
+                {WEEKDAY_NAMES.map((name, i) => {
+                    const day = timetable[i];
+                    return (
+                        <TableCell key={i} style={{ padding: 0, fontSize: '100%' }}>
+                            {day.absences && day.absences.map(absence => (
+                                <Absence key={i} absence={absence} />
+                            ))}
+                        </TableCell>
+                    );
+                })}
             </TableRow>
-        ));
+        );
     }
 
     render() {
@@ -225,7 +260,7 @@ const CurrentTimetableInformation = ({ id, type, masterdata, avatars, lastUpdate
                 disableTypography
                 primary={
                     <Typography variant="body2" noWrap>
-                    {object.LASTNAME ? object.FIRSTNAME + " " + object.LASTNAME : object.NAME}
+                        {object.LASTNAME ? object.FIRSTNAME + " " + object.LASTNAME : object.NAME}
                     </Typography>
                 }
                 secondary={<Typography variant="caption" noWrap>
@@ -269,7 +304,7 @@ const styles = theme => ({
     },
     today: {
         backgroundColor: grey[400],
-    }
+    },
 });
 
 const GrayoutTable = styled(Table)`
@@ -314,6 +349,7 @@ const mapDispatchToProps = dispatch => {
         setNextWeek: () => dispatch(changeWeek(1)),
         setThisWeek: () => dispatch(changeWeek('now')),
         setPreviousWeek: () => dispatch(changeWeek(-1)),
+        setTimeTable: (type, id) => dispatch(setTimeTable(type, id))
     };
 };
 

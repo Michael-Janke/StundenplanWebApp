@@ -24,7 +24,7 @@ class Period extends React.Component {
         return false;
     }
     render() {
-        const { lessons, type, small, supervisions, continueation } = this.props;
+        const { lessons, type, small, supervisions, continueation, setTimeTable } = this.props;
         if (!lessons || !type) {
             return null;
         }
@@ -50,6 +50,7 @@ class Period extends React.Component {
                                 last={lessons.length - 1 === i}
                                 multiple={lessons.length > 1}
                                 small={small}
+                                setTimeTable={setTimeTable}
                                 {...getFields(type)(lesson)}
                             />
                         );

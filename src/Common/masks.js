@@ -62,7 +62,7 @@ function transformNew(substitution) {
         TEACHER_ID_NEW: substitution.TEACHER_ID_NEW || substitution.TEACHER_ID,
         ROOM_ID_NEW: substitution.ROOM_ID_NEW || substitution.ROOM_ID,
         CLASS_IDS_NEW: (substitution.CLASS_IDS_NEW && substitution.CLASS_IDS_NEW.length && substitution.CLASS_IDS_NEW) || substitution.CLASS_IDS,
-        SUBJECT_ID: substitution.SUBJECT_ID_NEW !== substitution.SUBJECT_ID ? 0 : null,
+        SUBJECT_ID: substitution.SUBJECT_ID_NEW !== substitution.SUBJECT_ID  && substitution.SUBJECT_ID_NEW ? 0 : null,
         CLASS_IDS: substitution.CLASS_IDS ? 0 : null,
         TEACHER_ID: substitution.TEACHER_ID ? 0 : null,
         ROOM_ID: substitution.ROOM_ID_NEW !== substitution.ROOM_ID ? 0 : null,

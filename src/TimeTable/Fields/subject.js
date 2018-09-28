@@ -2,32 +2,37 @@ import React from 'react';
 // import styled from 'styled-components';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
+import Description from './description';
 
 
 const SubjectContainer = type => subject => (props) => {
-    const { themeClasses } = props;
+    const { themeClasses, description } = props;
+    const field = description ? 'DESCRIPTION' : 'NAME';
+
     const changed = subject.old === 0 || subject.new === 0;
+    let output;
     if (type === 'new') {
         const ClassNormal = changed ? NewSubject : Subject;
-        return (
-            <ClassNormal className={themeClasses[changed ? 'subject-new' : 'subject-normal']}>{subject.new ? subject.new.NAME : '-'}</ClassNormal>
+        output = (
+            <ClassNormal className={themeClasses[changed ? 'subject-new' : 'subject-normal']}>{subject.new ? subject.new[field] : '-'}</ClassNormal>
         );
     }
     if (type === 'old') {
-        return (
-            <OldSubject className={themeClasses['subject-old']}>{subject.old.NAME}</OldSubject>
+        output = (
+            <OldSubject className={themeClasses['subject-old']}>{subject.old[field]}</OldSubject>
         );
     }
     if (type === 'instead-by' || type === 'instead-of') {
         if (!changed) {
             return null;
         }
-        return (
-            <Subject className={themeClasses['subject-substitution']}>
-                {subject.substitution ? subject.substitution.NAME : '-'}
+        output = (
+            <Subject className={themeClasses['subject-normal']}>
+                {subject.substitution ? subject.substitution[field] : '-'}
             </Subject>
         );
     }
+    return description ? <Description label="Fach" classes={themeClasses}>{output}</Description> : output;
 };
 
 
@@ -47,11 +52,9 @@ export const subjectStyles = theme => ({
         fontWeight: 600,
         textDecoration: 'line-through ' + (theme.palette.type === 'dark' ? "white" : "black"),
     },
-    'subject-substitution': {
-        color: theme.palette.type === 'dark' ? grey[300] : grey[600],
+    'subject-description': {
         fontSize: '70%',
         fontWeight: 600,
-        textDecoration: 'line-through ' + (theme.palette.type === 'dark' ? "white" : "black"),
     }
 });
 

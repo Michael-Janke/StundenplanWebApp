@@ -2,10 +2,14 @@ import React from 'react';
 import styled from "styled-components";
 import indigo from '@material-ui/core/colors/indigo';
 import grey from '@material-ui/core/colors/grey';
+import InfoIcon from '@material-ui/icons/Info';
 
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { styles } from './Fields';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import Popover from './popover';
+import { Typography, IconButton } from '@material-ui/core';
 
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
 const BindField = (props) => field => Field.bind(null, field, props);
@@ -17,7 +21,7 @@ const SubstitutionText = ({ left, children }) => (
 );
 
 const AbstractLesson = (props) => {
-    let { classes, theme, colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, absence, substitutionInfo, continueation } = props;
+    let { classes, theme, colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, absence, substitutionInfo, continueation, setTimeTable, reference } = props;
     const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
     if (continueation) {
         return (
@@ -33,7 +37,7 @@ const AbstractLesson = (props) => {
     const isOld = fields.old;
 
 
-    const BoundField = BindField({ small, themeClasses: classes });
+    const BoundField = BindField({ small, themeClasses: classes, setTimeTable });
 
     const NewFields = fields.new && fields.new.map(BoundField);
     const OldFields = fields.old && fields.old.map(BoundField);
@@ -51,55 +55,20 @@ const AbstractLesson = (props) => {
             {substitutionText}
         </SubstitutionText>;
 
-    let InsteadBy;
-    if (substitutionInfo === 'instead-by') {
-        if (small) {
-            InsteadBy = (...fields) => (
-                <LessonContainer tab small>
-                    {fields.map((Field, i) => <Field key={i} left />)}
-                </LessonContainer>
-            );
-        }
-        else {
-            InsteadBy = (...fields) => (
-                <LessonContainer tab>
-                    {fields.map((Field, i) => <Field key={i} left />)}
-                </LessonContainer>
-            );
-        }
-    }
-
-    let InsteadOf;
-    if (substitutionInfo === 'instead-of') {
-        if (small) {
-            InsteadOf = (...fields) => (
-                <LessonContainer tab small>
-                    <InsteadInformation>statt:</InsteadInformation>
-                    {fields.map((Field, i) => <Field key={i} left />)}
-                </LessonContainer>
-            )
-        } else {
-            InsteadOf = (...fields) => (
-                <LessonContainer tab>
-                    <InsteadInformation>statt:</InsteadInformation>
-                    {fields.map((Field, i) => <Field key={i} left />)}
-                </LessonContainer>
-            )
-        }
-    }
-    InsteadOf=undefined; //todo as popover
-
-    if (isNew) {
-        if (!small) {
-            const [Field1, Field2, Field3] = NewFields;
-            return (
-                <Lesson
-                    type={theme.palette.type}
-                    color={styles.backgroundColor}
-                    flex={last}>
-                    <ColorBar lineColor={styles.color} />
-                    <LessonWrapper>
-                        {InsteadOf && InsteadOf(...SubstitutingFields)}
+    const [Field1, Field2, Field3] = isNew ? NewFields : OldFields;
+    const container =
+        isNew ? // new
+            (
+                small ? // small
+                    (
+                        <LessonContainer small>
+                            {substitutionType}
+                            <Field1 left />
+                            <Field2 left />
+                            <Field3 left />
+                        </LessonContainer>
+                    ) : // large
+                    (
                         <LessonContainer>
                             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', flex: 'none' }}>
                                 {substitutionType}
@@ -110,84 +79,59 @@ const AbstractLesson = (props) => {
                                 <Field3 />
                             </div>
                         </LessonContainer>
-                        {InsteadBy && InsteadBy(...SubstitutingFields)}
-                        {extraInfo}
-                    </LessonWrapper>
-                </Lesson>
-
+                    )
+            ) : // old
+            (
+                <LessonContainer small={small}>
+                    {substitutionType}
+                    <div>
+                        <Field1 left />
+                        {Field2 && <Field2 left />}
+                    </div>
+                </LessonContainer>
             );
-        } else {
-            const [Field1, Field2, Field3] = NewFields;
-            return (
+
+
+
+    const popoverActive = true;
+
+    return (
+        <Popover active={popoverActive} key={reference.TIMETABLE_ID}>
+            {(props, handleOpen) => (
                 <Lesson
                     type={theme.palette.type}
                     color={styles.backgroundColor}
-                    flex={last}>
+                    flex={last}
+                    {...props}
+                    onClick={handleOpen}
+                >
                     <ColorBar lineColor={styles.color} />
-                    <LessonWrapper small>
-                        {InsteadOf && InsteadOf(...SubstitutingFields)}
-                        <LessonContainer small>
-                            {substitutionType}
-                            <Field1 left />
-                            <Field2 left/>
-                            <Field3 left/>
-                        </LessonContainer>
-                        {InsteadBy && InsteadBy(...SubstitutingFields)}
+                    <LessonWrapper small={small}>
+                        {container}
                         {extraInfo}
                     </LessonWrapper>
                 </Lesson>
+            )}
+            {popoverActive &&
+                <div>
+                    <LessonWrapper>
+                        {substitutionType}
+                        <Field1 description />
+                        <Field2 description />
+                        {Field3 && <Field3 description />}
+                        <InsteadInformation>
+                            {{ 'instead-by': "durch", 'instead-of': "statt" }[substitutionInfo]}
+                        </InsteadInformation>
 
-            );
-        }
-    } else
-        if (isOld) {
-            if (!small) {
-                const [Field1, Field2] = OldFields;
-                return (
-                    <Lesson
-                        type={theme.palette.type}
-                        color={styles.backgroundColor}
-                        flex={last}>
-                        <ColorBar lineColor={styles.color} />
-                        <LessonWrapper>
-                            {InsteadOf && InsteadOf(...SubstitutingFields)}
-                            <LessonContainer>
-                                {substitutionType}
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', overflow: 'hidden', paddingLeft: 5 }}>
-                                    <Field1/>
-                                    {Field2 && <Field2 />}
-                                </div>
-                            </LessonContainer>
-                            {InsteadBy && InsteadBy(...SubstitutingFields)}
-                            {extraInfo}
-                        </LessonWrapper>
-                    </Lesson>
-                );
-            } else {
-                const [Field1, Field2] = OldFields;
-                return (
-                    <Lesson
-                        type={theme.palette.type}
-                        color={styles.backgroundColor}
-                        flex={last}>
-                        <ColorBar lineColor={styles.color} />
-                        {InsteadOf && InsteadOf(...SubstitutingFields)}
-                        <LessonWrapper small>
-                            <LessonContainer small>
-                                {substitutionType}
-                                <Field1 left/>
-                                {Field2 && <Field2 left />}
-                            </LessonContainer>
-                            {InsteadBy && InsteadBy(...SubstitutingFields)}
-                            {extraInfo}
-                        </LessonWrapper>
-                    </Lesson>
-                )
+                        {SubstitutingFields && SubstitutingFields.map((Field, i) => <Field key={i} description />)}
+                    </LessonWrapper>
+                </div>
             }
-        } else {
-            return null;
-        }
+        </Popover>
+    );
+
 };
+
 
 const ColorBar = styled.div`
     width: 3%;

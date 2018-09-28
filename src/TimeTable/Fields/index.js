@@ -3,6 +3,7 @@ import RoomContainer, { roomStyles } from "./room";
 import SubjectContainer, { subjectStyles } from "./subject";
 import TeachersContainer, { teacherStyles } from "./teachers";
 import ClassesContainer, { classStyles } from "./classes";
+import { descriptionStyles } from "./description";
 
 const extractSubject = (name) => {
     return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
@@ -18,6 +19,7 @@ export const styles = theme => ({
     ...roomStyles(theme),
     ...teacherStyles(theme),
     ...classStyles(theme),
+    ...descriptionStyles(theme),
 });
 
 export function getFields(type) {
