@@ -44,7 +44,11 @@ export function getStudentFields(lesson) {
             old: lesson.isOld && [
                 SubjectContainer('old')(subject),
                 TeachersContainer('old')(teachers),
-            ]
+            ],
+            substitution: lesson.substitutionInfo && [
+                SubjectContainer(lesson.substitutionInfo)(subject),
+                TeachersContainer(lesson.substitutionInfo)(teachers),
+            ],
         }
     }
 }

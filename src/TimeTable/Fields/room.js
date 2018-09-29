@@ -31,7 +31,7 @@ const RoomContainer = type => room => ({ small, themeClasses, description }) => 
             <Room className={themeClasses[changed ? 'room-new' : 'room-normal']}>{room.substitution ? room.substitution.NAME : '-'}</Room>
         );
     }
-    return description ? <Description classes={themeClasses} label="Raum">{output}</Description> : output;
+    return description ? <Description classes={themeClasses} label="Raum" type="room">{output}</Description> : output;
 }
 
 export const roomStyles = (theme) => ({

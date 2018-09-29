@@ -30,7 +30,7 @@ export const addSubstitutionInformation = (substitution) => {
     const { type } = substitution;
     return {
         ...substitution,
-        substitutionInfo: (substitution.SUBJECT_ID_SUBSTITUTING && type === 'teacher') ? substitution.isOld ? 'instead-by' : 'instead-of' : null,
+        substitutionInfo: (substitution.SUBJECT_ID_SUBSTITUTING) ? substitution.isOld ? 'instead-by' : 'instead-of' : null,
         TYPE: substitution.SUBJECT_ID_SUBSTITUTING && type === 'teacher' && substitution.isOld ? 'INSTEAD_OF' : substitution.TYPE,
     }
 }

@@ -17,7 +17,7 @@ const styles = theme => ({
 const Absence = ({ absence, classes }) => {
     return (
         <div className={classes.container}>
-            {absence.TEXT}
+            {absence.TEXT} ({ absence.PERIOD_FROM === absence.PERIOD_TO ? `${absence.PERIOD_FROM-1}.` : `${absence.PERIOD_FROM}. - ${absence.PERIOD_TO}.`})
         </div>
     );
 };

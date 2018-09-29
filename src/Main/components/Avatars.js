@@ -3,6 +3,7 @@ import { Avatar } from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
 import ClassIcon from '@material-ui/icons/Group';
 import RoomIcon from '@material-ui/icons/Room';
+import SubjectIcon from '@material-ui/icons/Book';
 import moment from 'moment';
 import createStore from '../../store';
 
@@ -23,6 +24,9 @@ export const checkAvatars = (upns, loadAvatars) => {
 export const ObjectIcon = ({ type, upn, avatars, size, outline, ...other }) => {
     if (type === 'class') {
         return <ClassIcon {...other} />;
+    }
+    if (type === 'subject') {
+        return <SubjectIcon {...other} />;
     }
     if (type === 'room' || type === 'all') {
         return <RoomIcon {...other} />;

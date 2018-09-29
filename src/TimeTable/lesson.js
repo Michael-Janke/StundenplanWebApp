@@ -107,24 +107,35 @@ const AbstractLesson = (props) => {
                 </Lesson>
             )}
             {popoverActive &&
-                <div>
+                <PopoverContainer>
                     <LessonWrapper>
                         {substitutionType}
-                        <Field1 description />
-                        <Field2 description />
-                        {Field3 && <Field3 description />}
-                        <InsteadInformation>
-                            {{ 'instead-by': "durch", 'instead-of': "statt" }[substitutionInfo]}
-                        </InsteadInformation>
+                        {SubstitutingFields ?
+                            <React.Fragment>
+                                <InsteadInformation>
+                                    {{ 'instead-of': "statt" }[substitutionInfo]}
+                                </InsteadInformation>
 
-                        {SubstitutingFields && SubstitutingFields.map((Field, i) => <Field key={i} description />)}
+                                {SubstitutingFields.map((Field, i) => <Field key={i} description />)}
+                            </React.Fragment>
+                            : <React.Fragment>
+                                <Field1 description />
+                                <Field2 description />
+                                {Field3 && <Field3 description />}
+                            </React.Fragment>
+                        }
                     </LessonWrapper>
-                </div>
+                </PopoverContainer>
             }
         </Popover>
     );
 
 };
+
+const PopoverContainer = styled.div`
+    display: flex;
+    
+`;
 
 
 const ColorBar = styled.div`

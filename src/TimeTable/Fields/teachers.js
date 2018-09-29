@@ -43,7 +43,7 @@ const TeachersContainer = type => teachers => ({ small, left, themeClasses, desc
             </Teacher>
         );
     }
-    return description ? <Description classes={themeClasses} label="Lehrer">{output}</Description> : output;
+    return description ? <Description classes={themeClasses} label="Lehrer" type="teacher">{output}</Description> : output;
 }
 
 export const teacherStyles = theme => ({

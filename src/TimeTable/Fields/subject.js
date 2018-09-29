@@ -32,7 +32,7 @@ const SubjectContainer = type => subject => (props) => {
             </Subject>
         );
     }
-    return description ? <Description label="Fach" classes={themeClasses}>{output}</Description> : output;
+    return description ? <Description label="Fach" classes={themeClasses} type="subject">{output}</Description> : output;
 };
 
 
