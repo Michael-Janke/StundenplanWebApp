@@ -400,7 +400,6 @@ const styles = theme => ({
     dropDownContainer: {
         position: 'absolute',
         width: '100%',
-        display: 'flex',
         flexDirection: 'column',
         maxHeight: 'calc(100vh - 64px - 8px)',
         opacity: 1,
@@ -426,6 +425,7 @@ const styles = theme => ({
         WebkitTransition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
         willChange: 'opacity, transform',
         transform: 'translate3d(0,0,0)',
+        maxHeight: 'inherit'
     },
     dropDownClosed: {
         boxShadow: 'none',

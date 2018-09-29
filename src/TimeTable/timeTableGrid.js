@@ -175,13 +175,13 @@ class TimeTableGrid extends React.Component {
 
         return (
             <TableRow style={{ height: 'unset' }} key={-1}>
-                <TableCell style={periodColumnStyle}></TableCell>
+                <TableCell style={periodColumnStyle} key={-1}></TableCell>
                 {WEEKDAY_NAMES.map((name, i) => {
                     const day = timetable[i];
                     return (
                         <TableCell key={i} style={{ padding: 0, fontSize: '100%' }}>
-                            {day.absences && day.absences.map(absence => (
-                                <Absence key={i} absence={absence} />
+                            {day.absences && day.absences.map((absence, j) => (
+                                <Absence key={j} absence={absence} />
                             ))}
                         </TableCell>
                     );

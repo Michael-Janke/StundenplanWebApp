@@ -93,7 +93,6 @@ const Column = styled.div`
 `
 
 const ShadowContainer = styled(Paper)`
-    display: flex;
     flex-direction: row;
     margin-left: 1vw;
     position: relative;

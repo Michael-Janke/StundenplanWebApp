@@ -46,6 +46,18 @@ class Main extends Component {
         }
     }
 
+    componentDidUpdate() {
+        this.setFontFamily();
+    }
+
+    componentDidMount() {
+        this.setFontFamily();
+    }
+
+    setFontFamily() {
+        document.getElementsByTagName("body")[0].style.fontFamily = this.state.theme.typography.fontFamily;
+    }
+
     static getDerivedStateFromProps(nextProps, prevState) {
         if (!prevState.theme
             || (nextProps.themeType && prevState.theme.palette.type !== nextProps.themeType)) {
@@ -64,7 +76,8 @@ class Main extends Component {
                 <MuiPickersUtilsProvider utils={MomentUtils}>
                     <div style={{
                         flexDirection: 'column', display: 'flex', height: '100%',
-                        backgroundColor: this.state.theme.palette.background.default
+                        backgroundColor: this.state.theme.palette.background.default,
+                        fontFamily: this.state.theme.typography.fontFamily,
                     }}>
                         <PrintProvider>
                             <AppBar onThemeToggle={this.onThemeToggle} />
