@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Popper from '@material-ui/core/Popper';
-import { Fade, Paper, Typography, withStyles, Zoom, RootRef, Grow, ClickAwayListener } from '@material-ui/core';
+import { Paper, withStyles, RootRef, Grow, ClickAwayListener } from '@material-ui/core';
 
 const styles = theme => ({
     popper: {
@@ -11,6 +11,7 @@ const styles = theme => ({
         marginTop: theme.spacing.unit,
         padding: theme.spacing.unit,
         width: 250,
+        color: theme.palette.text.primary,
     }
 });
 

@@ -2,14 +2,11 @@ import React from 'react';
 import styled from "styled-components";
 import indigo from '@material-ui/core/colors/indigo';
 import grey from '@material-ui/core/colors/grey';
-import InfoIcon from '@material-ui/icons/Info';
 
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { styles } from './Fields';
-import ButtonBase from '@material-ui/core/ButtonBase';
 import Popover from './popover';
-import { Typography, IconButton } from '@material-ui/core';
 
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
 const BindField = (props) => field => Field.bind(null, field, props);
@@ -21,7 +18,7 @@ const SubstitutionText = ({ left, children }) => (
 );
 
 const AbstractLesson = (props) => {
-    let { classes, theme, colorBar, small, last, multiple, specificSubstitutionType, substitutionText, fields, absence, substitutionInfo, continueation, setTimeTable, reference } = props;
+    let { classes, theme, small, last, multiple, specificSubstitutionType, substitutionText, fields, substitutionInfo, continueation, setTimeTable, reference } = props;
     const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
     if (continueation) {
         return (
@@ -34,9 +31,6 @@ const AbstractLesson = (props) => {
         );
     }
     const isNew = fields.new;
-    const isOld = fields.old;
-
-
     const BoundField = BindField({ small, themeClasses: classes, setTimeTable });
 
     const NewFields = fields.new && fields.new.map(BoundField);

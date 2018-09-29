@@ -268,7 +268,7 @@ class Search extends React.PureComponent {
 }
 
 Search.getDerivedStateFromProps = (props, state) => {
-    const { masterdata, favorites, small, open: openProps } = props;
+    const { masterdata, favorites, open: openProps } = props;
     const { selectedFilter, value, open, prevOpenProps } = state;
     const sortName = (o1, o2) => (o1.LASTNAME || o1.NAME).localeCompare(o2.LASTNAME || o2.NAME);
     const user = props.user;
