@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
 import { connect } from 'react-redux';
@@ -41,7 +40,7 @@ const styles = theme => ({
     list: {
         position: 'relative',
         overflow: 'auto',
-        maxHeight: '75vh',
+        maxHeight: 'calc(100vh - 140px)',
         paddingTop: 0,
 
         backgroundColor: theme.palette.background.default,
@@ -164,7 +163,7 @@ class Dates extends Component {
             : this.props.dates;
 
         return (
-            <Paper square={true} className={classes.root}>
+            <div square={true} className={classes.root}>
                 <ListItem ContainerComponent="div" className={classes.header}>
                     <ListItemIcon>
                         <CalendarIcon />
@@ -226,7 +225,7 @@ class Dates extends Component {
                         onClick={this.openDialog} >
                         <AddIcon />
                     </Button>}
-            </Paper>
+            </div>
         );
     }
 }

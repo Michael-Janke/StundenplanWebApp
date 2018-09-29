@@ -78,7 +78,7 @@ class TimeTableGrid extends React.Component {
     }
 
     renderPeriodsColumn(day, periodNumber) {
-        if (!this.props.currentTimetable) { return <TableCell key={day} rowSpan={1}/>; }
+        if (!this.props.currentTimetable) { return <TableCell key={day} rowSpan={1} />; }
         let dayObject = this.props.currentTimetable[day];
         if (dayObject.holiday) {
             if (periodNumber !== 1) return;
@@ -195,7 +195,7 @@ class TimeTableGrid extends React.Component {
         const tableHeaderStyle = { fontSize: '85%', textAlign: 'center', padding: 0 };
         return (
             <Print main name="TimeTable">
-                <div style={{ flexDirection: 'column', display: 'flex', height: '100%' }}>
+                <div style={{ height: '100%' }}>
                     <div className={classes.tableToolbar + " " + classes['table-header']}>
                         {warning && <Tooltip title={"Letzte Verbindung " + moment(lastCheck).fromNow()}>
                             <WarnIcon color="error" />
@@ -240,7 +240,7 @@ class TimeTableGrid extends React.Component {
                             </TableRow>
                         </TableHead>
                     </Table>
-                    <div style={{ maxHeight: small ? undefined : `calc(100vh - ${180}px)`, overflow: 'hidden auto' }}>
+                    <div style={{ maxHeight: small ? undefined : `calc(100vh - ${180}px)`, overflowY: 'auto' }}>
                         <GrayoutTable
                             className={classes.table}
                             disabled={this.props.counterChanged === 'detected'}
