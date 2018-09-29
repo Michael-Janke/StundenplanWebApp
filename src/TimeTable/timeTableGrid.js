@@ -29,6 +29,7 @@ import RoomList from './roomlist';
 import Supervision from './supervision';
 import moment from 'moment';
 import Absence from './absence';
+import { LinearProgress } from '@material-ui/core';
 
 class TimeTableGrid extends React.Component {
     state = {};
@@ -77,7 +78,7 @@ class TimeTableGrid extends React.Component {
     }
 
     renderPeriodsColumn(day, periodNumber) {
-        if (!this.props.currentTimetable) { return <TableCell key={day} />; }
+        if (!this.props.currentTimetable) { return <TableCell key={day} rowSpan={1}/>; }
         let dayObject = this.props.currentTimetable[day];
         if (dayObject.holiday) {
             if (periodNumber !== 1) return;
@@ -119,7 +120,7 @@ class TimeTableGrid extends React.Component {
                             lessons={period.lessons}
                             type={this.props.type}
                             small={this.props.small}
-                            setTimeTable={this.props.setTimeTable}/>
+                            setTimeTable={this.props.setTimeTable} />
                     }
                 </TableCell>
             );
@@ -149,18 +150,29 @@ class TimeTableGrid extends React.Component {
 
     renderAbsences() {
         const timetable = this.props.currentTimetable;
-        if (!timetable) {
-            return null;
-        }
-        const absences = WEEKDAY_NAMES.map((name, i) => timetable[i]);
-        if (absences.every(day => !day.absences)) {
-            return null;
-        }
         const periodColumnStyle = {
             width: this.state.periodsWidth,
             fontSize: '100%',
             padding: 2,
         };
+        if (!timetable) {
+            return (
+                <TableRow
+                    key={-1}
+                    style={{ height: 'unset' }}>
+                    <TableCell style={periodColumnStyle}></TableCell>
+                    <td colSpan={WEEKDAY_NAMES.length}>
+                        <LinearProgress variant="query">
+                        </LinearProgress>
+                    </td>
+                </TableRow>
+            );
+        }
+        const absences = WEEKDAY_NAMES.map((name, i) => timetable[i]);
+        if (absences.every(day => !day.absences)) {
+            return null;
+        }
+
         return (
             <TableRow style={{ height: 'unset' }} key={-1}>
                 <TableCell style={periodColumnStyle}></TableCell>
@@ -274,7 +286,7 @@ const CurrentTimetableInformation = ({ id, type, masterdata, avatars, lastUpdate
 const ConnectedCurrentTimetableInformation = connect(state => ({
     avatars: state.avatars,
     masterdata: state.timetable.masterdata,
-    lastUpdate:  moment(state.user.lastUpdate).fromNow(),
+    lastUpdate: moment(state.user.lastUpdate).fromNow(),
     small: state.browser.lessThan.medium,
 }))(CurrentTimetableInformation);
 
