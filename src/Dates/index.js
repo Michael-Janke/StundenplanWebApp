@@ -31,8 +31,6 @@ const styles = theme => ({
     },
     header: {
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
-        paddingTop: 0,
-        paddingBottom: 0,
     },
     root: {
         height: '100%',
@@ -167,17 +165,15 @@ class Dates extends Component {
 
         return (
             <Paper square={true} className={classes.root}>
-                <List className={classes.header}>
-                    <ListItem>
-                        <ListItemIcon>
-                            <CalendarIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Termine" />
-                        <ListItemSecondaryAction>
-                            {isAdmin && <IconButton onClick={this.setEditMode}><EditIcon /></IconButton>}
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                </List>
+                <ListItem ContainerComponent="div" className={classes.header}>
+                    <ListItemIcon>
+                        <CalendarIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Termine" />
+                    <ListItemSecondaryAction>
+                        {isAdmin && <IconButton onClick={this.setEditMode}><EditIcon /></IconButton>}
+                    </ListItemSecondaryAction>
+                </ListItem>
 
                 <List className={classes.list}>
                     {this.renderDates(dates)

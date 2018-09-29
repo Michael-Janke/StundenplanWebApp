@@ -74,7 +74,7 @@ const Text = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
-    word-break: break-all;
+    word-break: break-word;
 `;
 
 export default Holiday;
