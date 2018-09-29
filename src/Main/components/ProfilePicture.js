@@ -47,6 +47,7 @@ const Wrapper = styled.div`
 `
 const ProfileImg = styled.img`
     width:100%;
+    height: 300px;
 `
 const Name = styled.div`
     bottom: 0;

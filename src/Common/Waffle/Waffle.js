@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles, ButtonBase, Typography } from '@material-ui/core';
-
+import { Link } from 'react-router-dom';
 const styles = theme => ({
     root: {
     },
@@ -29,14 +29,25 @@ const styles = theme => ({
 });
 
 
-const Waffle = ({ classes, name, waffle }) => {
+const Waffle = ({ classes, name, waffle, onClick }) => {
     return (
         <ButtonBase
             TouchRippleProps={{ classes: { ripple: classes.ripple } }}
             className={classes.button}
             style={{ '--color': waffle.color }}
-            href={waffle.link}
-            target="_blank">
+            onClick={onClick}
+            {...(
+                waffle.router ?
+                    {
+                        component: Link,
+                        to: waffle.link,
+                    }
+                    : {
+                        href: waffle.link,
+                        component: 'a',
+                        target: "_blank",
+                    }
+            )}>
             <waffle.icon className={classes.icon} />
             <Typography className={classes.name}>
                 {name}

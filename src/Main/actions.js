@@ -2,6 +2,15 @@
 export function loadMe() {
     return { type: "GET_ME" };
 }
+export function openDrawer() {
+    return { type: "OPEN_DRAWER" };
+}
+export function closeDrawer() {
+    return { type: "CLOSE_DRAWER" };
+}
+export function toggleDrawer() {
+    return { type: "TOGGLE_DRAWER" };
+}
 
 export function addFavorite(key) {
     return { type: "ADD_FAVORITE", payload: key };

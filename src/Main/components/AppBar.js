@@ -1,68 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
-import Drawer from '@material-ui/core/SwipeableDrawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Divider from '@material-ui/core/Divider';
-import MenuIcon from '@material-ui/icons/Apps';
 import PrintIcon from '@material-ui/icons/Print';
 import Search from './Search.js';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import UserSettingsMenu from './UserSettingsMenu';
 import grey from '@material-ui/core/colors/grey';
-import ProfilePicture from './ProfilePicture';
-import indigo from '@material-ui/core/colors/indigo';
-import OfficeIcons from '../../Common/office-icons';
-import Waffle from './Waffle.js';
+import { toggleDrawer } from '../actions.js';
+import  Tooltip from '@material-ui/core/Tooltip';
 
-const Tooltip = ({ children }) => children;
-
-const styles = theme => ({
-    root: {
-        overflow: 'hidden',
-        display: 'flex',
-        width: '100%',
-    },
-    appBar: {
-        backgroundColor: indigo[600],
-        paddingLeft: 10,
-        paddingRight: 10,
-        zIndex: theme.zIndex.modal,
-    },
-    toolbar: {
-        minHeight: 64,
-    },
-    drawer: {
-        width: 300,
-
-    },
+const styles = ({
     icon: {
         color: grey[100]
     },
-    links: {
-        padding: theme.spacing.unit * 2,
-    },
-    linksHeader: {
-        color: grey[600],
-        paddingBottom: theme.spacing.unit,
-    },
-    linksList: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    }
 });
 
 class ResponsiveDrawer extends React.Component {
-    state = {
-        mobileOpen: false,
-        searchOpen: false,
-    };
 
     handleDrawerToggle = () => {
-        this.setState({ mobileOpen: !this.state.mobileOpen });
+        this.props.toggleDrawer();
     };
 
     onPrintTimetable = () => {
@@ -73,76 +30,22 @@ class ResponsiveDrawer extends React.Component {
         this.refs.calendar.getWrappedInstance().open();
     }
 
-    handleSearch = () => {
-        this.setState({ searchOpen: !this.state.searchOpen });
-    }
-
     render() {
-        const { classes, theme, small, large } = this.props;
+        const { classes, small, large } = this.props;
 
-        const links = (
-            <div className={classes.links}>
-                <div className={classes.linksHeader}>
-                    Apps
-                </div>
-                <div className={classes.linksList}>
-                    {Object.entries(OfficeIcons).map(([key, value], i) => {
-                        return (
-                            <Waffle name={key} waffle={value} key={i} />
-                        );
-                    })}
-                </div>
-            </div>
-        );
-        const drawer = (
-            <div className={classes.drawer}>
-                <ProfilePicture />
-                <Divider />
-                {links}
-            </div>
-        );
         return (
-            <div className={classes.root}>
-                <AppBar className={classes.appBar} style={{ boxShadow: 'none' }}>
-                    <Toolbar disableGutters variant="dense" className={classes.toolbar}>
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={this.handleDrawerToggle}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-
-                        <Icons style={{ marginLeft: large ? "calc(300px + 2vw - 58px)" : undefined }}>
-                            <Search shrinkChildren={small} alwaysOpen={!small}>
-                                {small ||
-                                    <Tooltip id="tooltip-print" title="Stundenplan drucken">
-                                        <IconButton onClick={this.onPrintTimetable}>
-                                            <PrintIcon className={classes.icon} />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                                <UserSettingsMenu />
-                            </Search>
-                        </Icons>
-                    </Toolbar>
-                </AppBar>
-                <Drawer
-                    variant="temporary"
-                    swipeAreaWidth={10}
-                    anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-                    open={this.state.mobileOpen}
-                    onClose={this.handleDrawerToggle}
-                    onOpen={this.handleDrawerToggle}
-
-                    ModalProps={{
-                        keepMounted: true, // Better open performance on mobile.
-                    }}
-                >
-                    {drawer}
-                </Drawer>
-                <div className={classes.toolbar} />
-            </div >
+            <Icons style={{ marginLeft: large ? "calc(300px + 2vw - 58px)" : undefined }}>
+                <Search shrinkChildren={small} alwaysOpen={!small}>
+                    {small ||
+                        <Tooltip id="tooltip-print" title="Stundenplan drucken">
+                            <IconButton onClick={this.onPrintTimetable}>
+                                <PrintIcon className={classes.icon} />
+                            </IconButton>
+                        </Tooltip>
+                    }
+                    {this.props.children}
+                </Search>
+            </Icons>
         );
     }
 }
@@ -166,4 +69,8 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(ResponsiveDrawer));
+const mapDispatchToProps = dispatch => ({
+    toggleDrawer: () => dispatch(toggleDrawer()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { withTheme: true })(ResponsiveDrawer));

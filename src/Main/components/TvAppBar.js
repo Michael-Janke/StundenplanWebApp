@@ -1,5 +1,4 @@
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
 import { connect } from 'react-redux';
 import withStyles from '@material-ui/core/styles/withStyles';
 
@@ -23,10 +22,8 @@ function LampOnIcon(props) {
 
 const styles = theme => ({
     root: {
-        overflow: 'hidden',
         display: 'flex',
         width: '100%',
-
     },
     appBar: {
         backgroundColor: indigo[600],
@@ -48,20 +45,17 @@ class TvAppBar extends React.Component {
         const LampComponent = theme.palette.type === 'dark' ? LampOnIcon : LampIcon;
         return (
             <div className={classes.root}>
-                <AppBar className={classes.appBar} style={{ boxShadow: 'none' }}>
-                    <div style={{ flex: 1 }}></div>
-                    <Search
-                        alwaysOpen
-                        open={this.props.open}
-                        Keyboard={Keyboard}>
-                        <Tooltip id="tooltip-theme" title="Theme ändern">
-                            <IconButton onClick={this.props.onThemeToggle}>
-                                <LampComponent className={classes.icon} />
-                            </IconButton>
-                        </Tooltip>
-                    </Search>
-                </AppBar>
-                <div className={classes.toolbar} />
+                <div style={{ flex: 1 }}></div>
+                <Search
+                    alwaysOpen
+                    open={this.props.open}
+                    Keyboard={Keyboard}>
+                    <Tooltip id="tooltip-theme" title="Theme ändern">
+                        <IconButton onClick={this.props.onThemeToggle}>
+                            <LampComponent className={classes.icon} />
+                        </IconButton>
+                    </Tooltip>
+                </Search>
             </div>
         );
     }

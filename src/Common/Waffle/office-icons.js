@@ -1,48 +1,71 @@
 import React from "react";
 import SvgIcon from "@material-ui/core/SvgIcon";
+// import TextSmsIcon from '@material-ui/icons/Textsms';   
 
 export default {
-  Outlook: {
-		color: "#0078d7",
-		icon: OutlookIcon,
-		link: "https://outlook.office365.com/",
-	},
-	OneDrive: {
-		color: "#0078d7",
-		icon: OneDriveIcon,
-		link: "https://wgmail-my.sharepoint.com/",
-	},
-	Teams: {
-		color: "#6264a7",
-		icon: TeamsIcon,
-		link: "https://teams.microsoft.com/_",
-	},
-	Homepage: {
-		color: 'black',
-		icon: WolkenbergIcon,
-		link: "https://www.wolkenberg-gymnasium.de/",
-  },
-  "alte Version": {
-		color: 'black',
-		icon: WolkenbergIcon,
-		link: "https://www.wolkenberg-gymnasium.de/stundenplan/index2.php",
-  },
-  InfoTafel: {
-		color: 'black',
-		icon: WolkenbergIcon,
-		link: "https://www.wolkenberg-gymnasium.de/InfoTafel/",
-	},
+    // Stundenplan: {
+    //     color: '#00593b',
+    //     icon: Icon(require('./icon.png')),
+    //     link: '/',
+    //     router: true,
+    // },
+    // 'Beiträge': {
+    //     color: '#00233a',
+    //     icon: TextSmsIcon,
+    //     link: '/contributions',
+    //     router: true,
+    // },
+    Outlook: {
+        color: "#0078d7",
+        icon: OutlookIcon,
+        link: "https://outlook.office365.com/",
+    },
+    OneDrive: {
+        color: "#0078d7",
+        icon: OneDriveIcon,
+        link: "https://wgmail-my.sharepoint.com/",
+    },
+    Teams: {
+        color: "#6264a7",
+        icon: TeamsIcon,
+        link: "https://teams.microsoft.com/_",
+    },
+    Homepage: {
+        color: 'black',
+        icon: Icon(require('./logoicon.png'), {
+            filter: 'invert(100%)',
+            WebkitFilter: 'invert(100%)',
+        }),
+        link: "https://www.wolkenberg-gymnasium.de/",
+    },
+    "alte Version": {
+        color: 'black',
+        icon: Icon(require('./logoicon.png'), {
+            filter: 'invert(100%)',
+            WebkitFilter: 'invert(100%)',
+        }),
+        link: "https://www.wolkenberg-gymnasium.de/stundenplan/index2.php",
+    },
+    InfoTafel: {
+        color: 'black',
+        icon: Icon(require('./logoicon.png'), {
+            filter: 'invert(100%)',
+            WebkitFilter: 'invert(100%)',
+        }),
+        link: "https://www.wolkenberg-gymnasium.de/InfoTafel/",
+    },
 };
 
-function WolkenbergIcon(props) {
-	return (
-		<img alt="wolkenberg" src={require('./logoicon.png')} style={{
-			filter: 'invert(100%)',
-			WebkitFilter: 'invert(100%)',
-			width: 24,
-		}}>
-		</img>
-	);
+function Icon(source, style) {
+    return (props) => {
+        return (
+            <img alt="wolkenberg" src={source} style={{
+                ...style,
+                width: 24,
+            }}>
+            </img>
+        );
+    }
 }
 
 

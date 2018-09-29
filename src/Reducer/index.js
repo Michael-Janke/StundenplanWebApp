@@ -6,6 +6,7 @@ import error from './error';
 import avatars from './avatars';
 import timetable from './timetable';
 import dates from './dates';
+import drawer from './drawer';
 
 let substitutions;
 if(process.env.REACT_APP_MODE === 'tv'){
@@ -14,7 +15,8 @@ if(process.env.REACT_APP_MODE === 'tv'){
 
 export default combineReducers({
     browser: responsiveStateReducer,
-    ...(substitutions && {substitutions}),
+    ...(substitutions && { substitutions }),
+    drawer,
     user,
     error,
     timetable,

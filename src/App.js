@@ -4,7 +4,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import './App.css';
 import createStore from './store';
-import Main from './Main';
+import AppRouter from './Router/AppRouter';
 
 const { store, persistor } = createStore();
 
@@ -13,7 +13,7 @@ class App extends Component {
         return (
             <Provider store={store}>
                 <PersistGate loading={null} persistor={persistor}>
-                    <Main />
+                    <AppRouter />
                 </PersistGate>
             </Provider>
         );
