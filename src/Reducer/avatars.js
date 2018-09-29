@@ -1,4 +1,3 @@
-import moment from 'moment';
 
 export default function avatarsReducer(state = { loading: false }, action = {}) {
     switch (action.type) {

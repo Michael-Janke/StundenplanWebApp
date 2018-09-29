@@ -48,6 +48,7 @@ function fuzzysearch(needle, haystack) {
     return true;
 }
 
+const isTv = process.env.REACT_APP_MODE === 'tv';
 
 class Search extends React.PureComponent {
     state = { open: false, nonEmpty: false, value: "" };
@@ -55,9 +56,11 @@ class Search extends React.PureComponent {
     handleOpen = () => {
         if (!this.state.open) {
             this.input.focus();
+            if (!isTv) {
+                this.props.loadMe();
+            }
         }
-        this.setState({ open: true, value: "" });
-        this.props.loadMe();
+        this.setState({ open: !this.state.open, value: "" });
     }
 
     handleFocus = () => {
@@ -81,7 +84,7 @@ class Search extends React.PureComponent {
     }
 
     handleClickAway = () => {
-        if (this.state.open) {
+        if (this.state.open && !this.props.open) {
             this.setState({ open: false, nonEmpty: false, value: "" });
         }
     }
@@ -143,11 +146,11 @@ class Search extends React.PureComponent {
     };
 
     render() {
-        const { classes, shrinkChildren, alwaysOpen, Keyboard, small } = this.props;
+        const { classes, shrinkChildren, alwaysOpen, Keyboard, small, style } = this.props;
         const { open, nonEmpty, value } = this.state;
         const isOpen = alwaysOpen || open || this.props.open;
         return (
-            <div className={classes.root}>
+            <div className={classes.root} style={style}>
                 <ClickAwayListener mouseEvent="onClick" onClickAway={this.handleClickAway}>
                     <div className={classes.searchbarWrapper}>
                         <div className={classNames(
@@ -230,11 +233,13 @@ class Search extends React.PureComponent {
                                                 />
                                             </ListItemIcon>
                                             <ListItemText inset primary={object.text} secondary={object.secondary} />
-                                            <ListItemSecondaryAction>
-                                                {object.secondary && <IconButton onClick={() => this.toggleFavorite(object)}>
-                                                    {object.favorite ? <StarIcon /> : <StarBorderIcon />}
-                                                </IconButton>}
-                                            </ListItemSecondaryAction>
+                                            {!isTv &&
+                                                <ListItemSecondaryAction>
+                                                    {object.secondary && <IconButton onClick={() => this.toggleFavorite(object)}>
+                                                        {object.favorite ? <StarIcon /> : <StarBorderIcon />}
+                                                    </IconButton>}
+                                                </ListItemSecondaryAction>
+                                            }
                                         </ListItem>
                                     )
                                 )}
@@ -263,8 +268,8 @@ class Search extends React.PureComponent {
 }
 
 Search.getDerivedStateFromProps = (props, state) => {
-    const { masterdata, favorites, small } = props;
-    const { selectedFilter, value } = state;
+    const { masterdata, favorites, small, open: openProps } = props;
+    const { selectedFilter, value, open, prevOpenProps } = state;
     const sortName = (o1, o2) => (o1.LASTNAME || o1.NAME).localeCompare(o2.LASTNAME || o2.NAME);
     const user = props.user;
     let data = [
@@ -277,7 +282,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             secondary: "",
             filterType: "Raum",
         },
-        {
+        ...(!user.id ? [] : [{
             searchString: "",
             upn: user.upn,
             type: user.type,
@@ -286,7 +291,7 @@ Search.getDerivedStateFromProps = (props, state) => {
             text: `${user.firstname} ${user.lastname}`,
             secondary: "",
             filterType: "",
-        },
+        }]),
         ...Object.values(masterdata.Class).filter((o) => o.NAME !== "07-08").sort(sortName).map((entry) => ({
             searchString: entry.NAME === "07-12" ? "" : "Klasse " + entry.NAME,
             type: "class",
@@ -336,7 +341,9 @@ Search.getDerivedStateFromProps = (props, state) => {
     return {
         data,
         result: filtered,
-        selectedFilter
+        selectedFilter,
+        prevOpenProps: openProps,
+        open: prevOpenProps !== openProps ? openProps : open || openProps,
     };
 }
 

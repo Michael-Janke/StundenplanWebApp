@@ -2,7 +2,7 @@
   "name": "stundenplan-web-app",
   "version": "0.1.1",
   "private": true,
-  "homepage": "https://www.wolkenberg-gymnasium.de/wolkenberg-app/stundenplan-web-app/",
+  "homepage": ".",
   "dependencies": {
     "@material-ui/codemod": "^1.1.0",
     "@material-ui/core": "^3.1.0",
@@ -37,7 +37,9 @@
     "build": "set REACT_APP_MODE=app&react-scripts build",
     "build:tv": "set REACT_APP_MODE=tv&react-scripts build",
     "deploy": " scp -r build/* u45065@www.wolkenberg-gymnasium.de:~/wolkenberg-app/stundenplan-web-app",
+    "deploy:tv": " scp -r build/* u45065@www.wolkenberg-gymnasium.de:~/wolkenberg-app/stundenplan-web-app-tv",
     "push": "npm run build && npm run deploy",
+    "push:tv": "npm run build:tv && npm run deploy:tv",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

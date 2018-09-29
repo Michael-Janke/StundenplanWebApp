@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import withTheme from '@material-ui/core/styles/withTheme';
@@ -8,58 +8,88 @@ import { Paper } from "@material-ui/core";
 import Dates from "../Dates";
 import ErrorBoundary from "../Common/ErrorBoundary";
 
-var Substitutions;
-if (process.env.REACT_APP_MODE === 'tv') {
-    Substitutions = require('./Substitutions').default;
-}
+const isTv = process.env.REACT_APP_MODE === 'tv';
+var View;
 
-class View extends PureComponent {
-    render() {
-        const { showCalendar, small } = this.props;
-        return (
-            <Container>
-                <AppBar backgroundColor={indigo[600]} />
-                {showCalendar && !small &&
-                    <ShadowContainer style={{width:300, flex:'none'}}>
+if(isTv) {
+    let Substitutions = require('./Substitutions').default;
+    View = ({ small }) => (
+        <Container>
+            <AppBar backgroundColor={indigo[600]} />
+            <ContainerFlex>
+                {!small &&
+                    <ShadowContainer style={{ width: 300, flex: 'none' }}>
                         <ErrorBoundary>
                             <Dates />
                         </ErrorBoundary>
                     </ShadowContainer>
                 }
                 {Substitutions ?
-                    <ShadowContainer>
+                    <ShadowContainer style={{ flex: 1 }}>
                         <Substitutions addDays={0} />
-                        <Substitutions addDays={1} />
                     </ShadowContainer>
                     : null}
-                <Column>
-                    <ShadowContainer style={{marginRight: '1vw'}}>
+            </ContainerFlex>
+            <Column style={{flex: 1}}>
+                <ShadowContainer style={{ marginRight: '1vw' }}>
+                    <ErrorBoundary>
+                        <TimeTableGrid />
+                    </ErrorBoundary>
+                </ShadowContainer>
+                {small &&
+                    <ShadowContainer>
                         <ErrorBoundary>
-                            <TimeTableGrid />
-                        </ErrorBoundary>    
+                            <Dates singleMonth />
+                        </ErrorBoundary>
                     </ShadowContainer>
-                    {showCalendar && small &&
-                        <ShadowContainer>
-                            <ErrorBoundary>
-                                <Dates singleMonth />
-                            </ErrorBoundary>
-                        </ShadowContainer>
-                    }
-                </Column>
-            </Container>
-        );
-    }
+                }
+            </Column>
+
+        </Container>
+    )
+} else {
+    View = ({ small }) => (
+        <Container>
+            <AppBar backgroundColor={indigo[600]} />
+            {!small &&
+                <ShadowContainer style={{ width: 300, flex: 'none' }}>
+                    <ErrorBoundary>
+                        <Dates />
+                    </ErrorBoundary>
+                </ShadowContainer>
+            }
+            <Column>
+                <ShadowContainer style={{ marginRight: '1vw' }}>
+                    <ErrorBoundary>
+                        <TimeTableGrid />
+                    </ErrorBoundary>
+                </ShadowContainer>
+                {small &&
+                    <ShadowContainer>
+                        <ErrorBoundary>
+                            <Dates singleMonth />
+                        </ErrorBoundary>
+                    </ShadowContainer>
+                }
+            </Column>
+        </Container>
+    );
 }
 
 const Container = styled.div`
     width: 100%;
     position: relative;
     display: flex;
-    background-color: ${props => props.backgroundColor};
-`
+`;
+const ContainerFlex = styled.div`
+    flex: 1;
+    display: flex;
+`;
+
 const Column = styled.div`
     display: flex;
     flex-direction: column;
+    flex: 1;
 `
 
 const ShadowContainer = styled(Paper)`
@@ -87,7 +117,6 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        showCalendar: process.env.REACT_APP_MODE !== 'tv',
         small: state.browser.lessThan.medium
     };
 };

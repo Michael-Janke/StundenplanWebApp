@@ -26,6 +26,7 @@ const styles = theme => ({
         overflow: 'hidden',
         display: 'flex',
         width: '100%',
+
     },
     appBar: {
         backgroundColor: indigo[600],
@@ -48,8 +49,11 @@ class TvAppBar extends React.Component {
         return (
             <div className={classes.root}>
                 <AppBar className={classes.appBar} style={{ boxShadow: 'none' }}>
-                    <div style={{ flex: 1 }} />
-                    <Search alwaysOpen open={this.props.open} Keyboard={Keyboard}>
+                    <div style={{ flex: 1 }}></div>
+                    <Search
+                        alwaysOpen
+                        open={this.props.open}
+                        Keyboard={Keyboard}>
                         <Tooltip id="tooltip-theme" title="Theme ändern">
                             <IconButton onClick={this.props.onThemeToggle}>
                                 <LampComponent className={classes.icon} />

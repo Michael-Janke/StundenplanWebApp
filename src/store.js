@@ -10,6 +10,10 @@ import cacheService from './Common/cache-service';
 import counterChanged from './Common/counter';
 import { responsiveStoreEnhancer } from 'redux-responsive'
 
+if (process.env.REACT_APP_MODE === 'tv') {
+    var tvBarrier = require('./Common/tv-barrier').default;   
+}
+
 const persistConfig = {
   key: 'root',
   storage,
@@ -20,12 +24,13 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = createStore(persistedReducer,
   composeWithDevTools(
-    applyMiddleware(
+    applyMiddleware(...[
+      ...(tvBarrier ? [tvBarrier] : []),
       actionRedirector,
       cacheService,
       ...services,
       counterChanged,
-      thunk),
+      thunk]),
     responsiveStoreEnhancer)
 );
 

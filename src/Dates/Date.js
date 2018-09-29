@@ -8,32 +8,36 @@ import orange from '@material-ui/core/colors/orange';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 import moment from 'moment';
+import withStyles from '@material-ui/core/styles/withStyles';
 
-const styles = {
+const styles = theme => ({
     HOLIDAY: {
-        color: green[600],
+        color: theme.palette.type === 'dark' ? green[200] : green[600],
         fontWeight: 'bold',
     },
     EXKURSION: {
-        color: orange[600],
+        color: theme.palette.type === 'dark' ? orange[200] : orange[600],
     },
     NORMAL: {
-        color: grey[800]
+        color: theme.palette.type === 'dark' ? grey[200] : grey[800]
     },
     EXAM: {
-        color: red[800],
+        color: theme.palette.type === 'dark' ? red[200] : red[800],
         fontWeight: 'bolder',
-    }
-}
-function Date({ date, onEdit, onDelete }) {
-    if(!date) return;
+    },
+    dateStrings: {
+        color: theme.palette.text.primary,
+    },
+});
+function Date({ date, onEdit, onDelete, classes }) {
+    if (!date) return;
     let dateFrom = date.DATE_FROM && moment(date.DATE_FROM.date).format("DD.MM.");
     let dateTo = date.DATE_TO && moment(date.DATE_TO.date).format("DD.MM.");
     let timeFrom = date.DATE_FROM && moment(date.DATE_FROM.date).format("HH:mm");
     let timeTo = date.DATE_TO && moment(date.DATE_TO.date).format("HH:mm");
     return (
         <Container>
-            <DateStrings>
+            <DateStrings className={classes.dateStrings}>
                 <DateFrom>
                     {dateFrom}
                 </DateFrom>
@@ -44,15 +48,15 @@ function Date({ date, onEdit, onDelete }) {
                 </DateTo>
             </DateStrings>
             <Text>
-                <Primary style={styles[date.TYPE]}>
+                <Primary className={classes[date.TYPE]}>
                     {date.TEXT}
                 </Primary>
                 <Secundary>
                     {date.SUBTEXT}
                 </Secundary>
             </Text>
-            {onEdit && <IconButton onClick={onEdit}><EditIcon/></IconButton>}
-            {onDelete && <IconButton onClick={onDelete}><DeleteIcon/></IconButton>}
+            {onEdit && <IconButton onClick={onEdit}><EditIcon /></IconButton>}
+            {onDelete && <IconButton onClick={onDelete}><DeleteIcon /></IconButton>}
         </Container>
     )
 }
@@ -97,4 +101,4 @@ const Secundary = styled.div`
     color: grey;
 `;
 
-export default Date;
+export default withStyles(styles)(Date);

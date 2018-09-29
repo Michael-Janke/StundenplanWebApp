@@ -45,6 +45,8 @@ const styles = theme => ({
         overflow: 'auto',
         maxHeight: '75vh',
         paddingTop: 0,
+
+        backgroundColor: theme.palette.background.default,
     },
     subheader: {
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
