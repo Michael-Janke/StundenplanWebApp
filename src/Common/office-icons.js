@@ -10,7 +10,7 @@ export default {
 	OneDrive: {
 		color: "#0078d7",
 		icon: OneDriveIcon,
-		link: "https://wgmail-my.sharepoint.com/personal/thomas_janke_wgmail_de/",
+		link: "https://wgmail-my.sharepoint.com/",
 	},
 	Teams: {
 		color: "#6264a7",

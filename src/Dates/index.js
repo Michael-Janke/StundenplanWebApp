@@ -183,23 +183,23 @@ class Dates extends Component {
                     {this.renderDates(dates)
                         .map((month, i) => (
                             <li key={i} className={classes.listSection}>
-                                <ul className={classes.ul}>
-                                    <RootRef rootRef={(node) => this.monthRefs[month.title] = node}>
+                                <RootRef rootRef={(node) => this.monthRefs[month.title] = node}>
+                                    <ul className={classes.ul}>
                                         <ListSubheader
                                             className={classes.subheader}
                                             key={month.title}>
                                             {month.title}
                                         </ListSubheader>
-                                    </RootRef>
-                                    {month.dates.map((date, i) => (
-                                        <Date
-                                            date={date}
-                                            key={date.DATE_ID}
-                                            onEdit={isAdmin && editMode && date.DATE_ID > 0 ? () => this.openDialog(date) : undefined}
-                                            onDelete={isAdmin && editMode && date.DATE_ID > 0 ? () => this.openDeleteDialog(date) : undefined}
-                                        />
-                                    ))}
-                                </ul>
+                                        {month.dates.map((date, i) => (
+                                            <Date
+                                                date={date}
+                                                key={date.DATE_ID}
+                                                onEdit={isAdmin && editMode && date.DATE_ID > 0 ? () => this.openDialog(date) : undefined}
+                                                onDelete={isAdmin && editMode && date.DATE_ID > 0 ? () => this.openDeleteDialog(date) : undefined}
+                                            />
+                                        ))}
+                                    </ul>
+                                </RootRef>
                             </li>
                         ))}
 
