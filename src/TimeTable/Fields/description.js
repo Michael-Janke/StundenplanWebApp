@@ -8,7 +8,7 @@ function Description({ classes, label, children, type }) {
             <div className={classes.label}>
                 <ObjectIcon size={0} fontSize="inherit" type={type} />
             </div>
-            <div>{children}</div>
+            <div className={classes.children}>{children}</div>
         </div>
     )
 }
@@ -23,6 +23,9 @@ export const descriptionStyles = (theme) => ({
         fontSize: '100%',
         color: theme.palette.text.secondary,
         fontWeight: 600,
+    },
+    children: {
+        textAlign: 'right',
     }
 })
 
