@@ -18,11 +18,6 @@ var MainAppBar = process.env.REACT_APP_MODE === 'tv'
 
 
 const styles = theme => ({
-    root: {
-        overflow: 'hidden',
-        display: 'flex',
-        width: '100%',
-    },
     appBar: {
         backgroundColor: indigo[600],
         paddingLeft: 10,
@@ -31,14 +26,10 @@ const styles = theme => ({
     },
     toolbar: {
         minHeight: 64,
-        justifyContent: 'space-between',
     },
 });
 
 class AppBar extends React.Component {
-    state = {
-    };
-
     handleDrawerToggle = () => {
         this.props.toggleDrawer();
     };
@@ -59,7 +50,7 @@ class AppBar extends React.Component {
         const appBarStyles = location.pathname === '/' ? { boxShadow: 'none' } : null;
 
         return (
-            <div className={classes.root}>
+            <div>
                 <AppBarComponent className={classes.appBar} style={appBarStyles}>
                     <Toolbar disableGutters variant="dense" className={classes.toolbar}>
                         <IconButton
@@ -77,7 +68,7 @@ class AppBar extends React.Component {
                 </AppBarComponent>
 
                 <div className={classes.toolbar} />
-            </div >
+            </div>
         );
     }
 }

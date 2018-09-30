@@ -66,7 +66,7 @@ class AppRouter extends Component {
 
     render() {
         return (
-            <Router>
+            <Router basename="/wolkenberg-app/stundenplan-web-app/">
                 <MuiThemeProvider theme={this.state.theme}>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <div style={{
@@ -79,7 +79,7 @@ class AppRouter extends Component {
                             <Switch>
                                 <Route path="/" exact component={Main} />
                                 <Route path="/contributions" component={Contributions} />
-                                <Route component={NotFoundPage}/>
+                                <Route component={NotFoundPage} />
                             </Switch>
                         </div>
                     </MuiPickersUtilsProvider>
