@@ -16,8 +16,8 @@ export const checkAvatars = (upns, loadAvatars) => {
         const avatar = avatars[upn];
         return !avatar || moment(avatar.expires).isBefore(moment())
     });
-    for(let i = 0; i<r.length; i += 10) {
-        loadAvatars(r.slice(i, i+10));
+    for (let i = 0; i < r.length; i += 10) {
+        loadAvatars(r.slice(i, i + 10));
     }
 };
 
@@ -40,9 +40,9 @@ export const ProfilePicture = (upn, avatars, size = 24, outline = false, other) 
             style={{ height: size, width: size }}
             {...other} />
         : outline ?
-            <Avatar style={{ height: size, width: size }} {...other}>
+            <Avatar {...(size && { style: { height: size, width: size } })} {...other}>
                 <PersonIcon />
             </Avatar>
             :
-            <PersonIcon style={{ height: size, width: size }} {...other} />
+            <PersonIcon {...(size && { style: { height: size, width: size } })}{...other} />
     );

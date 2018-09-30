@@ -6,7 +6,7 @@ function Description({ classes, label, children, type }) {
     return (
         <div className={classes.description}>
             <div className={classes.label}>
-                <ObjectIcon type={type} />
+                <ObjectIcon size={0} fontSize="inherit" type={type} />
             </div>
             <div>{children}</div>
         </div>
@@ -18,10 +18,9 @@ export const descriptionStyles = (theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        margin: `${theme.spacing.unit / 2}px 0`,
     },
     label: {
-        fontSize: '60%',
+        fontSize: '100%',
         color: theme.palette.text.secondary,
         fontWeight: 600,
     }
