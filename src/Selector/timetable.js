@@ -41,17 +41,20 @@ function freeRooms(masterdata, day, periods) {
         }
         const lessons = period.lessons.map(lesson => lesson.room);
         delete period.lessons;
-        const rooms = Object.values(masterdata.Room);
-        period.freeRooms = lessons.reduce((prev, current) => {
-            if (current.new) {
-                const index = prev.findIndex(room => room.ROOM_ID === current.new.ROOM_ID);
-                if (index !== -1) {
-                    prev.splice(index, 1);
-                }
-            }
-            return prev;
-        }, rooms);
+        let rooms = Object.values(masterdata.Room);
+        const absencesFiltered = day.absences ?
+            day.absences.filter(absence => absence.PERIOD_FROM - 1 <= y && absence.PERIOD_TO - 1 >= y && absence.ROOM_ID)
+            : [];
+        rooms = rooms.map(room => {
+            return {
+                ...room,
+                status: !lessons.find(current => (current.new || {}).ROOM_ID === room.ROOM_ID)
+                    && !absencesFiltered.find(absence => Number(absence.ROOM_ID) === room.ROOM_ID)
+            };
+        });
+        period.freeRooms = rooms;
     }
+    delete day.absences;
 }
 
 export function translateDay(masterdata, timetable, x, substitutions, periods, type, id, date) {

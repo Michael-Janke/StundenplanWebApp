@@ -126,6 +126,7 @@ class Search extends React.PureComponent {
         const filter = ["Lehrer", "Schüler", "Raum", "Klasse"];
         return <ListItem
             key={"Filter"}
+            className={classes.filter}
         >
             <ListItemIcon>
                 <FilterIcon />
@@ -403,6 +404,7 @@ const styles = theme => ({
         flexDirection: 'column',
         maxHeight: 'calc(100vh - 64px - 8px)',
         opacity: 1,
+        display: 'flex',
         transition: theme.transitions.create(['opacity']),
         WebkitTransition: theme.transitions.create(['opacity']),
     },
@@ -424,17 +426,23 @@ const styles = theme => ({
         transition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
         WebkitTransition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
         willChange: 'opacity, transform',
-        transform: 'translate3d(0,0,0)',
+        transform: 'translate(0,0)',
         maxHeight: 'inherit'
     },
     dropDownClosed: {
         boxShadow: 'none',
-        transform: 'translate3d(0,-8px,0)',
+        transform: 'translate(0,-8px)',
     },
     list: {
         backgroundColor: theme.palette.background.paper,
         overflowY: 'auto',
-        flex: 1,
+        padding: 0,
+    },
+    filter: {
+        top: 0,
+        position: 'sticky',
+        backgroundColor: theme.palette.background.paper,
+        zIndex: 1,
     },
     keyboard: {
         backgroundColor: theme.palette.background.paper,

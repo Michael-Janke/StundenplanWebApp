@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { loadAvatars } from '../actions';
 import makeGetEffectiveAvatars from '../../Selector/avatars';
 import List from '@material-ui/core/List';
+import { RootRef } from '@material-ui/core';
 
 const growthFactor = 18;
 
@@ -57,9 +58,11 @@ class SearchResult extends React.PureComponent {
         }
     }
 
-    componentDidMount() {
+    handleRef = (ref) => {
+        this.scroll = ref;
         this.scroll.addEventListener("scroll", this.onScroll);
     }
+
 
     componentWillUnmount() {
         this.scroll.removeEventListener("scroll", this.onScroll);
@@ -69,14 +72,14 @@ class SearchResult extends React.PureComponent {
 
         const { className } = this.props;
         return (
-            <div ref={node => this.scroll = node} className={className}>
-                {this.state.elements &&
-                    <List component="div">
+            this.state.elements ?
+                <RootRef rootRef={this.handleRef}>
+                    <List component="div" className={className}>
                         {this.props.filterBar}
                         {this.props.children(this.state.elements, this.props.avatars)}
                     </List>
-                }
-            </div>
+                </RootRef>
+                : null
         )
     }
 }

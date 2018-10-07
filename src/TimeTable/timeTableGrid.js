@@ -155,6 +155,9 @@ class TimeTableGrid extends React.Component {
             fontSize: '100%',
             padding: 2,
         };
+        if (!this.props.type || !this.props.id) {
+            return null;
+        }
         if (!timetable) {
             return (
                 <TableRow

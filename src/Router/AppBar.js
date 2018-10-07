@@ -53,13 +53,16 @@ class AppBar extends React.Component {
             <div>
                 <AppBarComponent className={classes.appBar} style={appBarStyles}>
                     <Toolbar disableGutters variant="dense" className={classes.toolbar}>
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={this.handleDrawerToggle}
-                        >
-                            <MenuIcon />
-                        </IconButton>
+                        {process.env.REACT_APP_MODE !== 'tv'
+                            &&
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={this.handleDrawerToggle}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        }
                         <Switch>
                             <Route path="/" exact render={() => <MainAppBar>{content}</MainAppBar>} />
                             <Route render={() => <div>{content}</div>} />

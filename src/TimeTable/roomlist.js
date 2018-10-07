@@ -1,8 +1,11 @@
 import React from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import indigo from '@material-ui/core/colors/indigo';
+import red from '@material-ui/core/colors/red';
+import green from '@material-ui/core/colors/green';
+import grey from '@material-ui/core/colors/grey';
 import { darken } from '@material-ui/core/styles/colorManipulator';
-
+import { classNames } from '../Common/const';
 class RoomList extends React.Component {
 
     extractRooms(rooms) {
@@ -12,7 +15,7 @@ class RoomList extends React.Component {
             const floor = array[0];
             const number = array[1];
             const rooms = e[floor] || (e[floor] = []);
-            rooms.push(number);
+            rooms.push({ number, status: r.status });
         });
         return e;
     }
@@ -26,7 +29,11 @@ class RoomList extends React.Component {
                     <div key={i} className={classes.wrapper}>
                         <div className={classes.floor}>{key}</div>
                         <div className={classes.numbers}>
-                            {entry.join(', ')}
+                            {entry.map((room, i) => (
+                                <div key={i} className={classNames(classes.number, room.status ? classes.numberFree : classes.numberBlocked)}>
+                                    {room.number}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 ))}
@@ -53,12 +60,24 @@ const styles = theme => ({
         marginRight: 4,
     },
     numbers: {
-        fontSize: '70%',
+        fontSize: '80%',
         display: 'flex',
         flexWrap: 'wrap',
-
+        alignItems: 'center',
     },
     number: {
+        margin: `${theme.spacing.unit / 3}px`,
+    },
+    numberFree: {
+        padding: `0 ${theme.spacing.unit / 2 - 1}px`,
+        fontWeight: 600,
+        color: green[theme.palette.type === 'dark' ? 300 : 600],
+        fontSize: '140%',
+    },
+    numberBlocked: {        
+        padding: `0 ${theme.spacing.unit / 2}px`,
+        fontSize: '100%',
+        color: red[theme.palette.type === 'dark' ? 300 : 600] + "5c",
     },
 });
 

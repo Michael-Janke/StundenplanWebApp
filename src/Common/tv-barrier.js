@@ -21,7 +21,7 @@ const tvBarrier = store => next => action => {
             if (timeout) {
                 clearTimeout(timeout);
             }
-            timeout = setTimeout(() => next({ type: 'SET_TIMETABLE', payload: {} }), 1000 * 60);
+            timeout = setTimeout(() => next({ type: 'SET_TIMETABLE', payload: { type: null, id: 0 } }), 1000 * 60);
             break;
         default: ;
     }
