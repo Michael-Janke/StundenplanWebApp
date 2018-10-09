@@ -226,7 +226,7 @@ class Search extends React.PureComponent {
                                 {(result, avatars) => (
                                     result.map((object, i) =>
                                         <ListItem
-                                            dense={true}
+                                            dense
                                             key={object.id + object.type}
                                             button
                                             onClick={this.handleClick.bind(null, object)}
@@ -407,6 +407,7 @@ const styles = theme => ({
     dropDownContainer: {
         position: 'absolute',
         width: '100%',
+        color: theme.palette.text.primary,
         flexDirection: 'column',
         maxHeight: 'calc(100vh - 64px - 8px)',
         opacity: 1,
