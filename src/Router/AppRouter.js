@@ -63,10 +63,11 @@ class AppRouter extends Component {
         }
         return {};
     }
-
     render() {
         return (
-            <Router basename="/wolkenberg-app/stundenplan-web-app/">
+            <Router basename={process.env.REACT_APP_MODE === 'tv'
+                ? "/wolkenberg-app/stundenplan-web-app-tv/"
+                : "/wolkenberg-app/stundenplan-web-app/"}>
                 <MuiThemeProvider theme={this.state.theme}>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <div style={{

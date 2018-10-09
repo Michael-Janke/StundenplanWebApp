@@ -72,15 +72,18 @@ class SearchResult extends React.PureComponent {
 
         const { className } = this.props;
         return (
-            this.state.elements ?
-                <RootRef rootRef={this.handleRef}>
-                    <List component="div" className={className}>
-                        {this.props.filterBar}
-                        {this.props.children(this.state.elements, this.props.avatars)}
-                    </List>
-                </RootRef>
-                : null
-        )
+            <RootRef rootRef={this.handleRef}>
+                <List component="div" className={className}>
+                    {this.state.elements ?
+                        <React.Fragment>
+                            {this.props.filterBar}
+                            {this.props.children(this.state.elements, this.props.avatars)}
+                        </React.Fragment>
+                        : null
+                    }
+                </List>
+            </RootRef>
+        );
     }
 }
 

@@ -79,8 +79,14 @@ class Search extends React.PureComponent {
         if (!this.state.open) {
             return;
         }
+        let selectedFilter = this.state.selectedFilter;
         let value = e.target.value;
-        this.setState({ nonEmpty: value.length > 0, value });
+        let nonEmpty = value.length > 0;
+        if (selectedFilter && !this.state.nonEmpty && nonEmpty) {
+            // disable filter when typing in
+            selectedFilter = "";
+        }
+        this.setState({ nonEmpty, value, selectedFilter });
     }
 
     handleClickAway = () => {
