@@ -163,7 +163,7 @@ class Dates extends Component {
             : this.props.dates;
 
         return (
-            <div square={true} className={classes.root}>
+            <div className={classes.root}>
                 <ListItem ContainerComponent="div" className={classes.header}>
                     <ListItemIcon>
                         <CalendarIcon />
