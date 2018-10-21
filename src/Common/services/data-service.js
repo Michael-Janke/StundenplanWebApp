@@ -10,15 +10,7 @@ const dataService = store => next => action => {
             return requestApiGenerator(store.dispatch)(API_URL, 'me', { type: 'GET_ME' });
         case 'GET_MASTERDATA':
             return requestApiGenerator(next)(API_URL, 'all', { type: 'GET_MASTERDATA' });
-        case 'ADD_DATE':
-            return requestApiGenerator(next)(API_URL, 'dates/', { type: 'ADD_DATE' }, 'POST', JSON.stringify(action.payload));
-        case 'DELETE_DATE':
-            return requestApiGenerator(next)(API_URL, 'dates/' + action.payload.DATE_ID,
-                { type: 'DELETE_DATE', request: action.payload }, 'DELETE');
-        case 'EDIT_DATE':
-            return requestApiGenerator(next)(API_URL, 'dates/' + action.payload.DATE_ID, { type: 'EDIT_DATE' }, 'PATCH', JSON.stringify(action.payload));
-        case 'GET_DATES':
-            return requestApiGenerator(next)(API_URL, 'dates/', { type: 'GET_DATES' });
+
         case "GET_TIMETABLE": {
             return requestApiGenerator(next)(API_URL,
                 `timetable/${action.payload.type}/${action.payload.id}`,
@@ -34,6 +26,11 @@ const dataService = store => next => action => {
         }
         case "SEND_LOGIN_STATISTIC":
             return requestApiGenerator(next)(API_URL, 'statistics/login', { type: "LOGIN_STATISTIC" }, 'POST', '{}');
+        case "GET_LOGIN_STATISTICS": {
+            let { week, year, action: statisticAction } = action.payload;
+            return requestApiGenerator(next)(API_URL,
+                `statistics/summarize/${statisticAction}/${year}-${week}`, { type: 'GET_LOGIN_STATISTICS', request: action.payload });
+        }
         case "SEND_FEEDBACK":
             return requestApiGenerator(next)(GRAPH_URL, 'beta/me/sendMail', { type: 'FEEDBACK' }, 'POST',
                 JSON.stringify(createFeedbackMail(action.payload)));

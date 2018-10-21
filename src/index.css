@@ -5,19 +5,9 @@ body {
   overscroll-behavior: contain; /* disable pull-to-refresh */
 }
 
-@media (max-width:599.95px) {
+@media (min-width:1920px) {
   body {
-    font-size: 15px;
-  }
-}
-@media (max-width:959.95px) {
-  body {
-    font-size: 16px;
-  }
-}
-@media (min-width:960px) {
-  body {
-    font-size: 17px;
+    font-size: 17.5px;
   }
 }
 @media (min-width:1280px) {
@@ -25,9 +15,20 @@ body {
     font-size: 17px;
   }
 }
-@media (min-width:1920px) {
+@media (min-width:960px) {
   body {
-    font-size: 17.5px;
+    font-size: 17px;
+  }
+}
+@media (max-width:959.95px) {
+  body {
+    font-size: 16px;
+  }
+}
+
+@media (max-width:599.95px) {
+  body {
+    font-size: 15px;
   }
 }
 
