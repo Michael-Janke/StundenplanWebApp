@@ -19,6 +19,7 @@
     "react-dom": "^16.5.2",
     "react-easy-print": "^0.6.0-beta.3",
     "react-interval": "^2.0.2",
+    "react-loadable": "^5.5.0",
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",

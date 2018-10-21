@@ -1,31 +1,21 @@
-import React, {
-    Component
-} from "react";
-import {
-    connect
-} from "react-redux";
-import {
-    setNotification,
-    setMyTimetable,
-    sendLoginStatistic,
-    changeTheme,
-    setSortBy
-} from "../Main/actions";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { setNotification, setMyTimetable, sendLoginStatistic, changeTheme, setSortBy } from "../Main/actions";
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import createTheme from '../Common/theme';
 import { connectToServiceWorker } from '../Common/firebase';
 import MomentUtils from 'material-ui-pickers/utils/moment-utils';
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
-import {
-    BrowserRouter as Router,
-    Route,
-    Switch
-} from 'react-router-dom';
-import Main from "../Main";
-import Contributions from '../Contributions';
-import AppDrawer from "./AppDrawer";
-import AppBar from "./AppBar";
-import NotFoundPage from "./NotFoundPage";
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import NotFoundPage from './NotFoundPage';
+import { asynchronize } from "./asynchronize";
+
+import AppBar from './AppBar';
+import AppDrawer from './AppDrawer';
+const Contributions = asynchronize(() => import("../Contributions"), true);
+const Main = asynchronize(() => import("../Main"), true);
+const Statistics = asynchronize(() => import("../Statistics"), true);
+
 
 class AppRouter extends Component {
 
@@ -78,8 +68,9 @@ class AppRouter extends Component {
                             <AppDrawer></AppDrawer>
                             <AppBar />
                             <Switch>
-                                <Route path="/" exact component={Main} />
-                                <Route path="/contributions" component={Contributions} />
+                                <Route exact path="/" component={Main} />
+                                <Route exact path="/contributions" component={Contributions} />
+                                <Route exact path="/admin" component={Statistics} />
                                 <Route component={NotFoundPage} />
                             </Switch>
                         </div>
