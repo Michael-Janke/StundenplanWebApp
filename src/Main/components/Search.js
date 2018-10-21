@@ -518,7 +518,7 @@ const styles = theme => ({
         WebkitTransition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
         willChange: 'opacity, transform',
         transform: 'translate(0,0)',
-        maxHeight: 'inherit'
+        maxHeight: 'inherit',
     },
     dropDownClosed: {
         boxShadow: 'none',
@@ -527,7 +527,7 @@ const styles = theme => ({
     list: {
         backgroundColor: theme.palette.background.paper,
         overflowY: 'auto',
-        padding: 0,
+        paddingTop: 0,
     },
     filter: {
         top: 0,

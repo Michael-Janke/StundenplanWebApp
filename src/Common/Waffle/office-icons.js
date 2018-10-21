@@ -1,20 +1,20 @@
 import React from "react";
 import SvgIcon from "@material-ui/core/SvgIcon";
-// import TextSmsIcon from '@material-ui/icons/Textsms';   
+import TextSmsIcon from '@material-ui/icons/Textsms';   
 
 export default {
-    // Stundenplan: {
-    //     color: '#00593b',
-    //     icon: Icon(require('./icon.png')),
-    //     link: '/',
-    //     router: true,
-    // },
-    // 'Beiträge': {
-    //     color: '#00233a',
-    //     icon: TextSmsIcon,
-    //     link: '/contributions',
-    //     router: true,
-    // },
+    Stundenplan: {
+        color: '#00593b',
+        icon: Icon(require('./icon.png')),
+        link: '/',
+        router: true,
+    },
+    'Beiträge': {
+        color: '#00233a',
+        icon: TextSmsIcon,
+        link: '/contributions',
+        router: true,
+    },
     Outlook: {
         color: "#0078d7",
         icon: OutlookIcon,

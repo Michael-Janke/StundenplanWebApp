@@ -60,7 +60,9 @@ class SearchResult extends React.PureComponent {
 
     handleRef = (ref) => {
         this.scroll = ref;
-        this.scroll.addEventListener("scroll", this.onScroll);
+        if (this.scroll) {
+            this.scroll.addEventListener("scroll", this.onScroll);
+        }
     }
 
 
