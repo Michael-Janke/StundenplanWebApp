@@ -20,8 +20,17 @@ firebase.initializeApp({
 });
 firebase.messaging().usePublicVapidKey("BFM3t4WACinSsfYyZfnlLtYmDsEk8Uk-TXHh-fNnKcrb9avPfJ-rDLdiMJvVLLyQRywcbE3nC0LEZ2L3OEKsn4w");
 
+const renderApp = () => {
+    const App = require('./App').default;
+    return ReactDOM.render(
+        <App />,
+        document.getElementById('root')
+    );
+};
 
-var App = require('./App').default;
-ReactDOM.render(<App />, document.getElementById('root'));
+renderApp();
 
+if (module.hot) {
+    module.hot.accept('./App', renderApp);
+}
 registerServiceWorker();

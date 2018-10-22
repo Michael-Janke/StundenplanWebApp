@@ -77,7 +77,7 @@ class Contribution extends React.Component {
                     }
                 </IconButton>
                 <Menu
-                    id="simple-menu"
+                    id="contribution-menu"
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}
