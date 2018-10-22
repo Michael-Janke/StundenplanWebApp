@@ -33,7 +33,7 @@ class Statistics extends React.Component {
         const data = logIns ? logIns.map(entry => ({ date: moment(entry.DATE).format("DD.MM"), count: entry.COUNT })) : [];
         return (
             <div className={classes.root}>
-                <Typography variant="display2">Anmeldungen</Typography>
+                <Typography variant="h2">Anmeldungen</Typography>
                 <ResponsiveContainer width="99%" height={320}>
                     <LineChart data={data}>
                         <Line type="linear" dataKey="count" stroke="#8884d8" />

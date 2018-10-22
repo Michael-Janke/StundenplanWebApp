@@ -274,7 +274,7 @@ const CurrentTimetableInformation = ({ id, type, masterdata, avatars, lastUpdate
                 style={{ width: 0 }}
                 disableTypography
                 primary={
-                    <Typography variant="body2" noWrap>
+                    <Typography variant="subtitle2" noWrap>
                         {object.LASTNAME ? object.FIRSTNAME + " " + object.LASTNAME : object.NAME}
                     </Typography>
                 }

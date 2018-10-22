@@ -82,25 +82,29 @@ class Contribution extends React.Component {
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}
                 >
-                    <MenuItem onClick={this.handleOpenDelete}>
-                        <ListItemIcon>
-                            <DeleteIcon />
-                        </ListItemIcon>
-                        <ListItemText inset primary="Löschen" />
-                    </MenuItem>
-                    <MenuItem onClick={this.handleEdit}>
-                        <ListItemIcon>
-                            <EditIcon />
-                        </ListItemIcon>
-                        <ListItemText inset primary="Editieren" />
-                    </MenuItem>
-                    
+                    { (contribution.USER_CREATED || isAdmin) &&
+                        <MenuItem onClick={this.handleOpenDelete}>
+                            <ListItemIcon>
+                                <DeleteIcon />
+                            </ListItemIcon>
+                            <ListItemText inset primary="Löschen" />
+                        </MenuItem>
+                    }
+                    { (contribution.USER_CREATED || isAdmin) &&
+                        <MenuItem onClick={this.handleEdit}>
+                            <ListItemIcon>
+                                <EditIcon />
+                            </ListItemIcon>
+                            <ListItemText inset primary="Editieren" />
+                        </MenuItem>
+                    }
+                        
                     {isAdmin &&
                         <MenuItem onClick={this.handleApprove}>
                             <ListItemIcon>
                                 <ApproveIcon />
                             </ListItemIcon>
-                        <ListItemText inset primary={approved ? "Sperren" :"Freigeben"} />
+                            <ListItemText inset primary={approved ? "Sperren" :"Freigeben"} />
                         </MenuItem>
                     }
                 </Menu>
@@ -127,13 +131,14 @@ class Contribution extends React.Component {
                     title={contribution.TITLE}
                     subheader={moment(contribution.DATE_FROM.date).format("DD. MMMM, YYYY")}
                 />
-                <CardMedia
+                {/* <CardMedia
                     className={classes.media}
                     image=""
                     title="Contemplative Reptile"
-                />
+                /> */}
                 <CardContent>
                     <div className={classes.content} dangerouslySetInnerHTML={{__html: markup}}/>
+                    <div>von {contribution.CREATOR}</div>
                 </CardContent>
                 <CardActions className={classes.actions} disableActionSpacing>
                     <IconButton aria-label="Add to favorites">

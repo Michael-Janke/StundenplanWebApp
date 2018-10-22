@@ -26,6 +26,7 @@ const styles = theme => ({
     },
     toolbar: {
         minHeight: 64,
+        justifyContent: 'space-between',
     },
 });
 
