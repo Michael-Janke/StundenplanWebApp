@@ -41,7 +41,7 @@ class EmojiPicker extends React.Component {
         const { classes } = this.props;
         return (
             <React.Fragment>
-                <ToggleButton onMouseDown={this.handleClick}>
+                <ToggleButton onMouseDown={this.handleClick} value="EMOJI">
                     <EmojiconIcon />
                     <ArrowDropDownIcon />
                 </ToggleButton>
@@ -61,7 +61,8 @@ class EmojiPicker extends React.Component {
                 >
                     <Grid container spacing={0} className={classes.grid}>
                         {this.state.emojis && Object.values(this.state.emojis).map((entry, i) => {
-                            let emoji = String.fromCodePoint(entry.u.split('-').reduce((sum, n) => sum + parseInt("0x" + n), 0));
+                            let emoji = entry.u.split('-').map(e => String.fromCodePoint(parseInt("0x" + e)));
+
                             return <Grid item xs={4} zeroMinWidth key={i}>
                                 <Button className={classes.button}>
                                     <span role="img" aria-label="lol">{emoji}</span>
