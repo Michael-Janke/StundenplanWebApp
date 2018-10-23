@@ -103,7 +103,7 @@ class Contributions extends React.Component {
                             Beiträge
                         </Typography>
                         <Typography variant="h6" align="center" color="textSecondary" paragraph>
-                            Erstelle Beiträge, um z.B. wichtige Informationen bekanntzugeben. Mir fällt kein besserer Text ein.
+                            Erstelle Beiträge, um z.B. wichtige Informationen bekanntzugeben. 
                         </Typography>
                         {contributions && !contributions.length &&
                             <Typography variant="h6" align="center" color="error" paragraph>

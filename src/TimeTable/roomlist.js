@@ -3,7 +3,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import indigo from '@material-ui/core/colors/indigo';
 import red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
-import grey from '@material-ui/core/colors/grey';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import { classNames } from '../Common/const';
 class RoomList extends React.Component {
