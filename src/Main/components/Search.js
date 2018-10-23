@@ -29,8 +29,8 @@ function fuzzysearch(needle = "", haystack="") {
     needle = replaceUmlaute(needle.toLowerCase());
     haystack = haystack.split(" ");
     needle = needle.split(" ");
-    return haystack.some((subHaystack) => {
-        return needle.some((subNeedle) => {
+    return needle.every((subNeedle) => {
+        return haystack.some((subHaystack) => {
             return subHaystack.indexOf(subNeedle) >= 0;
         })
     });
