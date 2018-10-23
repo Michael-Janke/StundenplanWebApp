@@ -8,7 +8,7 @@ import timetable from './timetable';
 import dates from './dates';
 import drawer from './drawer';
 import admin from "./admin";
-import contributions from './contributions';
+import posts from './posts';
 
 let substitutions;
 if (process.env.REACT_APP_MODE === 'tv') {
@@ -19,7 +19,7 @@ export default combineReducers({
     browser: responsiveStateReducer,
     ...(substitutions && { substitutions }),
     ...(admin && { admin }),
-    contributions,
+    posts,
     drawer,
     user,
     error,

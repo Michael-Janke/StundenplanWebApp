@@ -45,20 +45,20 @@ const ToggleButton = (props) => (
 );
 
 
-class ContributionEditor extends Component {
+class PostEditor extends Component {
 
     state = { open: false, editorState: EditorState.createEmpty(), currentTab: 0 };
     static getDerivedStateFromProps(props, state) {
         if (!state.open && props.open) {
-            const contribution = props.contribution;
+            const post = props.post;
             return {
                 open: true,
                 DATE_FROM: moment().format(),
                 DATE_TO: moment().format(),
                 TITLE: "",
-                ...contribution,
-                editorState: contribution ?
-                    EditorState.createWithContent(convertFromRaw(JSON.parse(contribution.TEXT)))
+                ...post,
+                editorState: post ?
+                    EditorState.createWithContent(convertFromRaw(JSON.parse(post.TEXT)))
                     : EditorState.createEmpty(),
             }
         }
@@ -69,7 +69,7 @@ class ContributionEditor extends Component {
             open: false
         });
         this.props.onClose(abort ? undefined : {
-            ...this.props.contribution,
+            ...this.props.post,
             TEXT: JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent())),
             TITLE: this.state.TITLE,
             DATE_FROM: this.state.DATE_FROM,
@@ -196,4 +196,4 @@ const mapStateToProps = state => ({
     small: state.browser.lessThan.medium,
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(ContributionEditor));
+export default connect(mapStateToProps)(withStyles(styles)(PostEditor));

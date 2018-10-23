@@ -12,7 +12,7 @@ import { asynchronize } from "./asynchronize";
 
 import AppBar from './AppBar';
 import AppDrawer from './AppDrawer';
-const Contributions = asynchronize(() => import("../Contributions"));
+const Posts = asynchronize(() => import("../Posts"));
 const Main = asynchronize(() => import("../Main"));
 const Statistics = asynchronize(() => import("../Statistics"));
 
@@ -69,7 +69,7 @@ class AppRouter extends Component {
                             <AppBar />
                             <Switch>
                                 <Route exact path="/" component={Main} />
-                                <Route exact path="/contributions" component={Contributions} />
+                                <Route exact path="/posts" component={Posts} />
                                 <Route exact path="/admin" component={Statistics} />
                                 <Route component={NotFoundPage} />
                             </Switch>

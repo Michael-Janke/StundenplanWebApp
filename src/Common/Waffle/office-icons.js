@@ -9,10 +9,10 @@ export default {
         link: '/',
         router: true,
     },
-    'Beiträge': {
+    'Neuigkeiten': {
         color: '#00233a',
         icon: TextSmsIcon,
-        link: '/contributions',
+        link: '/posts',
         router: true,
     },
     Outlook: {

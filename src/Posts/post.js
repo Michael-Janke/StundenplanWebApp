@@ -14,8 +14,8 @@ import { withStyles, Menu, MenuItem, ListItemIcon, ListItemText, Badge } from '@
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { ObjectIcon } from '../Main/components/Avatars';
-import ContributionDeletionDialog from './ContributionDeletionDialog';
-import { deleteContribution, editContribution } from './actions';
+import PostDeletionDialog from './PostDeletionDialog';
+import { deletePost, editPost } from './actions';
 import draftToHtml from 'draftjs-to-html';
 
 const styles = theme => ({
@@ -30,7 +30,7 @@ const styles = theme => ({
     }
 });
 
-class Contribution extends React.Component {
+class Post extends React.Component {
     state = {
         anchorEl: null,
         deleteOpen: false,
@@ -46,26 +46,26 @@ class Contribution extends React.Component {
 
     handleEdit = () => {
         this.setState({ anchorEl: null, deleteOpen: false });
-        this.props.onEdit(this.props.contribution);
+        this.props.onEdit(this.props.post);
     };
     
     handleApprove = () => {
         this.setState({ anchorEl: null, deleteOpen: false });
-        this.props.editContribution({...this.props.contribution, APPROVED: !this.props.contribution.APPROVED})
+        this.props.editPost({...this.props.post, APPROVED: !this.props.post.APPROVED})
     };
     handleClose = () => {
         this.setState({ anchorEl: null, deleteOpen: false });
     };
     handleDelete = () => {
         this.setState({ anchorEl: null, deleteOpen: false });
-        this.props.deleteContribution(this.props.contribution);
+        this.props.deletePost(this.props.post);
     }
 
     render() {
         const { anchorEl, deleteOpen } = this.state;
-        const { isAdmin, classes, contribution, avatars } = this.props;
-        const approved = contribution.APPROVED;
-        const menu = (contribution.USER_CREATED || isAdmin) && (
+        const { isAdmin, classes, post, avatars } = this.props;
+        const approved = post.APPROVED;
+        const menu = (post.USER_CREATED || isAdmin) && (
             <React.Fragment>
                 <IconButton onClick={this.handleClick}>
                     {!isAdmin || approved ? <MoreVertIcon /> :
@@ -75,12 +75,12 @@ class Contribution extends React.Component {
                     }
                 </IconButton>
                 <Menu
-                    id="contribution-menu"
+                    id="post-menu"
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}
                 >
-                    { (contribution.USER_CREATED || isAdmin) &&
+                    { (post.USER_CREATED || isAdmin) &&
                         <MenuItem onClick={this.handleOpenDelete}>
                             <ListItemIcon>
                                 <DeleteIcon />
@@ -88,7 +88,7 @@ class Contribution extends React.Component {
                             <ListItemText inset primary="Löschen" />
                         </MenuItem>
                     }
-                    { (contribution.USER_CREATED || isAdmin) &&
+                    { (post.USER_CREATED || isAdmin) &&
                         <MenuItem onClick={this.handleEdit}>
                             <ListItemIcon>
                                 <EditIcon />
@@ -106,14 +106,14 @@ class Contribution extends React.Component {
                         </MenuItem>
                     }
                 </Menu>
-                {<ContributionDeletionDialog
+                {<PostDeletionDialog
                     open={deleteOpen}
                     handleClose={this.handleClose}
                     handleDelete={this.handleDelete}
                 />}
             </React.Fragment>
         );
-        const rawContentState = JSON.parse(contribution.TEXT);
+        const rawContentState = JSON.parse(post.TEXT);
 
         const markup = draftToHtml(
             rawContentState,
@@ -123,11 +123,11 @@ class Contribution extends React.Component {
             <Card className={classes.card}>
                 <CardHeader
                     avatar={
-                        <ObjectIcon avatars={avatars} size={0} upn={contribution.CREATOR} />
+                        <ObjectIcon avatars={avatars} size={0} upn={post.CREATOR} />
                     }
                     action={menu}
-                    title={contribution.TITLE}
-                    subheader={moment(contribution.DATE_FROM.date).format("DD. MMMM, YYYY")}
+                    title={post.TITLE}
+                    subheader={moment(post.DATE_FROM.date).format("DD. MMMM, YYYY")}
                 />
                 {/* <CardMedia
                     className={classes.media}
@@ -136,7 +136,7 @@ class Contribution extends React.Component {
                 /> */}
                 <CardContent>
                     <div className={classes.content} dangerouslySetInnerHTML={{__html: markup}}/>
-                    <div>von {contribution.CREATOR}</div>
+                    <div>von {post.CREATOR}</div>
                 </CardContent>
                 <CardActions className={classes.actions} disableActionSpacing>
                     <IconButton aria-label="Add to favorites">
@@ -157,9 +157,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    deleteContribution: (contribution) => dispatch(deleteContribution(contribution)), 
-    editContribution: (contribution) => dispatch(editContribution(contribution)),
+    deletePost: (post) => dispatch(deletePost(post)), 
+    editPost: (post) => dispatch(editPost(post)),
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Contribution));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Post));

@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import { Button, Grid } from '@material-ui/core';
-import Contribution from './contribution';
+import Post from './post';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { addContribution, editContribution, getContributions } from './actions';
+import { addPost, editPost, getPosts } from './actions';
 import { asynchronize } from '../Router/asynchronize';
 
-const ContributionEditor = asynchronize(() => import('./editor'));
+const PostEditor = asynchronize(() => import('./editor'));
 
 const styles = theme => ({
     root: {
@@ -18,21 +18,21 @@ const styles = theme => ({
         boxSizing: 'border-box',
         overflowY: 'auto',
     },
-    contributions: {
+    post: {
         display: 'flex',
         flexWrap: 'wrap',
     },
-    contributionsEnter: {
+    postEnter: {
         opacity: 0,
     },
-    contributionsEnterActive: {
+    postEnterActive: {
         transition: theme.transitions.create(['opacity']),
         opacity: 1,
     },
-    contributionsExit: {
+    postExit: {
         opacity: 1,
     },
-    contributionsExitActive: {
+    postExitActive: {
         transition: theme.transitions.create(['opacity']),
         opacity: 0,
     },
@@ -66,48 +66,48 @@ const styles = theme => ({
     },
 });
 
-class Contributions extends React.Component {
+class Posts extends React.Component {
 
     state = { dialogOpen: false };
 
     componentWillMount() {
-        this.props.getContributions();
+        this.props.getPosts();
     }
-    handleDialogClose = (contribution) => {
+    handleDialogClose = (post) => {
         this.setState({ dialogOpen: false });
-        if (!contribution) {
+        if (!post) {
             return;
         }
-        if (contribution.CONTRIBUTION_ID) {
-            this.props.editContribution(contribution);
+        if (post.POST_ID) {
+            this.props.editPost(post);
         } else {
-            this.props.addContribution(contribution);
+            this.props.addPost(post);
         }
     }
 
     handleCreate = () => {
-        this.setState({ dialogOpen: true, contributionEdit: null });
+        this.setState({ dialogOpen: true, postEdit: null });
     }
 
-    handleOnEdit = (contribution) => {
-        this.setState({ dialogOpen: true, contributionEdit: contribution });
+    handleOnEdit = (post) => {
+        this.setState({ dialogOpen: true, postEdit: post });
     }
 
     render() {
-        const { classes, contributions, isAdmin } = this.props;
+        const { classes, posts, isAdmin } = this.props;
         return (
             <div className={classes.root}>
                 <div className={classes.heroUnit}>
                     <div className={classes.heroContent}>
                         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                            Beiträge
+                            Neuigkeiten
                         </Typography>
                         <Typography variant="h6" align="center" color="textSecondary" paragraph>
-                            Erstelle Beiträge, um z.B. wichtige Informationen bekanntzugeben. 
+                            Erstelle Beiträge, um über Neugigkeiten von Lehrern und Schülern zu informieren. 
                         </Typography>
-                        {contributions && !contributions.length &&
+                        {posts && !posts.length &&
                             <Typography variant="h6" align="center" color="error" paragraph>
-                                Es sind keine Beiträge vorhanden!
+                                Es sind keine Neuigkeiten vorhanden!
                             </Typography>
                         }
                         <div className={classes.heroButtons}>
@@ -127,29 +127,29 @@ class Contributions extends React.Component {
                     </div>
                 </div>
                 <div className={classes.layout}>
-                    <Grid container component={TransitionGroup} spacing={40} className={classes.contributions}>
-                        {contributions && contributions.map((contribution, i) => (
+                    <Grid container component={TransitionGroup} spacing={40} className={classes.post}>
+                        {posts && posts.map((post, i) => (
                             <CSSTransition
                                 classNames={{
-                                    enter: classes.contributionsEnter,
-                                    enterActive: classes.contributionsEnterActive,
-                                    exit: classes.contributionsExit,
-                                    exitActive: classes.contributionsExitActive,
+                                    enter: classes.postEnter,
+                                    enterActive: classes.postEnterActive,
+                                    exit: classes.postExit,
+                                    exitActive: classes.postExitActive,
                                 }}
-                                key={contribution.CONTRIBUTION_ID}
+                                key={post.POST_ID}
                                 timeout={500}>
                                 <Grid item xs={12} md={6}>
-                                    <Contribution contribution={contribution} isAdmin={isAdmin} onEdit={this.handleOnEdit} />
+                                    <Post post={post} isAdmin={isAdmin} onEdit={this.handleOnEdit} />
                                 </Grid>
                             </CSSTransition>
                         ))}
                     </Grid>
                 </div>
-                <ContributionEditor
+                <PostEditor
                     isAdmin={isAdmin}
                     open={this.state.dialogOpen}
                     onClose={this.handleDialogClose}
-                    contribution={this.state.contributionEdit}
+                    post={this.state.postEdit}
                 />
                 <Button variant="fab" color="primary" className={classes.createButton} onClick={this.handleCreate}>
                     <AddIcon />
@@ -160,14 +160,14 @@ class Contributions extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    contributions: state.contributions.contributions,
+    posts: state.posts.posts,
     isAdmin: state.user.scope === 'admin',
 });
 
 const mapDispatchToProps = dispatch => ({
-    getContributions: () => dispatch(getContributions()),
-    addContribution: (contribution) => dispatch(addContribution(contribution)),
-    editContribution: (contribution) => dispatch(editContribution(contribution)),
+    getPosts: () => dispatch(getPosts()),
+    addPost: (post) => dispatch(addPost(post)),
+    editPost: (post) => dispatch(editPost(post)),
 });
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Contributions));
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Posts));
