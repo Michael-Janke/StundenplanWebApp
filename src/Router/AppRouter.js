@@ -12,9 +12,9 @@ import { asynchronize } from "./asynchronize";
 
 import AppBar from './AppBar';
 import AppDrawer from './AppDrawer';
-const Contributions = asynchronize(() => import("../Contributions"), true);
-const Main = asynchronize(() => import("../Main"), true);
-const Statistics = asynchronize(() => import("../Statistics"), true);
+const Contributions = asynchronize(() => import("../Contributions"));
+const Main = asynchronize(() => import("../Main"));
+const Statistics = asynchronize(() => import("../Statistics"));
 
 
 class AppRouter extends Component {

@@ -67,7 +67,7 @@ class Contribution extends React.Component {
         const { anchorEl, deleteOpen } = this.state;
         const { isAdmin, classes, contribution, avatars } = this.props;
         const approved = contribution.APPROVED;
-        const menu = (
+        const menu = (contribution.USER_CREATED || isAdmin) && (
             <React.Fragment>
                 <IconButton onClick={this.handleClick}>
                     {!isAdmin || approved ? <MoreVertIcon /> :
@@ -146,11 +146,6 @@ class Contribution extends React.Component {
                     </IconButton>
                     <IconButton aria-label="Share">
                         <ShareIcon />
-                    </IconButton>
-                    <IconButton
-                        aria-label="Show more"
-                    >
-                        <ExpandMoreIcon />
                     </IconButton>
                 </CardActions>
             </Card>
