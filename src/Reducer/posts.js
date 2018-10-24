@@ -16,7 +16,7 @@ export default function postsReducer(state = {}, action) {
             return {
                 ...state,
                 posts: [...(state.posts || []).filter(post => post.POST_ID !== action.request.POST_ID)]
-            }    
+            };
         case "EDIT_POST_RECEIVED":
             return {
                 ...state,

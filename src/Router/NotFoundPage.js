@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles, Button, Paper, Typography } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
+import { hideSplash } from './SplashScreen';
 
 function NotFoundPage(props) {
     const { classes, location, error = 404, retry } = props;
@@ -8,6 +9,9 @@ function NotFoundPage(props) {
         404: `${location.pathname} konnte nicht gefunden werden`,
         400: `${location.pathname} konnte nicht geladen werden`,
     }[error];
+    // make sure splash is hidden
+    hideSplash();
+
     return (
         <div className={classes.root}>
             <Paper className={classes.paper} elevation={0}>

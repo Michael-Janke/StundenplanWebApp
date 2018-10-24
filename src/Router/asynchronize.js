@@ -1,17 +1,7 @@
 import React from 'react';
 import NotFoundPage from './NotFoundPage';
 import Loadable from "react-loadable";
-
-function showSplash() {
-    const splashScreen = document.getElementById('splash-screen');
-    splashScreen.className = "";
-}
-
-function hideSplash() {
-    const splashScreen = document.getElementById('splash-screen');
-    splashScreen.className = "ending";
-    setTimeout(() => splashScreen.className = "ended", 300);
-}
+import { hideSplash } from './SplashScreen';
 
 const Loading = ({ isLoading, error, retry }) => {
     // Handle the loading state
@@ -30,8 +20,7 @@ const Loading = ({ isLoading, error, retry }) => {
     }
 };
 
-const splashScreen = (importFunc) => {
-    showSplash();
+const withSplashScreen = (importFunc) => {
     return importFunc().then(component => {
         hideSplash();
         return component;
@@ -39,6 +28,6 @@ const splashScreen = (importFunc) => {
 }
 
 export const asynchronize = (importFunc) => Loadable({
-    loader: () => splashScreen(importFunc),
+    loader: () => withSplashScreen(importFunc),
     loading: Loading,
 });
