@@ -93,7 +93,6 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        loading: state.user.loading,
         notificationToken: state.user.notificationToken,
         themeType: state.user.themeType,
     };

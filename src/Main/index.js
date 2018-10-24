@@ -12,7 +12,6 @@ import {
 } from "./actions";
 import TimeTable from "../TimeTable"
 import ReactInterval from 'react-interval';
-import PrintProvider from 'react-easy-print';
 
 class Main extends Component {
     constructor(props) {
@@ -26,7 +25,7 @@ class Main extends Component {
 
     render() {
         return (
-            <PrintProvider>
+            <React.Fragment>
                 <TimeTable />
                 <Snackbar
                     open={!!this.props.error}
@@ -37,7 +36,7 @@ class Main extends Component {
                     }}
                     onClose={this.props.clearErrors} />
                 <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
-            </PrintProvider>
+            </React.Fragment>
         );
     }
 }

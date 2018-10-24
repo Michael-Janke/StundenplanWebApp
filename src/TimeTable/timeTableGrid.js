@@ -30,6 +30,7 @@ import Supervision from './supervision';
 import moment from 'moment';
 import Absence from './absence';
 import { LinearProgress } from '@material-ui/core';
+import PrintProvider from 'react-easy-print';
 
 class TimeTableGrid extends React.Component {
     state = {};
@@ -197,6 +198,7 @@ class TimeTableGrid extends React.Component {
         const { classes, id, type, warning, lastCheck, small } = this.props;
         const tableHeaderStyle = { fontSize: '85%', textAlign: 'center', padding: 0 };
         return (
+            <PrintProvider>
             <Print main name="TimeTable">
                 <div style={{ height: '100%' }}>
                     <div className={classes.tableToolbar + " " + classes['table-header']}>
@@ -254,7 +256,8 @@ class TimeTableGrid extends React.Component {
                         </GrayoutTable>
                     </div>
                 </div>
-            </Print>
+                </Print>
+            </PrintProvider>
         );
     }
 }

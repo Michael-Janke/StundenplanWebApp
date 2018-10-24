@@ -20,6 +20,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import moment from 'moment';
 import { RootRef } from "@material-ui/core";
 import DateDeletionDialog from "./DateDeletionDialog";
+import { classNames } from "../Common/const";
 
 const styles = theme => ({
     fabButton: {
@@ -31,19 +32,16 @@ const styles = theme => ({
     header: {
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
     },
-    root: {
-        height: '100%',
-        display: "flex",
-        width: "100%",
-        flexDirection: "column",
-    },
     list: {
         position: 'relative',
         overflow: 'auto',
         maxHeight: 'calc(100vh - 140px)',
         paddingTop: 0,
-
         backgroundColor: theme.palette.background.default,
+    },
+    listSmall: {
+        maxHeight: 'unset',
+        overflow: 'initial',
     },
     subheader: {
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
@@ -57,6 +55,7 @@ const styles = theme => ({
     ul: {
         backgroundColor: 'inherit',
         padding: 0,
+        margin: 0,
     },
 });
 
@@ -163,7 +162,7 @@ class Dates extends Component {
             : this.props.dates;
 
         return (
-            <div className={classes.root}>
+            <React.Fragment>
                 <ListItem ContainerComponent="div" className={classes.header}>
                     <ListItemIcon>
                         <CalendarIcon />
@@ -173,59 +172,56 @@ class Dates extends Component {
                         {isAdmin && <IconButton onClick={this.setEditMode}><EditIcon /></IconButton>}
                     </ListItemSecondaryAction>
                 </ListItem>
-
-                <List className={classes.list}>
+                <List className={classNames(classes.list, singleMonth && classes.listSmall)}>
                     {this.renderDates(dates)
                         .map((month, i) => (
-                            <li key={i} className={classes.listSection}>
-                                <RootRef rootRef={(node) => this.monthRefs[month.title] = node}>
-                                    <ul className={classes.ul}>
-                                        <ListSubheader
-                                            className={classes.subheader}
-                                            key={month.title}>
-                                            {month.title}
-                                        </ListSubheader>
-                                        {month.dates.map((date, i) => (
-                                            <Date
-                                                date={date}
-                                                key={date.DATE_ID}
-                                                onEdit={isAdmin && editMode && date.DATE_ID > 0 ? () => this.openDialog(date) : undefined}
-                                                onDelete={isAdmin && editMode && date.DATE_ID > 0 ? () => this.openDeleteDialog(date) : undefined}
-                                            />
-                                        ))}
-                                    </ul>
-                                </RootRef>
-                            </li>
+                            <RootRef key={i} rootRef={(node) => this.monthRefs[month.title] = node}>
+                                <ul className={classes.ul}>
+                                    <ListSubheader
+                                        className={classes.subheader}
+                                        key={month.title}>
+                                        {month.title}
+                                    </ListSubheader>
+                                    {month.dates.map((date, i) => (
+                                        <Date
+                                            date={date}
+                                            key={date.DATE_ID}
+                                            onEdit={isAdmin && editMode && date.DATE_ID > 0 ? () => this.openDialog(date) : undefined}
+                                            onDelete={isAdmin && editMode && date.DATE_ID > 0 ? () => this.openDeleteDialog(date) : undefined}
+                                        />
+                                    ))}
+                                </ul>
+                            </RootRef>
                         ))}
 
                     {!singleMonth && <div className={classes.buffer}>
                         {!dates && "Keine Termine eingetragen"}
                     </div>}
+
+                    <DateDeletionDialog
+                        open={this.state.dialogDeleteOpen}
+                        handleClose={this.handleDeletionDialogClose}
+                        handleDelete={this.deleteDate}
+                        date={this.state.deleteDate}
+                    />
+
+                    {isAdmin && <DateDialog
+                        open={this.state.dialogOpen}
+                        handleClose={this.handleDateAddEdit}
+                        date={this.state.selectedDate}
+                        edit={this.state.edit}
+                    />}
+                    {editMode &&
+                        <Button
+                            variant="fab"
+                            mini
+                            className={classes.fabButton}
+                            color="primary"
+                            onClick={this.openDialog} >
+                            <AddIcon />
+                        </Button>}
                 </List>
-
-                <DateDeletionDialog
-                    open={this.state.dialogDeleteOpen}
-                    handleClose={this.handleDeletionDialogClose}
-                    handleDelete={this.deleteDate}
-                    date={this.state.deleteDate}
-                />
-
-                {isAdmin && <DateDialog
-                    open={this.state.dialogOpen}
-                    handleClose={this.handleDateAddEdit}
-                    date={this.state.selectedDate}
-                    edit={this.state.edit}
-                />}
-                {editMode &&
-                    <Button
-                        variant="fab"
-                        mini
-                        className={classes.fabButton}
-                        color="primary"
-                        onClick={this.openDialog} >
-                        <AddIcon />
-                    </Button>}
-            </div>
+            </React.Fragment>
         );
     }
 }

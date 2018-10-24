@@ -4,6 +4,7 @@ import Waffle from '../Common/Waffle/Waffle';
 import Drawer from '@material-ui/core/SwipeableDrawer';
 import ProfilePicture from '../Main/components/ProfilePicture';
 import Divider from '@material-ui/core/Divider';
+import Loadable from "react-loadable";
 
 import grey from '@material-ui/core/colors/grey';
 import { withStyles } from '@material-ui/core';
@@ -33,21 +34,17 @@ const styles = theme => ({
 
 class AppDrawer extends React.Component {
 
-    handleCloseDrawer = () => {
-        this.props.closeDrawer();
-    }
-
     render() {
         const { classes } = this.props;
         const links = (
-            <div className={classes.links}>
+            <div className={classes.links} onMouseOver={Loadable.preloadAll}>
                 <div className={classes.linksHeader}>
                     Apps
                 </div>
                 <div className={classes.linksList}>
                     {Object.entries(officeIcons).map(([key, value], i) => {
                         return (
-                            <Waffle name={key} waffle={value} key={i} onClick={this.handleCloseDrawer} />
+                            <Waffle name={key} waffle={value} key={i} onClick={this.props.closeDrawer} />
                         );
                     })}
                 </div>
@@ -60,7 +57,6 @@ class AppDrawer extends React.Component {
                 {links}
             </div>
         );
-
         return (
             <div>
                 <Drawer

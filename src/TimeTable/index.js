@@ -80,6 +80,7 @@ const Container = styled.div`
     width: 100%;
     position: relative;
     display: flex;
+    overflow: auto;
 `;
 const ContainerFlex = styled.div`
     flex: 1;
