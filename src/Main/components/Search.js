@@ -296,7 +296,6 @@ const styles = theme => ({
         position: 'fixed',
         right: 0,
         left: 0,
-        height: '100vh',
     },
     dropDownContainerClosed: {
         opacity: 0,
