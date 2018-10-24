@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect'
 import searchFilter, { replaceUmlaute } from '../Common/search-filter';
+import computeUser from './user';
 
 const getMasterdata = (state) => state.timetable.masterdata;
 const getFavorites = (state) => state.user.favorites;
@@ -7,17 +8,6 @@ const getCurrentValue = (state, props) => props.value;
 const getSelectedFilter = (state, props) => props.selectedFilter;
 
 const sortName = (o1, o2) => (o1.LASTNAME || o1.NAME).localeCompare(o2.LASTNAME || o2.NAME);
-
-// state.user changes reference
-// selectors check their selectors' return value for equality
-const computeUser = createSelector(
-    state => state.user.upn,
-    state => state.user.type,
-    state => state.user.id,
-    state => state.user.firstname,
-    state => state.user.lastname,
-    (upn, type, id, firstname, lastname) => ({ upn, type, id, firstname, lastname })
-);
 
 const computeData = (masterdata, favorites, user) => {
     let data = [
