@@ -5,6 +5,7 @@ import { loadAvatars } from '../actions';
 import makeGetEffectiveAvatars from '../../Selector/avatars';
 import List from '@material-ui/core/List';
 import { RootRef } from '@material-ui/core';
+import makeGetSearchResult from '../../Selector/search';
 
 const growthFactor = 18;
 
@@ -91,8 +92,10 @@ class SearchResult extends React.PureComponent {
 
 const makeMapStateToProps = () => {
     const getEffectiveAvatars = makeGetEffectiveAvatars();
-    return (state) => ({
+    const getSearchResult = makeGetSearchResult();
+    return (state, props) => ({
         avatars: getEffectiveAvatars(state),
+        results: getSearchResult(state, props),
     });
 }
 
