@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { loadProfilePicture } from "../actions"
 import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Create';
+import computeUser from '../../Selector/user';
 
 class ProfilePicture extends Component {
 
@@ -21,8 +22,8 @@ class ProfilePicture extends Component {
     render() {
         return (
             <Wrapper>
-                {this.props.user.profilePicture
-                    ?<ProfileImg src={this.props.user.profilePicture} />
+                {this.props.userProfilePicture
+                    ?<ProfileImg src={this.props.userProfilePicture} />
                     :<div style={{height:100, padding:20}}>Lade doch ein Profilfoto hoch.</div>}
                 <IconButton
                     onClick={this.profilePicChange}
@@ -73,8 +74,13 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-const mapStateToProps = state => {
-    return { user: state.user };
-};
+const makeMapStateToProps = () => {
+    return state => {
+        return {
+            user: computeUser(state),
+            userProfilePicture: state.user.profilePicture,
+        };
+    };
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfilePicture);
+export default connect(makeMapStateToProps, mapDispatchToProps)(ProfilePicture);
