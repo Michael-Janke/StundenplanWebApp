@@ -21,7 +21,7 @@ export const checkAvatars = (upns, loadAvatars) => {
     }
 };
 
-export const ObjectIcon = ({ type, upn, avatars, size, outline, ...other }) => {
+export const ObjectIcon = ({ type, upn, avatars, size, profilePicSize, outline, ...other }) => {
     if (type === 'class') {
         return <ClassIcon {...other} />;
     }
@@ -31,13 +31,13 @@ export const ObjectIcon = ({ type, upn, avatars, size, outline, ...other }) => {
     if (type === 'room' || type === 'all') {
         return <RoomIcon {...other} />;
     }
-    return ProfilePicture(upn, avatars, size, outline, other);
+    return ProfilePicture(upn, avatars, size, profilePicSize, outline, other);
 }
 
-export const ProfilePicture = (upn, avatars, size = 24, outline = false, other) =>
+export const ProfilePicture = (upn, avatars, size = 24, profilePicSize, outline = false, other) =>
     (avatars && avatars[upn] && avatars[upn].img
         ? <Avatar src={"data:image/jpg;base64," + avatars[upn].img}
-            {...(size && { style: { height: size, width: size } })}
+            {...(size && { style: { height: profilePicSize || size, width: profilePicSize || size } })}
             {...other} />
         : outline ?
             <Avatar {...(size && { style: { height: size, width: size } })} {...other}>

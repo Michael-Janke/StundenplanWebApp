@@ -269,7 +269,7 @@ const CurrentTimetableInformation = ({ id, type, masterdata, avatars, lastUpdate
     if (!object) return null;
     return (
         <ListItem>
-            <ListItemIcon><ObjectIcon avatars={avatars} upn={object.UPN} type={type} /></ListItemIcon>
+            <ListItemIcon><ObjectIcon avatars={avatars} upn={object.UPN} type={type} profilePicSize={34} /></ListItemIcon>
             <ListItemText
                 style={{ width: 0 }}
                 disableTypography
