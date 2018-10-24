@@ -151,7 +151,7 @@ export class ReminderSettings extends Component {
                                         </ListItemSecondaryAction>
                                     </ListItem>
                                     )}
-                                    <ListItem>
+                                    <ListItem key={-1}>
                                         <ListItemText>
                                             <TextField
                                                 label="Empfänger hinzufügen"
