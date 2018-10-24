@@ -9,12 +9,9 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import FilterIcon from '@material-ui/icons/FilterList';
-import StarIcon from '@material-ui/icons/Star';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 import grey from '@material-ui/core/colors/grey';
 import indigo from '@material-ui/core/colors/indigo';
@@ -23,7 +20,6 @@ import SearchResult from './SearchResult';
 import { classNames } from '../../Common/const';
 import { connect } from 'react-redux';
 import { setTimeTable, addFavorite, removeFavorite, loadMe } from '../actions';
-import { ObjectIcon } from './Avatars';
 
 
 const isTv = process.env.REACT_APP_MODE === 'tv';
@@ -95,7 +91,7 @@ class Search extends React.PureComponent {
         });
     }
 
-    toggleFavorite(object) {
+    toggleFavorite = (object) => {
         object.favorite
             ? this.props.removeFavorite(object.upn || object.text)
             : this.props.addFavorite(object.upn || object.text)
@@ -199,34 +195,9 @@ class Search extends React.PureComponent {
                                     classes.list,
                                     !open && classes.dropDownClosed
                                 )}
+                                onClick={this.handleClick}
+                                toggleFavorite={this.toggleFavorite}
                                 filterBar={this.renderFilterBar()}>
-                                {(result, avatars) => (
-                                    result.map((object, i) =>
-                                        <ListItem
-                                            dense
-                                            key={object.id + object.type}
-                                            button
-                                            onClick={this.handleClick.bind(null, object)}
-                                            {...(i === 0 && { className: classes.listItemSelected })}
-                                        >
-                                            <ListItemIcon>
-                                                <ObjectIcon
-                                                    type={object.type}
-                                                    avatars={object.upn && avatars}
-                                                    upn={object.upn}
-                                                />
-                                            </ListItemIcon>
-                                            <ListItemText inset primary={object.text} secondary={object.secondary} />
-                                            {!isTv &&
-                                                <ListItemSecondaryAction>
-                                                    {object.secondary && <IconButton onClick={() => this.toggleFavorite(object)}>
-                                                        {object.favorite ? <StarIcon /> : <StarBorderIcon />}
-                                                    </IconButton>}
-                                                </ListItemSecondaryAction>
-                                            }
-                                        </ListItem>
-                                    )
-                                )}
                             </SearchResult>
                         </div>
                     </div>
@@ -254,7 +225,7 @@ class Search extends React.PureComponent {
 Search.getDerivedStateFromProps = (props, state) => {
     const { open: openProps } = props;
     const { open, ...prevProps } = state;
-    
+
     return {
         open: (prevProps && prevProps.open !== openProps) ? openProps : open || openProps,
     };
@@ -411,7 +382,6 @@ const styles = theme => ({
 
 const mapStateToProps = (state) => ({
     masterdata: state.timetable.masterdata,
-    favorites: state.user.favorites || "",
     small: state.browser.lessThan.medium,
 });
 

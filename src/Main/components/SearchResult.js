@@ -2,10 +2,10 @@ import React from 'react';
 import { checkAvatars } from './Avatars';
 import { connect } from 'react-redux';
 import { loadAvatars } from '../actions';
-import makeGetEffectiveAvatars from '../../Selector/avatars';
 import List from '@material-ui/core/List';
 import { RootRef } from '@material-ui/core';
 import makeGetSearchResult from '../../Selector/search';
+import SearchItem from './SearchItem';
 
 const growthFactor = 18;
 
@@ -80,7 +80,14 @@ class SearchResult extends React.PureComponent {
                     {this.state.elements ?
                         <React.Fragment>
                             {this.props.filterBar}
-                            {this.props.children(this.state.elements, this.props.avatars)}
+                            {this.state.elements.map((object, i) => (
+                                <SearchItem
+                                    key={i}
+                                    {...object}
+                                    onClick={this.props.onClick}
+                                    toggleFavorite={this.props.toggleFavorite}
+                                />
+                            ))}
                         </React.Fragment>
                         : null
                     }
@@ -91,10 +98,8 @@ class SearchResult extends React.PureComponent {
 }
 
 const makeMapStateToProps = () => {
-    const getEffectiveAvatars = makeGetEffectiveAvatars();
     const getSearchResult = makeGetSearchResult();
     return (state, props) => ({
-        avatars: getEffectiveAvatars(state),
         results: getSearchResult(state, props),
     });
 }

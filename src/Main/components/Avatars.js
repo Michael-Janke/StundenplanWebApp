@@ -6,7 +6,8 @@ import RoomIcon from '@material-ui/icons/Room';
 import SubjectIcon from '@material-ui/icons/Book';
 import moment from 'moment';
 import createStore from '../../store';
-
+import { makeGetEffectiveAvatar } from '../../Selector/avatars';
+import { connect } from 'react-redux';
 const { store } = createStore();
 
 export const checkAvatars = (upns, loadAvatars) => {
@@ -21,28 +22,39 @@ export const checkAvatars = (upns, loadAvatars) => {
     }
 };
 
-export const ObjectIcon = ({ type, upn, avatars, size, profilePicSize, outline, ...other }) => {
+export const ObjectIcon = ({ type, upn, avatars, size, profilePicSize, outline }) => {
     if (type === 'class') {
-        return <ClassIcon {...other} />;
+        return <ClassIcon  />;
     }
     if (type === 'subject') {
-        return <SubjectIcon {...other} />;
+        return <SubjectIcon  />;
     }
     if (type === 'room' || type === 'all') {
-        return <RoomIcon {...other} />;
+        return <RoomIcon  />;
     }
-    return ProfilePicture(upn, avatars, size, profilePicSize, outline, other);
+    return <ProfilePicture {...({ upn, size, profilePicSize, outline })} />;
 }
 
-export const ProfilePicture = (upn, avatars, size = 24, profilePicSize, outline = false, other) =>
-    (avatars && avatars[upn] && avatars[upn].img
-        ? <Avatar src={"data:image/jpg;base64," + avatars[upn].img}
-            {...(size && { style: { height: profilePicSize || size, width: profilePicSize || size } })}
-            {...other} />
+
+
+const ProfilePictureComponent = ({ avatar, size = 24, profilePicSize, outline = false }) =>
+    (avatar && avatar.img
+        ? <Avatar src={"data:image/jpg;base64," + avatar.img}
+            {...(size && { height: profilePicSize || size, width: profilePicSize || size } )}
+             />
         : outline ?
-            <Avatar {...(size && { style: { height: size, width: size } })} {...other}>
+            <Avatar {...(size && { style: { height: size, width: size } })} >
                 <PersonIcon />
             </Avatar>
             :
-            <PersonIcon {...(size && { style: { height: size, width: size } })}{...other} />
+            <PersonIcon {...(size && { style: { height: size, width: size } })} />
     );
+
+const makeMapStateToProps = () => {
+    const getEffectiveAvatar = makeGetEffectiveAvatar();
+    return (state, props) => ({
+        avatar: getEffectiveAvatar(state, props),
+    });
+}
+
+export const ProfilePicture = connect(makeMapStateToProps)(ProfilePictureComponent);

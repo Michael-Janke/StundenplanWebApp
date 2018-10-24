@@ -63,7 +63,7 @@ class Post extends React.Component {
 
     render() {
         const { anchorEl, deleteOpen } = this.state;
-        const { isAdmin, classes, post, avatars } = this.props;
+        const { isAdmin, classes, post } = this.props;
         const approved = post.APPROVED;
         const menu = (post.USER_CREATED || isAdmin) && (
             <React.Fragment>
@@ -123,7 +123,7 @@ class Post extends React.Component {
             <Card className={classes.card}>
                 <CardHeader
                     avatar={
-                        <ObjectIcon avatars={avatars} size={0} upn={post.CREATOR} />
+                        <ObjectIcon size={0} upn={post.CREATOR} />
                     }
                     action={menu}
                     title={post.TITLE}
@@ -153,7 +153,6 @@ class Post extends React.Component {
 
 
 const mapStateToProps = state => ({
-    avatars: state.avatars,
 });
 
 const mapDispatchToProps = dispatch => ({

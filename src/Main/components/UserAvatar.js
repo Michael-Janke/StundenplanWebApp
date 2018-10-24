@@ -3,13 +3,12 @@ import { connect } from "react-redux";
 import { loadAvatars } from '../actions';
 
 import { ProfilePicture, checkAvatars } from "./Avatars";
-import makeGetEffectiveAvatars from "../../Selector/avatars";
 
 class UserAvatar extends React.Component {
     render() {
         const { upn } = this.props;
         checkAvatars([upn], this.props.loadAvatars);
-        return ProfilePicture(upn, this.props.avatars, 48, true);
+        return <ProfilePicture upn={upn} size={48} outline={true}/>;
     }
 }
 
@@ -20,9 +19,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const makeMapStateToProps = () => {
-    const getEffectiveAvatars = makeGetEffectiveAvatars();
     return (state) => ({
-        avatars: getEffectiveAvatars(state),
         upn: state.user.upn,
     });
 }

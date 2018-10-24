@@ -4,6 +4,9 @@ const shallowEqual = (a, b) => {
     if (a === b) {
         return true;
     }
+    if (!a || !b) {
+        return false;
+    }
     var aKeys = Object.keys(a);
     var bKeys = Object.keys(b);
     var len = aKeys.length;
@@ -26,7 +29,6 @@ const createEqualSelector = createSelectorCreator(
 );
 
 
-
 const getEffectiveAvatars = state => Object.keys(state.avatars)
     .reduce((prev, current) => {
         const object = state.avatars[current];
@@ -42,5 +44,23 @@ const makeGetEffectiveAvatars = () => {
         c => c,
     );
 };
+
+const getEffectiveAvatar = (state, props) => {
+    const avatar = state.avatars[props.upn];
+    if(avatar && avatar.img){
+        return avatar;
+    }
+    return null;
+}
+
+
+const makeGetEffectiveAvatar = () => {
+    return createEqualSelector(
+        getEffectiveAvatar,
+        c => c,
+    )
+};
+
+export { makeGetEffectiveAvatar };
 
 export default makeGetEffectiveAvatars;
