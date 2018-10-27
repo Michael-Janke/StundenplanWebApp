@@ -174,12 +174,12 @@ class Dates extends Component {
                 </ListItem>
                 <List className={classNames(classes.list, singleMonth && classes.listSmall)}>
                     {this.renderDates(dates)
-                        .map((month, i) => (
-                            <RootRef key={i} rootRef={(node) => this.monthRefs[month.title] = node}>
+                        .map(month => (
+                            <RootRef key={month.title} rootRef={(node) => this.monthRefs[month.title] = node}>
                                 <ul className={classes.ul}>
                                     <ListSubheader
-                                        className={classes.subheader}
-                                        key={month.title}>
+                                        key={-1}
+                                        className={classes.subheader}>
                                         {month.title}
                                     </ListSubheader>
                                     {month.dates.map((date, i) => (

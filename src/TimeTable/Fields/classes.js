@@ -36,13 +36,13 @@ const extractClasses = (classes) => {
 const ClassesContainer = type => classes => ({ small, left, themeClasses, description, setTimeTable }) => {
     const Classes = (e) => (
         <Container left={left} className={themeClasses['classes']}>
-            {Object.keys(e).map((key, i) => {
+            {Object.keys(e).map((key) => {
                 let classes = e[key];
                 return (
-                    <ClassContainer key={i}>
+                    <ClassContainer key={key}>
                         <Grade>{key}</Grade>
                         {classes.letters.map((letter, i) =>
-                            <Class key={i} onClick={description && (() => (setTimeTable('class', letter.id.CLASS_ID)))}>
+                            <Class key={letter.id.CLASS_ID} onClick={description && (() => (setTimeTable('class', letter.id.CLASS_ID)))}>
                                 {letter.letter}
                             </Class>
                         )}

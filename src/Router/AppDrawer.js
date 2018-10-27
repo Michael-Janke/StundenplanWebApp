@@ -42,9 +42,9 @@ class AppDrawer extends React.Component {
                     Apps
                 </div>
                 <div className={classes.linksList}>
-                    {Object.entries(officeIcons).map(([key, value], i) => {
+                    {Object.entries(officeIcons).map(([key, value]) => {
                         return (
-                            <Waffle name={key} waffle={value} key={i} onClick={this.props.closeDrawer} />
+                            <Waffle name={key} waffle={value} key={key} onClick={this.props.closeDrawer} />
                         );
                     })}
                 </div>

@@ -104,80 +104,79 @@ export class ReminderSettings extends Component {
                     </Title>
                 </DialogTitle>
                 <DialogContent style={customContentStyle}>
-                    {loading && "Daten werden geladen"}
-                    <DialogContentText>
-                        <FlexContainer>
-                            <Row>
-                                <span>E-Mail-Erinnerung:</span>
-                                <Switch
-                                    checked={remind}
-                                    onChange={(event) => this.handleChange('remind', event.target.checked)}
-                                    disabled={loading}
-                                    color="primary"
-                                />
-                            </Row>
-                            <Row>
-                                <span>Uhrzeit:</span>
-                                <TimeInput
-                                    mode='24h'
-                                    value={remindTime}
-                                    onChange={(time) => {
-                                        if(time.getHours() < 15)
-                                            time.setHours(15);
-                                        time.setMinutes(Math.floor(time.getMinutes()/5)*5);
-                                        this.handleChange('remindTime', time)
-                                    }}
-                                    disabled={loading || !remind}
-                                    minuselectableMinutesInterval={5}
-                                    minutesStep={5}                                    
-                                    okToConfirm={false}
-                                />
-                            </Row>
-                            {!loading && remind &&
-                            <div>
-                                <span>Empfänger:</span>
-                                <List>
-                                    {remindEMails.map((email) =>
-                                    <ListItem key={email}>
-                                        <ListItemText primary={email} />
-                                        <ListItemSecondaryAction>
-                                            <IconButton 
-                                                aria-label="Delete"
-                                                onClick={this.deleteEMail(email)}
-                                                disabled={loading}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
-                                    )}
-                                    <ListItem key={-1}>
-                                        <ListItemText>
-                                            <TextField
-                                                label="Empfänger hinzufügen"
-                                                value={this.state.newEMail}
-                                                onChange={(event) => this.handleChange('newEMail', event.target.value)}
-                                                margin="normal"
-                                                fullWidth
-                                            />
-                                        </ListItemText>
-                                        <ListItemSecondaryAction>
-                                            <Button variant="fab" 
-                                                style={{marginLeft:5}}
-                                                mini
-                                                color="primary"
-                                                aria-label="Add" 
-                                                onClick={this.addEMail}
-                                                disabled={loading || !validateEmail(this.state.newEMail)}
-                                            >
-                                                <AddIcon />
-                                            </Button>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
-                                </List>
-                            </div>}
-                        </FlexContainer>
-                    </DialogContentText>
+                    <DialogContentText>{loading && "Daten werden geladen"}</DialogContentText>
+
+                    <FlexContainer>
+                        <Row>
+                            <span>E-Mail-Erinnerung:</span>
+                            <Switch
+                                checked={remind}
+                                onChange={(event) => this.handleChange('remind', event.target.checked)}
+                                disabled={loading}
+                                color="primary"
+                            />
+                        </Row>
+                        <Row>
+                            <span>Uhrzeit:</span>
+                            <TimeInput
+                                mode='24h'
+                                value={remindTime}
+                                onChange={(time) => {
+                                    if(time.getHours() < 15)
+                                        time.setHours(15);
+                                    time.setMinutes(Math.floor(time.getMinutes()/5)*5);
+                                    this.handleChange('remindTime', time)
+                                }}
+                                disabled={loading || !remind}
+                                minuselectableMinutesInterval={5}
+                                minutesStep={5}                                    
+                                okToConfirm={false}
+                            />
+                        </Row>
+                        {!loading && remind &&
+                        <div>
+                            <span>Empfänger:</span>
+                            <List>
+                                {remindEMails.map((email) =>
+                                <ListItem key={email}>
+                                    <ListItemText primary={email} />
+                                    <ListItemSecondaryAction>
+                                        <IconButton 
+                                            aria-label="Delete"
+                                            onClick={this.deleteEMail(email)}
+                                            disabled={loading}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                                )}
+                                <ListItem key={-1}>
+                                    <ListItemText>
+                                        <TextField
+                                            label="Empfänger hinzufügen"
+                                            value={this.state.newEMail}
+                                            onChange={(event) => this.handleChange('newEMail', event.target.value)}
+                                            margin="normal"
+                                            fullWidth
+                                        />
+                                    </ListItemText>
+                                    <ListItemSecondaryAction>
+                                        <Button variant="fab" 
+                                            style={{marginLeft:5}}
+                                            mini
+                                            color="primary"
+                                            aria-label="Add" 
+                                            onClick={this.addEMail}
+                                            disabled={loading || !validateEmail(this.state.newEMail)}
+                                        >
+                                            <AddIcon />
+                                        </Button>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                            </List>
+                        </div>}
+                    </FlexContainer>
                 </DialogContent>
                 <DialogActions> 
                     <Button

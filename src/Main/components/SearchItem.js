@@ -17,15 +17,14 @@ class SearchItem extends React.PureComponent {
     }
 
     render() {
-        const { id, type, upn, text, secondary, favorite } = this.props;
+        const { type, upn, text, secondary, favorite } = this.props;
         return (
             <ListItem
                 dense
-                key={id + type}
                 button
                 onClick={this.handleClick}
-            // {...(i === 0 && { className: classes.listItemSelected })}
-            >
+                // {...(i === 0 && { className: classes.listItemSelected })}
+                >
                 <ListItemIcon>
                     <ObjectIcon
                         type={type}

@@ -141,7 +141,7 @@ class Substitutions extends React.Component {
                                     <SubstitutionEntry
                                         substitution={substitution}
                                         type={sortBy.type.singular}
-                                        key={i} />
+                                        key={substitution.SUBSTITUTION_ID} />
                                 )}
                             </div>
                         </SubstitutionsContainer>

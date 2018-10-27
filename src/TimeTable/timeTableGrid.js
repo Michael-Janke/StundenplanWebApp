@@ -136,8 +136,8 @@ class TimeTableGrid extends React.Component {
         };
         return [
             this.renderAbsences(),
-            ...Object.values(this.props.periods).map((period, i) => (
-                <TableRow style={{ height: "100%" }} key={i}>
+            ...Object.values(this.props.periods).map(period => (
+                <TableRow style={{ height: "100%" }} key={period.PERIOD_TIME_ID}>
                     <TableCell style={periodColumnStyle}>
                         <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
                             {this.props.small || this.renderPeriodTimes(period)}
@@ -184,8 +184,8 @@ class TimeTableGrid extends React.Component {
                     const day = timetable[i];
                     return (
                         <TableCell key={i} style={{ padding: 0, fontSize: '100%' }}>
-                            {day.absences && day.absences.map((absence, j) => (
-                                <Absence key={j} absence={absence} />
+                            {day.absences && day.absences.map(absence => (
+                                <Absence key={absence.ABSENCE_ID} absence={absence} />
                             ))}
                         </TableCell>
                     );

@@ -25,11 +25,11 @@ class RoomList extends React.Component {
         return (
             <div className={classes.root}>
                 {Object.entries(extracted).map(([key, entry], i) => (
-                    <div key={i} className={classes.wrapper}>
+                    <div key={key} className={classes.wrapper}>
                         <div className={classes.floor}>{key}</div>
                         <div className={classes.numbers}>
-                            {entry.map((room, i) => (
-                                <div key={i} className={classNames(classes.number, room.status ? classes.numberFree : classes.numberBlocked)}>
+                            {entry.map(room => (
+                                <div key={room.number} className={classNames(classes.number, room.status ? classes.numberFree : classes.numberBlocked)}>
                                     {room.number}
                                 </div>
                             ))}

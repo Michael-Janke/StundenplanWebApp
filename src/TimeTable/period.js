@@ -36,7 +36,7 @@ class Period extends React.Component {
                         return (
                             <Absence
                                 {...other}
-                                key={i}
+                                key={other.absence.ABSENCE_ID}
                                 small={small}
                             />
                         );
@@ -45,7 +45,7 @@ class Period extends React.Component {
                             <AbstractLesson
                                 {...other}
                                 continueation={continueation}
-                                key={i}
+                                key={lesson.reference.TIMETABLE_ID}
                                 supervisions={supervisions}
                                 last={lessons.length - 1 === i}
                                 multiple={lessons.length > 1}

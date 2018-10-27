@@ -128,7 +128,7 @@ class Posts extends React.Component {
                 </div>
                 <div className={classes.layout}>
                     <Grid container component={TransitionGroup} spacing={40} className={classes.post}>
-                        {posts && posts.map((post, i) => (
+                        {posts && posts.map(post => (
                             <CSSTransition
                                 classNames={{
                                     enter: classes.postEnter,

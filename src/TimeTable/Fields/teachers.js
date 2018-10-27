@@ -14,31 +14,33 @@ const TeachersContainer = type => teachers => ({ small, left, themeClasses, desc
     let output;
     if (type === 'new') {
         const NormalTeacher = !!teachers.old ? NewTeacher : Teacher;
-        output = teachers.new.map((teacher, i) =>
+        output = teachers.new.map(teacher =>
             <NormalTeacher
                 left={left}
                 onClick={description && (() => setTimeTable('teacher', teacher.TEACHER_ID))}
-                className={themeClasses[!!teachers.old ? 'teacher-new' : 'teacher-normal']} key={i}>
+                className={themeClasses[!!teachers.old ? 'teacher-new' : 'teacher-normal']}
+                key={teacher.TEACHER_ID}>
                 {teacherToName(teacher, small)}
             </NormalTeacher>
         )
     }
     if (type === 'old') {
-        output = teachers.old.map((teacher, i) =>
+        output = teachers.old.map(teacher =>
             <OldTeacher
                 left={left}
                 onClick={description && (() => setTimeTable('teacher', teacher.TEACHER_ID))}
-                className={themeClasses['teacher-old']} key={"o" + i}>
+                className={themeClasses['teacher-old']} key={teacher.TEACHER_ID}>
                 {teacherToName(teacher, small)}
             </OldTeacher>
         );
     }
     if (type === 'instead-of' || type === 'instead-by') {
-        output = teachers.substitution.map((teacher, i) =>
+        output = teachers.substitution.map(teacher =>
             <Teacher
                 left={left}
                 onClick={description && (() => setTimeTable('teacher', teacher.TEACHER_ID))}
-                className={themeClasses[!!teachers.old ? 'teacher-new' : 'teacher-normal']} key={i}>
+                className={themeClasses[!!teachers.old ? 'teacher-new' : 'teacher-normal']}
+                key={teacher.TEACHER_ID}>
                 {teacherToName(teacher, small)}
             </Teacher>
         );

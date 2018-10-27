@@ -71,7 +71,7 @@ class PeriodRangePicker extends React.Component {
                     <DialogContent className={classes.content}>
                         {Object.values(periods).map((period, i) => {
                             return (
-                                <div key={i} className={classes.checkboxContainer}>
+                                <div key={period.PERIOD_TIME_ID} className={classes.checkboxContainer}>
                                     {i}.
                                     <Checkbox
                                         className={classes.checkbox}

@@ -80,9 +80,9 @@ class SearchResult extends React.PureComponent {
                     {this.state.elements ?
                         <React.Fragment>
                             {this.props.filterBar}
-                            {this.state.elements.map((object, i) => (
+                            {this.state.elements.map((object) => (
                                 <SearchItem
-                                    key={i}
+                                    key={object.id + object.type}
                                     {...object}
                                     onClick={this.props.onClick}
                                     toggleFavorite={this.props.toggleFavorite}
