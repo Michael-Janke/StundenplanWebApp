@@ -224,10 +224,11 @@ class Search extends React.PureComponent {
 
 Search.getDerivedStateFromProps = (props, state) => {
     const { open: openProps } = props;
-    const { open, ...prevProps } = state;
+    const { open, prevOpenProps } = state;
 
     return {
-        open: (prevProps && prevProps.open !== openProps) ? openProps : open || openProps,
+        prevOpenProps: openProps,
+        open: (prevOpenProps !== openProps) ? openProps : open || openProps,
     };
 }
 
