@@ -18,7 +18,7 @@ SUBJECTS.forEach((subject, i) => {
 export function classNames(...classes) {
     if (!classes.length) return "";
     return classes.map(arg => {
-        return typeof arg === 'object' ?
+        return (arg && typeof arg === 'object') ?
             Object.entries(arg).map(([key, entry]) => {
                 return entry && key;
             }).filter(e => !!e)

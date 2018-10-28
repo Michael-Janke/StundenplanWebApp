@@ -22,32 +22,33 @@ export const checkAvatars = (upns, loadAvatars) => {
     }
 };
 
-export const ObjectIcon = ({ type, upn, size, profilePicSize, outline }) => {
+export const ObjectIcon = ({ type, upn, size, profilePicSize, outline, ...other }) => {
     if (type === 'class') {
-        return <ClassIcon  />;
+        return <ClassIcon {...other} />;
     }
     if (type === 'subject') {
-        return <SubjectIcon  />;
+        return <SubjectIcon {...other} />;
     }
     if (type === 'room' || type === 'all') {
-        return <RoomIcon  />;
+        return <RoomIcon {...other} />;
     }
-    return <ProfilePicture {...({ upn, size, profilePicSize, outline })} />;
+    return <ProfilePicture {...({ upn, size, profilePicSize, outline, ...other })} />;
 }
 
 
 
-const ProfilePictureComponent = ({ avatar, size = 24, profilePicSize, outline = false }) =>
+const ProfilePictureComponent = ({ avatar, size = 24, profilePicSize, outline = false, dispatch, ...other }) =>
     (avatar && avatar.img
         ? <Avatar src={"data:image/jpg;base64," + avatar.img}
             {...(size && { style: { height: profilePicSize || size, width: profilePicSize || size } })}
+            {...other}
              />
         : outline ?
-            <Avatar {...(size && { style: { height: size, width: size } })} >
+            <Avatar {...(size && { style: { height: size, width: size } })} {...other}>
                 <PersonIcon />
             </Avatar>
             :
-            <PersonIcon {...(size && { style: { height: size, width: size } })} />
+            <PersonIcon {...(size && { style: { height: size, width: size } })} {...other}/>
     );
 
 const makeMapStateToProps = () => {
@@ -57,4 +58,4 @@ const makeMapStateToProps = () => {
     });
 }
 
-export const ProfilePicture = connect(makeMapStateToProps)(ProfilePictureComponent);
+export const ProfilePicture = connect(makeMapStateToProps, null)(ProfilePictureComponent);
