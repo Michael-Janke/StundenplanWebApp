@@ -8,7 +8,8 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import grey from '@material-ui/core/colors/grey';
 import { toggleDrawer } from '../actions.js';
-import  Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from '@material-ui/core/Tooltip';
+import PrintDialog from '../../TimeTable/Print';
 
 const styles = ({
     icon: {
@@ -16,14 +17,37 @@ const styles = ({
     },
 });
 
-class ResponsiveDrawer extends React.Component {
+class AppBar extends React.Component {
+
+    state = { printOpen: false };
+
+    componentDidMount() {
+        window.addEventListener('keydown', this.handleKeyDown);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.handleKeyDown);
+    }
+
+    handleKeyDown = event => {
+        if (event.ctrlKey && event.keyCode === 80) {
+            event.preventDefault();
+            this.setState({ printOpen: true });
+        }
+    }
+
 
     handleDrawerToggle = () => {
         this.props.toggleDrawer();
     };
 
     onPrintTimetable = () => {
-        window.setTimeout(window.print, 0);
+        // window.setTimeout(window.print, 0);
+        this.setState({ printOpen: true });
+    }
+
+    handlePrintClose = () => {
+        this.setState({ printOpen: false });
     }
 
     handleCalendar = () => {
@@ -32,20 +56,23 @@ class ResponsiveDrawer extends React.Component {
 
     render() {
         const { classes, small, large } = this.props;
-
+        const { printOpen } = this.state;
         return (
-            <Icons style={{ marginLeft: large ? "calc(300px + 2vw - 58px)" : undefined }}>
-                <Search shrinkChildren={small} alwaysOpen={!small}>
-                    {small ||
-                        <Tooltip id="tooltip-print" title="Stundenplan drucken">
-                            <IconButton onClick={this.onPrintTimetable}>
-                                <PrintIcon className={classes.icon} />
-                            </IconButton>
-                        </Tooltip>
-                    }
-                    {this.props.children}
-                </Search>
-            </Icons>
+            <React.Fragment>
+                <Icons style={{ marginLeft: large ? "calc(300px + 2vw - 58px)" : undefined }}>
+                    <Search shrinkChildren={small} alwaysOpen={!small}>
+                        {small ||
+                            <Tooltip id="tooltip-print" title="Stundenplan drucken">
+                                <IconButton onClick={this.onPrintTimetable}>
+                                    <PrintIcon className={classes.icon} />
+                                </IconButton>
+                            </Tooltip>
+                        }
+                        {this.props.children}
+                    </Search>
+                </Icons>
+                <PrintDialog open={printOpen} onClose={this.handlePrintClose} />
+            </React.Fragment>
         );
     }
 }
@@ -57,7 +84,7 @@ const Icons = styled.div`
     align-items: center;
 `;
 
-ResponsiveDrawer.propTypes = {
+AppBar.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
 };
@@ -73,4 +100,4 @@ const mapDispatchToProps = dispatch => ({
     toggleDrawer: () => dispatch(toggleDrawer()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { withTheme: true })(ResponsiveDrawer));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { withTheme: true })(AppBar));

@@ -15,19 +15,24 @@ const getType = createSelector(getTimetableState, (state) => state.currentTimeTa
 const getId = createSelector(getTimetableState, (state) => state.currentTimeTableId);
 const getPeriods = createSelector(getTimetableState, (state) => state.masterdata.Period_Time);
 
+const getIgnore = (state, props) => props && props.noSubstitutions;
+
 const getCurrentTimetableSelector = createSelector(
     getTimetables,
     getType,
     getId,
     (timetables, type, id) => timetables[getTimetableCacheKey({ type, id })]
 );
+
 const getCurrentSubstitutionsSelector = createSelector(
+    getIgnore,
     getSubstitutions,
     getType,
     getId,
     getWeekSelector,
     getYearSelector,
-    (substitutions, type, id, week, year) => substitutions[getSubstitutionsCacheKey({ type, id, week, year })]
+    (ignore, substitutions, type, id, week, year) => 
+    ignore ? {substitutions: []} : substitutions[getSubstitutionsCacheKey({ type, id, week, year })]
 );
 
 function freeRooms(masterdata, day, periods) {
