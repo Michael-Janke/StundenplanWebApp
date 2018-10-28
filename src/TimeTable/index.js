@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import withTheme from '@material-ui/core/styles/withTheme';
-import TimeTableGrid from './timeTableGrid';
+import TimeTableContainer from './components/container';
 import indigo from '@material-ui/core/colors/indigo';
 import { Paper } from "@material-ui/core";
 import Dates from "../Dates";
@@ -33,7 +33,7 @@ if(isTv) {
             <Column style={{flex: 1}}>
                 <ShadowContainer style={{ marginRight: '1vw' }}>
                     <ErrorBoundary>
-                        <TimeTableGrid />
+                        <TimeTableContainer />
                     </ErrorBoundary>
                 </ShadowContainer>
                 {small &&
@@ -61,7 +61,7 @@ if(isTv) {
             <Column>
                 <ShadowContainer style={{ marginRight: '1vw' }}>
                     <ErrorBoundary>
-                        <TimeTableGrid />
+                        <TimeTableContainer />
                     </ErrorBoundary>
                 </ShadowContainer>
                 {small &&

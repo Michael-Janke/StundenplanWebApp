@@ -1,0 +1,112 @@
+import React from 'react';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import { withStyles } from '@material-ui/core/styles';
+import moment from 'moment';
+import BackIcon from '@material-ui/icons/ArrowBack';
+import NextIcon from '@material-ui/icons/ArrowForward';
+import ResetIcon from '@material-ui/icons/ArrowDownward';
+import WarnIcon from '@material-ui/icons/Warning';
+import { connect } from 'react-redux';
+import TimeTableInformation from './information';
+import { changeWeek } from '../../Main/actions';
+import grey from '@material-ui/core/colors/grey';
+import { classNames, WEEKDAY_NAMES } from '../../Common/const';
+import TableHead from '@material-ui/core/TableHead';
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import PeriodCell from './periodCell';
+
+const styles = theme => ({
+    tableToolbar: {
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        height: 48,
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+    tableHeader: {
+        backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
+        tableLayout: 'fixed',
+        fontSize: '100%',
+    },
+    tableHeaderCell: {
+        fontSize: '85%',
+        textAlign: 'center',
+        padding: 0,
+    },
+    tableHeaderRow: {
+        height: 48,
+    },
+    tableHeaderRowSmall: {
+        height: 28,
+    },
+    today: {
+        backgroundColor: grey[400],
+    },
+});
+
+const TimeTableHeader = ({ classes, warning, lastCheck, small, date, id, type, print, ...other }) => {
+    const dateIterator = date ? date.clone().startOf('day').weekday(0) : moment().startOf('day').weekday(0);
+    return (
+        <React.Fragment>
+            <div className={classNames(classes.tableToolbar, classes.tableHeader)}>
+                {warning &&
+                    <Tooltip title={"Letzte Verbindung " + moment(lastCheck).fromNow()}>
+                        <WarnIcon color="error" />
+                    </Tooltip>
+                }
+                <TimeTableInformation id={id} type={type} print={print} small={small} />
+                {print || (
+                    <React.Fragment>
+                        <IconButton onClick={other.setPreviousWeek}>
+                            <BackIcon />
+                        </IconButton>
+                        {small ||
+                            <IconButton onClick={other.setThisWeek}>
+                                <ResetIcon />
+                            </IconButton>
+                        }
+                        <IconButton onClick={other.setNextWeek}>
+                            <NextIcon />
+                        </IconButton>
+                    </React.Fragment>
+                )}
+            </div>
+            <Table className={classes.tableHeader}>
+                <TableHead>
+                    <TableRow
+                        className={classNames(classes.tableHeaderRow, small && classes.tableHeaderRowSmall)}>
+                        <PeriodCell small={small} />
+                        {WEEKDAY_NAMES.map((day, i) => {
+                            const mDate = dateIterator.clone().add(i, 'days');
+                            const isToday = date && moment().startOf('day').diff(mDate, 'days') === 0;
+                            return (
+                                <TableCell
+                                    key={i}
+                                    className={classNames(classes.tableHeaderCell, isToday && classes.today)}
+                                >
+                                    {(!small || !date) && mDate.format('dddd')}
+                                    {(!small || !date) && <br />}
+                                    {date && mDate.format('DD.MM.')}
+                                </TableCell>
+                            );
+                        })}
+                    </TableRow>
+                </TableHead>
+            </Table>
+        </React.Fragment>
+    )
+};
+
+const mapStateToProps = state => ({
+});
+const mapDispatchToProps = dispatch => ({
+    setNextWeek: () => dispatch(changeWeek(1)),
+    setThisWeek: () => dispatch(changeWeek('now')),
+    setPreviousWeek: () => dispatch(changeWeek(-1)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(TimeTableHeader));
