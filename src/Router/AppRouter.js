@@ -5,7 +5,7 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import createTheme from '../Common/theme';
 import { connectToServiceWorker } from '../Common/firebase';
 import MomentUtils from 'material-ui-pickers/utils/moment-utils';
-import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import NotFoundPage from './NotFoundPage';
 import { asynchronize } from "./asynchronize";
