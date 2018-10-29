@@ -57,7 +57,7 @@ class TimeTableGrid extends React.Component {
     }
 
     renderPeriodsColumn(day, periodNumber) {
-        const { currentTimetable, periods, type, small, date } = this.props;
+        const { currentTimetable, periods, type, small, date, setTimeTable } = this.props;
 
         if (!currentTimetable) { return <TableCell key={day} rowSpan={1} />; }
         let dayObject = currentTimetable[day];

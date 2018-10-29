@@ -89,7 +89,7 @@ class PrintDialog extends React.Component {
                         </DialogTitle>
                         <DialogContent>
                             <form className={classes.root} autoComplete="off">
-                                <FormControl className={classes.formControl}>
+                                {/* <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="format">Format</InputLabel>
                                     <Select
                                         value={this.state.format}
@@ -101,7 +101,7 @@ class PrintDialog extends React.Component {
                                     >
                                         <MenuItem value="A4">A4</MenuItem>
                                     </Select>
-                                </FormControl>
+                                </FormControl> */}
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="orientation">Layout</InputLabel>
                                     <Select
@@ -134,7 +134,7 @@ class PrintDialog extends React.Component {
                                                     onChange={this.handleChange}
                                                     name="exact" />
                                             }
-                                            label="Hintergrundbilder"
+                                            label="Hintergrund anzeigen"
                                         />
                                     </FormGroup>
                                 </FormControl>

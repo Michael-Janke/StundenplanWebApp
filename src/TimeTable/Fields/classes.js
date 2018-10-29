@@ -64,7 +64,7 @@ const ClassesContainer = type => classes => ({ small, left, themeClasses, descri
     const output = Classes(extracted);
     const classCount = Object.values(extracted).reduce((prev, e) => prev + e.letters.length, 0);
     return description ?
-        <Description classes={themeClasses} type="classes" label={"Klasse" + (classCount > 1 ? 'n' : '')}>
+        <Description classes={themeClasses} type="class" label={"Klasse" + (classCount > 1 ? 'n' : '')}>
             {output}
         </Description>
         : output;

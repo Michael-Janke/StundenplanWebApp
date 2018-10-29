@@ -32,12 +32,12 @@ class Period extends React.Component {
             <PeriodsContainer>
                 {lessons.map((lesson, i) => {
                     let { classes, subject, teachers, room, ...other } = lesson;
-                    if (other.absenceOnly || (other.absence && other.type)) {
+                    if (other.absence) {
                         return (
                             <Absence
                                 {...other}
                                 key={other.absence.ABSENCE_ID}
-                                small={small}
+                                table
                             />
                         );
                     } else {

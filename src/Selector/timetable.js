@@ -119,7 +119,18 @@ function joinSubstitutions(day, subOnDay, type, id) {
         });
     }
     if (subOnDay.absences) {
-        day.absences = subOnDay.absences;
+        if (type === 'room') {
+            // sort in table
+            subOnDay.absences.forEach((absence) => {
+                for (let i = absence.PERIOD_FROM-1; i < absence.PERIOD_TO; i++){
+                    const period = day.periods[i];
+                    period.lessons = [{ absence }];
+                }
+            });
+        } else {
+            // sort in header
+            day.absences = subOnDay.absences;
+        }
     }
 
 }
@@ -307,6 +318,9 @@ function translate(masterdata, period) {
 }
 
 export function translateLesson(masterdata, lesson) {
+    if (lesson.absence) {
+        return { absence: lesson.absence };
+    }
     return {
         reference: lesson,
         isOld: lesson.isOld,
