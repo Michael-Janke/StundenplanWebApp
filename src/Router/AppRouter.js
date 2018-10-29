@@ -6,7 +6,7 @@ import createTheme from '../Common/theme';
 import { connectToServiceWorker } from '../Common/firebase';
 import MomentUtils from 'material-ui-pickers/utils/moment-utils';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import NotFoundPage from './NotFoundPage';
 import { asynchronize } from "./asynchronize";
 
@@ -55,9 +55,7 @@ class AppRouter extends Component {
     }
     render() {
         return (
-            <Router basename={process.env.REACT_APP_MODE === 'tv'
-                ? "/wolkenberg-app/stundenplan-web-app-tv/"
-                : "/wolkenberg-app/stundenplan-web-app/"}>
+            <Router>
                 <MuiThemeProvider theme={this.state.theme}>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <div style={{
