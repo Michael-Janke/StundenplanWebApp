@@ -24,6 +24,11 @@ const dataService = store => next => action => {
                 { type: 'GET_SUBSTITUTIONS', request: action.payload }
             );
         }
+        case "GET_SUPERVISIONS": {
+            let { year, week } = action.payload;
+            return requestApiGenerator(next)(API_URL,
+                `supervision/${year - week}`, { type: "GET_SUPERVISIONS", request: action.payload });
+        }
         case "SEND_LOGIN_STATISTIC":
             return requestApiGenerator(next)(API_URL, 'statistics/login', { type: "LOGIN_STATISTIC" }, 'POST', '{}');
         case "GET_LOGIN_STATISTICS": {
