@@ -116,11 +116,16 @@ class Page extends React.Component {
             }
             return obj;
         }
+        const mapCssRules = (child) => {
+            const css = this.toArray(child.sheet.cssRules);
+            return css.map(rule => rule.cssText).join("\n");
+        }
+
         const styles = children
             .filter(child => child.tagName === 'STYLE')
             .map(child =>
                 <style key={child.getAttribute('data-meta') + child.innerHTML.length} {...getAttributes(child)}>
-                    {child.innerHTML}
+                    {child.innerHTML || mapCssRules(child)}
                 </style>
             );
         return styles;
