@@ -10,6 +10,7 @@ const getSelectedFilter = (state, props) => props.selectedFilter;
 const sortName = (o1, o2) => (o1.LASTNAME || o1.NAME).localeCompare(o2.LASTNAME || o2.NAME);
 
 const computeData = (masterdata, favorites, user) => {
+    favorites = favorites || [];
     let data = [
         {
             searchString: "",

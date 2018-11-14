@@ -50,7 +50,7 @@ function extract(type, fieldName, data, masterdata, currentPeriod) {
     if (!masterdata.Subject || !data.substitutions) return [];
 
     data.substitutions
-        .filter((substitution) => substitution.PERIOD >= currentPeriod && currentPeriod.PERIOD_TIME_ID)
+        .filter((substitution) => substitution.PERIOD >= (currentPeriod ? currentPeriod.PERIOD_TIME_ID : 0))
         .forEach(substitution => {
             let value;
             if (isValid(substitution[fieldName + "_NEW"])) {
