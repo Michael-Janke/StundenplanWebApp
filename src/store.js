@@ -9,9 +9,9 @@ import actionRedirector from './Common/action-redirects';
 import cacheService from './Common/cache-service';
 import counterChanged from './Common/counter';
 import { responsiveStoreEnhancer } from 'redux-responsive'
-
+import periodEnhancer from './periodEnhancer';
 if (process.env.REACT_APP_MODE === 'tv') {
-    var tvBarrier = require('./Common/tv-barrier').default;   
+  var tvBarrier = require('./Common/tv-barrier').default;
 }
 
 const persistConfig = {
@@ -24,6 +24,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = createStore(persistedReducer,
   composeWithDevTools(
+    periodEnhancer,
     applyMiddleware(...[
       ...(tvBarrier ? [tvBarrier] : []),
       actionRedirector,
@@ -31,7 +32,8 @@ const store = createStore(persistedReducer,
       ...services,
       counterChanged,
       thunk]),
-    responsiveStoreEnhancer)
+    responsiveStoreEnhancer,
+  )
 );
 
 const persistor = persistStore(store);

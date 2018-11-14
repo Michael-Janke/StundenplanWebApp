@@ -9,6 +9,7 @@ import dates from './dates';
 import drawer from './drawer';
 import admin from "./admin";
 import posts from './posts';
+import period from './period';
 
 let substitutions;
 if (process.env.REACT_APP_MODE === 'tv') {
@@ -19,6 +20,7 @@ export default combineReducers({
     browser: responsiveStateReducer,
     ...(substitutions && { substitutions }),
     ...(admin && { admin }),
+    period,
     posts,
     drawer,
     user,
