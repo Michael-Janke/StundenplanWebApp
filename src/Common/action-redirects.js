@@ -8,13 +8,11 @@ const actionRedirector = store => next => action => {
         case "COUNTER_CHANGED": case "CHANGE_WEEK": case "SET_DATE": {
             let { timetableDate, currentTimeTableId, currentTimeTableType } = store.getState().timetable;
             let { id, type } = action.payload;
+            id = currentTimeTableId || id;
+            type = currentTimeTableType || type;
             if (id && type) {
                 next({ type: "GET_TIMETABLE", payload: { id, type } });
-            }
-            id = id || currentTimeTableId;
-            type = type || currentTimeTableType;
-            if (id && type) {
-                return next({
+                next({
                     type: 'GET_SUBSTITUTIONS',
                     payload: {
                         id,
