@@ -48,7 +48,7 @@ const styles = theme => ({
     },
 });
 
-const TimeTableHeader = ({ classes, warning, lastCheck, small, date, id, type, print, ...other }) => {
+const TimeTableHeader = ({ classes, warning, lastCheck, small, date, id, type, print, isMin, isMax, ...other }) => {
     const dateIterator = date ? date.clone().startOf('day').weekday(0) : moment().startOf('day').weekday(0);
     return (
         <React.Fragment>
@@ -61,7 +61,7 @@ const TimeTableHeader = ({ classes, warning, lastCheck, small, date, id, type, p
                 <TimeTableInformation id={id} type={type} print={print} small={small} />
                 {print || (
                     <React.Fragment>
-                        <IconButton onClick={other.setPreviousWeek}>
+                        <IconButton disabled={isMin} onClick={other.setPreviousWeek}>
                             <BackIcon />
                         </IconButton>
                         {small ||
@@ -69,7 +69,7 @@ const TimeTableHeader = ({ classes, warning, lastCheck, small, date, id, type, p
                                 <ResetIcon />
                             </IconButton>
                         }
-                        <IconButton onClick={other.setNextWeek}>
+                        <IconButton disabled={isMax} onClick={other.setNextWeek}>
                             <NextIcon />
                         </IconButton>
                     </React.Fragment>
@@ -102,6 +102,8 @@ const TimeTableHeader = ({ classes, warning, lastCheck, small, date, id, type, p
 };
 
 const mapStateToProps = state => ({
+    isMin: state.timetable.dateIsMin,
+    isMax: state.timetable.dateIsMax,
 });
 const mapDispatchToProps = dispatch => ({
     setNextWeek: () => dispatch(changeWeek(1)),

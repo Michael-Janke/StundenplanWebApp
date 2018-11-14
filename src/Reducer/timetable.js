@@ -59,9 +59,12 @@ export default function timetableReducer(state = initialState, action = {}) {
             };
         case "CHANGE_WEEK": case "SET_DATE": case "SET_MY_TIMETABLE":
             let { id, type } = action.payload;
-            const min = moment()
-                .year(state.masterdata.minMaxDates.min.year)
-                .week(state.masterdata.minMaxDates.min.week);
+            const min = moment.max(
+                moment()
+                    .year(state.masterdata.minMaxDates.min.year)
+                    .week(state.masterdata.minMaxDates.min.week),
+                moment().add(-1, 'week')
+            );
             const max = moment()
                 .year(state.masterdata.minMaxDates.max.year)
                 .week(state.masterdata.minMaxDates.max.week);
@@ -74,16 +77,19 @@ export default function timetableReducer(state = initialState, action = {}) {
             } else {
                 newDate = (moment().isoWeekday() >= 6) ? moment().add(1, 'week') : moment();
             }
+            let timetableDate = moment.max(min,
+                moment.min(max,
+                    newDate
+                )
+            ).startOf('day');
 
             return {
                 ...state,
                 currentTimeTableId: id || state.currentTimeTableId,
                 currentTimeTableType: type || state.currentTimeTableType,
-                timetableDate: moment.max(min,
-                    moment.min(max,
-                        newDate
-                    )
-                )
+                timetableDate,
+                dateIsMin: timetableDate.isSame(min, 'week'),
+                dateIsMax: timetableDate.isSame(max, 'week'),
             };
         case "GET_TIMETABLE":
             return state;
