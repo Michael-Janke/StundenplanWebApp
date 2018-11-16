@@ -211,16 +211,16 @@ class Dates extends Component {
                         date={this.state.selectedDate}
                         edit={this.state.edit}
                     />}
-                    {editMode &&
-                        <Button
-                            variant="fab"
-                            mini
-                            className={classes.fabButton}
-                            color="primary"
-                            onClick={this.openDialog} >
-                            <AddIcon />
-                        </Button>}
                 </List>
+                {editMode &&
+                    <Button
+                        variant="fab"
+                        mini
+                        className={classes.fabButton}
+                        color="primary"
+                        onClick={this.openDialog} >
+                        <AddIcon />
+                    </Button>}
             </React.Fragment>
         );
     }
@@ -231,8 +231,6 @@ const makeMapStateToProps = () => {
     const mapStateToProps = (state, props) => {
         return {
             timetableDate: state.timetable.timetableDate,
-            min: state.timetable.masterdata.minMaxDates.min,
-            max: state.timetable.masterdata.minMaxDates.max,
             dates: getCurrentDates(state),
             isAdmin: state.user.scope === 'admin'
         }

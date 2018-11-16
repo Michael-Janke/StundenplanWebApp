@@ -158,6 +158,7 @@ class Page extends React.Component {
                                         background-image: none!important;
                                         background-color: transparent!important;`
                                         : ""}
+                                    -webkit-print-color-adjust: exact;
                                     transition: background-image 250ms, background-color 250ms;
                                 }`}
                             </style>

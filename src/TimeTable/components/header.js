@@ -87,6 +87,7 @@ const TimeTableHeader = ({ classes, warning, lastCheck, small, date, id, type, p
                                 <TableCell
                                     key={i}
                                     className={classNames(classes.tableHeaderCell, isToday && classes.today)}
+                                    padding="none"
                                 >
                                     {(!small || !date) && mDate.format('dddd')}
                                     {(!small || !date) && <br />}
