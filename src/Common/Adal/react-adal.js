@@ -32,7 +32,7 @@ export function runWithAdal(authContext, app) {
   window.addEventListener("hashchange", () => {
     authContext.handleWindowCallback.bind(authContext)();
     window.setTimeout(() => {
-      if (window.document.getElementById("root").childElementCount == 0) {
+      if (window.document.getElementById("root").childElementCount === 0) {
         window.location.reload();
         console.log("reloaded for pwa-bug")
       }
