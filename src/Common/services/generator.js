@@ -37,7 +37,13 @@ export const requestApiGenerator = next => (endpoint, route, action, METHOD = "G
                     payload: err.message ? { text: err.message } : err
                 })
             )
-    )
+    ).catch((err) =>
+        next({
+            ...action,
+            type: 'TOKEN_ERROR',
+            payload: {text: "Login fehlgeschlagen"}
+        })
+)
 }
 
 export const getImageGenerator = next => (endpoint, route, action) => {

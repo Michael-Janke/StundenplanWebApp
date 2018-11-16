@@ -1,37 +1,29 @@
-/* eslint-disable */
-'use strict';
+import AuthenticationContext_ from './adal';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.AuthenticationContext = undefined;
-exports.adalGetToken = adalGetToken;
-exports.runWithAdal = runWithAdal;
-exports.runWithToken = runWithToken;
-exports.adalFetch = adalFetch;
+export const AuthenticationContext = AuthenticationContext_;
 
-var _adal = require('./adal');
+export function adalGetToken(authContext, resourceGuiId, callback) {
+  return new Promise((resolve, reject) => {
+    authContext.acquireToken(resourceGuiId, (message, token, msg) => {
+      if (!msg) {
+        resolve(token);
+      } else
+      if (message.includes('AADSTS50076') || message.includes('AADSTS50079')) {
+        // Default to redirect for multi-factor authentication,
+        // but allow using popup if a callback is provided
+        callback ? authContext.acquireTokenPopup(resourceGuiId, callback)
+          : authContext.acquireTokenRedirect(resourceGuiId);
 
-var _adal2 = _interopRequireDefault(_adal);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var AuthenticationContext = exports.AuthenticationContext = _adal2.default;
-
-function adalGetToken(authContext, resourceGuiId) {
-  return new Promise(function (resolve, reject) {
-    authContext.acquireToken(resourceGuiId, function (message, token, msg) {
-      if (!msg) resolve(token);
-      // eslint-disable-next-line
-      else reject({ message: message, msg: msg });
+      } else reject({ message, msg });  // eslint-disable-line
     });
   });
 }
-function runWithToken(authContext, app) {
+
+export function runWithToken(authContext, app) {
   app();
 };
 
-function runWithAdal(authContext, app) {
+export function runWithAdal(authContext, app) {
   //it must run in iframe to for refreshToken (parsing hash and get token)
   authContext.handleWindowCallback();
   //progressive web apps do not handle a window.location same origin change as reload, but as simple hash change
@@ -42,6 +34,7 @@ function runWithAdal(authContext, app) {
     window.setTimeout(() => {
       if (window.document.getElementById("root").childElementCount == 0) {
         window.location.reload();
+        console.log("reloaded for pwa-bug")
       }
     }, 100);
   }, false);
@@ -57,11 +50,11 @@ function runWithAdal(authContext, app) {
   }
 }
 
-function adalFetch(authContext, resourceGuiId, fetch, url, options) {
-  return adalGetToken(authContext, resourceGuiId).then(function (token) {
-    var o = options;
+export function adalFetch(authContext, resourceGuiId, fetch, url, options) {
+  return adalGetToken(authContext, resourceGuiId).then((token) => {
+    const o = options || {};
     if (!o.headers) o.headers = {};
-    o.headers.Authorization = 'Bearer ' + token;
-    return fetch(url, options);
+    o.headers.Authorization = `Bearer ${token}`;
+    return fetch(url, o);
   });
 }
