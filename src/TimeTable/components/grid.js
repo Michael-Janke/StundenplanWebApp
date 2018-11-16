@@ -88,9 +88,7 @@ class TimeTableGrid extends React.Component {
                         textAlign: 'center', padding: '0.5vmin', overflow: 'visible', fontSize: '100%'
                     }}
                     rowSpan={(period.skip || 0) + 1}>
-                    {period.supervision &&
-                        <Supervision supervision={period.supervision} />
-                    }
+                    
                     {period.freeRooms ?
                         <RoomList
                             rooms={period.freeRooms}
@@ -101,7 +99,11 @@ class TimeTableGrid extends React.Component {
                             lessons={period.lessons}
                             type={type}
                             small={small}
-                            setTimeTable={setTimeTable} />
+                            setTimeTable={setTimeTable}>
+                            {period.supervision &&
+                                <Supervision supervision={period.supervision} />
+                            }
+                        </PeriodColumn>
                     }
                 </TableCell>
             );

@@ -30,6 +30,7 @@ class Period extends React.Component {
         }
         return (
             <PeriodsContainer>
+                {this.props.children}
                 {lessons.map((lesson, i) => {
                     let { classes, subject, teachers, room, ...other } = lesson;
                     if (other.absence) {

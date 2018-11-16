@@ -4,6 +4,7 @@ import Chip from '@material-ui/core/Chip';
 
 const styles = theme => ({
     root: {
+        height: 0,
         width: '100%',
         display: 'flex',
         justifyContent: 'center',
