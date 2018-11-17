@@ -4,17 +4,23 @@ export const AuthenticationContext = AuthenticationContext_;
 
 export function adalGetToken(authContext, resourceGuiId, callback) {
   return new Promise((resolve, reject) => {
+    if (!navigator.onLine) {
+        return reject({ message: "offline", msg: "offline" });
+    }
+    if (!authContext.getCachedToken(authContext.config.clientId) || !authContext.getCachedUser()) {
+      return authContext.login();
+    }
     authContext.acquireToken(resourceGuiId, (message, token, msg) => {
       if (!msg) {
         resolve(token);
       } else
-      if (message.includes('AADSTS50076') || message.includes('AADSTS50079')) {
-        // Default to redirect for multi-factor authentication,
-        // but allow using popup if a callback is provided
-        callback ? authContext.acquireTokenPopup(resourceGuiId, callback)
-          : authContext.acquireTokenRedirect(resourceGuiId);
+        if (message.includes('AADSTS50076') || message.includes('AADSTS50079')) {
+          // Default to redirect for multi-factor authentication,
+          // but allow using popup if a callback is provided
+          callback ? authContext.acquireTokenPopup(resourceGuiId, callback)
+            : authContext.acquireTokenRedirect(resourceGuiId);
 
-      } else reject({ message, msg });  // eslint-disable-line
+        } else reject({ message, msg });  // eslint-disable-line
     });
   });
 }
@@ -41,7 +47,7 @@ export function runWithAdal(authContext, app) {
   //prevent iframe double app !!!
   if (window === window.parent) {
     if (!authContext.isCallback(window.location.hash)) {
-      if (!authContext.getCachedToken(authContext.config.clientId) || !authContext.getCachedUser()) {
+      if (!authContext.getCachedUser()) {
         authContext.login();
       } else {
         app();

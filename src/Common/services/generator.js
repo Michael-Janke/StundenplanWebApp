@@ -11,39 +11,81 @@ const handleErrors = (response) => {
     }
     return response;
 }
+const timeout = (timeout, success) =>
+    new Promise((resolve, reject) =>
+        setTimeout(resolve, timeout)
+    );
 
-export const requestApiGenerator = next => (endpoint, route, action, METHOD = "GET", body) => {
-    adalGetToken(authContext, adalConfig.endpoints[endpoint]).then((token) =>
-        fetch(endpoint + route, {
-            method: METHOD,
-            body,
-            headers: {
-                "Authorization": 'Bearer ' + token,
-                "Content-Type": "Application/Json"
+
+async function fetchData(url, options) {
+    let controller = new AbortController();
+    let signal = controller.signal;
+    timeout(10 * 1000).then(() => controller.abort());
+    let response = await fetch(url, { ...options, signal });
+    return handleErrors(response).json().catch(err => null);
+}
+
+export const requestApiGenerator = next => async (endpoint, route, action, METHOD = "GET", body) => {
+    let token;
+    let data;
+    for (let i = 1; i <= 3; i++) {
+        try {
+            token = await adalGetToken(authContext, adalConfig.endpoints[endpoint]);
+        } catch (err) {
+            if (/offline/.test(err.message)) {
+                next({
+                    ...action,
+                    type: 'OFFLINE_ERROR',
+                    payload: { text: "offline" }
+                });
+            } else {
+                next({
+                    ...action,
+                    type: 'TOKEN_ERROR',
+                    payload: { text: err.message || "unspecified error" }
+                });
             }
-        })
-            .then(handleErrors)
-            .then(res => res.json().catch(err => null))
-            .then((res) =>
+        }
+        if (token) {
+            try {
+                data = await fetchData(endpoint + route, {
+                    method: METHOD,
+                    body,
+                    headers: {
+                        "Authorization": 'Bearer ' + token,
+                        "Content-Type": "Application/Json"
+                    }
+                });
                 next({
                     ...action,
                     type: action.type + '_RECEIVED',
-                    payload: res
-                }))
-            .catch((err) =>
+                    payload: data
+                });
+                return;
+            } catch (err) {
                 next({
                     ...action,
                     type: action.type + '_ERROR',
                     payload: err.message ? { text: err.message } : err
                 })
-            )
-    ).catch((err) =>
-        next({
-            ...action,
-            type: 'TOKEN_ERROR',
-            payload: {text: "Login fehlgeschlagen"}
-        })
-)
+            }
+        }
+        await Promise.race([
+            timeout(i * 1000 * 20),
+            new Promise((resolve) => {
+                const listener = () => {
+                    resolve();
+                    window.removeEventListener('online', listener)
+                };
+                window.addEventListener('online', listener);
+            })
+        ]);
+    }
+    next({
+        ...action,
+        type: action.type + '_TIMEOUT_ERROR',
+        payload: { text: "fetch data timed out after 3 tries" },
+    });
 }
 
 export const getImageGenerator = next => (endpoint, route, action) => {
