@@ -81,9 +81,9 @@ const TimeTableHeader = ({ classes, offline, lastCheck, small, date, id, type, p
                 <CollapseVertical in={offline}>
                     <ListItem className={classes.offline} disableGutters>
                         <Tooltip title={lastCheck && "Letzte Verbindung " + lastCheck}>
-                            <ListItemIcon className={small || classes.offlineIcon}><OfflinePin fontSize="small" /></ListItemIcon>
+                            <ListItemIcon className={classes.offlineIcon}><OfflinePin fontSize="small" /></ListItemIcon>
                         </Tooltip>
-                        <Typography className={small || classes.offlineText} color="textSecondary" noWrap>Offline</Typography>
+                        <Typography className={classes.offlineText} color="textSecondary" noWrap>Offline</Typography>
                     </ListItem>
                 </CollapseVertical>
                 <TimeTableInformation id={id} type={type} print={print} small={small} />

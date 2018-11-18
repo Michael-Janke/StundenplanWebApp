@@ -6,8 +6,21 @@ import { ObjectIcon } from '../../Main/components/Avatars';
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import { withStyles } from '@material-ui/core';
 
-const CurrentTimetableInformation = ({ type, id, masterdata, lastUpdate, small }) => {
+const styles = theme => ({
+    text: {
+        transition: theme.transitions.create('padding'),
+        [theme.breakpoints.down('xs')]: {
+            padding: 0,
+        }
+    },
+    item: {
+        paddingRight: 0,
+    }
+})
+
+const CurrentTimetableInformation = ({ type, id, masterdata, lastUpdate, small, classes }) => {
     if (!masterdata || !type || !id) return null;
     let object;
     if (type === 'all') {
@@ -18,11 +31,12 @@ const CurrentTimetableInformation = ({ type, id, masterdata, lastUpdate, small }
     }
     if (!object) return null;
     return (
-        <ListItem>
+        <ListItem className={classes.item}>
             <ListItemIcon>
                 <ObjectIcon upn={object.UPN} type={type} profilePicSize={34} />
             </ListItemIcon>
             <ListItemText
+                className={classes.text}
                 disableTypography
                 primary={
                     <Typography variant="subtitle2" noWrap>
@@ -43,4 +57,4 @@ const mapStateToProps = (state, { print }) => ({
     lastUpdate: print ? moment(state.user.lastUpdate).format("[am] dd, DD. MMMM YYYY") : moment(state.user.lastUpdate).fromNow(),
 });
 
-export default connect(mapStateToProps)(CurrentTimetableInformation);
+export default connect(mapStateToProps)(withStyles(styles)(CurrentTimetableInformation));
