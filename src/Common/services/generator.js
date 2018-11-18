@@ -18,9 +18,11 @@ const timeout = (timeout, success) =>
 
 
 async function fetchData(url, options) {
-    let controller = new AbortController();
-    let signal = controller.signal;
-    timeout(10 * 1000).then(() => controller.abort());
+    if (window.AbortController) {
+        var controller = new AbortController();
+        var signal = controller.signal;
+        timeout(10 * 1000).then(() => controller.abort());
+    }
     let response = await fetch(url, { ...options, signal });
     return handleErrors(response).json().catch(err => null);
 }
