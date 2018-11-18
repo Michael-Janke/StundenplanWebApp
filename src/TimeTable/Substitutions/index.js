@@ -50,6 +50,7 @@ const styles = theme => ({
     button: {
         height: 32,
         width: 32,
+        padding: 0,
     }
 });
 
@@ -131,9 +132,11 @@ class Substitutions extends React.Component {
                         <SubstitutionsContainer key={i}>
                             <div className={classes.substitutionsHeader}>
                                 {this.renderName(entry) || <div />}
-                                <IconButton className={classes.button}
+                                <IconButton
+                                    mini
+                                    className={classes.button}
                                     onClick={this.handleSelectTimetable.bind(this, entry)}>
-                                    <LinkIcon className={classes.icon} />
+                                    <LinkIcon fontSize="small" />
                                 </IconButton>
                             </div>
                             <div className={classes.substitutionsContainer}>

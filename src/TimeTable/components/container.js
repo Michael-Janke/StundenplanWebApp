@@ -4,6 +4,7 @@ import TimeTableGrid from './grid';
 import TimeTableHeader from './header';
 import makeGetCurrentTimetable from '../../Selector/timetable';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 const defaultMapStateToProps = (state, props) => ({
     small: state.browser.lessThan.medium,
@@ -19,15 +20,17 @@ const getCurrentTimetable = makeGetCurrentTimetable();
         currentTimetable: getCurrentTimetable(state, props),
         periods: state.timetable.masterdata.Period_Time,
         warning: state.user.warning,
-        lastCheck: state.user.lastCheck,
         counterChanged: state.user.counterChanged,
+        offline: !state.online.timetable || !state.online.adal,
         ...(defaultMapStateToProps(state, props))
     });
     var ConnectedTimeTableGrid = connect(mapStateToProps)(TimeTableGrid);
 }
 {
     const mapStateToProps = (state, props) => ({
-        ...(defaultMapStateToProps(state, props))
+        lastCheck: !state.online.counter && moment(state.user.lastCheck).fromNow(),
+        offline: !state.online.counter,
+        ...(defaultMapStateToProps(state, props)),
     });
     var ConnectedTimeTableHeader = connect(mapStateToProps)(TimeTableHeader);
 }

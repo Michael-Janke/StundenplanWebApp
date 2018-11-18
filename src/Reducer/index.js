@@ -10,6 +10,7 @@ import drawer from './drawer';
 import admin from "./admin";
 import posts from './posts';
 import period from './period';
+import online from './online';
 
 let substitutions;
 if (process.env.REACT_APP_MODE === 'tv') {
@@ -21,6 +22,7 @@ export default combineReducers({
     ...(substitutions && { substitutions }),
     ...(admin && { admin }),
     period,
+    online,
     posts,
     drawer,
     user,

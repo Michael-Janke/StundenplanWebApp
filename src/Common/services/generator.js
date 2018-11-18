@@ -23,71 +23,54 @@ async function fetchData(url, options) {
         var signal = controller.signal;
         timeout(10 * 1000).then(() => controller.abort());
     }
-    let response = await fetch(url, { ...options, signal });
+    let response = await fetch(url, { ...options, signal }).catch((err) => {
+        if (/abort/.test(err.message)) {
+            throw new Error("fetch timed out");
+        }
+    });
     return handleErrors(response).json().catch(err => null);
 }
 
 export const requestApiGenerator = next => async (endpoint, route, action, METHOD = "GET", body) => {
     let token;
     let data;
-    for (let i = 1; i <= 3; i++) {
-        try {
-            token = await adalGetToken(authContext, adalConfig.endpoints[endpoint]);
-        } catch (err) {
-            if (/offline/.test(err.message)) {
-                next({
-                    ...action,
-                    type: 'OFFLINE_ERROR',
-                    payload: { text: "offline" }
-                });
-            } else {
-                next({
-                    ...action,
-                    type: 'TOKEN_ERROR',
-                    payload: { text: err.message || "unspecified error" }
-                });
+    try {
+        token = await adalGetToken(authContext, adalConfig.endpoints[endpoint]);
+        next({ type: 'ADAL_RECEIVED', payload: token });
+        data = await fetchData(endpoint + route, {
+            method: METHOD,
+            body,
+            headers: {
+                "Authorization": 'Bearer ' + token,
+                "Content-Type": "Application/Json"
             }
+        });
+        next({
+            ...action,
+            type: action.type + '_RECEIVED',
+            payload: data
+        });
+        return;
+    } catch (err) {
+        if (/offline/.test(err.message)) {
+            next({
+                ...action,
+                type: 'ADAL_ERROR',
+                payload: { text: "user is offline" }
+            });
+        } else {
+            next({
+                ...action,
+                type: 'ADAL_ERROR',
+                payload: { text: err.message || "unspecified error" }
+            });
         }
-        if (token) {
-            try {
-                data = await fetchData(endpoint + route, {
-                    method: METHOD,
-                    body,
-                    headers: {
-                        "Authorization": 'Bearer ' + token,
-                        "Content-Type": "Application/Json"
-                    }
-                });
-                next({
-                    ...action,
-                    type: action.type + '_RECEIVED',
-                    payload: data
-                });
-                return;
-            } catch (err) {
-                next({
-                    ...action,
-                    type: action.type + '_ERROR',
-                    payload: err.message ? { text: err.message } : err
-                })
-            }
-        }
-        await Promise.race([
-            timeout(i * 1000 * 20),
-            new Promise((resolve) => {
-                const listener = () => {
-                    resolve();
-                    window.removeEventListener('online', listener)
-                };
-                window.addEventListener('online', listener);
-            })
-        ]);
+        next({
+            ...action,
+            type: action.type + '_ERROR',
+            payload: err.message ? { text: err.message } : err
+        })
     }
-    next({
-        ...action,
-        type: action.type + '_TIMEOUT_ERROR',
-        payload: { text: "fetch data timed out after 3 tries" },
-    });
 }
 
 export const getImageGenerator = next => (endpoint, route, action) => {

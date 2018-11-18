@@ -94,6 +94,10 @@ export function changeWeek(direction, id, type) {
     return { type: "CHANGE_WEEK", payload: { direction, id, type } };
 }
 
+export function retryTimetable() {
+    return { type: "RETRY_TIMETABLE", payload: {} };
+}
+
 export function setDate(date, id, type) {
     return { type: "SET_DATE", payload: { date, id, type } };
 }
