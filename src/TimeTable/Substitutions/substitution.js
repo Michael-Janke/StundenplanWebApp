@@ -29,7 +29,7 @@ const SubstitutionEntry = (props) => {
     const OldFields = fields.old && fields.old.map(BoundField);
 
     const SubstitutingFields = fields.substitution && fields.substitution.map(BoundField);
-    let substitutionTextBig = substitutionText && substitutionText.length > 5;
+    let substitutionTextBig = substitutionText && substitutionText.length > 10;
 
     const substitutionType = specificSubstitutionType && (
         <SubstitutionType color={isOld ? grey[700] : styles.color}>

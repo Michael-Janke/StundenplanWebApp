@@ -44,7 +44,7 @@ const AbstractLesson = (props) => {
         </SubstitutionType>
     );
 
-    const extraInfo = substitutionText &&
+    const extraInfo = substitutionTextBig &&
         <SubstitutionText left={small}>
             {substitutionText}
         </SubstitutionText>;
