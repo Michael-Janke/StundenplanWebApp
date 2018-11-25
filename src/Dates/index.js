@@ -4,7 +4,6 @@ import IconButton from '@material-ui/core/IconButton';
 import { connect } from 'react-redux';
 import { getDates, deleteDate, editDate, addDate } from "./actions";
 import makeGetCurrentDates from "../Selector/dates";
-import DateDialog from "./DateDialog";
 import Date from "./Date";
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
@@ -19,8 +18,11 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import moment from 'moment';
 import { RootRef } from "@material-ui/core";
-import DateDeletionDialog from "./DateDeletionDialog";
 import { classNames } from "../Common/const";
+import { asynchronize } from "../Router/asynchronize";
+
+const DateDialog = asynchronize(() => import('./DateDialog'));
+const DateDeletionDialog = asynchronize(() => import("./DateDeletionDialog"));
 
 const styles = theme => ({
     fabButton: {
@@ -197,15 +199,15 @@ class Dates extends Component {
                     {!singleMonth && <div className={classes.buffer}>
                         {!dates && "Keine Termine eingetragen"}
                     </div>}
-
-                    <DateDeletionDialog
+                    
+                    {isAdmin && editMode && <DateDeletionDialog
                         open={this.state.dialogDeleteOpen}
                         handleClose={this.handleDeletionDialogClose}
                         handleDelete={this.deleteDate}
                         date={this.state.deleteDate}
-                    />
+                    />}
 
-                    {isAdmin && <DateDialog
+                    {isAdmin && editMode && <DateDialog
                         open={this.state.dialogOpen}
                         handleClose={this.handleDateAddEdit}
                         date={this.state.selectedDate}

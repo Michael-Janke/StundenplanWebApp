@@ -63,7 +63,7 @@ class PeriodRangePicker extends React.Component {
         const id = open ? 'simple-popper2' : null;
         return (
             <div>
-                <Button aria-describedby={id} variant="flat" onClick={this.handleClick}>
+                <Button aria-describedby={id} variant="text" onClick={this.handleClick}>
                     Stunden auswählen
                 </Button>
                 <Popover id={id} open={open} anchorEl={anchorEl} onClose={this.handleClick}>
