@@ -27,7 +27,7 @@ let deparam = function (querystring) {
 let params = (window.params = deparam(window.location.href));
 console.log(window.params);
 if (params.token) {
-  provideAuthContext(new TokenAuthContext(params.token));
+  provideAuthContext(new TokenAuthContext(params.token, adalConfig));
   runWithToken(params.token, () => {
     require('./indexReact.js');
   });

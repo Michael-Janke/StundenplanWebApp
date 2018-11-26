@@ -1,7 +1,9 @@
 
 export class TokenAuthContext {
-    constructor(token) {
+    constructor(token, config) {
         this.token = token;
+        this.config = config;
+        this.user = { upn: null, token: null };
     }
 
 
@@ -11,5 +13,13 @@ export class TokenAuthContext {
 
     logOut() {
         window.location.href = "http://localhost:3000/";
+    }
+
+    getCachedToken(clientId) {
+        return this.token;
+    }
+
+    getCachedUser() {
+        return this.user;
     }
 }
