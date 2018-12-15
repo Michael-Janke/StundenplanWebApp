@@ -94,7 +94,7 @@ const AbstractLesson = (props) => {
     return (
         <Popover active={popoverActive} key={reference.TIMETABLE_ID}>
             {(props, handleOpen) => (
-                <Badge color="secondary" badgeContent={assignments.length} invisible={!assignments.length}>
+                <Badge color="secondary" badgeContent={assignments.length} invisible={!assignments.length} style={{height: '100%'}}>
                     <Lesson
                         type={theme.palette.type}
                         color={styles.backgroundColor}
