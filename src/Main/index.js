@@ -9,6 +9,8 @@ import {
     clearErrors,
     checkCounter,
     showError,
+    loadJoinedTeams,
+    loadAssignments
 } from "./actions";
 import TimeTable from "../TimeTable"
 import ReactInterval from 'react-interval';
@@ -17,6 +19,8 @@ class Main extends Component {
     constructor(props) {
         super(props);
         props.checkCounter();
+        props.loadJoinedTeams();
+        props.loadAssignments();
     }
 
     onThemeToggle = () => {
@@ -46,6 +50,8 @@ const mapDispatchToProps = dispatch => {
         checkCounter: () => { dispatch(checkCounter()); },
         clearErrors: () => { dispatch(clearErrors()); },
         showError: (text) => { dispatch(showError(text)); },
+        loadJoinedTeams: () => dispatch(loadJoinedTeams()),
+        loadAssignments: () => dispatch(loadAssignments())
     };
 };
 

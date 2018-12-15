@@ -1,7 +1,24 @@
+import moment from 'moment';
 
 export function loadMe() {
     return { type: "GET_ME" };
 }
+export function loadJoinedTeams() {
+    return { type: "GET_JOINED_TEAMS" };
+}
+
+export function loadAssignments() {
+    return { type: "GET_ASSIGNMENTS",
+            date: moment().subtract(1, 'weeks').startOf('isoWeek').format('YYYY-MM-DD')};
+}
+
+export function getTeamsWebUrl(id) {
+    return { 
+            type: "GET_TEAMS_WEBURL",
+            id
+        };
+}
+
 export function openDrawer() {
     return { type: "OPEN_DRAWER" };
 }

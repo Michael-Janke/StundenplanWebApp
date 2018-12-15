@@ -1,6 +1,8 @@
 const initialState = {
     unreadMessages: 0,
-    joinedTeams: []
+    joinedTeams: [],
+    assignments: [],
+    webUrls: {}
 };
 
 export default function teamsReducer(state = initialState, action = {}) {
@@ -10,7 +12,24 @@ export default function teamsReducer(state = initialState, action = {}) {
                 ...state,
                 unreadMessages: action.payload && action.payload.unreadItemCount
             };
- 
+        case "GET_JOINED_TEAMS_RECEIVED":
+            return {
+                ...state,
+                joinedTeams: action.payload && action.payload.value
+            };
+        case "GET_ASSIGNMENTS_RECEIVED":
+            return {
+                ...state,
+                assignments: action.payload && action.payload.value
+            };
+        case "GET_TEAMS_WEBURL_RECEIVED":
+            return {
+                ...state,
+                webUrls: {
+                    ...state.webUrls,
+                    [action.id]: action.payload.webUrl
+                }
+            }
         default:
             return state;
     }
