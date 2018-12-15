@@ -9,7 +9,11 @@ import styled from 'styled-components';
 import grey from '@material-ui/core/colors/grey';
 import { toggleDrawer } from '../actions.js';
 import Tooltip from '@material-ui/core/Tooltip';
+import MailIcon from '@material-ui/icons/Mail';
+import Badge from '@material-ui/core/Badge';
 import PrintDialog from '../../TimeTable/Print';
+import MailDialog from './Mail';
+
 
 const styles = ({
     icon: {
@@ -19,7 +23,7 @@ const styles = ({
 
 class AppBar extends React.Component {
 
-    state = { printOpen: false };
+    state = { printOpen: false, mailOpen: false };
 
     componentDidMount() {
         window.addEventListener('keydown', this.handleKeyDown);
@@ -35,8 +39,7 @@ class AppBar extends React.Component {
             this.setState({ printOpen: true });
         }
     }
-
-
+    
     handleDrawerToggle = () => {
         this.props.toggleDrawer();
     };
@@ -50,13 +53,19 @@ class AppBar extends React.Component {
         this.setState({ printOpen: false });
     }
 
-    handleCalendar = () => {
-        this.refs.calendar.getWrappedInstance().open();
+    onMailOpen = () => {
+        // window.setTimeout(window.print, 0);
+        this.setState({ mailOpen: true });
     }
 
+    handleMailClose = () => {
+        this.setState({ mailOpen: false });
+    }
+
+
     render() {
-        const { classes, small, large } = this.props;
-        const { printOpen } = this.state;
+        const { classes, small, large, unreadMessages } = this.props;
+        const { printOpen, mailOpen } = this.state;
         return (
             <React.Fragment>
                 <Icons style={{ marginLeft: large ? "calc(300px + 2vw - 58px)" : undefined }}>
@@ -68,10 +77,18 @@ class AppBar extends React.Component {
                                 </IconButton>
                             </Tooltip>
                         }
+                        <Tooltip id="tooltip-print" title="Ungelesene Nachrichten">
+                            <IconButton onClick={this.onMailOpen}>
+                                <Badge badgeContent={unreadMessages} invisible={!unreadMessages} color="secondary">
+                                    <MailIcon className={classes.icon} />
+                                </Badge>
+                            </IconButton>
+                        </Tooltip>
                         {this.props.children}
                     </Search>
                 </Icons>
                 <PrintDialog open={printOpen} onClose={this.handlePrintClose} />
+                <MailDialog open={mailOpen} onClose={this.handleMailClose} />
             </React.Fragment>
         );
     }
@@ -93,6 +110,7 @@ const mapStateToProps = state => {
     return {
         small: state.browser.lessThan.medium,
         large: state.browser.greaterThan.medium,
+        unreadMessages: state.teams.unreadMessages || 0,
     };
 };
 

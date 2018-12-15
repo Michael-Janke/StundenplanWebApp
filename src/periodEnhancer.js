@@ -3,8 +3,11 @@ const enhanceStore = (createStore) => (reducer, preloadedState, enhancer) => {
     const store = createStore(reducer, preloadedState, enhancer);
     
     const dispatchReduxAction = () => {
-        return store.dispatch({
+        store.dispatch({
             type: 'CHECK_CURRENT_PERIOD',
+        });
+        store.dispatch({
+            type: 'GET_UNREAD_MESSAGES',
         });
     };
     window.addEventListener('online', store.dispatch.bind(null, { type: 'NETWORK_ONLINE' }));

@@ -16,6 +16,7 @@ const tvBarrier = store => next => action => {
         case 'GET_PROFILE_PICTURE':
         case 'GET_PROFILE_PICTURE_SMALL':
         case 'GET_BATCH_AVATARS':
+        case 'GET_UNREAD_MESSAGES':
             return;
         case 'SET_TIMETABLE':
             if (timeout) {

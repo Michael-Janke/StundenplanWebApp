@@ -11,6 +11,7 @@ import admin from "./admin";
 import posts from './posts';
 import period from './period';
 import online from './online';
+import teams from './teams';
 
 let substitutions;
 if (process.env.REACT_APP_MODE === 'tv') {
@@ -30,4 +31,5 @@ export default combineReducers({
     timetable,
     avatars,
     dates,
+    teams
 });
