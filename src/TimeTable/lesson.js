@@ -7,6 +7,7 @@ import { darken } from '@material-ui/core/styles/colorManipulator';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { styles } from './Fields';
 import Popover from './popover';
+import OpenTeamsButton from './components/openTeams';
 
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
 const BindField = (props) => field => Field.bind(null, field, props);
@@ -18,7 +19,7 @@ const SubstitutionText = ({ left, children }) => (
 );
 
 const AbstractLesson = (props) => {
-    let { classes, theme, small, last, multiple, specificSubstitutionType, substitutionText, fields, substitutionInfo, continueation, setTimeTable, reference } = props;
+    let { classes, theme, small, last, multiple, specificSubstitutionType, substitutionText, fields, substitutionInfo, continueation, setTimeTable, reference, team } = props;
     const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
     if (continueation) {
         return (
@@ -125,6 +126,7 @@ const AbstractLesson = (props) => {
                             </React.Fragment>
                         }
                     </LessonWrapper>
+                    {team && <OpenTeamsButton id={team.id} />}
                 </PopoverContainer>
             }
         </Popover>
@@ -134,7 +136,7 @@ const AbstractLesson = (props) => {
 
 const PopoverContainer = styled.div`
     display: flex;
-    
+    flex-direction: column;    
 `;
 
 

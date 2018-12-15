@@ -1,6 +1,6 @@
 const initialState = {
     unreadMessages: 0,
-    joinedTeams: [],
+    joinedTeams: {},
     assignments: [],
     webUrls: {}
 };
@@ -16,6 +16,12 @@ export default function teamsReducer(state = initialState, action = {}) {
             return {
                 ...state,
                 joinedTeams: action.payload && action.payload.value
+                    .filter((team) => team.externalId && team.externalId>32000000 && team.externalId<40000000)
+                    .reduce((acc,team) => ({
+                        ...acc, 
+                        [team.externalId-32000000]: team
+                    }), {}
+                )
             };
         case "GET_ASSIGNMENTS_RECEIVED":
             return {

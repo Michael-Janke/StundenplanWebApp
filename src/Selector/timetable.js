@@ -5,6 +5,7 @@ import moment from 'moment';
 const getTimetableState = (state) => state.timetable;
 const getMasterdata = createSelector(getTimetableState, (state) => state.masterdata);
 const getTimetables = createSelector(getTimetableState, (state) => state.timetables);
+const getTeams = (state) => state.teams.joinedTeams;
 const getSubstitutions = createSelector(getTimetableState, (state) => state.substitutions);
 
 const getDate = createSelector(getTimetableState, (state) => state.timetableDate);
@@ -62,7 +63,7 @@ function freeRooms(masterdata, day, periods) {
     delete day.absences;
 }
 
-export function translateDay(masterdata, timetable, x, substitutions, periods, type, id, date) {
+export function translateDay(masterdata, timetable, x, substitutions, periods, type, id, date, teams) {
     let day = readTimetable(timetable, x, periods, date);
     if (substitutions) {
         joinSubstitutions(day, substitutions.substitutions[x], type, id);
@@ -70,19 +71,19 @@ export function translateDay(masterdata, timetable, x, substitutions, periods, t
     if (type !== 'all') {
         skipDuplications(day, periods);
     }
-    translatePeriods(masterdata, day, periods, id, type);
+    translatePeriods(masterdata, day, periods, teams);
     if (type === 'all') {
         freeRooms(masterdata, day, periods);
     }
     return day;
 }
 
-function translateTimetable(masterdata, timetable, substitutions, periods, type, id, date) {
+function translateTimetable(masterdata, timetable, substitutions, periods, type, id, date, teams) {
     if (!timetable || !masterdata || !substitutions) return null;
     periods = Object.values(periods);
     let data = [];
     for (let x = 0; x < WEEKDAY_NAMES.length; x++) {
-        data[x] = translateDay(masterdata, timetable, x, substitutions, periods, type, id, date);
+        data[x] = translateDay(masterdata, timetable, x, substitutions, periods, type, id, date, teams);
     }
     return data;
 }
@@ -262,13 +263,13 @@ function readTimetable(_data, day, periods, date) {
     return { periods: data };
 }
 
-export function translatePeriods(masterdata, day, periods) {
+export function translatePeriods(masterdata, day, periods, teams) {
     if (day.holiday) {
         return day;
     }
     for (let y = 0; y < periods.length; y++) {
         if (day.periods[y] && day.periods[y].lessons) {
-            translate(masterdata, day.periods[y]);
+            translate(masterdata, day.periods[y], teams);
         }
     }
 }
@@ -312,12 +313,12 @@ export function equalPeriods(period1, period2) {
     }
     return false;
 }
-function translate(masterdata, period) {
+function translate(masterdata, period, teams) {
     if (!period) return null;
-    period.lessons = period.lessons.map(translateLesson.bind(null, masterdata));
+    period.lessons = period.lessons.map(translateLesson.bind(null, masterdata, teams));
 }
 
-export function translateLesson(masterdata, lesson) {
+export function translateLesson(masterdata, teams = {}, lesson) {
     if (lesson.absence) {
         return { absence: lesson.absence };
     }
@@ -348,7 +349,8 @@ export function translateLesson(masterdata, lesson) {
             new: lesson.CLASS_IDS && lesson.CLASS_IDS.map((c) => masterdata.Class[c]),
             old: lesson.CLASS_IDS_OLD && lesson.CLASS_IDS_OLD.map((c) => masterdata.Class[c]),
             substitution: lesson.CLASS_IDS_SUBSTITUTING && lesson.CLASS_IDS_SUBSTITUTING.map((c) => masterdata.Class[c]),
-        }
+        },
+        team: teams[lesson.SUBJECT_ID * 10000 + lesson.LESSON_ID]
     }
 }
 
@@ -361,6 +363,7 @@ const makeGetCurrentTimetable = () => {
         getType,
         getId,
         getDate,
+        getTeams,
         translateTimetable
     );
 };
