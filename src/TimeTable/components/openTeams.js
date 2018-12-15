@@ -25,7 +25,7 @@ class OpenTeamsButton extends React.Component {
             }
     }
     openLink() {
-        window.open(this.props.webUrl, "_blank")
+        window.open(this.props.webUrl, "_blank");
     }
     render() {
         return <Button variant="outlined" onClick={this.openTeam}>

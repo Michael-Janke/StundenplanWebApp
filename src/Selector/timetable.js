@@ -6,11 +6,15 @@ const getTimetableState = (state) => state.timetable;
 const getMasterdata = createSelector(getTimetableState, (state) => state.masterdata);
 const getTimetables = createSelector(getTimetableState, (state) => state.timetables);
 const getTeams = (state) => state.teams.joinedTeams;
+const getAssignments = (state) => state.teams.assignments;
 const getSubstitutions = createSelector(getTimetableState, (state) => state.substitutions);
 
 const getDate = createSelector(getTimetableState, (state) => state.timetableDate);
 const getWeekSelector = createSelector(getDate, (date) => moment(date).week());
 const getYearSelector = createSelector(getDate, (date) => moment(date).year());
+const getAssignmentsSelector =  createSelector(getDate, getAssignments, (date, assignments) => assignments.filter((assignment) => 
+    moment(date).isSame(moment(assignment.dueDateTime), 'week')
+));
 
 const getType = createSelector(getTimetableState, (state) => state.currentTimeTableType);
 const getId = createSelector(getTimetableState, (state) => state.currentTimeTableId);
@@ -63,7 +67,7 @@ function freeRooms(masterdata, day, periods) {
     delete day.absences;
 }
 
-export function translateDay(masterdata, timetable, x, substitutions, periods, type, id, date, teams) {
+export function translateDay(masterdata, timetable, x, substitutions, periods, type, id, date, teams, assignments) {
     let day = readTimetable(timetable, x, periods, date);
     if (substitutions) {
         joinSubstitutions(day, substitutions.substitutions[x], type, id);
@@ -71,19 +75,27 @@ export function translateDay(masterdata, timetable, x, substitutions, periods, t
     if (type !== 'all') {
         skipDuplications(day, periods);
     }
-    translatePeriods(masterdata, day, periods, teams);
+    let assignmentsOfDay = assignments.filter((assignment) => 
+        moment(assignment.dueDateTime).isSame(moment(date).weekday(x),'day')
+    );
+    let assignmentsMatching = {
+        toMatch: assignmentsOfDay,
+        match: []
+    };
+    translatePeriods(masterdata, day, periods, teams, assignmentsMatching);
     if (type === 'all') {
         freeRooms(masterdata, day, periods);
     }
+    day.unmatchedAssignments = assignmentsMatching.toMatch;
     return day;
 }
 
-function translateTimetable(masterdata, timetable, substitutions, periods, type, id, date, teams) {
+function translateTimetable(masterdata, timetable, substitutions, periods, type, id, date, teams, assignments) {
     if (!timetable || !masterdata || !substitutions) return null;
     periods = Object.values(periods);
     let data = [];
     for (let x = 0; x < WEEKDAY_NAMES.length; x++) {
-        data[x] = translateDay(masterdata, timetable, x, substitutions, periods, type, id, date, teams);
+        data[x] = translateDay(masterdata, timetable, x, substitutions, periods, type, id, date, teams, assignments);
     }
     return data;
 }
@@ -263,13 +275,13 @@ function readTimetable(_data, day, periods, date) {
     return { periods: data };
 }
 
-export function translatePeriods(masterdata, day, periods, teams) {
+export function translatePeriods(masterdata, day, periods, teams, assignmentsMatching) {
     if (day.holiday) {
         return day;
     }
     for (let y = 0; y < periods.length; y++) {
         if (day.periods[y] && day.periods[y].lessons) {
-            translate(masterdata, day.periods[y], teams);
+            translate(masterdata, day.periods[y], teams, assignmentsMatching);
         }
     }
 }
@@ -313,15 +325,27 @@ export function equalPeriods(period1, period2) {
     }
     return false;
 }
-function translate(masterdata, period, teams) {
+function translate(masterdata, period, teams, assignmentsMatching) {
     if (!period) return null;
-    period.lessons = period.lessons.map(translateLesson.bind(null, masterdata, teams));
+    period.lessons = period.lessons.map(translateLesson.bind(null, masterdata, teams, assignmentsMatching));
 }
 
-export function translateLesson(masterdata, teams = {}, lesson) {
+export function translateLesson(masterdata, teams = {}, assignmentsMatching = {toMatch:[]}, lesson) {
     if (lesson.absence) {
         return { absence: lesson.absence };
     }
+    let team = teams[lesson.SUBJECT_ID * 10000 + lesson.LESSON_ID];
+    let validAssignments = [];
+    let stillToMatch = [];
+    
+    assignmentsMatching.toMatch.forEach(assignment => {
+        if(team && assignment.classId === team.id) {
+            validAssignments.push(assignment);
+        } else {
+            stillToMatch.push(assignment);
+        }
+    });
+    assignmentsMatching.toMatch = stillToMatch;
     return {
         reference: lesson,
         isOld: lesson.isOld,
@@ -350,7 +374,8 @@ export function translateLesson(masterdata, teams = {}, lesson) {
             old: lesson.CLASS_IDS_OLD && lesson.CLASS_IDS_OLD.map((c) => masterdata.Class[c]),
             substitution: lesson.CLASS_IDS_SUBSTITUTING && lesson.CLASS_IDS_SUBSTITUTING.map((c) => masterdata.Class[c]),
         },
-        team: teams[lesson.SUBJECT_ID * 10000 + lesson.LESSON_ID]
+        team,
+        assignments: validAssignments
     }
 }
 
@@ -364,7 +389,8 @@ const makeGetCurrentTimetable = () => {
         getId,
         getDate,
         getTeams,
-        translateTimetable
+        getAssignmentsSelector,
+        translateTimetable,
     );
 };
 

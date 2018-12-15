@@ -116,6 +116,7 @@ class TimeTableGrid extends React.Component {
         const { small, periods, offline, currentTimetable: timetable, retry } = this.props;
         return [
             this.renderAbsences(),
+            this.renderUnmatchedAssignments(),
             ...(offline && !timetable ? [
                 <Offline retry={retry}/>
             ] :
@@ -129,7 +130,30 @@ class TimeTableGrid extends React.Component {
                         </PeriodCell>
                         {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
                     </TableRow>
-                )))];
+                ))),
+            ];
+    }
+
+    renderUnmatchedAssignments() {
+        const { currentTimetable: timetable, small } = this.props;  
+        if(!timetable || !timetable.some((day) => !!day.unmatchedAssignments.length)) {
+            return null;
+        }
+        return (
+            <TableRow style={{ height: 'unset' }} key={-2}>
+                <PeriodCell small={small}><Times>{small ? "HA" : "Hausaufgaben"}</Times></PeriodCell>
+                {WEEKDAY_NAMES.map((name, i) => {
+                    const day = timetable[i];
+                    return (
+                        <TableCell key={i} style={{ padding: 0, fontSize: '100%' }}>
+                            {day.unmatchedAssignments && day.unmatchedAssignments.map(assignment => (
+                                <Times key={assignment.id}><Time>{assignment.displayName}</Time></Times>
+                            ))}
+                        </TableCell>
+                    );
+                })}
+            </TableRow>
+        );
     }
 
     renderAbsences() {

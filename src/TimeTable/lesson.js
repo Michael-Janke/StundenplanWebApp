@@ -2,12 +2,13 @@ import React from 'react';
 import styled from "styled-components";
 import indigo from '@material-ui/core/colors/indigo';
 import grey from '@material-ui/core/colors/grey';
-
+import Typography from '@material-ui/core/Typography';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { styles } from './Fields';
 import Popover from './popover';
 import OpenTeamsButton from './components/openTeams';
+import Badge from '@material-ui/core/Badge';
 
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
 const BindField = (props) => field => Field.bind(null, field, props);
@@ -19,7 +20,7 @@ const SubstitutionText = ({ left, children }) => (
 );
 
 const AbstractLesson = (props) => {
-    let { classes, theme, small, last, multiple, specificSubstitutionType, substitutionText, fields, substitutionInfo, continueation, setTimeTable, reference, team } = props;
+    let { classes, theme, small, last, multiple, specificSubstitutionType, substitutionText, fields, substitutionInfo, continueation, setTimeTable, reference, team, assignments } = props;
     const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
     if (continueation) {
         return (
@@ -93,22 +94,25 @@ const AbstractLesson = (props) => {
     return (
         <Popover active={popoverActive} key={reference.TIMETABLE_ID}>
             {(props, handleOpen) => (
-                <Lesson
-                    type={theme.palette.type}
-                    color={styles.backgroundColor}
-                    flex={last}
-                    {...props}
-                    onClick={handleOpen}
-                >
-                    <ColorBar lineColor={styles.color} />
-                    <LessonWrapper small={small}>
-                        {container}
-                        {extraInfo}
-                    </LessonWrapper>
-                </Lesson>
+                <Badge color="secondary" badgeContent={assignments.length} invisible={!assignments.length}>
+                    <Lesson
+                        type={theme.palette.type}
+                        color={styles.backgroundColor}
+                        flex={last}
+                        {...props}
+                        onClick={handleOpen}
+                    >
+                        <ColorBar lineColor={styles.color} />
+                        <LessonWrapper small={small}>
+                            {container}
+                            {extraInfo}
+                        </LessonWrapper>
+                    </Lesson>
+                </Badge>
             )}
             {popoverActive &&
                 <PopoverContainer>
+                    {team && <OpenTeamsButton id={team.id} />}
                     <LessonWrapper>
                         {substitutionType}
                         {SubstitutingFields ?
@@ -126,7 +130,14 @@ const AbstractLesson = (props) => {
                             </React.Fragment>
                         }
                     </LessonWrapper>
-                    {team && <OpenTeamsButton id={team.id} />}
+                    {!!assignments.length && <div>
+                        <Typography variant="h6" gutterBottom>
+                            Hausaufgaben
+                        </Typography>
+                        {assignments.map((assignment) => {
+                            return <Typography key={assignment.id} variant="body1">{assignment.displayName}</Typography>;
+                        }) }
+                    </div>}
                 </PopoverContainer>
             }
         </Popover>
