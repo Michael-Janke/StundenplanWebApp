@@ -56,6 +56,10 @@ export class Mail extends Component {
         "<a href='https://itunes.apple.com/de/app/microsoft-outlook/id951937596?mt=8' style='display:inline-block;overflow:hidden;margin:10px;background:url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2015-01-29&kind=iossoftware&bubble=ios_apps) no-repeat;width:135px;height:40px;'></a>"
     }};
 
+    openWebOutlook() {
+        window.location = "https://outlook.office365.com";
+    }
+
     render() {
 
         const customContentStyle = {
@@ -78,7 +82,7 @@ export class Mail extends Component {
                 <DialogContent style={customContentStyle}>
                     <DialogContentText>
                         Du hast ungelesene Nachrichten in deinem Schul-E-Mail-Account.
-                        <Button variant="contained" style={{margin:10}}>
+                        <Button variant="contained" style={{margin:10}} onClick={this.openWebOutlook}>
                             <Icons.Outlook.icon/> &nbsp;
                             Zur Web-Version
                         </Button>
