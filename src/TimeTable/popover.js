@@ -10,7 +10,6 @@ const styles = theme => ({
     paper: {
         marginTop: theme.spacing.unit,
         padding: theme.spacing.unit,
-        width: '25vmin',
         color: theme.palette.text.primary,
     }
 });
