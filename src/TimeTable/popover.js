@@ -8,9 +8,8 @@ const styles = theme => ({
         zIndex: theme.zIndex.modal - 1,
     },
     paper: {
-        marginTop: theme.spacing.unit,
-        padding: theme.spacing.unit,
         minWidth: 125,
+        maxHeight: 500,
         color: theme.palette.text.primary,
     }
 });
@@ -34,7 +33,7 @@ class Popover extends React.Component {
 
     handleMouseLeave = () => {
         clearTimeout(this.leaveTimer);
-        this.leaveTimer = setTimeout(this.handleClose, 500);
+        this.leaveTimer = setTimeout(this.handleClose, 1000);
     }
 
     handleToggle = () => {

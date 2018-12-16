@@ -2,8 +2,6 @@ import React from 'react';
 // import styled from 'styled-components';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
-import Description from './description';
-
 
 const SubjectContainer = type => subject => (props) => {
     const { themeClasses, description } = props;
@@ -32,7 +30,7 @@ const SubjectContainer = type => subject => (props) => {
             </Subject>
         );
     }
-    return description ? <Description label="Fach" classes={themeClasses} type="subject">{output}</Description> : output;
+    return description ? null : output;
 };
 
 

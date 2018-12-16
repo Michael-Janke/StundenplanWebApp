@@ -2,7 +2,8 @@ const initialState = {
     unreadMessages: 0,
     joinedTeams: {},
     assignments: [],
-    webUrls: {}
+    teamUrls: {},
+    notebookUrls: {}
 };
 
 export default function teamsReducer(state = initialState, action = {}) {
@@ -31,11 +32,27 @@ export default function teamsReducer(state = initialState, action = {}) {
         case "GET_TEAMS_WEBURL_RECEIVED":
             return {
                 ...state,
-                webUrls: {
-                    ...state.webUrls,
-                    [action.id]: action.payload.webUrl
+                teamUrls: {
+                    ...state.teamUrls,
+                    [action.id]: {
+                        web: action.payload.webUrl,
+                        client: action.payload.webUrl.replace('https://teams.microsoft.com/', 'msteams:')
+                    }
                 }
             }
+        case "GET_TEAMS_NOTEBOOK_RECEIVED": {
+            let notebook = action.payload.value.length ? action.payload.value[0] : action.payload.value;
+            return {
+                ...state,
+                notebookUrls: {
+                    ...state.notebookUrls,
+                    [action.id]: {
+                        web: notebook.links.oneNoteWebUrl.href,
+                        client: notebook.links.oneNoteClientUrl.href,
+                    }
+                }
+            }
+        } 
         default:
             return state;
     }

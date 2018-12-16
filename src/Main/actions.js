@@ -19,6 +19,13 @@ export function getTeamsWebUrl(id) {
         };
 }
 
+export function getTeamsNotebook(id) {
+    return { 
+            type: "GET_TEAMS_NOTEBOOK",
+            id
+        };
+}
+
 export function openDrawer() {
     return { type: "OPEN_DRAWER" };
 }

@@ -69,6 +69,4 @@ const OldRoom = styled(Room)`
     font-size: 50%;
 `;
 
-
-
 export default RoomContainer;

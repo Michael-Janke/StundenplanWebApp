@@ -135,8 +135,8 @@ class TimeTableGrid extends React.Component {
     }
 
     renderUnmatchedAssignments() {
-        const { currentTimetable: timetable, small } = this.props;  
-        if(!timetable || !timetable.some((day) => !!day.unmatchedAssignments.length)) {
+        const { currentTimetable: timetable, small, me } = this.props;  
+        if(!timetable || !me || !timetable.some((day) => !!day.unmatchedAssignments.length)) {
             return null;
         }
         return (

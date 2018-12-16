@@ -1,32 +1,19 @@
 import React from 'react';
 
 import { ObjectIcon } from '../../Main/components/Avatars';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
-function Description({ classes, label, children, type }) {
+function Description({ classes, label, children, type, instead }) {
     return (
-        <div className={classes.description}>
-            <div className={classes.label}>
+        <ListItem button={type!=="subject"}>
+            <ListItemIcon>
                 <ObjectIcon size={0} fontSize="inherit" type={type} />
-            </div>
-            <div className={classes.children}>{children}</div>
-        </div>
+            </ListItemIcon>
+            <ListItemText primary={children} secondary={instead?"statt":undefined}/>
+        </ListItem>
     )
 }
-
-export const descriptionStyles = (theme) => ({
-    description: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    label: {
-        fontSize: '100%',
-        color: theme.palette.text.secondary,
-        fontWeight: 600,
-    },
-    children: {
-        textAlign: 'right',
-    }
-})
 
 export default Description;

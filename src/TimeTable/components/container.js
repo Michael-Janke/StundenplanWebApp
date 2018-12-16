@@ -22,6 +22,7 @@ const getCurrentTimetable = makeGetCurrentTimetable();
         warning: state.user.warning,
         counterChanged: state.user.counterChanged,
         offline: !state.online.timetable || !state.online.adal,
+        me: state.timetable.currentTimeTableType === state.user.type && state.timetable.currentTimeTableId === state.user.id,
         ...(defaultMapStateToProps(state, props))
     });
     var ConnectedTimeTableGrid = connect(mapStateToProps)(TimeTableGrid);

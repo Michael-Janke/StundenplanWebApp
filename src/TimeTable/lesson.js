@@ -2,13 +2,16 @@ import React from 'react';
 import styled from "styled-components";
 import indigo from '@material-ui/core/colors/indigo';
 import grey from '@material-ui/core/colors/grey';
-import Typography from '@material-ui/core/Typography';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { styles } from './Fields';
 import Popover from './popover';
-import OpenTeamsButton from './components/openTeams';
+import OpenOfficeButton from './components/openOffice';
+import Assignments from './components/assignments';
 import Badge from '@material-ui/core/Badge';
+import Divider from '@material-ui/core/Divider';
+import List from '@material-ui/core/List';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
 const BindField = (props) => field => Field.bind(null, field, props);
@@ -20,7 +23,7 @@ const SubstitutionText = ({ left, children }) => (
 );
 
 const AbstractLesson = (props) => {
-    let { classes, theme, small, last, multiple, specificSubstitutionType, substitutionText, fields, substitutionInfo, continueation, setTimeTable, reference, team, assignments } = props;
+    let { classes, theme, small, last, multiple, specificSubstitutionType, substitutionText, fields, continueation, setTimeTable, reference, team, assignments } = props;
     const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
     if (continueation) {
         return (
@@ -111,45 +114,36 @@ const AbstractLesson = (props) => {
                 </Badge>
             )}
             {popoverActive &&
-                <PopoverContainer>
-                    {team && <OpenTeamsButton id={team.id} />}
-                    <LessonWrapper>
-                        {substitutionType}
-                        {SubstitutingFields ?
-                            <React.Fragment>
-                                <InsteadInformation>
-                                    {{ 'instead-of': "statt" }[substitutionInfo]}
-                                </InsteadInformation>
-
-                                {SubstitutingFields.map((Field, i) => <Field key={i} description />)}
-                            </React.Fragment>
-                            : <React.Fragment>
-                                <Field1 description />
-                                <Field2 description />
-                                {Field3 && <Field3 description />}
-                            </React.Fragment>
-                        }
-                    </LessonWrapper>
-                    {!!assignments.length && <div>
-                        <Typography variant="h6" gutterBottom>
-                            Hausaufgaben
-                        </Typography>
-                        {assignments.map((assignment) => {
-                            return <Typography key={assignment.id} variant="body1">{assignment.displayName}</Typography>;
-                        }) }
-                    </div>}
-                </PopoverContainer>
+                <List>
+                    {specificSubstitutionType && <ListSubheader component="div">
+                        {specificSubstitutionType.name}
+                    </ListSubheader>}
+                    {SubstitutingFields &&
+                        <React.Fragment>
+                            {SubstitutingFields.map((Field, i) => <Field key={i} description instead/>)}
+                        </React.Fragment>
+                    }
+                    <Field1 description />
+                    <Field2 description />
+                    {Field3 && <Field3 description />}
+                    {team && <React.Fragment>
+                            <Divider />
+                            <ListSubheader component="div">Office</ListSubheader>
+                            <OpenOfficeButton id={team.id} type="teams"/>
+                            <OpenOfficeButton id={team.id} type="notebook"/>
+                        </React.Fragment>
+                    }
+                    {!!assignments.length && <React.Fragment>
+                            <Divider />
+                            <Assignments assignments={assignments}/>
+                        </React.Fragment>
+                    }
+                </List>
             }
         </Popover>
     );
 
 };
-
-const PopoverContainer = styled.div`
-    display: flex;
-    flex-direction: column;    
-`;
-
 
 const ColorBar = styled.div`
     width: 3%;
@@ -173,12 +167,6 @@ const SubstitutionType = styled.div`
     width: 30px;
     white-space: nowrap;
     color: ${props => props.color};
-`;
-
-const InsteadInformation = styled.div`
-    font-size: 50%;
-    font-weight: 600;
-    color: ${grey[400]};
 `;
 
 const LessonContainer = styled.div`

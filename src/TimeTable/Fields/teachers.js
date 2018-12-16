@@ -10,7 +10,7 @@ const teacherToName = (teacher, small) =>
             : (teacher.FIRSTNAME || "")[0] + ". " + teacher.LASTNAME
         : '-';
 
-const TeachersContainer = type => teachers => ({ small, left, themeClasses, description, setTimeTable }) => {
+const TeachersContainer = type => teachers => ({ small, left, themeClasses, description, setTimeTable, instead }) => {
     let output;
     if (type === 'new') {
         const NormalTeacher = !!teachers.old ? NewTeacher : Teacher;
@@ -45,7 +45,9 @@ const TeachersContainer = type => teachers => ({ small, left, themeClasses, desc
             </Teacher>
         );
     }
-    return description ? <Description classes={themeClasses} label="Lehrer" type="teacher">{output}</Description> : output;
+    if(!description) return output;
+    return <Description classes={themeClasses} label="Lehrer" type="teacher" instead={instead}>{output}</Description>;
+
 }
 
 export const teacherStyles = theme => ({
@@ -78,6 +80,5 @@ const NewTeacher = styled(Teacher)`
 const OldTeacher = styled(Teacher)`
     font-size: 50%;
 `;
-
 
 export default TeachersContainer;
