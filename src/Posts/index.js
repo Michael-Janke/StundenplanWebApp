@@ -7,9 +7,7 @@ import { Button, Grid } from '@material-ui/core';
 import Post from './post';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { addPost, editPost, getPosts } from './actions';
-import { asynchronize } from '../Router/asynchronize';
-
-const PostEditor = asynchronize(() => import('./editor'));
+import { withRouter } from 'react-router';
 
 const styles = theme => ({
     root: {
@@ -86,11 +84,11 @@ class Posts extends React.Component {
     }
 
     handleCreate = () => {
-        this.setState({ dialogOpen: true, postEdit: null });
+        this.props.history.push("/posts/new");
     }
 
     handleOnEdit = (post) => {
-        this.setState({ dialogOpen: true, postEdit: post });
+        this.props.history.push("/posts/" + post.POST_ID);
     }
 
     render() {
@@ -145,12 +143,6 @@ class Posts extends React.Component {
                         ))}
                     </Grid>
                 </div>
-                <PostEditor
-                    isAdmin={isAdmin}
-                    open={this.state.dialogOpen}
-                    onClose={this.handleDialogClose}
-                    post={this.state.postEdit}
-                />
                 <Button variant="fab" color="primary" className={classes.createButton} onClick={this.handleCreate}>
                     <AddIcon />
                 </Button>
@@ -170,4 +162,4 @@ const mapDispatchToProps = dispatch => ({
     editPost: (post) => dispatch(editPost(post)),
 });
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Posts));
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(Posts)));

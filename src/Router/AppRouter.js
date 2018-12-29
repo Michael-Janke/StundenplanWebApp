@@ -6,16 +6,8 @@ import createTheme from '../Common/theme';
 import { connectToServiceWorker } from '../Common/firebase';
 import MomentUtils from 'material-ui-pickers/utils/moment-utils';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-import NotFoundPage from './NotFoundPage';
-import { asynchronize } from "./asynchronize";
-
-import AppBar from './AppBar';
-import AppDrawer from './AppDrawer';
-const Posts = asynchronize(() => import("../Posts"));
-const Main = asynchronize(() => import("../Main"));
-const Statistics = asynchronize(() => import("../Statistics"));
-
+import { HashRouter as Router } from 'react-router-dom';
+import Routes from './routes';
 
 class AppRouter extends Component {
 
@@ -63,14 +55,7 @@ class AppRouter extends Component {
                             backgroundColor: this.state.theme.palette.background.default,
                             fontFamily: this.state.theme.typography.fontFamily,
                         }}>
-                            <AppDrawer></AppDrawer>
-                            <AppBar />
-                            <Switch>
-                                <Route exact path="/" component={Main} />
-                                <Route exact path="/posts" component={Posts} />
-                                <Route exact path="/admin" component={Statistics} />
-                                <Route component={NotFoundPage} />
-                            </Switch>
+                            <Routes />
                         </div>
                     </MuiPickersUtilsProvider>
                 </MuiThemeProvider>

@@ -35,14 +35,6 @@ class AppBar extends React.Component {
         this.props.toggleDrawer();
     };
 
-    onPrintTimetable = () => {
-        window.setTimeout(window.print, 0);
-    }
-
-    handleCalendar = () => {
-        this.refs.calendar.getWrappedInstance().open();
-    }
-
     render() {
         const { classes, location } = this.props;
         const content = (

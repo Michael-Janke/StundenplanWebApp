@@ -1,19 +1,31 @@
 import React from 'react';
+import { Redirect, withRouter } from 'react-router-dom';
 
-export default class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component {
     constructor(props) {
-      super(props);
-      this.state = { hasError: false };
+        super(props);
+        this.state = { error: null };
     }
-  
+
     componentDidCatch(error, info) {
-      this.setState({ hasError: true });
+        this.setState({ error: { error, info } });
     }
-  
+
     render() {
-      if (this.state.hasError) {
-        return <h1>Something went wrong.</h1>;
-      }
-      return this.props.children;
+        const { error } = this.state;
+        if (error) {
+            return (
+                <Redirect to={{
+                    pathname: '/error',
+                    state: {
+                        error: 500,
+                        message: `Fehlerberschreibung: ${error.error.message} \nStacktrace: ${error.info.componentStack}`,
+                    }
+                }} />
+            );
+        }
+        return this.props.children;
     }
-  }
+}
+
+export default withRouter(ErrorBoundary);

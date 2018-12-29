@@ -127,7 +127,7 @@ class Post extends React.Component {
                     }
                     action={menu}
                     title={post.TITLE}
-                    subheader={moment(post.DATE_FROM.date).format("DD. MMMM, YYYY")}
+                    subheader={post.DATE_FROM && moment(post.DATE_FROM.date).format("DD. MMMM, YYYY")}
                 />
                 {/* <CardMedia
                     className={classes.media}

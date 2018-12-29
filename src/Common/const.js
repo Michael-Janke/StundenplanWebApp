@@ -8,6 +8,11 @@ const colorsArray = ["red", "pink", "purple", "deepPurple", "indigo", "blue", "c
 
 export const SUBJECT_COLORS = colorsArray.map(color => colors[color][600]);
 
+export const COLOR_STYLE_MAP = colorsArray.reduce((prev, current) => {
+    prev[current] = { color: colors[current][600] };
+    return prev;
+}, {})
+
 export const SUBJECTS = ["de", "inf", "en", "sp", "geo", "ph", "la", "ch", "ge", "bio", "ma", "ku", "ds", "mu", "fr", "ru", "pb", "sn", "ler", "rel", "wat"];
 
 export const SUBJECT_COLORS_MAP = {};
@@ -34,15 +39,15 @@ function normalize(v) {
 export function specifySubstitutionType(id, type, substitution) {
     let lesson = {};
     substitution = { ...substitution, id, type };
-    
-    if(!substitution.isOld && substitution.TEXT === "Methodenkompetenz") {
+
+    if (!substitution.isOld && substitution.TEXT === "Methodenkompetenz") {
         substitution.TYPE = "METH_COMP";
         substitution.TEXT = "";
     }
     lesson.specificSubstitutionType = getSpecificSubstitutionType(substitution);
     if (lesson.specificSubstitutionType && lesson.specificSubstitutionType.mask) {
         substitution = lesson.specificSubstitutionType.mask(substitution);
-        if(substitution)
+        if (substitution)
             lesson.specificSubstitutionType = getSpecificSubstitutionType(substitution);
     }
 

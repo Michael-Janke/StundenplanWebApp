@@ -2,6 +2,7 @@ import React from 'react';
 import NotFoundPage from './NotFoundPage';
 import Loadable from "react-loadable";
 import { hideSplash } from './SplashScreen';
+import { withRouter } from 'react-router';
 
 const Loading = ({ isLoading, error, retry }) => {
     // Handle the loading state
@@ -13,7 +14,7 @@ const Loading = ({ isLoading, error, retry }) => {
     // Handle the error state
     console.error(error);
     if (error) {
-        return <NotFoundPage error={400} retry={retry} />;
+        return React.createElement(withRouter(<NotFoundPage error={400} retry={retry} />));
     }
     else {
         return null;
