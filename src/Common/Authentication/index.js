@@ -31,7 +31,7 @@ export const runApplication = (app) => {
     } else {
         if (code) {
             // back to '/' without reloading page
-            window.history.pushState("", "", "/");
+            window.history.replaceState("", "", window.location.pathname);
             authContext.handleCallback(code, session_state, state);
         }
         app();
