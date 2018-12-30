@@ -1,5 +1,3 @@
-self.addEventListener('message', event => {
-    if (event.data === 'skipWaiting') {
-      self.skipWaiting();
-    }
+self.addEventListener('message', function handleSkipWaiting(event) {
+    if (event.data === 'skipWaiting') { self.skipWaiting(); }
 });

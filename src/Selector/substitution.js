@@ -16,7 +16,7 @@ const getAddDays = (state, props) => {
 }
 
 const getWeekSelector = createSelector(getAddDays, (daysToAdd) => moment().add(daysToAdd, 'days').week());
-const getYearSelector = createSelector(getAddDays, (daysToAdd) => moment().add(daysToAdd, 'days').year());
+const getYearSelector = createSelector(getAddDays, (daysToAdd) => moment().add(daysToAdd, 'days').weekYear());
 
 const getSubstitutions = (state) => state.timetable.substitutions;
 const getMasterdata = (state) => state.timetable.masterdata;

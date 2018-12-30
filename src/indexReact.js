@@ -2,7 +2,7 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import registerServiceWorker from './registerServiceWorker';
+import {register} from './serviceWorker';
 import firebase from 'firebase';
 import moment from 'moment';
 import 'moment/locale/de';
@@ -33,4 +33,10 @@ renderApp();
 if (module.hot) {
     module.hot.accept('./App', renderApp);
 }
-registerServiceWorker();
+
+register({
+    onUpdate: registration => {
+        console.log("reload app due to new files");
+        window.location.reload();
+    }
+});

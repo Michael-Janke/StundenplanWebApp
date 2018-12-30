@@ -19,7 +19,7 @@ const actionRedirector = store => next => action => {
                     payload: {
                         id,
                         type,
-                        year: moment(timetableDate).year(),
+                        year: moment(timetableDate).weekYear(),
                         week: moment(timetableDate).week()
                     }
                 });

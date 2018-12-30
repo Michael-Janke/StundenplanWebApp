@@ -11,7 +11,7 @@ const getSubstitutions = createSelector(getTimetableState, (state) => state.subs
 
 const getDate = createSelector(getTimetableState, (state) => state.timetableDate);
 const getWeekSelector = createSelector(getDate, (date) => moment(date).week());
-const getYearSelector = createSelector(getDate, (date) => moment(date).year());
+const getYearSelector = createSelector(getDate, (date) => moment(date).weekYear());
 const getAssignmentsSelector =  createSelector(getDate, getAssignments, (date, assignments) => assignments.filter((assignment) => 
     moment(date).isSame(moment(assignment.dueDateTime), 'week')
 ));

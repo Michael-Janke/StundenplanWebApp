@@ -18,7 +18,7 @@ import LogOutIcon from '@material-ui/icons/ExitToApp';
 import MailIcon from '@material-ui/icons/Mail';
 
 import { purge } from '../../store';
-import { unregister } from '../../registerServiceWorker';
+import { unregister } from '../../serviceWorker';
 import { connectToServiceWorker } from '../../Common/firebase';
 import { setNotification, showError, loadMe, logOut } from '../actions';
 import UserAvatar from './UserAvatar';

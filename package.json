@@ -10,7 +10,6 @@
     "@material-ui/lab": "^3.0.0-alpha.23",
     "babel-polyfill": "^6.26.0",
     "chroma-js": "^1.4.0",
-    "cra-append-sw": "^2.6.0",
     "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.4",
     "firebase": "^4.13.1",
@@ -45,8 +44,8 @@
   "scripts": {
     "start": "set REACT_APP_MODE=app & react-scripts start & cra-append-sw --mode dev ./custom-sw.js",
     "start:tv": "set REACT_APP_MODE=tv & react-scripts start & cra-append-sw --mode dev ./custom-sw.js",
-    "build": "node ./increment_build.js & set REACT_APP_MODE=app & react-scripts build & cra-append-sw ./custom-sw.js",
-    "build:tv": "node ./increment_build.js & set REACT_APP_MODE=tv & react-scripts build & cra-append-sw ./custom-sw.js",
+    "build": "node ./increment_build.js & set REACT_APP_MODE=app & react-scripts build & node ./modify-sw.js",
+    "build:tv": "node ./increment_build.js & set REACT_APP_MODE=tv & react-scripts build & node ./modify-sw.js",
     "deploy": " scp -r build/* u45065@www.wolkenberg-gymnasium.de:~/wolkenberg-app/stundenplan-web-app",
     "deploy:tv": " scp -r build/* u45065@www.wolkenberg-gymnasium.de:~/wolkenberg-app/stundenplan-web-app-tv",
     "push": "npm run build && npm run deploy",

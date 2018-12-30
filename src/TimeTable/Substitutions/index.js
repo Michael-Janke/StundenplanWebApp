@@ -92,7 +92,7 @@ class Substitutions extends React.Component {
     static getDerivedStateFromProps(props, state) {
         if (!props.substitutions || (props.loading === 'detected') !== (state.loading === 'detected')) {
             let date = moment().add(getAddDays(props), 'day');
-            props.getSubstitutions(date.week(), date.year());
+            props.getSubstitutions(date.week(), date.weekYear());
             props.getTimetableAll();
         }
         return { loading: props.loading };
