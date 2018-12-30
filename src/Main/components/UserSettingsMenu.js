@@ -193,7 +193,7 @@ class UserSettingsMenu extends React.Component {
                         <ListItemIcon>
                             <RefreshIcon />
                         </ListItemIcon>
-                        <ListItemText inset primary="Reset" />
+                        <ListItemText inset primary="Reset"/>
                     </MenuItem>
                     {false && <MenuItem
                         onClick={this.setNotification}>

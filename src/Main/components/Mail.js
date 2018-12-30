@@ -95,7 +95,7 @@ export class Mail extends Component {
                         <Typography variant="h6" gutterBottom>
                             Outlook auf dem PC/Mac installieren
                         </Typography>
-                            Auf deinem Computer kannst du <a href="https://portal.office.com/OLS/MySoftware.aspx">Micrsoft Office ProPlus</a> kostenlos installieren. Damit wird auch Outlook installiert und mit deinem Konto verbunden.
+                            Auf deinem Computer kannst du <a href="https://portal.office.com/OLS/MySoftware.aspx">Microsoft Office ProPlus</a> kostenlos installieren. Damit wird auch Outlook installiert und mit deinem Konto verbunden.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

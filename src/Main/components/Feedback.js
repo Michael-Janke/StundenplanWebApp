@@ -12,6 +12,8 @@ import { sendFeedback } from '../actions';
 import FeedbackIcon from '@material-ui/icons/Feedback';
 import Slide from '@material-ui/core/Slide';
 
+import version from '../../version.json';
+
 function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
@@ -73,6 +75,8 @@ export class Feedback extends Component {
                     <DialogContentText>
                         Danke, dass du diese App verwendest.
                         Ideen, Wünsche, Anregungen? Schreib sie uns gerne!
+                        <br/>
+                        Buildnummer: {version.build}
                     </DialogContentText>
                     <TextField
                         onFocus={this.clearError}
