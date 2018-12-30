@@ -21,6 +21,13 @@ const styles = ({
     },
 });
 
+const UnreadMessages = connect(({teams}) => ({unreadMessages: teams.unreadMessages || 0}))(
+    withStyles(styles)(({unreadMessages, classes}) => 
+    <Badge badgeContent={unreadMessages} invisible={!unreadMessages} color="secondary">
+        <MailIcon className={classes.icon} />
+    </Badge>
+));
+
 class AppBar extends React.Component {
 
     state = { printOpen: false, mailOpen: false };
@@ -64,13 +71,13 @@ class AppBar extends React.Component {
 
 
     render() {
-        const { classes, small, large, unreadMessages } = this.props;
+        const { classes, small, large } = this.props;
         const { printOpen, mailOpen } = this.state;
         return (
             <React.Fragment>
                 <Icons style={{ marginLeft: large ? "calc(300px + 2vw - 58px)" : undefined }}>
                     <Search shrinkChildren={small} alwaysOpen={!small}>
-                        {small ||
+                        {!small &&
                             <Tooltip id="tooltip-print" title="Stundenplan drucken">
                                 <IconButton onClick={this.onPrintTimetable}>
                                     <PrintIcon className={classes.icon} />
@@ -79,9 +86,7 @@ class AppBar extends React.Component {
                         }
                         <Tooltip id="tooltip-print" title="Ungelesene Nachrichten">
                             <IconButton onClick={this.onMailOpen}>
-                                <Badge badgeContent={unreadMessages} invisible={!unreadMessages} color="secondary">
-                                    <MailIcon className={classes.icon} />
-                                </Badge>
+                                <UnreadMessages />
                             </IconButton>
                         </Tooltip>
                         {this.props.children}
@@ -103,14 +108,12 @@ const Icons = styled.div`
 
 AppBar.propTypes = {
     classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
     return {
         small: state.browser.lessThan.medium,
         large: state.browser.greaterThan.medium,
-        unreadMessages: state.teams.unreadMessages || 0,
     };
 };
 
@@ -118,4 +121,4 @@ const mapDispatchToProps = dispatch => ({
     toggleDrawer: () => dispatch(toggleDrawer()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { withTheme: true })(AppBar));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AppBar));

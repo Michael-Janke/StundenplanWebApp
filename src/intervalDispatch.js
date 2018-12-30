@@ -9,6 +9,12 @@ const enhanceStore = (createStore) => (reducer, preloadedState, enhancer) => {
         store.dispatch({
             type: 'GET_UNREAD_MESSAGES',
         });
+        store.dispatch({
+            type: 'GET_COUNTER',
+        });
+        store.dispatch({
+            type: 'GET_ASSIGNMENTS',
+        });
     };
     window.addEventListener('online', store.dispatch.bind(null, { type: 'NETWORK_ONLINE' }));
     window.addEventListener('offline', store.dispatch.bind(null, { type: 'NETWORK_OFFLINE' }));

@@ -3,7 +3,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
 import { connect } from 'react-redux';
 import { getDates, deleteDate, editDate, addDate } from "./actions";
-import makeGetCurrentDates from "../Selector/dates";
 import Date from "./Date";
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
@@ -155,13 +154,15 @@ class Dates extends Component {
             && this.monthRefs[selectedMonth].scrollIntoView({ block: 'start', behavior: 'smooth', inline: 'start' });
     }
 
+    shouldComponentUpdate(props) {
+        if(this.props.dates !== props.dates) return true;
+        if(this.props.timetableDate.month() !== props.timetableDate.month()) return true;
+        return false;
+    }
+
     render() {
         const { classes, isAdmin, timetableDate, singleMonth } = this.props;
         const { editMode } = this.state;
-
-        const dates = singleMonth
-            ? this.props.dates.filter((date = {}) => moment(date.DATE_FROM.date).month() === timetableDate.month())
-            : this.props.dates;
 
         return (
             <React.Fragment>
@@ -228,17 +229,14 @@ class Dates extends Component {
     }
 }
 
-const makeMapStateToProps = () => {
-    const getCurrentDates = makeGetCurrentDates();
-    const mapStateToProps = (state, props) => {
-        return {
-            timetableDate: state.timetable.timetableDate,
-            dates: getCurrentDates(state),
-            isAdmin: state.user.scope === 'admin'
-        }
+
+const mapStateToProps = (state) => {
+    return {
+        timetableDate: state.timetable.timetableDate,
+        dates: state.dates,
+        isAdmin: state.user.scope === 'admin'
     }
-    return mapStateToProps;
-};
+}
 
 const mapDispatchToProps = (dispatch) => ({
     getDates: () => dispatch(getDates()),
@@ -247,4 +245,4 @@ const mapDispatchToProps = (dispatch) => ({
     editDate: (date) => dispatch(editDate(date)),
 });
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(withStyles(styles)(Dates)); 
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Dates)); 

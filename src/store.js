@@ -9,7 +9,7 @@ import actionRedirector from './Common/action-redirects';
 import cacheService from './Common/cache-service';
 import counterChanged from './Common/counter';
 import { responsiveStoreEnhancer } from 'redux-responsive'
-import periodEnhancer from './periodEnhancer';
+import periodEnhancer from './intervalDispatch';
 if (process.env.REACT_APP_MODE === 'tv') {
   var tvBarrier = require('./Common/tv-barrier').default;
 }

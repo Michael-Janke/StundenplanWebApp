@@ -12,8 +12,7 @@ import {
     loadJoinedTeams,
     loadAssignments
 } from "./actions";
-import TimeTable from "../TimeTable"
-import ReactInterval from 'react-interval';
+import TimeTable from "../TimeTable";
 
 class Main extends Component {
     constructor(props) {
@@ -39,7 +38,6 @@ class Main extends Component {
                         color: 'red'
                     }}
                     onClose={this.props.clearErrors} />
-                <ReactInterval timeout={60 * 1000} enabled={true} callback={this.props.checkCounter} />
             </React.Fragment>
         );
     }

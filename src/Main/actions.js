@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 export function loadMe() {
     return { type: "GET_ME" };
 }
@@ -8,8 +6,7 @@ export function loadJoinedTeams() {
 }
 
 export function loadAssignments() {
-    return { type: "GET_ASSIGNMENTS",
-            date: moment().subtract(1, 'weeks').startOf('isoWeek').format('YYYY-MM-DD')};
+    return { type: "GET_ASSIGNMENTS" };
 }
 
 export function getTeamsWebUrl(id) {
