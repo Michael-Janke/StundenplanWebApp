@@ -19,7 +19,7 @@ import moment from 'moment';
 import { RootRef } from "@material-ui/core";
 import { classNames } from "../Common/const";
 import { asynchronize } from "../Router/asynchronize";
-
+import isEqual from 'react-fast-compare';
 const DateDialog = asynchronize(() => import('./DateDialog'));
 const DateDeletionDialog = asynchronize(() => import("./DateDeletionDialog"));
 
@@ -123,45 +123,40 @@ class Dates extends Component {
 
     renderDates = (dates) => {
         let array = [];
-        dates.reduce((prev, current) => {
-            let date = moment(current.DATE_FROM.date);
-            if (!prev || prev.month !== date.month()) {
-                let c = { month: date.month(), title: date.format("MMMM YY"), dates: [current] };
-                array.push(c);
-                return c;
-            }
-            prev.dates.push(current);
-            return prev;
-        }, null);
+        Object.entries(dates).forEach(([key, value]) => {
+            const month = moment(key, "MM-YYYY");
+            array.push({ month, title: month.format("MMMM YY"), dates: value });
+        });
         return array;
     }
 
 
     componentDidMount() {
-        this.scrollToMonth();
+        this.scrollToMonth(this.props);
     }
 
-    componentDidUpdate() {
-        this.scrollToMonth();
+    componentWillReceiveProps(props) {
+        if (this.props.timetableDate.month() !== props.timetableDate.month() || this.props.dates !== props.dates) {
+            this.scrollToMonth(props);
+        }
     }
 
     monthRefs = {};
 
-    scrollToMonth = () => {
-        if (this.props.singleMonth) return;
-        const selectedMonth = this.props.timetableDate.format("MMMM YY");
+    scrollToMonth = (props) => {
+        if (props.singleMonth) return;
+        const selectedMonth = props.timetableDate.format("MMMM YY");
         this.monthRefs[selectedMonth]
             && this.monthRefs[selectedMonth].scrollIntoView({ block: 'start', behavior: 'smooth', inline: 'start' });
     }
 
-    shouldComponentUpdate(props) {
-        if(this.props.dates !== props.dates) return true;
-        if(this.props.timetableDate.month() !== props.timetableDate.month()) return true;
-        return false;
+    shouldComponentUpdate(props, state) {
+        if (!isEqual(props.dates, this.props.dates)) return true;
+        return !isEqual(this.state, state);
     }
 
     render() {
-        const { classes, isAdmin, timetableDate, singleMonth } = this.props;
+        const { classes, isAdmin, singleMonth, dates } = this.props;
         const { editMode } = this.state;
 
         return (
@@ -200,7 +195,7 @@ class Dates extends Component {
                     {!singleMonth && <div className={classes.buffer}>
                         {!dates && "Keine Termine eingetragen"}
                     </div>}
-                    
+
                     {isAdmin && editMode && <DateDeletionDialog
                         open={this.state.dialogDeleteOpen}
                         handleClose={this.handleDeletionDialogClose}
@@ -233,7 +228,7 @@ class Dates extends Component {
 const mapStateToProps = (state) => {
     return {
         timetableDate: state.timetable.timetableDate,
-        dates: state.dates,
+        dates: state.dates.dates,
         isAdmin: state.user.scope === 'admin'
     }
 }
