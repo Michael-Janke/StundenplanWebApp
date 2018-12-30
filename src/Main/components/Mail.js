@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import MailIcon from '@material-ui/icons/Mail';
@@ -51,17 +50,12 @@ export class Mail extends Component {
         });
     }
 
-    createBadges() { return {__html:
-        "<a href='https://play.google.com/store/apps/details?id=com.microsoft.office.outlook&hl=de'><img alt='Jetzt bei Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/de_badge_web_generic.png' style='display:inline;width:150px;height:60px;'/></a>" +
-        "<a href='https://itunes.apple.com/de/app/microsoft-outlook/id951937596?mt=8' style='display:inline-block;overflow:hidden;margin:10px;background:url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2015-01-29&kind=iossoftware&bubble=ios_apps) no-repeat;width:135px;height:40px;'></a>"
-    }};
-
     openWebOutlook() {
         window.location = "https://outlook.office365.com";
     }
 
     render() {
-
+        var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         const customContentStyle = {
             maxWidth: 500,
             overflowY: 'auto',
@@ -80,23 +74,42 @@ export class Mail extends Component {
                     </FeedbackTitle>
                 </DialogTitle>
                 <DialogContent style={customContentStyle}>
-                    <DialogContentText>
+                    <Typography variant="body1">
                         Du hast ungelesene Nachrichten in deinem Schul-E-Mail-Account.
-                        <Button variant="contained" style={{margin:10}} onClick={this.openWebOutlook}>
-                            <Icons.Outlook.icon/> &nbsp;
-                            Zur Web-Version
-                        </Button>
-                        
-                        <Typography variant="h6" gutterBottom>
-                            Apps installieren
-                        </Typography>
-                            Wir empfehlen dir die App zu installieren. Damit bekommst du sofort eine Benachrichtigung auf dein Smartphone.
-                        <div dangerouslySetInnerHTML={this.createBadges()} />
-                        <Typography variant="h6" gutterBottom>
-                            Outlook auf dem PC/Mac installieren
-                        </Typography>
-                            Auf deinem Computer kannst du <a href="https://portal.office.com/OLS/MySoftware.aspx">Microsoft Office ProPlus</a> kostenlos installieren. Damit wird auch Outlook installiert und mit deinem Konto verbunden.
-                    </DialogContentText>
+                    </Typography>
+                    <Button variant="contained" style={{ margin: 10 }} onClick={this.openWebOutlook}>
+                        <Icons.Outlook.icon /> &nbsp;
+                        Zur Web-Version
+                    </Button>
+                    {isMobile ?
+                        <>
+                            <Typography variant="h6" gutterBottom>
+                                Apps installieren
+                            </Typography>
+                            <Typography variant="body1">
+                                Wir empfehlen dir die App zu installieren. Damit bekommst du sofort eine Benachrichtigung auf dein Smartphone.
+                            </Typography>
+                            <div>
+                                <a href='https://play.google.com/store/apps/details?id=com.microsoft.office.outlook&hl=de'>
+                                    <img alt='Jetzt bei Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/de_badge_web_generic.png'
+                                        style={{ display: 'inline', width: 150, height: 60 }} />
+                                </a>
+                                <a href='https://itunes.apple.com/de/app/microsoft-outlook/id951937596?mt=8'
+                                    style={{ display: 'inline-block', overflow: 'hidden', margin: 10, background: 'url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2015-01-29&kind=iossoftware&bubble=ios_apps) no-repeat', width: 135, height: 40 }}>
+                                </a>
+                            </div>
+                        </> :
+                        <>
+                            <Typography variant="h6" gutterBottom>
+                                Outlook auf dem PC/Mac installieren
+                            </Typography>
+                            <Typography variant="body1">
+                                Auf deinem Computer kannst du <a href="https://portal.office.com/OLS/MySoftware.aspx">Microsoft Office ProPlus</a> kostenlos installieren. Damit wird auch Outlook installiert und mit deinem Konto verbunden.
+                            </Typography>
+                        </>
+                    }
+
+
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -112,9 +125,9 @@ export class Mail extends Component {
 }
 
 const FeedbackTitle = styled.div`
-    display: flex;
-    align-items: center;
-`;
+            display: flex;
+            align-items: center;
+        `;
 
 const mapStateToProps = (state) => ({
     small: state.browser.lessThan.medium

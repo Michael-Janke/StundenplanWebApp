@@ -15,7 +15,7 @@ const styles = theme => ({
 });
 
 
-class Popover extends React.Component {
+class Popover extends React.PureComponent {
 
     state = { open: false };
 

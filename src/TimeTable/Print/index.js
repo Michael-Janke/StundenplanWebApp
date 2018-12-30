@@ -47,7 +47,7 @@ const styles = theme => ({
     },
 });
 
-class PrintDialog extends React.Component {
+class PrintDialog extends React.PureComponent {
     state = {
         format: 'A4',
         orientation: 'vertical',
