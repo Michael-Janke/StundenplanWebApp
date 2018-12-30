@@ -20,14 +20,14 @@ import MailIcon from '@material-ui/icons/Mail';
 import { purge } from '../../store';
 import { unregister } from '../../registerServiceWorker';
 import { connectToServiceWorker } from '../../Common/firebase';
-import { setNotification, showError, loadMe } from '../actions';
-import { authContext } from '../../Common/Adal/adalConfig';
+import { setNotification, showError, loadMe, logOut } from '../actions';
 import UserAvatar from './UserAvatar';
 import withTheme from '@material-ui/core/styles/withTheme';
 import Tooltip from '@material-ui/core/Tooltip';
 import ReminderSettingsDialog from './ReminderSettingsDialog';
 import Feedback from './Feedback';
 import TokenError from './TokenError';
+import { getAuthContext } from '../../Common/Authentication/storage';
 
 class UserSettingsMenu extends React.Component {
 
@@ -96,7 +96,8 @@ class UserSettingsMenu extends React.Component {
     };
 
     logout = () => {
-        authContext.logOut();
+        this.props.logOut();
+        getAuthContext().logOut();
     }
 
     openFeedback = () => {
@@ -216,6 +217,7 @@ class UserSettingsMenu extends React.Component {
 
 const mapDispatchToProps = dispatch => {
     return {
+        logOut: () => { dispatch(logOut()) }, 
         setNotification: (newToken, oldToken) => { dispatch(setNotification(newToken, oldToken)); },
         showError: (text) => { dispatch(showError(text)); },
         loadMe: () => { dispatch(loadMe()); },

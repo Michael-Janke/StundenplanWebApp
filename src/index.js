@@ -1,14 +1,5 @@
-import {
-  runWithAdal,
-  runWithToken,
-  AuthenticationContext,
-} from './Common/Adal/react-adal';
-import {
-  authContext,
-  provideAuthContext,
-  adalConfig,
-} from './Common/Adal/adalConfig';
-import { TokenAuthContext } from './Common/Adal/tokenAuthContext';
+
+import { runApplication } from './Common/Authentication';
 
 let deparam = function (querystring) {
   // remove any preceding url and split
@@ -27,14 +18,11 @@ let deparam = function (querystring) {
 let params = (window.params = deparam(window.location.href));
 console.log(window.params);
 if (params.token) {
-  provideAuthContext(new TokenAuthContext(params.token, adalConfig));
-  runWithToken(params.token, () => {
-    require('./indexReact.js');
-  });
+
 } else {
-  provideAuthContext(new AuthenticationContext(adalConfig));
-  runWithAdal(authContext, () => {
-    // eslint-disable-next-line
-    require('./indexReact.js');
-  });
+    runApplication(() => {
+        // eslint-disable-next-line
+        require('./indexReact.js');
+    })
+
 }

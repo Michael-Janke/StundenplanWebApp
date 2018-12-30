@@ -17,6 +17,11 @@ const initialState = {
 
 export default function userReducer(state = initialState, action = {}) {
     switch (action.type) {
+        case "LOGOUT": {
+            return {
+                
+            };
+        }
         case "COUNTER_RECEIVED":
             return {
                 ...state,

@@ -110,6 +110,10 @@ export function changeTheme(type) {
     return { type: 'CHANGE_THEME', payload: type };
 }
 
+export function logOut() {
+    return { type: "LOGOUT" };
+}
+
 export function setNotification({ newToken, oldToken }) {
     return { type: "SET_NOTIFICATION", payload: { newToken, oldToken } };
 }

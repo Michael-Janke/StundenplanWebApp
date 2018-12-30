@@ -1,6 +1,5 @@
-import { adalGetToken } from '../Adal/react-adal';
-import { adalConfig, authContext } from '../Adal/adalConfig';
 import moment from 'moment';
+import { getToken } from '../Authentication';
 
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
@@ -35,7 +34,7 @@ export const requestApiGenerator = next => async (endpoint, route, action, METHO
     let token;
     let data;
     try {
-        token = await adalGetToken(authContext, adalConfig.endpoints[endpoint]);
+        token = await getToken(endpoint);
         next({ type: 'ADAL_RECEIVED', payload: token });
         data = await fetchData(endpoint + route, {
             method: METHOD,
@@ -74,7 +73,7 @@ export const requestApiGenerator = next => async (endpoint, route, action, METHO
 }
 
 export const getImageGenerator = next => (endpoint, route, action) => {
-    adalGetToken(authContext, adalConfig.endpoints[endpoint]).then((token) =>
+    getToken(endpoint).then((token) =>
         fetch(endpoint + route, {
             headers: {
                 "Authorization": 'Bearer ' + token
@@ -98,7 +97,7 @@ export const getImageGenerator = next => (endpoint, route, action) => {
 }
 
 export const getBatchGenerator = next => (payload, name) => {
-    adalGetToken(authContext, GRAPH_URL).then((token) =>
+    getToken(GRAPH_URL).then((token) =>
         fetch(GRAPH_URL + 'v1.0/$batch', {
             method: "POST",
             body: JSON.stringify(payload),
