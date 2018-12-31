@@ -19,7 +19,7 @@ import moment from 'moment';
 import { RootRef } from "@material-ui/core";
 import { classNames } from "../Common/const";
 import { asynchronize } from "../Router/asynchronize";
-import isEqual from 'react-fast-compare';
+
 const DateDialog = asynchronize(() => import('./DateDialog'));
 const DateDeletionDialog = asynchronize(() => import("./DateDeletionDialog"));
 
@@ -121,42 +121,35 @@ class Dates extends Component {
         this.setState({ editMode: !this.state.editMode });
     }
 
-    renderDates = (dates) => {
+    renderDates = (dates, singleMonth) => {
         let array = [];
         Object.entries(dates).forEach(([key, value]) => {
-            const month = moment(key, "MM-YYYY");
-            array.push({ month, title: month.format("MMMM YY"), dates: value });
+            if(singleMonth && singleMonth !== key) { return; }
+            const month = moment(key, "M-YYYY");
+            array.push({ month, key, title: month.format("MMMM YYYY"), dates: value });
         });
         return array;
     }
-
 
     componentDidMount() {
         this.scrollToMonth(this.props);
     }
 
-    componentWillReceiveProps(props) {
-        if (this.props.timetableDate.month() !== props.timetableDate.month() || this.props.dates !== props.dates) {
-            this.scrollToMonth(props);
-        }
+    componentDidUpdate() {
+        this.scrollToMonth(this.props);
     }
 
     monthRefs = {};
 
     scrollToMonth = (props) => {
         if (props.singleMonth) return;
-        const selectedMonth = props.timetableDate.format("MMMM YY");
+        const selectedMonth = props.month;
         this.monthRefs[selectedMonth]
             && this.monthRefs[selectedMonth].scrollIntoView({ block: 'start', behavior: 'smooth', inline: 'start' });
     }
 
-    shouldComponentUpdate(props, state) {
-        if (!isEqual(props.dates, this.props.dates)) return true;
-        return !isEqual(this.state, state);
-    }
-
     render() {
-        const { classes, isAdmin, singleMonth, dates } = this.props;
+        const { classes, isAdmin, singleMonth, dates, month } = this.props;
         const { editMode } = this.state;
 
         return (
@@ -171,9 +164,9 @@ class Dates extends Component {
                     </ListItemSecondaryAction>
                 </ListItem>
                 <List className={classNames(classes.list, singleMonth && classes.listSmall)}>
-                    {this.renderDates(dates)
+                    {this.renderDates(dates, singleMonth && month)
                         .map(month => (
-                            <RootRef key={month.title} rootRef={(node) => this.monthRefs[month.title] = node}>
+                            <RootRef key={month.title} rootRef={(node) => this.monthRefs[month.key] = node}>
                                 <ul className={classes.ul}>
                                     <ListSubheader
                                         key={-1}
@@ -227,7 +220,7 @@ class Dates extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        timetableDate: state.timetable.timetableDate,
+        month: state.timetable.timetableDate.format('M-YYYY'),
         dates: state.dates.dates,
         isAdmin: state.user.scope === 'admin'
     }

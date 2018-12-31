@@ -11,8 +11,8 @@ moment.locale('de');
 console.log("REACT_APP_MODE: " + process.env.REACT_APP_MODE);
 
 if (process.env.NODE_ENV !== 'production') {
-    const { whyDidYouUpdate } = require('why-did-you-update');
-    whyDidYouUpdate(React);
+    //const { whyDidYouUpdate } = require('why-did-you-update');
+    //whyDidYouUpdate(React);
 }
 
 firebase.initializeApp({

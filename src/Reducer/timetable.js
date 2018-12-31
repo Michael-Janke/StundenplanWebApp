@@ -61,12 +61,12 @@ export default function timetableReducer(state = initialState, action = {}) {
             let { id, type } = action.payload;
             const min = moment.max(
                 moment()
-                    .year(state.masterdata.minMaxDates.min.year)
+                    .weekYear(state.masterdata.minMaxDates.min.year)
                     .week(state.masterdata.minMaxDates.min.week),
                 moment().add(-1, 'week')
             );
             const max = moment()
-                .year(state.masterdata.minMaxDates.max.year)
+                .weekYear(state.masterdata.minMaxDates.max.year)
                 .week(state.masterdata.minMaxDates.max.week);
             
             let newDate;
