@@ -164,12 +164,18 @@ export class AuthenticationContext {
                 this.cleanupCode();
                 setAuthContext(this);
             } else {
+                const authCodeExpired = newToken.error_codes.indexOf(70008) !== -1;
+                if (authCodeExpired) {
+                    // get new authCode
+                    this.login();
+                    return;
+                }
                 // an error occured
                 this.tokens[endpoint] = null;
                 this.tokenAcquisistions[endpoint].forEach(listener => listener(null, newToken));
                 this.tokenAcquisistions[endpoint] = null;
                 reject(newToken);
-
+                setAuthContext(this);
             }
         });
     }

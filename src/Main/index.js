@@ -7,7 +7,6 @@ import {
 import Snackbar from '@material-ui/core/Snackbar';
 import {
     clearErrors,
-    checkCounter,
     showError,
     loadJoinedTeams,
     loadAssignments
@@ -17,7 +16,6 @@ import TimeTable from "../TimeTable";
 class Main extends Component {
     constructor(props) {
         super(props);
-        props.checkCounter();
         props.loadJoinedTeams();
         props.loadAssignments();
     }
@@ -45,7 +43,6 @@ class Main extends Component {
 
 const mapDispatchToProps = dispatch => {
     return {
-        checkCounter: () => { dispatch(checkCounter()); },
         clearErrors: () => { dispatch(clearErrors()); },
         showError: (text) => { dispatch(showError(text)); },
         loadJoinedTeams: () => dispatch(loadJoinedTeams()),
