@@ -2,22 +2,37 @@ import { setAuthContext } from './storage';
 
 
 export class AuthenticationContext {
-    resources = {
+    static resources = {
         'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/':
             'https://wgmail.onmicrosoft.com/f863619c-ea91-4f1d-85f4-2f907c53963b/user_impersonation',
         'https://graph.microsoft.com/': 'https://graph.microsoft.com/mail.read'
     };
 
-    tokens = {};
-    
-    tokenAcquisistions = {};
-
+    toObject() {
+        return {
+            tokens: this.tokens,
+            code: this.code,
+            state: this.state,
+            session_state: this.session_state,
+            tokensReceived: this.tokensReceived
+        }
+    }
     constructor(obj) {
         if (obj) {
             // copy values into this object
-            Object.entries(obj).forEach(([key, value]) => this[key] = value);
+            this.tokens = obj.tokens;
+            this.code = obj.code;
+            this.state = obj.state;
+            this.session_state = obj.session_state;
+            this.tokensReceived = obj.tokensReceived;
         }
     }
+
+    tokens = {};
+
+    tokenAcquisistions = {};
+
+    tokensReceived = false;
 
     /**
      * get scopes
@@ -26,7 +41,7 @@ export class AuthenticationContext {
     getScope(resource) {
         return [
             'offline_access',
-            ...(resource ? [resource] : Object.values(this.resources)),
+            ...(resource ? [resource] : Object.values(AuthenticationContext.resources)),
         ]
     }
 
@@ -48,9 +63,16 @@ export class AuthenticationContext {
             !!this.code
             || Object.keys(this.tokens).length
             || Object.keys(this.tokenAcquisistions).length
+            || this.tokensReceived
         );
     }
     login() {
+        // invalidate current tokens, in fact we get new access tokens soon
+        this.tokens = {};
+        this.tokenAcquisistions = {};
+        this.tokensReceived = false;
+        setAuthContext(this);
+
         window.location.replace(`
         https://login.microsoftonline.com/wgmail.de/oauth2/v2.0/authorize?                         
                 client_id=fb82e2a9-1efd-4a8e-9ac6-92413ab4b58b
@@ -63,18 +85,21 @@ export class AuthenticationContext {
     }
 
     handleCallback(code, session_state, state) {
-        this.code = code;
-        this.session_state = session_state;
-        this.state = state;
-        setAuthContext(this);
+        if (!this.code && !this.tokensReceived) {
+            this.code = code;
+            this.session_state = session_state;
+            this.state = state;
+            setAuthContext(this);
+        }
     }
 
     cleanupCode() {
         // as soon as all tokens are received, code can be removed
-        if (Object.keys(this.tokens).length >= Object.keys(this.resources).length) {
+        if (Object.keys(this.tokens).length >= Object.keys(AuthenticationContext.resources).length) {
             this.code = null;
             this.session_state = null;
             this.state = null;
+            this.tokensReceived = true;
             setAuthContext(this);
         }
     }
@@ -88,7 +113,7 @@ export class AuthenticationContext {
 
         return new Promise(async (resolve, reject) => {
             const { code, state } = this;
-            const token = this.tokens[endpoint];    
+            const token = this.tokens[endpoint];
             if (token) {
                 var refresh_token = token.refresh_token;
                 var expires_in = token.expires_in;
@@ -119,7 +144,7 @@ export class AuthenticationContext {
                 code,
                 refresh_token,
                 state,
-                scope: this.getScope(this.resources[endpoint]).join(" ")
+                scope: this.getScope(AuthenticationContext.resources[endpoint]).join(" ")
             };
             const response = await fetch(`https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/token`, {
                 method: 'POST',

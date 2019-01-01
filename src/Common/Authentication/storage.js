@@ -16,5 +16,5 @@ export const getAuthContext = () => {
 }
 
 export const setAuthContext = (authContext) => {
-    ls('authorization', authContext);
+    ls('authorization', authContext && authContext.toObject());
 }
