@@ -37,7 +37,12 @@ class OpenTeamsButton extends React.Component {
 
     openClient = () => {
         window.addEventListener("blur", this.successClient);
-        this.iframe.current.src = this.props.url.client;
+        if(navigator.platform === "Win32") {
+            this.iframe.current.src = this.props.url.client;
+        } else {
+            this.openUrl();
+        }
+
         let timer = setTimeout(this.errorClient, 6000);
         this.setState({webTimer: timer})
     }
