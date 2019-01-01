@@ -30,7 +30,8 @@ const dataService = store => next => action => {
                 `supervision/${year - week}`, { type: "GET_SUPERVISIONS", request: action.payload });
         }
         case "SEND_LOGIN_STATISTIC":
-            return requestApiGenerator(next)(API_URL, 'statistics/login', { type: "LOGIN_STATISTIC" }, 'POST', '{}');
+            return requestApiGenerator(next)(API_URL, 'statistics/login', { type: "LOGIN_STATISTIC" }, 'POST',
+                JSON.stringify(action.payload));
         case "GET_LOGIN_STATISTICS": {
             let { week, year, action: statisticAction } = action.payload;
             return requestApiGenerator(next)(API_URL,

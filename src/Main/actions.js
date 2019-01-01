@@ -53,8 +53,8 @@ export function checkCounter() {
     return { type: "GET_COUNTER" };
 }
 
-export function sendLoginStatistic() {
-    return { type: "SEND_LOGIN_STATISTIC" };
+export function sendLoginStatistic(data) {
+    return { type: "SEND_LOGIN_STATISTIC", payload: data };
 }
 
 export function setSortBy(sortBy) {

@@ -8,6 +8,7 @@ import MomentUtils from 'material-ui-pickers/utils/moment-utils';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
 import { HashRouter as Router } from 'react-router-dom';
 import Routes from './routes';
+import version from '../version.json';
 
 class AppRouter extends Component {
 
@@ -20,7 +21,16 @@ class AppRouter extends Component {
             this.props.setSortBy(window.params.sortBy || 'class');
         }
         this.props.setMyTimetable();
-        this.props.sendLoginStatistic();
+        this.props.sendLoginStatistic({
+            device: {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                browser: navigator.userAgent,
+            },
+            buildNumber: version.build,
+            version: version.version,
+            production: process.env.NODE_ENV === 'production',
+        });
         if (this.props.notificationToken) {
             connectToServiceWorker(this.props.setNotification, this.props.notificationToken);
         }
@@ -67,7 +77,7 @@ class AppRouter extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         setMyTimetable: () => { dispatch(setMyTimetable()) },
-        sendLoginStatistic: () => { dispatch(sendLoginStatistic()) },
+        sendLoginStatistic: (data) => { dispatch(sendLoginStatistic(data)) },
         setNotification: (token) => { dispatch(setNotification(token)); },
         changeTheme: (type) => { dispatch(changeTheme(type)); },
         setSortBy: (sortBy) => { dispatch(setSortBy(sortBy)); },
