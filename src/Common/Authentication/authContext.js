@@ -105,12 +105,6 @@ export class AuthenticationContext {
     }
 
     getToken(endpoint) {
-        let tokenAcquisition = this.tokenAcquisistions[endpoint];
-        if (!tokenAcquisition) {
-            this.tokenAcquisistions[endpoint] = [];
-            console.debug("new acquisition for", endpoint);
-        }
-
         return new Promise(async (resolve, reject) => {
             const { code, state } = this;
             const token = this.tokens[endpoint];
@@ -124,8 +118,12 @@ export class AuthenticationContext {
                     return;
                 }
             }
-            if (tokenAcquisition) {
-                tokenAcquisition.push((token, error) => {
+            let activeTokenAcquisition = this.tokenAcquisistions[endpoint];
+            if (!activeTokenAcquisition) {
+                this.tokenAcquisistions[endpoint] = [];
+                console.debug("new acquisition for", endpoint);
+            } else {
+                activeTokenAcquisition.push((token, error) => {
                     if (token) {
                         resolve(token);
                     } else {
