@@ -1,5 +1,17 @@
 import React from 'react';
-import { Redirect, withRouter } from 'react-router-dom';
+import { withStyles, Typography } from '@material-ui/core';
+import ErrorIcon from '@material-ui/icons/Error';
+
+const styles = theme => ({
+    root: {
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+    },
+})
 
 class ErrorBoundary extends React.Component {
     constructor(props) {
@@ -13,19 +25,18 @@ class ErrorBoundary extends React.Component {
 
     render() {
         const { error } = this.state;
+        const { classes } = this.props;
         if (error) {
             return (
-                <Redirect to={{
-                    pathname: '/error',
-                    state: {
-                        error: 500,
-                        message: `Fehlerberschreibung: ${error.error.message} \nStacktrace: ${error.info.componentStack}`,
-                    }
-                }} />
+                <div className={classes.root}>
+                    <Typography gutterBottom><ErrorIcon color="error" /></Typography>
+                    <Typography variant="body1" color="textPrimary">Ein Fehler ist aufgetreten</Typography>
+                    <Typography variant="body2" color="textSecondary">Bitte versuche es später erneut</Typography>
+                </div>
             );
         }
         return this.props.children;
     }
 }
 
-export default withRouter(ErrorBoundary);
+export default withStyles(styles)(ErrorBoundary);
