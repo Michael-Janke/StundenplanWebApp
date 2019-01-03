@@ -20,8 +20,21 @@ const enhanceStore = (createStore) => (reducer, preloadedState, enhancer) => {
     window.addEventListener('offline', store.dispatch.bind(null, { type: 'NETWORK_OFFLINE' }));
 
     // call action every minute
-    setInterval(dispatchReduxAction, 1000 * 60);
-    dispatchReduxAction();
+    let intervalId;
+    const startInterval = () => {
+        stopInterval();
+        intervalId = setInterval(dispatchReduxAction, 1000 * 60);
+        dispatchReduxAction();
+    }
+    const stopInterval = () => {
+        if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = undefined;
+        }
+    }
+    startInterval();
+    window.addEventListener('blur', stopInterval);
+    window.addEventListener('focus', startInterval);
 
     return store;
 }
