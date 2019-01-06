@@ -20,9 +20,6 @@ class EditPage extends Component {
     }
 
     render() {
-        if (!this.props.location.state) {
-            this.props.history.replace(this.props.location.pathname, { back: true, title: "Post editieren" });
-        }
         return (
             <Stepper
                 onClose={this.handleClose}

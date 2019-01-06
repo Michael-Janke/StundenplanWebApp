@@ -75,7 +75,7 @@ class AppBar extends React.Component {
         const { printOpen, mailOpen } = this.state;
         return (
             <React.Fragment>
-                <Icons style={{ marginLeft: large ? "calc(300px + 2vw - 58px)" : undefined }}>
+                <Icons style={{ marginLeft: large ? "calc(300px + 2vw - 78px)" : undefined }}>
                     <Search shrinkChildren={small} alwaysOpen={!small}>
                         {!small &&
                             <Tooltip id="tooltip-print" title="Stundenplan drucken">

@@ -21,7 +21,7 @@ class Statistics extends React.Component {
 
     state = {
         week: 0,
-        year: 2018,
+        year: 0,
     }
 
     componentWillMount() {

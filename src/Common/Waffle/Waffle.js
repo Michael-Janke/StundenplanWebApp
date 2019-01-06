@@ -41,6 +41,7 @@ const Waffle = ({ classes, name, waffle, onClick }) => {
                     {
                         component: Link,
                         to: waffle.link,
+                        replace: true,
                     }
                     : {
                         href: waffle.link,

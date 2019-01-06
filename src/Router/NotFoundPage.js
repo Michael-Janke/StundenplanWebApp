@@ -27,7 +27,7 @@ function NotFoundPage(props) {
         <div className={classes.root}>
             <Paper className={classes.paper} elevation={0}>
                 <Typography variant="h5" paragraph>{message}</Typography>
-                <Button component={Link} to="/">Zurück</Button>
+                <Button component={Link} replace to="/">Zurück</Button>
                 {retry && <Button onClick={retry}>Erneut versuchen</Button>}
                 <ExpansionPanel className={classes.expansionPanel} elevation={0} square>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
