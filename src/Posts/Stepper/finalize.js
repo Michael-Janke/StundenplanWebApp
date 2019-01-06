@@ -11,7 +11,7 @@ class Finalize extends Component {
     state = {};
 
     static getDerivedStateFromProps(props, state) {
-        if (props.post !== state.prevPost && props.post.TEXT) {
+        if (props.post !== state.prevPost) {
             return {
                 prevPost: props.post,
                 post: {

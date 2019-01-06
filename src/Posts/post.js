@@ -17,6 +17,7 @@ import { ObjectIcon } from '../Main/components/Avatars';
 import PostDeletionDialog from './PostDeletionDialog';
 import { deletePost, editPost } from './actions';
 import draftToHtml from 'draftjs-to-html';
+import Diashow from './diashow';
 
 const styles = theme => ({
     card: {
@@ -48,10 +49,10 @@ class Post extends React.Component {
         this.setState({ anchorEl: null, deleteOpen: false });
         this.props.onEdit(this.props.post);
     };
-    
+
     handleApprove = () => {
         this.setState({ anchorEl: null, deleteOpen: false });
-        this.props.editPost({...this.props.post, APPROVED: !this.props.post.APPROVED})
+        this.props.editPost({ ...this.props.post, APPROVED: !this.props.post.APPROVED })
     };
     handleClose = () => {
         this.setState({ anchorEl: null, deleteOpen: false });
@@ -80,7 +81,7 @@ class Post extends React.Component {
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}
                 >
-                    { (post.USER_CREATED || isAdmin) &&
+                    {(post.USER_CREATED || isAdmin) &&
                         <MenuItem onClick={this.handleOpenDelete}>
                             <ListItemIcon>
                                 <DeleteIcon />
@@ -88,7 +89,7 @@ class Post extends React.Component {
                             <ListItemText inset primary="Löschen" />
                         </MenuItem>
                     }
-                    { (post.USER_CREATED || isAdmin) &&
+                    {(post.USER_CREATED || isAdmin) &&
                         <MenuItem onClick={this.handleEdit}>
                             <ListItemIcon>
                                 <EditIcon />
@@ -96,13 +97,13 @@ class Post extends React.Component {
                             <ListItemText inset primary="Editieren" />
                         </MenuItem>
                     }
-                        
+
                     {isAdmin &&
                         <MenuItem onClick={this.handleApprove}>
                             <ListItemIcon>
                                 <ApproveIcon />
                             </ListItemIcon>
-                            <ListItemText inset primary={approved ? "Sperren" :"Freigeben"} />
+                            <ListItemText inset primary={approved ? "Sperren" : "Freigeben"} />
                         </MenuItem>
                     }
                 </Menu>
@@ -113,11 +114,14 @@ class Post extends React.Component {
                 />}
             </React.Fragment>
         );
-        const rawContentState = JSON.parse(post.TEXT);
+        if (post.TEXT) {
+            const rawContentState = JSON.parse(post.TEXT);
 
-        const markup = draftToHtml(
-            rawContentState,
-        );
+            var markup = draftToHtml(
+                rawContentState,
+            );
+
+        }
 
         return (
             <Card className={classes.card}>
@@ -135,7 +139,8 @@ class Post extends React.Component {
                     title="Contemplative Reptile"
                 /> */}
                 <CardContent>
-                    <div className={classes.content} dangerouslySetInnerHTML={{__html: markup}}/>
+                    {post.IMAGES && <Diashow post={post}></Diashow>}
+                    <div className={classes.content} dangerouslySetInnerHTML={{ __html: markup }} />
                     <div>von {post.CREATOR}</div>
                 </CardContent>
                 <CardActions className={classes.actions} disableActionSpacing>
@@ -156,7 +161,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    deletePost: (post) => dispatch(deletePost(post)), 
+    deletePost: (post) => dispatch(deletePost(post)),
     editPost: (post) => dispatch(editPost(post)),
 });
 

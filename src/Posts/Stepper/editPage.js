@@ -8,7 +8,7 @@ class EditPage extends Component {
 
     handleClose = (post) => {
         // close
-        this.props.history.replace("/posts");
+        this.props.history.goBack();
         if (!post) {
             return;
         }
@@ -20,6 +20,9 @@ class EditPage extends Component {
     }
 
     render() {
+        if (!this.props.location.state) {
+            this.props.history.replace(this.props.location.pathname, { back: true, title: "Post editieren" });
+        }
         return (
             <Stepper
                 onClose={this.handleClose}

@@ -1,34 +1,36 @@
 import React, { PureComponent } from 'react'
-import { withStyles, Stepper, Step, Typography, Button, DialogActions, StepButton, Collapse, Paper, StepContent } from '@material-ui/core';
+import { withStyles, Stepper, Step, Typography, Button, DialogActions, StepButton, Collapse, Paper, MobileStepper } from '@material-ui/core';
 import ChooseStep from './choose';
 import TextEditor from './textEditor';
 import Finalize from './finalize';
 import types from './types';
 import { connect } from 'react-redux';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import DiashowEditor from './Diashow/diashowEditor';
 
 const styles = theme => ({
-    root: {
-        width: 'auto',
-        display: 'block', // Fix IE 11 issue.
-        marginLeft: theme.spacing.unit * 3,
-        marginRight: theme.spacing.unit * 3,
-    },
-    paper: {
-        marginTop: theme.spacing.unit * 8,
+    content: {
         flexDirection: 'column',
         alignItems: 'center',
         padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit}px`,
+        // backgroundColor: theme.palette.background.paper,
+        overflowY: 'auto',
+        flexGrow: 1,
     },
-    button: {
-        marginTop: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
+    paper: {
+        ...theme.mixins.gutters(),
+        paddingTop: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 2,
     },
-    actionsContainer: {
-        marginBottom: theme.spacing.unit * 2,
+    root: {
+        flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'column',
     },
-    resetContainer: {
-        padding: theme.spacing.unit * 3,
-    },
+    mobileStepper: {
+        flexShrink: 0,
+    }
 });
 
 const steps = [
@@ -45,7 +47,7 @@ const steps = [
                 case "PICTURE":
                     return "Bild";
                 case "DIASHOW":
-                    return "DIASHOW";
+                    return <DiashowEditor {...props}></DiashowEditor>
                 default:
                     return null;
             }
@@ -112,6 +114,9 @@ class PostStepper extends PureComponent {
 
     handleStep = (e) => {
         let post = this.functions[this.state.activeStep]();
+        if (!post) {
+            return;
+        }
         const diff = 1;
         if (this.state.activeStep + diff === steps.length) {
             this.props.onClose(this.state.post);
@@ -145,40 +150,58 @@ class PostStepper extends PureComponent {
         const { activeStep, post } = this.state;
         return (
             <div className={classes.root}>
-                <Paper className={classes.paper}>
-                    <Typography variant="h2" paragraph>Post {post.POST_ID ? "editieren" : "erstellen"}</Typography>
-
-                    <Stepper activeStep={activeStep} orientation={small ? "vertical" : "horizontal"}>
-                        {steps.map(({ Label, Component }, index) => {
+                <div className={classes.content}>
+                    <Paper elevation={0} className={classes.paper}>
+                        {small && <Typography variant="h5" gutterBottom>{React.createElement(steps[activeStep].Label, { post })}</Typography>}
+                        {!small && <Stepper activeStep={activeStep} orientation={"horizontal"}>
+                            {steps.map(({ Label, Component }, index) => {
+                                return (
+                                    <Step key={index}>
+                                        <StepButton
+                                            onClick={this.handleClick(index)}
+                                            completed={index <= activeStep - 1}
+                                        >
+                                            <Label post={post} />
+                                        </StepButton>
+                                    </Step>
+                                );
+                            })}
+                        </Stepper>}
+                        {steps.map(({ Component }, index) => {
                             return (
-                                <Step key={index}>
-                                    <StepButton
-                                        onClick={this.handleClick(index)}
-                                        completed={index <= activeStep - 1}
-                                    >
-                                        <Label post={post} />
-                                    </StepButton>
-                                    {small && (
-                                        <StepContent>
-                                            {this.renderComponent(Component, post, index)}
-                                        </StepContent>
-                                    )}
-                                </Step>
+                                <Collapse in={index === activeStep} key={index}>
+                                    {this.renderComponent(Component, post, index)}
+                                </Collapse>
                             );
                         })}
-                    </Stepper>
-                    {!small && steps.map(({ Component }, index) => {
-                        return (
-                            <Collapse in={index === activeStep} key={index}>
-                                {this.renderComponent(Component, post, index)}
-                            </Collapse>
-                        );
-                    })}
+                    </Paper>
+                </div>
+                {small ?
+                    <MobileStepper
+                        steps={steps.length}
+                        position="static"
+                        activeStep={activeStep}
+                        className={classes.mobileStepper}
+                        nextButton={
+                            <Button size="small" onClick={this.handleStep}>
+                                {activeStep < steps.length - 1 ? "Weiter" : "Erstellen"}
+                                <KeyboardArrowRight />
+                            </Button>
+                        }
+                        backButton={
+                            <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
+                                <KeyboardArrowLeft />
+                                Zurück
+                            </Button>
+                        }
+                    />
+                    :
                     <DialogActions>
                         <Button
-                            onClick={this.handleClose}
+                            onClick={this.handleBack}
+                            disabled={activeStep === 0}
                         >
-                            Abbrechen
+                            Zurück
                             </Button>
                         <Button
                             variant="contained"
@@ -188,9 +211,8 @@ class PostStepper extends PureComponent {
                             {activeStep < steps.length - 1 ? "Weiter" : "Erstellen"}
                         </Button>
                     </DialogActions>
-                </Paper>
+                }
             </div>
-
         )
     }
 }

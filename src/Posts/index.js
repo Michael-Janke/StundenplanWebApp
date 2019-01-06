@@ -52,7 +52,7 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 4,
     },
     layout: {
-        padding: `${theme.spacing.unit * 8}px 0`,
+        padding: `${theme.spacing.unit * 8}px 20px`,
         width: 'auto',
         marginLeft: theme.spacing.unit * 3,
         marginRight: theme.spacing.unit * 3,
@@ -101,7 +101,7 @@ class Posts extends React.Component {
                             Neuigkeiten
                         </Typography>
                         <Typography variant="h6" align="center" color="textSecondary" paragraph>
-                            Erstelle Beiträge, um über Neugigkeiten von Lehrern und Schülern zu informieren. 
+                            Erstelle Beiträge, um über Neuigkeiten von Lehrern und Schülern zu informieren. 
                         </Typography>
                         {posts && !posts.length &&
                             <Typography variant="h6" align="center" color="error" paragraph>
@@ -109,7 +109,7 @@ class Posts extends React.Component {
                             </Typography>
                         }
                         <div className={classes.heroButtons}>
-                            <Grid container spacing={16} justify="center">
+                            <Grid container justify="center">
                                 <Grid item>
                                     <Button variant="contained" color="primary" onClick={this.handleCreate}>
                                         Jetzt erstellen

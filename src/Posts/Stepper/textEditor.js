@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withStyles, FormControl, InputLabel, Input, Typography } from '@material-ui/core';
+import { withStyles, FormControl, InputLabel, Input, FormHelperText } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { Editor, EditorState, RichUtils, convertFromRaw, convertToRaw, Modifier } from 'draft-js';
 import FormatBoldIcon from '@material-ui/icons/FormatBold';
@@ -61,8 +61,15 @@ class PostEditor extends Component {
         this.props.handleNextFunction(this.handleNext);
     }
 
+    componentWillUnmount() {
+        this.props.handleNextFunction(null);
+    }
+
     handleNext = () => {
         const prevPost = this.props.post;
+        if (!this.state.TITLE) {
+            return null;
+        }
         return {
             ...prevPost,
             TEXT: JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent())),
@@ -131,10 +138,7 @@ class PostEditor extends Component {
 
         return (
             <>
-                <Typography>
-                    Schreibe deinen Text
-                </Typography>
-                <FormControl className={classes.formControl} error={!this.state.TITLE}>
+                <FormControl required className={classes.formControl} error={!this.state.TITLE}>
                     <InputLabel htmlFor="title">Titel</InputLabel>
                     <Input
                         id="title"
@@ -143,6 +147,7 @@ class PostEditor extends Component {
                         value={this.state.TITLE}
                         onChange={this.handleChange("TITLE")}
                     />
+                    <FormHelperText id="component-error-text">Ein Titel wird benötigt</FormHelperText>
                 </FormControl>
                 <ToggleButtonGroup exclusive value={inlineStyle} onChange={this.handleFormat}>
                     <ToggleButton value="BOLD">

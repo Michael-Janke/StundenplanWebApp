@@ -1,10 +1,14 @@
 import React from 'react';
-import { Typography, Tab, withStyles, Tabs } from '@material-ui/core';
+import { Tab, withStyles, Tabs, Paper } from '@material-ui/core';
 import types from './types';
 
 const styles = theme => ({
     root: {
+        backgroundColor: theme.palette.background.default,
 
+    },
+    content: {
+        padding: theme.spacing.unit * 3,
     }
 });
 
@@ -14,6 +18,16 @@ class Choose extends React.Component {
     state = {
         currentTab: types["TEXT"],
     }
+    static getDerivedStateFromProps(props, state) {
+        if (props.post !== state.post) {
+            return {
+                post: props.post,
+                currentTab: types[props.post.TYPE || "TEXT"],
+            }
+        }
+        return null;
+    }
+
     handleNext = () => {
         const prevPost = this.props.post;
         return {
@@ -32,28 +46,30 @@ class Choose extends React.Component {
 
     render() {
         const { currentTab } = this.state;
+        const { classes } = this.props;
         return (
-            <>
-                <Typography variant="h5" paragraph>
-                    Wähle aus, was du machen willst.
-                </Typography>
-                <Tabs
-                    value={currentTab}
-                    onChange={this.handleChange}
-                    indicatorColor="secondary"
-                    textColor="secondary"
-                    fullWidth
-                >
-                    {Object.values(types).map(tab => {
-                        return (
-                            <Tab key={tab.label} label={tab.label} value={tab} icon={<tab.icon />} />
-                        )
-                    })}
-                </Tabs>
-                <Typography variant="body1" paragraph>
-                    {currentTab.description}
-                </Typography>
-            </>
+            <div className={classes.root}>
+                <Paper square elevation={0}>
+
+                    <Tabs
+                        value={currentTab}
+                        onChange={this.handleChange}
+                        indicatorColor="secondary"
+                        textColor="secondary"
+                        fullWidth
+                    >
+                        {Object.values(types).map(tab => {
+                            return (
+                                <Tab key={tab.label} label={tab.label} value={tab} icon={<tab.icon />} />
+                            )
+                        })}
+                    </Tabs>
+                    <div className={classes.content}>
+
+                        {currentTab.description}
+                    </div>
+                </Paper>
+            </div>
         );
     }
 }
