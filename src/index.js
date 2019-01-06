@@ -1,5 +1,6 @@
 
 import { runApplication } from './Common/Authentication';
+import 'babel-polyfill';
 
 let deparam = function (querystring) {
   // remove any preceding url and split
