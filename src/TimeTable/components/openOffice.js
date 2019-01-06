@@ -82,8 +82,8 @@ class OpenTeamsButton extends React.Component {
                 >
                     <ListItemIcon>
                         {(!url || this.state.webTimer)
-                        ? <CircularProgress style={{marginRight: 10}} size={24}/>
-                        : <Icon.icon style={{marginRight: 10}}/>}
+                        ? <CircularProgress size={24}/>
+                        : <Icon.icon />}
                     </ListItemIcon>
                     <ListItemText primary={this.state.url ? "im Browser öffnen" : text}/>
                 </ListItem>

@@ -6,15 +6,17 @@ import Icon from '@material-ui/icons/Assignment';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 export default function Assignments(props) {
-    return <React.Fragment>
-                <ListSubheader component="div">Hausaufgaben</ListSubheader>
-                {props.assignments.map((assignment) => 
-                    <ListItem button key={assignment.id}>
-                        <ListItemIcon>
-                            <Icon />
-                        </ListItemIcon>
-                        <ListItemText primary={assignment.displayName} secondary={assignment.instructions && assignment.instructions.content} />
-                    </ListItem>
-                )}
-            </React.Fragment>;
+    return (
+        <React.Fragment>
+            <ListSubheader component="div">Hausaufgaben</ListSubheader>
+            {props.assignments.map((assignment) => 
+                <ListItem button key={assignment.id}>
+                    <ListItemIcon>
+                        <Icon />
+                    </ListItemIcon>
+                    <ListItemText primary={assignment.displayName} secondary={assignment.instructions && assignment.instructions.content} />
+                </ListItem>
+            )}
+        </React.Fragment>
+    );
 }

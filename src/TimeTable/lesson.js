@@ -97,11 +97,15 @@ const AbstractLesson = (props) => {
     return (
         <Popover active={popoverActive} key={reference.TIMETABLE_ID}>
             {(props, handleOpen) => (
-                <Badge color="secondary" badgeContent={assignments.length} invisible={!assignments.length} style={{height: '100%'}}>
+                <Badge
+                    component="div"
+                    color="secondary"
+                    badgeContent={assignments.length}
+                    invisible={!assignments.length}
+                    style={{ display: 'flex', flex: 'auto' }}>
                     <Lesson
                         type={theme.palette.type}
                         color={styles.backgroundColor}
-                        flex={last}
                         {...props}
                         onClick={handleOpen}
                     >
@@ -120,23 +124,25 @@ const AbstractLesson = (props) => {
                     </ListSubheader>}
                     {SubstitutingFields &&
                         <React.Fragment>
-                            {SubstitutingFields.map((Field, i) => <Field key={i} description instead/>)}
+                            {SubstitutingFields.map((Field, i) => <Field key={i} description />)}
+                            <Divider />
+
                         </React.Fragment>
                     }
                     <Field1 description />
                     <Field2 description />
                     {Field3 && <Field3 description />}
                     {team && <React.Fragment>
-                            <Divider />
-                            <ListSubheader component="div">Office</ListSubheader>
-                            <OpenOfficeButton id={team.id} type="teams"/>
-                            <OpenOfficeButton id={team.id} type="notebook"/>
-                        </React.Fragment>
+                        <Divider />
+                        <ListSubheader component="div">Office</ListSubheader>
+                        <OpenOfficeButton id={team.id} type="teams" />
+                        <OpenOfficeButton id={team.id} type="notebook" />
+                    </React.Fragment>
                     }
                     {!!assignments.length && <React.Fragment>
-                            <Divider />
-                            <Assignments assignments={assignments}/>
-                        </React.Fragment>
+                        <Divider />
+                        <Assignments assignments={assignments} />
+                    </React.Fragment>
                     }
                 </List>
             }
