@@ -236,6 +236,7 @@ function skipTeacherDuplications(lessons) {
 
                 combineSubstitutions(last, lesson);
                 lessons.splice(j, 1);
+                j--;
             }
         }
     }
