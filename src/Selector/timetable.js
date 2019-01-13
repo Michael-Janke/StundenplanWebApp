@@ -307,8 +307,13 @@ function equalArrays(array1, array2) {
     return true;
 }
 
-export function equalPeriods(period1, period2) {
-
+export function equalPeriods(p1, p2) {
+    const period1 = p1.reference;
+    const period2 = p2.reference;
+    
+    if (p1.assignments !== p2.assignments) {
+        return false;
+    }
     if (((!!period1.TIMETABLE_ID)
         ? (period1.TIMETABLE_ID === period2.TIMETABLE_ID) : false)
         || (period1.substitutionText === period2.substitutionText

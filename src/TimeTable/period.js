@@ -17,7 +17,7 @@ class Period extends React.Component {
         for (let i = 0; i < l1.length; i++) {
             let o1 = l1[i];
             let o2 = l2[i];
-            if (!equalPeriods(o1.reference, o2.reference)) {
+            if (!equalPeriods(o1, o2)) {
                 return true;
             }
         }
