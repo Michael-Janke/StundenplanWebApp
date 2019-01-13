@@ -9,6 +9,7 @@ const styles = theme => ({
     },
     paper: {
         minWidth: 125,
+        maxWidth: '70vw',
         maxHeight: 500,
         color: theme.palette.text.primary,
     }

@@ -93,7 +93,11 @@ const AbstractLesson = (props) => {
 
 
     const popoverActive = true;
-
+    const workingAssignments = assignments.some((assignment) =>
+        assignment.submissions
+            ? assignment.submissions.some(submission => submission.status === 'working')
+            : true
+    );
     return (
         <Popover active={popoverActive} key={reference.TIMETABLE_ID}>
             {(props, handleOpen) => (
@@ -101,7 +105,7 @@ const AbstractLesson = (props) => {
                     component="div"
                     color="secondary"
                     badgeContent={assignments.length}
-                    invisible={!assignments.length}
+                    invisible={!workingAssignments}
                     style={{ display: 'flex', flex: 'auto' }}>
                     <Lesson
                         type={theme.palette.type}
