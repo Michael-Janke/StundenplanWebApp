@@ -6,7 +6,7 @@ import { darken } from '@material-ui/core/styles/colorManipulator';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { styles } from './Fields';
 import Popover from './popover';
-import OpenOfficeButton from './components/openOffice';
+import OpenOfficeButton from './components/officeLink';
 import Assignments from './components/assignments';
 import Badge from '@material-ui/core/Badge';
 import Divider from '@material-ui/core/Divider';
@@ -145,7 +145,7 @@ const AbstractLesson = (props) => {
                     }
                     {!!assignments.length && <React.Fragment>
                         <Divider />
-                        <Assignments assignments={assignments} />
+                        <Assignments assignments={assignments} team={team} />
                     </React.Fragment>
                     }
                 </List>
