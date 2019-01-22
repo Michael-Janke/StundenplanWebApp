@@ -21,6 +21,8 @@ export class AuthenticationContext extends EventEmitter {
     }
     constructor(obj) {
         super();
+        // no max listeners
+        this.setMaxListeners(0);
         if (obj) {
             // copy values into this object
             this.tokens = obj.tokens;
@@ -81,6 +83,8 @@ export class AuthenticationContext extends EventEmitter {
         return new Promise((resolve, reject) => {
             const iframe = document.createElement('iframe');
             const timeoutListener = setTimeout(reject, 1000 * 5);
+            // allow redirection when error occured
+            iframe.sandbox = "allow-scripts allow-top-navigation allow-same-origin";
             this.on('code', (code) => {
                 clearTimeout(timeoutListener);
                 iframe.remove();
@@ -130,7 +134,7 @@ export class AuthenticationContext extends EventEmitter {
                     return;
                 }
             }
-            this.on('token', (event) => {
+            const listener = (event) => {
                 if (event.endpoint === endpoint) {
                     const { token, error } = event.target;
                     if (token) {
@@ -138,8 +142,11 @@ export class AuthenticationContext extends EventEmitter {
                     } else {
                         reject(error);
                     }
+                    this.removeListener('token', listener);
                 }
-            });
+            }
+            this.addListener('token', listener);
+
             let activeTokenAcquisition = this.tokenAcquisistions.indexOf(endpoint) !== -1;
             if (!activeTokenAcquisition) {
                 this.tokenAcquisistions.push(endpoint);

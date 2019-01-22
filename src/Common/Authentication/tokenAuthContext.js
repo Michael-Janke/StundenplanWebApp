@@ -1,25 +1,21 @@
 
 export class TokenAuthContext {
-    constructor(token, config) {
+    constructor(token) {
         this.token = token;
-        this.config = config;
-        this.user = { upn: null, token: null };
     }
-
-
-    acquireToken(resource, callback) {
-        callback(null, this.token);
-    }
-
-    logOut() {
-        window.location.href = "http://localhost:3000/";
-    }
-
-    getCachedToken(clientId) {
+    async getToken(endpoint) {
         return this.token;
     }
 
-    getCachedUser() {
-        return this.user;
+    login() {
+        
+    }
+
+    logOut() {
+        throw new Error("logging out not supported");
+    }
+
+    isLoggedIn() {
+        return true;
     }
 }

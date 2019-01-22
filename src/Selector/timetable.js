@@ -12,7 +12,7 @@ const getSubstitutions = createSelector(getTimetableState, (state) => state.subs
 const getDate = createSelector(getTimetableState, (state) => state.timetableDate);
 const getWeekSelector = createSelector(getDate, (date) => moment(date).week());
 const getYearSelector = createSelector(getDate, (date) => moment(date).weekYear());
-const getAssignmentsSelector =  createSelector(getDate, getAssignments, (date, assignments) => assignments.filter((assignment) => 
+const getAssignmentsSelector = createSelector(getDate, getAssignments, (date, assignments) => assignments.filter((assignment) =>
     moment(date).isSame(moment(assignment.dueDateTime), 'week')
 ));
 
@@ -36,8 +36,8 @@ const getCurrentSubstitutionsSelector = createSelector(
     getId,
     getWeekSelector,
     getYearSelector,
-    (ignore, substitutions, type, id, week, year) => 
-    ignore ? {substitutions: []} : substitutions[getSubstitutionsCacheKey({ type, id, week, year })]
+    (ignore, substitutions, type, id, week, year) =>
+        ignore ? { substitutions: [] } : substitutions[getSubstitutionsCacheKey({ type, id, week, year })]
 );
 
 function freeRooms(masterdata, day, periods) {
@@ -75,8 +75,8 @@ export function translateDay(masterdata, timetable, x, substitutions, periods, t
     if (type !== 'all') {
         skipDuplications(day, periods);
     }
-    let assignmentsOfDay = assignments.filter((assignment) => 
-        moment(assignment.dueDateTime).isSame(moment(date).weekday(x),'day')
+    let assignmentsOfDay = assignments.filter((assignment) =>
+        moment(assignment.dueDateTime).isSame(moment(date).weekday(x), 'day')
     );
     let assignmentsMatching = {
         toMatch: assignmentsOfDay,
@@ -118,7 +118,7 @@ function joinSubstitutions(day, subOnDay, type, id) {
             }
             const index = lessons.findIndex((lesson) => lesson.TIMETABLE_ID === substitution.TIMETABLE_ID);
             if (index !== -1) {
-                lessons[index] = lesson ? {...lesson, LESSON_ID: lessons[index].LESSON_ID} : null;
+                lessons[index] = lesson ? { ...lesson, LESSON_ID: lessons[index].LESSON_ID } : null;
                 period.lessons = lessons.filter(c => c);
             } else if (lesson) {
                 lessons.push(lesson);
@@ -135,7 +135,7 @@ function joinSubstitutions(day, subOnDay, type, id) {
         if (type === 'room') {
             // sort in table
             subOnDay.absences.forEach((absence) => {
-                for (let i = absence.PERIOD_FROM-1; i < absence.PERIOD_TO; i++){
+                for (let i = absence.PERIOD_FROM - 1; i < absence.PERIOD_TO; i++) {
                     const period = day.periods[i];
                     period.lessons = [{ absence }];
                 }
@@ -310,7 +310,7 @@ function equalArrays(array1, array2) {
 export function equalPeriods(p1, p2) {
     const period1 = p1.reference;
     const period2 = p2.reference;
-    
+
     if (p1.assignments !== p2.assignments) {
         return false;
     }
@@ -333,19 +333,19 @@ export function equalPeriods(p1, p2) {
 }
 function translate(masterdata, period, teams, assignmentsMatching) {
     if (!period) return null;
-    period.lessons = period.lessons.map(translateLesson.bind(null, masterdata, teams, assignmentsMatching));
+    period.lessons = period.lessons.map((lesson) => translateLesson(masterdata, lesson, teams, assignmentsMatching));
 }
 
-export function translateLesson(masterdata, teams = {}, assignmentsMatching = {toMatch:[]}, lesson) {
+export function translateLesson(masterdata, lesson, teams = {}, assignmentsMatching = { toMatch: [] }) {
     if (lesson.absence) {
         return { absence: lesson.absence };
     }
     let team = teams[(lesson.SUBJECT_ID || lesson.SUBJECT_ID_OLD) * 10000 + lesson.LESSON_ID];
     let validAssignments = [];
     let stillToMatch = [];
-    
+
     assignmentsMatching.toMatch.forEach(assignment => {
-        if(team && assignment.classId === team.id) {
+        if (team && assignment.classId === team.id) {
             validAssignments.push(assignment);
         } else {
             stillToMatch.push(assignment);

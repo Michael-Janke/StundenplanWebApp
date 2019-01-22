@@ -1,5 +1,6 @@
 import { AuthenticationContext } from './authContext';
 import { getAuthContext, setAuthContext } from './storage';
+import { TokenAuthContext } from './tokenAuthContext';
 
 
 export function getToken(resource) {
@@ -18,6 +19,12 @@ export function getToken(resource) {
                 reject(error);
             });
     });
+}
+
+
+export const runApplicationToken = (token, app) => {
+    setAuthContext(new TokenAuthContext(token));
+    app();
 }
 
 export const runApplication = (app) => {

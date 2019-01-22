@@ -1,5 +1,5 @@
 
-import { runApplication } from './Common/Authentication';
+import { runApplication, runApplicationToken } from './Common/Authentication';
 import 'babel-polyfill';
 
 let deparam = function (querystring) {
@@ -19,11 +19,13 @@ let deparam = function (querystring) {
 let params = (window.params = deparam(window.location.href));
 console.log(window.params);
 if (params.token) {
-
+    runApplicationToken(params.token, () => {
+        // eslint-disable-next-line
+        require('./indexReact.js');
+    })
 } else {
     runApplication(() => {
         // eslint-disable-next-line
         require('./indexReact.js');
     })
-
 }
