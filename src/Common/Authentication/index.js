@@ -21,13 +21,21 @@ export function getToken(resource) {
 }
 
 export const runApplication = (app) => {
-    let authContext = getAuthContext();
     const { code, session_state, state } = window.params;
+    let authContext;
+    if (AuthenticationContext.isIFrame()) {
+        authContext = getAuthContext(window.parent);
+        if (code) {
+            authContext.handleCallback(code, session_state, state);
+        }
+        return;
+    }
+    authContext = getAuthContext();
 
     if (!authContext) {
         authContext = new AuthenticationContext();
-        authContext.login();
         setAuthContext(authContext);
+        authContext.login();
     } else {
         if (code) {
             // back to '/' without reloading page

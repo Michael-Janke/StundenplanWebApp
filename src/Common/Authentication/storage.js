@@ -1,20 +1,25 @@
 import ls from 'local-storage';
-import {AuthenticationContext} from './authContext';
+import { AuthenticationContext } from './authContext';
 
-let cachedContext;
+const CONTEXT_KEY = "authorization_v2";
 
-export const getAuthContext = () => {
-    let authContext = cachedContext || ls('authorization');
+// remove old keys
+["authorization"].forEach(ls.remove);
+
+export const getAuthContext = (win = window) => {
+    let authContext = win[CONTEXT_KEY] || ls(CONTEXT_KEY);
     if (authContext) {
-        if (!(authContext instanceof AuthenticationContext)) {
+        if (!(authContext.toObject)) {
             authContext = new AuthenticationContext(authContext);
-            cachedContext = authContext;
+            win[CONTEXT_KEY] = authContext;
+            setAuthContext(authContext, win);
         }
         return authContext;
     }
     return null;
 }
 
-export const setAuthContext = (authContext) => {
-    ls('authorization', authContext && authContext.toObject());
+export const setAuthContext = (authContext, win = window) => {
+    win[CONTEXT_KEY] = authContext;
+    ls(CONTEXT_KEY, authContext && authContext.toObject());
 }

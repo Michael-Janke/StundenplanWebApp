@@ -1,38 +1,38 @@
 import { setAuthContext } from './storage';
+import { EventEmitter } from 'events';
 
 
-export class AuthenticationContext {
+export class AuthenticationContext extends EventEmitter {
     static resources = {
         'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/':
             'https://wgmail.onmicrosoft.com/f863619c-ea91-4f1d-85f4-2f907c53963b/user_impersonation',
         'https://graph.microsoft.com/': 'https://graph.microsoft.com/mail.read'
     };
 
+    static isIFrame() {
+        return window !== window.parent;
+    }
+
     toObject() {
         return {
+            authCodes: this.authCodes,
             tokens: this.tokens,
-            code: this.code,
-            state: this.state,
-            session_state: this.session_state,
-            tokensReceived: this.tokensReceived
         }
     }
     constructor(obj) {
+        super();
         if (obj) {
             // copy values into this object
             this.tokens = obj.tokens;
-            this.code = obj.code;
-            this.state = obj.state;
-            this.session_state = obj.session_state;
-            this.tokensReceived = obj.tokensReceived;
+            this.authCodes = obj.authCodes;
         }
     }
 
     tokens = {};
 
-    tokenAcquisistions = {};
+    authCodes = [];
 
-    tokensReceived = false;
+    tokenAcquisistions = [];
 
     /**
      * get scopes
@@ -60,53 +60,65 @@ export class AuthenticationContext {
 
     isLoggedIn() {
         return (
-            !!this.code
+            !!this.authCodes.length
             || Object.keys(this.tokens).length
             || Object.keys(this.tokenAcquisistions).length
-            || this.tokensReceived
         );
     }
-    login() {
-        // invalidate current tokens, in fact we get new access tokens soon
-        this.tokens = {};
-        this.tokenAcquisistions = {};
-        this.tokensReceived = false;
-        setAuthContext(this);
 
-        window.location.replace(`
-        https://login.microsoftonline.com/wgmail.de/oauth2/v2.0/authorize?                         
+    getAuthCodeLink() {
+        return `https://login.microsoftonline.com/wgmail.de/oauth2/v2.0/authorize?                         
                 client_id=fb82e2a9-1efd-4a8e-9ac6-92413ab4b58b
                 &response_type=code
                 &redirect_uri=${encodeURIComponent(window.location.href.split("?")[0].split("#")[0])}
                 &response_mode=query
                 &scope=${encodeURIComponent(this.getScope().join(' '))}
                 &state=12345
-        `.replace(/ /g, ""));
+        `.replace(/ /g, "");
+    }
+
+    getAuthCodeIframe() {
+        return new Promise((resolve, reject) => {
+            const iframe = document.createElement('iframe');
+            const timeoutListener = setTimeout(reject, 1000 * 5);
+            this.on('code', (code) => {
+                clearTimeout(timeoutListener);
+                iframe.remove();
+                if (code) {
+                    resolve(code);
+                } else {
+                    reject();
+                }
+            });
+            iframe.src = this.getAuthCodeLink();
+            iframe.style.width = 0;
+            iframe.style.height = 0;
+            iframe.style.borderWidth = 0;
+            iframe.style.display = 'block';
+            document.body.appendChild(iframe);
+
+        });
+    }
+
+    login() {
+        // invalidate current tokens, in fact we get new access tokens soon
+        this.tokens = {};
+        this.tokenAcquisistions = [];
+        setAuthContext(this);
+        window.location.replace(this.getAuthCodeLink());
     }
 
     handleCallback(code, session_state, state) {
-        if (!this.code && !this.tokensReceived) {
-            this.code = code;
-            this.session_state = session_state;
-            this.state = state;
-            setAuthContext(this);
-        }
-    }
-
-    cleanupCode() {
-        // as soon as all tokens are received, code can be removed
-        if (Object.keys(this.tokens).length >= Object.keys(AuthenticationContext.resources).length) {
-            this.code = null;
-            this.session_state = null;
-            this.state = null;
-            this.tokensReceived = true;
+        if (!this.authCodes.find(authCode => authCode.code === code)) {
+            const obj = { code, session_state, state };
+            this.authCodes.push(obj);
+            this.emit('code', obj);
             setAuthContext(this);
         }
     }
 
     getToken(endpoint) {
         return new Promise(async (resolve, reject) => {
-            const { code, state } = this;
             const token = this.tokens[endpoint];
             if (token) {
                 var refresh_token = token.refresh_token;
@@ -118,26 +130,31 @@ export class AuthenticationContext {
                     return;
                 }
             }
-            let activeTokenAcquisition = this.tokenAcquisistions[endpoint];
-            if (!activeTokenAcquisition) {
-                this.tokenAcquisistions[endpoint] = [];
-                console.debug("new acquisition for", endpoint);
-            } else {
-                activeTokenAcquisition.push((token, error) => {
+            this.on('token', (event) => {
+                if (event.endpoint === endpoint) {
+                    const { token, error } = event.target;
                     if (token) {
                         resolve(token);
                     } else {
                         reject(error);
                     }
-                });
+                }
+            });
+            let activeTokenAcquisition = this.tokenAcquisistions.indexOf(endpoint) !== -1;
+            if (!activeTokenAcquisition) {
+                this.tokenAcquisistions.push(endpoint);
+                console.debug("new acquisition for", endpoint);
+            } else {
                 return;
             }
-
-            if (!code && !refresh_token) {
-                console.debug("log in out of not having code");
-                this.login();
-                return;
+            // use first authCode as code is recycled from initial login
+            let authCode = this.authCodes.splice(0, 1)[0];
+            if (!authCode) {
+                // second authCode need to be fetched in background to speed up app
+                authCode = await this.getAuthCodeIframe();
+                this.authCodes.splice(this.authCodes.indexOf(authCode), 1);
             }
+            const { code, state } = authCode;
             const body = {
                 code,
                 refresh_token,
@@ -156,10 +173,7 @@ export class AuthenticationContext {
             if (!newToken.error) {
                 newToken.acquired = Date.now();
                 this.tokens[endpoint] = newToken;
-                this.tokenAcquisistions[endpoint].forEach(listener => listener(newToken));
-                this.tokenAcquisistions[endpoint] = null;
-                resolve(newToken);
-                this.cleanupCode();
+                this.emit('token', { endpoint, target: { token: newToken } })
                 setAuthContext(this);
             } else {
                 const authCodeExpired = newToken.error_codes.indexOf(70008) !== -1;
@@ -170,9 +184,7 @@ export class AuthenticationContext {
                 }
                 // an error occured
                 this.tokens[endpoint] = null;
-                this.tokenAcquisistions[endpoint].forEach(listener => listener(null, newToken));
-                this.tokenAcquisistions[endpoint] = null;
-                reject(newToken);
+                this.emit('token', { endpoint, target: { error: newToken } })
                 setAuthContext(this);
             }
         });
