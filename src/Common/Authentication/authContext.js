@@ -9,10 +9,6 @@ export class AuthenticationContext extends EventEmitter {
         'https://graph.microsoft.com/': 'https://graph.microsoft.com/mail.read'
     };
 
-    static isIFrame() {
-        return window !== window.parent;
-    }
-
     toObject() {
         return {
             authCodes: this.authCodes,
@@ -52,19 +48,27 @@ export class AuthenticationContext extends EventEmitter {
         https://login.microsoftonline.com/common/oauth2/v2.0/logout?
             post_logout_redirect_uri=${encodeURIComponent("https://wolkenberg-gymnasium.de/")}
         `.replace(/ /g, ""));
-        this.tokens = [];
+        this.tokens = {};
         this.tokenAcquisistions = [];
-        this.code = null;
-        this.state = null;
-        this.session_state = null;
+        this.authCodes = [];
         setAuthContext(null);
     }
 
     isLoggedIn() {
+        const tokens = Object.values(this.tokens).length + this.tokenAcquisistions.length;
+        const resources = Object.values(AuthenticationContext.resources).length;
         return (
-            !!this.authCodes.length
-            || Object.keys(this.tokens).length
-            || Object.keys(this.tokenAcquisistions).length
+            Math.max(this.authCodes.length, tokens)
+            >= resources
+        );
+    }
+
+    isLoggingIn() {
+        const tokens = Object.values(this.tokens).length + this.tokenAcquisistions.length;
+        const resources = Object.values(AuthenticationContext.resources).length;
+
+        return (
+            this.authCodes.length <= (resources - tokens)
         );
     }
 
@@ -79,29 +83,8 @@ export class AuthenticationContext extends EventEmitter {
         `.replace(/ /g, "");
     }
 
-    getAuthCodeIframe() {
-        return new Promise((resolve, reject) => {
-            const iframe = document.createElement('iframe');
-            const timeoutListener = setTimeout(reject, 1000 * 5);
-            // allow redirection when error occured
-            iframe.sandbox = "allow-scripts allow-top-navigation allow-same-origin";
-            this.on('code', (code) => {
-                clearTimeout(timeoutListener);
-                iframe.remove();
-                if (code) {
-                    resolve(code);
-                } else {
-                    reject();
-                }
-            });
-            iframe.src = this.getAuthCodeLink();
-            iframe.style.width = 0;
-            iframe.style.height = 0;
-            iframe.style.borderWidth = 0;
-            iframe.style.display = 'block';
-            document.body.appendChild(iframe);
-
-        });
+    loadAuthCode() {
+        window.location.replace(this.getAuthCodeLink());
     }
 
     login() {
@@ -158,8 +141,8 @@ export class AuthenticationContext extends EventEmitter {
             let authCode = this.authCodes.splice(0, 1)[0];
             if (!authCode) {
                 // second authCode need to be fetched in background to speed up app
-                authCode = await this.getAuthCodeIframe();
-                this.authCodes.splice(this.authCodes.indexOf(authCode), 1);
+                this.loadAuthCode();
+                return;
             }
             const { code, state } = authCode;
             const body = {
