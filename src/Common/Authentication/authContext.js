@@ -130,8 +130,8 @@ export class AuthenticationContext extends EventEmitter {
             }
             this.addListener('token', listener);
 
-            let activeTokenAcquisition = this.tokenAcquisistions.indexOf(endpoint) !== -1;
-            if (!activeTokenAcquisition) {
+            let activeTokenAcquisition = this.tokenAcquisistions.indexOf(endpoint);
+            if (activeTokenAcquisition === -1) {
                 this.tokenAcquisistions.push(endpoint);
                 console.debug("new acquisition for", endpoint);
             } else {
@@ -139,12 +139,12 @@ export class AuthenticationContext extends EventEmitter {
             }
             // use first authCode as code is recycled from initial login
             let authCode = this.authCodes.splice(0, 1)[0];
-            if (!authCode) {
-                // second authCode need to be fetched in background to speed up app
+            if (!authCode && !refresh_token) {
+                // reload code
                 this.loadAuthCode();
                 return;
             }
-            const { code, state } = authCode;
+            const { code, state } = authCode || {};
             const body = {
                 code,
                 refresh_token,
@@ -177,6 +177,7 @@ export class AuthenticationContext extends EventEmitter {
                 this.emit('token', { endpoint, target: { error: newToken } })
                 setAuthContext(this);
             }
+            this.tokenAcquisistions.splice(activeTokenAcquisition, 1);
         });
     }
 }
