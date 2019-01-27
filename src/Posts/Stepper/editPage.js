@@ -6,9 +6,17 @@ import { addPost, editPost, getPosts } from '../actions';
 
 class EditPage extends Component {
 
+    componentDidUpdate(prevProps) {
+        // determine if page got edited or added
+        if (this.props.post !== prevProps.post
+            || this.props.posts !== prevProps.posts) {
+            this.props.history.goBack();
+        }
+    }
+
     handleClose = (post) => {
         // close
-        this.props.history.goBack();
+        
         if (!post) {
             return;
         }
@@ -32,13 +40,14 @@ class EditPage extends Component {
 const findPost = (posts, match) => {
     const id = match.params.id;
     if (id === 'new') {
-        return {};
+        return null;
     }
     return posts.find((post) => post.POST_ID === Number(id));
 }
 
 const mapStateToProps = (state, props) => ({
-    post: findPost(state.posts.posts, props.match)
+    post: findPost(state.posts.posts, props.match),
+    posts: state.posts.posts.length
 });
 
 const mapDispatchToProps = dispatch => ({

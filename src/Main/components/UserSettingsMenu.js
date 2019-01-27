@@ -26,7 +26,6 @@ import withTheme from '@material-ui/core/styles/withTheme';
 import Tooltip from '@material-ui/core/Tooltip';
 import ReminderSettingsDialog from './ReminderSettingsDialog';
 import Feedback from './Feedback';
-import TokenError from './TokenError';
 import { getAuthContext } from '../../Common/Authentication/storage';
 
 class UserSettingsMenu extends React.Component {
@@ -131,9 +130,7 @@ class UserSettingsMenu extends React.Component {
                     open={this.state.feedbackOpen} 
                     onClose={this.closeFeedback}
                 />
-                <TokenError 
-                    onReset={this.reset}
-                />
+
                 <Tooltip id="tooltip-settings" title="Benutzereinstellungen">
                     <IconButton
                         aria-label="More"

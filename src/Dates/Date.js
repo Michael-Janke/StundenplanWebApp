@@ -30,7 +30,7 @@ const styles = theme => ({
     },
 });
 function Date({ date, onEdit, onDelete, classes }) {
-    if (!date) return;
+    if (!date) return null;
     let dateFrom = date.DATE_FROM && moment(date.DATE_FROM.date).format("DD.MM.");
     let dateTo = date.DATE_TO && moment(date.DATE_TO.date).format("DD.MM.");
     let timeFrom = date.DATE_FROM && moment(date.DATE_FROM.date).format("HH:mm");

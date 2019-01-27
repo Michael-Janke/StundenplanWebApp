@@ -38,7 +38,7 @@ const dataService = store => next => action => {
                 `statistics/summarize/${statisticAction}/${year}-${week}`, { type: 'GET_LOGIN_STATISTICS', request: action.payload });
         }
         case "SEND_FEEDBACK":
-            return requestApiGenerator(next)(GRAPH_URL, 'beta/me/sendMail', { type: 'FEEDBACK' }, 'POST',
+            return requestApiGenerator(next)(GRAPH_URL, 'beta/me/sendMail', { type: 'SEND_FEEDBACK' }, 'POST',
                 JSON.stringify(createFeedbackMail(action.payload)));
         case "PATCH_REMIND_SETTINGS":
             return requestApiGenerator(next)(API_URL, 'me', { type: 'GET_ME' }, 'PATCH', JSON.stringify(action.payload));

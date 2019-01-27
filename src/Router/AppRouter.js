@@ -9,6 +9,8 @@ import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider
 import { HashRouter as Router } from 'react-router-dom';
 import Routes from './routes';
 import version from '../version.json';
+import Notifier from "./Notifier";
+import { SnackbarProvider } from "notistack";
 
 class AppRouter extends Component {
 
@@ -65,6 +67,11 @@ class AppRouter extends Component {
                             backgroundColor: this.state.theme.palette.background.default,
                             fontFamily: this.state.theme.typography.fontFamily,
                         }}>
+                            <SnackbarProvider
+                                maxSnack={1}
+                                autoHideDuration={2000}>
+                                <Notifier />
+                            </SnackbarProvider>
                             <Routes />
                         </div>
                     </MuiPickersUtilsProvider>

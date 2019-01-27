@@ -4,10 +4,7 @@ import React, {
 import {
     connect
 } from "react-redux";
-import Snackbar from '@material-ui/core/Snackbar';
 import {
-    clearErrors,
-    showError,
     loadJoinedTeams,
     loadAssignments
 } from "./actions";
@@ -20,31 +17,15 @@ class Main extends Component {
         props.loadAssignments();
     }
 
-    onThemeToggle = () => {
-        this.props.changeTheme(this.props.themeType === 'dark' ? 'light' : 'dark');
-    }
-
     render() {
         return (
-            <React.Fragment>
-                <TimeTable />
-                <Snackbar
-                    open={!!this.props.error}
-                    message={"Fehler: " + this.props.error}
-                    autoHideDuration={5000}
-                    style={{
-                        color: 'red'
-                    }}
-                    onClose={this.props.clearErrors} />
-            </React.Fragment>
+            <TimeTable />
         );
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        clearErrors: () => { dispatch(clearErrors()); },
-        showError: (text) => { dispatch(showError(text)); },
         loadJoinedTeams: () => dispatch(loadJoinedTeams()),
         loadAssignments: () => dispatch(loadAssignments())
     };
@@ -52,8 +33,6 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        error: state.error.error,
-        themeType: state.user.themeType,
     };
 };
 

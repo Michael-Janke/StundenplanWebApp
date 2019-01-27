@@ -5,9 +5,6 @@ import { TokenAuthContext } from './tokenAuthContext';
 
 export function getToken(resource) {
     return new Promise((resolve, reject) => {
-        if (!navigator.onLine) {
-            return reject({ message: "offline", msg: "offline" });
-        }
         const authContext = getAuthContext();
         if (!authContext.isLoggedIn() && !authContext.isLoggingIn()) {
             console.log("not logged in");

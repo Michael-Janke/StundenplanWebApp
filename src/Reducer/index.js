@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import { responsiveStateReducer } from 'redux-responsive';
 
 import user from './user';
-import error from './error';
+import notifications from './notifications';
 import avatars from './avatars';
 import timetable from './timetable';
 import dates from './dates';
@@ -27,7 +27,7 @@ export default combineReducers({
     posts,
     drawer,
     user,
-    error,
+    notifications,
     timetable,
     avatars,
     dates,

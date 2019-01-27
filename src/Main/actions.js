@@ -99,6 +99,20 @@ export function clearErrors() {
     return { type: "CLEAR_ERROR", payload: null };
 }
 
+export const enqueueSnackbar = notification => ({
+    type: 'ENQUEUE_SNACKBAR',
+    notification: {
+        key: new Date().getTime() + Math.random(),
+        ...notification,
+    },
+});
+
+export const removeSnackbar = key => ({
+    type: 'REMOVE_SNACKBAR',
+    key,
+});
+
+
 export function setTimeTable(type, id) {
     return { type: "SET_TIMETABLE", payload: { type, id } };
 }

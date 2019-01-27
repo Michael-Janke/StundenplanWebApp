@@ -4,12 +4,6 @@ import { getToken } from '../Authentication';
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
 
-const handleErrors = (response) => {
-    if (!response.ok) {
-        throw response;
-    }
-    return response;
-}
 const timeout = (timeout, success) =>
     new Promise((resolve, reject) =>
         setTimeout(resolve, timeout)
@@ -26,16 +20,22 @@ async function fetchData(url, options) {
         if (/abort/.test(err.message)) {
             throw new Error("fetch timed out");
         }
+        throw err;
     });
-    return handleErrors(response).json().catch(err => null);
+    if (response && response.ok) {
+        return response.json().catch(err => {});
+    }
+    throw response;
 }
 
 export const requestApiGenerator = next => async (endpoint, route, action, METHOD = "GET", body) => {
     let token;
     let data;
     try {
+        if (!navigator.onLine) {
+            throw new Error("navigator offline");
+        }
         token = await getToken(endpoint);
-        next({ type: 'ADAL_RECEIVED', payload: token });
         data = await fetchData(endpoint + route, {
             method: METHOD,
             body,
@@ -51,19 +51,6 @@ export const requestApiGenerator = next => async (endpoint, route, action, METHO
         });
         return;
     } catch (err) {
-        if (/offline/.test(err.message)) {
-            next({
-                ...action,
-                type: 'ADAL_ERROR',
-                payload: { text: "user is offline" }
-            });
-        } else {
-            next({
-                ...action,
-                type: 'ADAL_ERROR',
-                payload: { text: err.message || "unspecified error" }
-            });
-        }
         next({
             ...action,
             type: action.type + '_ERROR',
@@ -114,7 +101,7 @@ export const getBatchGenerator = next => (payload, name) => {
                         ...acc,
                         [response.id]: {
                             img: response.body.error ? null : response.body,
-                            expires: moment().add('7', 'days')
+                            expires: +moment().add('7', 'days')
                         }
                     }), {})
                 })
