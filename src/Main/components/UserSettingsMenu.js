@@ -130,8 +130,8 @@ class UserSettingsMenu extends React.Component {
                     open={this.state.feedbackOpen} 
                     onClose={this.closeFeedback}
                 />
-
-                <Tooltip id="tooltip-settings" title="Benutzereinstellungen">
+                {/* https://github.com/mui-org/material-ui/issues/9343#issuecomment-377772257 */}
+                <Tooltip id="tooltip-settings" title="Benutzereinstellungen" disableFocusListener>
                     <IconButton
                         aria-label="More"
                         aria-owns={anchorEl ? 'long-menu' : null}
@@ -143,6 +143,7 @@ class UserSettingsMenu extends React.Component {
                     </IconButton>
                 </Tooltip>
                 <Menu
+                    disableRestoreFocus
                     id="long-menu"
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
