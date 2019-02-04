@@ -1,4 +1,5 @@
 import { requestApiGenerator, API_URL } from "./generator";
+import { getAuthContext } from "../Authentication/storage";
 
 
 export default store => next => action => {
@@ -15,7 +16,8 @@ export default store => next => action => {
         case 'ADD_DATE_RECEIVED': 
         case 'DELETE_DATE_RECEIVED': 
         case 'EDIT_DATE_RECEIVED':
-            return requestApiGenerator(next)(API_URL, 'dates/v2', { type: 'GET_DATES' });
+            return requestApiGenerator(next)(API_URL,
+                getAuthContext().isAllowed() ? 'dates/v2' : 'dates/public', { type: 'GET_DATES' });
         default: ;
     }
 }

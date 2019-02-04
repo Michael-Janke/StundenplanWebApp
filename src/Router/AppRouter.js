@@ -38,18 +38,6 @@ class AppRouter extends Component {
         }
     }
 
-    componentDidUpdate() {
-        this.setFontFamily();
-    }
-
-    componentDidMount() {
-        this.setFontFamily();
-    }
-
-    setFontFamily() {
-        document.getElementsByTagName("body")[0].style.fontFamily = this.state.theme.typography.fontFamily;
-    }
-
     static getDerivedStateFromProps(nextProps, prevState) {
         if (!prevState.theme
             || (nextProps.themeType && prevState.theme.palette.type !== nextProps.themeType)) {
@@ -62,18 +50,12 @@ class AppRouter extends Component {
             <Router>
                 <MuiThemeProvider theme={this.state.theme}>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
-                        <div style={{
-                            flexDirection: 'column', display: 'flex', height: '100%',
-                            backgroundColor: this.state.theme.palette.background.default,
-                            fontFamily: this.state.theme.typography.fontFamily,
-                        }}>
-                            <SnackbarProvider
-                                maxSnack={1}
-                                autoHideDuration={2000}>
-                                <Notifier />
-                            </SnackbarProvider>
-                            <Routes />
-                        </div>
+                        <SnackbarProvider
+                            maxSnack={1}
+                            autoHideDuration={2000}>
+                            <Notifier />
+                        </SnackbarProvider>
+                        <Routes />
                     </MuiPickersUtilsProvider>
                 </MuiThemeProvider>
             </Router>

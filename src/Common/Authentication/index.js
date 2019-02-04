@@ -6,9 +6,13 @@ import { TokenAuthContext } from './tokenAuthContext';
 export function getToken(resource) {
     return new Promise((resolve, reject) => {
         const authContext = getAuthContext();
+        if (authContext.isAllowed() === false) {
+            resolve(null);
+        }
         if (!authContext.isLoggedIn() && !authContext.isLoggingIn()) {
             console.log("not logged in");
-            authContext.login();
+            // authContext.login();
+            return reject('not logged in');
         }
         authContext.getToken(resource)
             .then(token => {
@@ -32,17 +36,16 @@ export const runApplication = (app) => {
     if (!authContext) {
         authContext = new AuthenticationContext();
         setAuthContext(authContext);
-        authContext.login();
+    }
+    if (code) {
+        // back to '/' without reloading page
+        window.history.replaceState("", "", window.location.pathname);
+        authContext.handleCallback(code, session_state, state);
+    }
+    if (authContext.isLoggingIn() && !authContext.isLoggedIn()) {
+        authContext.allowAuthentication();
+        authContext.loadAuthCode();
     } else {
-        if (code) {
-            // back to '/' without reloading page
-            window.history.replaceState("", "", window.location.pathname);
-            authContext.handleCallback(code, session_state, state);
-        }
-        if (authContext.isLoggingIn() && !authContext.isLoggedIn()) {
-            authContext.loadAuthCode();
-        } else {
-            app();
-        }
+        app();
     }
 }

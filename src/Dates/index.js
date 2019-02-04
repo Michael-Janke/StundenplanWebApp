@@ -24,6 +24,11 @@ const DateDialog = asynchronize(() => import('./DateDialog'));
 const DateDeletionDialog = asynchronize(() => import("./DateDeletionDialog"));
 
 const styles = theme => ({
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+    },
     fabButton: {
         position: "absolute",
         right: theme.spacing.unit * 2,
@@ -36,7 +41,7 @@ const styles = theme => ({
     list: {
         position: 'relative',
         overflow: 'auto',
-        maxHeight: 'calc(100vh - 140px)',
+        flex: 1,
         paddingTop: 0,
         backgroundColor: theme.palette.background.default,
     },
@@ -153,7 +158,7 @@ class Dates extends Component {
         const { editMode } = this.state;
 
         return (
-            <React.Fragment>
+            <div className={classes.root}>
                 <ListItem ContainerComponent="div" className={classes.header}>
                     <ListItemIcon>
                         <CalendarIcon />
@@ -212,7 +217,7 @@ class Dates extends Component {
                         onClick={this.openDialog} >
                         <AddIcon />
                     </Button>}
-            </React.Fragment>
+            </div>
         );
     }
 }

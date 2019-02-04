@@ -53,6 +53,9 @@ export class AuthenticationContext extends EventEmitter {
         this.authCodes = [];
         setAuthContext(null);
     }
+    isAllowed() {
+        return this.authenticationAllowed;
+    }
 
     isLoggedIn() {
         const tokens = Object.values(this.tokens).length + this.tokenAcquisistions.length;
@@ -69,6 +72,7 @@ export class AuthenticationContext extends EventEmitter {
 
         return (
             this.authCodes.length <= (resources - tokens)
+            && this.authCodes.length
         );
     }
 
@@ -84,10 +88,27 @@ export class AuthenticationContext extends EventEmitter {
     }
 
     loadAuthCode() {
+        if (!this.authenticationAllowed) {
+            throw new Error("Authentication not allowed");
+        }
         window.location.replace(this.getAuthCodeLink());
     }
 
+    allowAuthentication() {
+        return this.authenticationAllowed = true;
+    }
+
+    disallowAuthentication() {
+        return this.authenticationAllowed = false;
+    }
+
     login() {
+        if (!this.authenticationAllowed) {
+            throw new Error("Authentication not allowed");
+        }
+        if (this.isLoggedIn() || this.isLoggingIn()) {
+            return;
+        }
         // invalidate current tokens, in fact we get new access tokens soon
         this.tokens = {};
         this.tokenAcquisistions = [];

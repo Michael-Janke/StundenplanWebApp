@@ -1,8 +1,13 @@
+import { getAuthContext } from "./Common/Authentication/storage";
 
 const enhanceStore = (createStore) => (reducer, preloadedState, enhancer) => {
     const store = createStore(reducer, preloadedState, enhancer);
     
     const dispatchReduxAction = () => {
+        if (getAuthContext().isAllowed() === false) {
+            stopInterval();
+            return;
+        }
         store.dispatch({
             type: 'CHECK_CURRENT_PERIOD',
         });
