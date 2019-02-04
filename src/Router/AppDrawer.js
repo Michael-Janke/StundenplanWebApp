@@ -7,7 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import Loadable from "react-loadable";
 
 import grey from '@material-ui/core/colors/grey';
-import { withStyles } from '@material-ui/core';
+import { withStyles, Typography } from '@material-ui/core';
 import { toggleDrawer, closeDrawer } from '../Main/actions';
 import { connect } from 'react-redux';
 
@@ -22,10 +22,7 @@ const styles = theme => ({
     links: {
         padding: theme.spacing.unit * 2,
     },
-    linksHeader: {
-        color: grey[600],
-        paddingBottom: theme.spacing.unit,
-    },
+
     linksList: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -38,9 +35,9 @@ class AppDrawer extends React.Component {
         const { classes } = this.props;
         const links = (
             <div className={classes.links} onMouseOver={Loadable.preloadAll}>
-                <div className={classes.linksHeader}>
+                <Typography gutterBottom color="textSecondary" variant="body1">
                     Apps
-                </div>
+                </Typography>
                 <div className={classes.linksList}>
                     {Object.entries(officeIcons).map(([key, value]) => {
                         return (

@@ -18,7 +18,7 @@ if(isTv) {
             <AppBar backgroundColor={indigo[600]} />
             <ContainerFlex>
                 {!small &&
-                    <ShadowContainer style={{ width: 300, flex: 'none' }}>
+                    <ShadowContainer style={{ width: 300, flex: 'none', maxHeight: 'calc(100vh - 140px)' }}>
                         <ErrorBoundary>
                             <Dates />
                         </ErrorBoundary>
@@ -52,7 +52,7 @@ if(isTv) {
         <Container>
             <AppBar backgroundColor={indigo[600]} />
             {!small &&
-                <ShadowContainer style={{ width: 300, flex: 'none' }}>
+                <ShadowContainer style={{ width: 300, flex: 'none', maxHeight: 'calc(100vh - 140px)' }}>
                     <ErrorBoundary>
                         <Dates />
                     </ErrorBoundary>
