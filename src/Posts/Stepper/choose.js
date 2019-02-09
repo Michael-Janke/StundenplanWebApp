@@ -56,7 +56,7 @@ class Choose extends React.Component {
                         onChange={this.handleChange}
                         indicatorColor="secondary"
                         textColor="secondary"
-                        fullWidth
+                        variant="fullWidth"
                     >
                         {Object.values(types).map(tab => {
                             return (

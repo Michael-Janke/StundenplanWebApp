@@ -3,20 +3,22 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 
 import EmojiconIcon from '@material-ui/icons/Face';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import SearchIcon from '@material-ui/icons/Search';
 import { Popover, Button, withStyles, TextField } from '@material-ui/core';
-import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
+
 import Grid from 'react-virtualized/dist/commonjs/Grid'
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 const styles = theme => ({
     grid: {
-        width: 200,
     },
     button: {
-        fontSize: '100%',
+        fontSize: '1rem',
     },
     tab: {
-        minWidth: 48,
+        minWidth: 0,
+        flex: 1,
+        fontSize: '1rem',
     }
 });
 
@@ -34,8 +36,9 @@ class EmojiPicker extends React.Component {
     state = {
         anchorEl: null,
         emojiData: null,
-        columnCount: 3,
+        columnCount: 4,
         filter: null,
+        search: "",
     };
 
 
@@ -44,9 +47,14 @@ class EmojiPicker extends React.Component {
         this.setState({ filter: value, filtered: this.filter(value, this.state.emojiData) });
     }
 
-    filter(category, data) {
-        const filtered = category.members.map(id => data.emojis[id]);
-        return filtered;
+    filter(category, data, value = "") {
+        if (value || !category) {
+            value = value.toLowerCase();
+            return Object.values(data.emojis).filter(entry => entry.n.indexOf(value) !== -1)
+        } else {
+            const filtered = category.members.map(id => data.emojis[id]);
+            return filtered;
+        }
     }
 
     componentDidUpdate() {
@@ -66,6 +74,14 @@ class EmojiPicker extends React.Component {
     handleClose = () => {
         this.setState({ anchorEl: null });
     };
+
+    handleKey = event => {
+        const value = event.target.value
+        this.setState({
+            search: value,
+            filtered: this.filter(this.state.filter, this.state.emojiData, value),
+        });
+    }
 
     renderCell = ({ columnIndex, rowIndex, isScrolling, key, style }) => {
         const index = columnIndex + (this.state.columnCount * rowIndex);
@@ -115,12 +131,18 @@ class EmojiPicker extends React.Component {
                     }}
                 >
                     <div className={classes.grid}>
-                        <TextField variant="filled" label="Suchen"/>
+                        <TextField value={this.state.search} variant="filled" label="Suchen" fullWidth onChange={this.handleKey} />
                         <Tabs
-                            value={this.state.filter}
+                            value={this.state.search ? null : this.state.filter}
                             onChange={this.handleChange}
-                            scrollable
-                            scrollButtons="on">
+                        >
+                            <Tab
+                                className={classes.tab}
+                                key={0}
+                                value={null}
+                                icon={<SearchIcon />}
+                            >
+                            </Tab>
                             {this.state.emojiData && this.state.emojiData.categories.map(category => {
                                 const entry = this.state.emojiData.emojis[category.members[0]]
                                 return (
@@ -132,23 +154,20 @@ class EmojiPicker extends React.Component {
                                 )
                             })}
                         </Tabs>
-                        <AutoSizer disableHeight>
-                            {({ width }) => (
-                                <Grid
-                                    // to fix a weird bug when changing data source
-                                    key={this.state.filter && this.state.filter.name}
-                                    ref="List"
-                                    height={200}
-                                    overscanRowCount={10}
-                                    noRowsRenderer={this.renderNoRows}
-                                    rowCount={filtered ? (filtered.length / 3 - 1) : 0}
-                                    columnCount={3}
-                                    rowHeight={48}
-                                    columnWidth={64}
-                                    cellRenderer={this.renderCell}
-                                    width={width}
-                                />)}
-                        </AutoSizer>
+                        <Grid
+                            // to fix a weird bug when changing data source
+                            // key={this.state.filtered}
+                            ref="List"
+                            height={200}
+                            // overscanRowCount={10}
+                            noRowsRenderer={this.renderNoRows}
+                            rowCount={filtered ? (Math.floor(filtered.length / this.state.columnCount)) : 0}
+                            columnCount={this.state.columnCount}
+                            rowHeight={48}
+                            columnWidth={64}
+                            cellRenderer={this.renderCell}
+                            width={264}
+                        />
                     </div>
                 </Popover>
             </React.Fragment>

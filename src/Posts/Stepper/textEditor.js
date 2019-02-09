@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { withStyles, FormControl, InputLabel, Input, FormHelperText } from '@material-ui/core';
+import { withStyles, FormControl, InputLabel, Input, FormHelperText, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { Editor, EditorState, RichUtils, convertFromRaw, convertToRaw, Modifier } from 'draft-js';
+import { EditorState, RichUtils, convertFromRaw, convertToRaw, Modifier } from 'draft-js';
 import FormatBoldIcon from '@material-ui/icons/FormatBold';
 import FormatItalicIcon from '@material-ui/icons/FormatItalic';
 import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
@@ -10,7 +10,7 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import EmojiPicker from './emojiPicker';
 import ColorPicker from './colorPicker';
 import { COLOR_STYLE_MAP } from '../../Common/const';
-
+import Editor from '../editor';
 
 const styles = theme => ({
     textArea: {
@@ -38,6 +38,7 @@ function handleChange(props) {
 const ToggleButton = (props) => (
     <MUIToggleButton onMouseDown={handleChange(props)} {...props} onClick={null} />
 );
+
 
 
 class PostEditor extends Component {
@@ -125,7 +126,15 @@ class PostEditor extends Component {
     }
 
     handleFormat = (e, formats) => {
-        this.handleEditorStateChanged(RichUtils.toggleInlineStyle(this.state.editorState, formats));
+        switch (formats) {
+            case "BOLD":
+            case "ITALIC":
+            case "UNDERLINE":
+                this.handleEditorStateChanged(RichUtils.toggleInlineStyle(this.state.editorState, formats));
+                break;
+            default: break;
+        }
+        this.handleEditorStateChanged(RichUtils.toggleBlockType(this.state.editorState, formats));
     }
 
     handleEmojiDropDown = (e) => {
@@ -134,7 +143,8 @@ class PostEditor extends Component {
 
     render() {
         const { classes } = this.props;
-        const inlineStyle = [...this.state.editorState.getCurrentInlineStyle()];
+        const inlineStyle = [...this.state.editorState.getCurrentInlineStyle(),
+        RichUtils.getCurrentBlockType(this.state.editorState)];
 
         return (
             <>
@@ -159,6 +169,9 @@ class PostEditor extends Component {
                     <ToggleButton value="UNDERLINE">
                         <FormatUnderlinedIcon />
                     </ToggleButton>
+                    <ToggleButton value="small">
+                        <Typography variant="body2" color="textSecondary">small</Typography>
+                    </ToggleButton>
                     <ColorPicker value={inlineStyle} onColorSelected={this.handleColorSelected} />
                     <EmojiPicker onEmojiSelected={this.handleEmojiSelected} />
                 </ToggleButtonGroup>
@@ -166,7 +179,6 @@ class PostEditor extends Component {
                     <Editor
                         ref="editor"
                         editorState={this.state.editorState}
-                        customStyleMap={COLOR_STYLE_MAP}
                         onChange={this.handleEditorStateChanged}
                     />
                 </div>

@@ -10,14 +10,15 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ApproveIcon from '@material-ui/icons/Check';
 import EditIcon from '@material-ui/icons/Edit';
-import { withStyles, Menu, MenuItem, ListItemIcon, ListItemText, Badge } from '@material-ui/core';
+import { withStyles, Menu, MenuItem, ListItemIcon, ListItemText, Badge, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { ObjectIcon } from '../Main/components/Avatars';
 import PostDeletionDialog from './PostDeletionDialog';
 import { deletePost, editPost } from './actions';
-import draftToHtml from 'draftjs-to-html';
 import Diashow from './diashow';
+import { EditorState, convertFromRaw } from 'draft-js';
+import Editor from './editor';
 
 const styles = theme => ({
     card: {
@@ -116,11 +117,7 @@ class Post extends React.Component {
         );
         if (post.TEXT) {
             const rawContentState = JSON.parse(post.TEXT);
-
-            var markup = draftToHtml(
-                rawContentState,
-            );
-
+            var editorState = EditorState.createWithContent(convertFromRaw(rawContentState));
         }
 
         return (
@@ -140,8 +137,12 @@ class Post extends React.Component {
                 /> */}
                 <CardContent>
                     {post.IMAGES && <Diashow post={post}></Diashow>}
-                    <div className={classes.content} dangerouslySetInnerHTML={{ __html: markup }} />
-                    <div>von {post.CREATOR}</div>
+                    <Editor
+                        editorState={editorState}
+                        readOnly
+                    >
+                    </Editor>
+                    <Typography variant="body2">von {post.CREATOR}</Typography>
                 </CardContent>
                 <CardActions className={classes.actions} disableActionSpacing>
                     <IconButton aria-label="Add to favorites">
