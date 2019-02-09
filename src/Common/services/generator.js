@@ -23,9 +23,9 @@ async function fetchData(url, options) {
         throw err;
     });
     if (response && response.ok) {
-        return response.json().catch(err => {});
+        return await response.json();
     }
-    throw response;
+    throw await response.json();
 }
 
 export const requestApiGenerator = next => async (endpoint, route, action, METHOD = "GET", body) => {
@@ -51,10 +51,11 @@ export const requestApiGenerator = next => async (endpoint, route, action, METHO
         });
         return;
     } catch (err) {
+        var error = err && (err.error || err);
         next({
             ...action,
             type: action.type + '_ERROR',
-            payload: err.message ? { text: err.message } : err
+            payload: error.message ? { text: error.message } : error
         })
     }
 }

@@ -40,7 +40,14 @@ const enhanceStore = (createStore) => (reducer, preloadedState, enhancer) => {
     startInterval();
     window.addEventListener('blur', stopInterval);
     window.addEventListener('focus', startInterval);
-
+    
+    if (module.hot) {
+        module.hot.dispose(() => {
+            stopInterval();
+            window.removeEventListener('blur', stopInterval);
+            window.removeEventListener('focus', startInterval);
+        });
+    }
     return store;
 }
 
