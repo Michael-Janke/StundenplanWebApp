@@ -6,6 +6,10 @@ const CONTEXT_KEY = "authorization_v2";
 // remove old keys
 ["authorization"].forEach(ls.remove);
 
+/**
+ * @param {Window} win 
+ * @returns {AuthenticationContext}
+ */
 export const getAuthContext = (win = window) => {
     let authContext = win[CONTEXT_KEY] || ls(CONTEXT_KEY);
     if (authContext) {

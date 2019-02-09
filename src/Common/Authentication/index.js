@@ -41,7 +41,7 @@ export const runApplication = (app) => {
         authContext.handleCallback(code, session_state, state);
     }
     if (authContext.isLoggingIn() && !authContext.isLoggedIn()) {
-        authContext.allowAuthentication();
+        authContext.allow('authentication');
         authContext.loadAuthCode();
     } else {
         app();

@@ -53,9 +53,7 @@ export class AuthenticationContext extends EventEmitter {
         this.authCodes = [];
         setAuthContext(null);
     }
-    isAllowed() {
-        return this.authenticationAllowed;
-    }
+
 
     isLoggedIn() {
         const tokens = Object.values(this.tokens).length + this.tokenAcquisistions.length;
@@ -88,22 +86,29 @@ export class AuthenticationContext extends EventEmitter {
     }
 
     loadAuthCode() {
-        if (!this.authenticationAllowed) {
+        if (!this.isAllowed('authentication')) {
             throw new Error("Authentication not allowed");
         }
         window.location.replace(this.getAuthCodeLink());
     }
 
-    allowAuthentication() {
-        return this.authenticationAllowed = true;
+    allow(variant) {
+        return this.allowed = variant;
     }
 
-    disallowAuthentication() {
-        return this.authenticationAllowed = false;
+    /**
+     * 
+     * @param  {...('authentication' | 'public' | 'token')} variant
+     */
+    isAllowed(...variant) {
+        if (variant && variant.length) {
+            return variant.indexOf(this.allowed) !== -1;
+        }
+        return !!this.allowed;
     }
 
     login() {
-        if (!this.authenticationAllowed) {
+        if (!this.isAllowed('authentication')) {
             throw new Error("Authentication not allowed");
         }
         if (this.isLoggedIn() || this.isLoggingIn()) {

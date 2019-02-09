@@ -17,7 +17,7 @@ export default store => next => action => {
         case 'DELETE_DATE_RECEIVED': 
         case 'EDIT_DATE_RECEIVED':
             return requestApiGenerator(next)(API_URL,
-                getAuthContext().isAllowed() ? 'dates/v2' : 'dates/public', { type: 'GET_DATES' });
+                getAuthContext().isAllowed('authentication', 'token') ? 'dates/v2' : 'dates/public', { type: 'GET_DATES' });
         default: ;
     }
 }

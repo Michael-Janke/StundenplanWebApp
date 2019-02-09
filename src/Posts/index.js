@@ -9,12 +9,18 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { addPost, editPost, getPosts } from './actions';
 import { withRouter } from 'react-router';
 
+/**
+ * 
+ * @param {import('@material-ui/core').Theme} theme 
+ */
 const styles = theme => ({
     root: {
         width: '100%',
         // padding: `${theme.spacing.unit * 8}px ${theme.spacing.unit * 6}px`,
         boxSizing: 'border-box',
         overflowY: 'auto',
+        height: '100%',
+        backgroundColor: theme.palette.background.default
     },
     post: {
         display: 'flex',

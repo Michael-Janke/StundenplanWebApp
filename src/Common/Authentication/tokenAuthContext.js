@@ -10,19 +10,15 @@ export class TokenAuthContext {
         }
     }
 
-    isAllowed() {
-        return false;
+    isAllowed(...variants) {
+        return variants.indexOf('token') !== -1
     }
 
     async getToken(endpoint) {
         return { access_token: this.token };
     }
 
-    disallowAuthentication() {
-        
-    }
-
-    allowAuthentication() {
+    allow() {
         
     }
 
