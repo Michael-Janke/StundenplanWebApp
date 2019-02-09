@@ -21,8 +21,8 @@ export class AuthenticationContext extends EventEmitter {
         this.setMaxListeners(0);
         if (obj) {
             // copy values into this object
-            this.tokens = obj.tokens;
-            this.authCodes = obj.authCodes;
+            this.tokens = obj.tokens || {};
+            this.authCodes = obj.authCodes || [];
         }
     }
 

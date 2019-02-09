@@ -3,12 +3,31 @@ export class TokenAuthContext {
     constructor(token) {
         this.token = token;
     }
+
+    toObject() {
+        return {
+            token: this.token
+        }
+    }
+
+    isAllowed() {
+        return false;
+    }
+
     async getToken(endpoint) {
-        return this.token;
+        return { access_token: this.token };
+    }
+
+    disallowAuthentication() {
+        
+    }
+
+    allowAuthentication() {
+        
     }
 
     login() {
-        
+
     }
 
     logOut() {
@@ -16,6 +35,10 @@ export class TokenAuthContext {
     }
 
     isLoggedIn() {
+        return true;
+    }
+
+    isLoggingIn() {
         return true;
     }
 }

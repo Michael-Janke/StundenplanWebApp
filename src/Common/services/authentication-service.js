@@ -19,6 +19,7 @@ export default store => next => action => {
             case 'GET_BATCH_AVATARS':
             case 'GET_UNREAD_MESSAGES':
             case 'GET_ASSIGNMENTS':
+            case 'GET_JOINED_TEAMS':
                 return;
             default: ;
         }

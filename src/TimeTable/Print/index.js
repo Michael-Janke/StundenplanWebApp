@@ -13,7 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Grow from '@material-ui/core/Grow';
 import { Checkbox, ListItemIcon, FormGroup } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Page from './pageLegacy';
+import Page from './page';
 
 const styles = theme => ({
     wrapper: {
