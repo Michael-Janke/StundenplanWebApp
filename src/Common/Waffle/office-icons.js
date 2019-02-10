@@ -5,7 +5,7 @@ import TextSmsIcon from '@material-ui/icons/Textsms';
 export default {
     Stundenplan: {
         color: '#00593b',
-        icon: Icon(require('./icon.png')),
+        icon: Icon(require('../icons/icon.png')),
         link: '/',
         router: true,
     },
@@ -37,7 +37,7 @@ export default {
     },
     Homepage: {
         color: 'black',
-        icon: Icon(require('./logoicon.png'), {
+        icon: Icon(require('../icons/logoicon.png'), {
             filter: 'invert(100%)',
             WebkitFilter: 'invert(100%)',
         }),
@@ -45,7 +45,7 @@ export default {
     },
     "alte Version": {
         color: 'black',
-        icon: Icon(require('./logoicon.png'), {
+        icon: Icon(require('../icons/logoicon.png'), {
             filter: 'invert(100%)',
             WebkitFilter: 'invert(100%)',
         }),
@@ -53,7 +53,7 @@ export default {
     },
     InfoTafel: {
         color: 'black',
-        icon: Icon(require('./logoicon.png'), {
+        icon: Icon(require('../icons/logoicon.png'), {
             filter: 'invert(100%)',
             WebkitFilter: 'invert(100%)',
         }),
