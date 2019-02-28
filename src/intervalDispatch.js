@@ -4,7 +4,8 @@ const enhanceStore = (createStore) => (reducer, preloadedState, enhancer) => {
     const store = createStore(reducer, preloadedState, enhancer);
     
     const dispatchReduxAction = () => {
-        if (!getAuthContext().isAllowed('authentication', 'token')) {
+        const isAllowed = getAuthContext().isAllowed('authentication', 'token')
+        if (!isAllowed && isAllowed !== undefined) {
             stopInterval();
             return;
         }

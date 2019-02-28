@@ -6,6 +6,9 @@ import { TokenAuthContext } from './tokenAuthContext';
 export function getToken(resource) {
     return new Promise((resolve, reject) => {
         const authContext = getAuthContext();
+        if (authContext.isAllowed('public')) {
+            return resolve(undefined);
+        }
 
         if (!authContext.isLoggedIn() && !authContext.isLoggingIn()) {
             console.log("not logged in");
