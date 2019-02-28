@@ -21,6 +21,7 @@ const PostEditor = withAuth(() => import("../Posts/Stepper/editPage"));
 const Main = withAuth(() => import("../Main"));
 const Statistics = withAuth(() => import("../Statistics"));
 const Dates = withAuthentication('public', asynchronized(() => import("../Dates")));
+const PublicPosts = withAuthentication('token', asynchronized(() => import("../Posts/public")));
 const PublicTimetable = withAuthentication('token', asynchronized(() => import("../TimeTable/public")));
 
 class Routes extends React.Component {
@@ -47,6 +48,7 @@ class Routes extends React.Component {
                     <Route exact path="/" component={Main} />
                     <Route exact path="/posts" component={Posts} />
                     <Route exact path="/public/dates" component={Dates} />
+                    <Route exact path="/public/posts" component={PublicPosts} />
                     <Route exact path="/public/tv" component={PublicTimetable} />
                     <Route exact path="/posts/:id" component={PostEditor} />
                     <Route exact path="/admin" component={Statistics} />
