@@ -5,7 +5,9 @@ import {register} from './serviceWorker';
 import firebase from 'firebase';
 import moment from 'moment';
 import 'moment/locale/de';
+import { install } from '@material-ui/styles';
 moment.locale('de');
+install();
 
 console.log("REACT_APP_MODE: " + process.env.REACT_APP_MODE);
 
