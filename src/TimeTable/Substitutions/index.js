@@ -21,7 +21,6 @@ const styles = theme => ({
         flexDirection: 'column',
     },
     rootHeader: {
-        height: 80,
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
         padding: theme.spacing.unit,
         borderBottom: `1px solid ${theme.palette.divider}`,
@@ -32,6 +31,7 @@ const styles = theme => ({
         padding: theme.spacing.unit,
         overflowY: 'auto',
         backgroundColor: theme.palette.background.default,
+        flex: '1 0',
     },
     substitutionsHeader: {
         fontSize: '90%',
