@@ -19,16 +19,25 @@ import { deletePost, editPost } from './actions';
 import Diashow from './diashow';
 import { EditorState, convertFromRaw } from 'draft-js';
 import Editor from './editor';
+import { classNames } from '../Common/const';
 
 const styles = theme => ({
     card: {
         maxWidth: 600,
+        display: 'flex',
+        flexDirection: 'column',
+
     },
     media: {
         paddingTop: '56.5%'
     },
-    content: {
-        fontSize: '100%',
+    cardContent: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    contentOverflow: {
+        overflowY: 'auto',
     }
 });
 
@@ -65,7 +74,7 @@ class Post extends React.Component {
 
     render() {
         const { anchorEl, deleteOpen } = this.state;
-        const { isAdmin, classes, post } = this.props;
+        const { isAdmin, classes, post, overflow } = this.props;
         const approved = post.APPROVED;
         const menu = (post.USER_CREATED || isAdmin) && (
             <React.Fragment>
@@ -137,15 +146,17 @@ class Post extends React.Component {
                     image=""
                     title="Contemplative Reptile"
                 /> */}
-                <CardContent>
-                    {post.IMAGES && <Diashow post={post}></Diashow>}
-                    {editorState && 
-                        <Editor
-                            editorState={editorState}
-                            readOnly
-                        >
-                        </Editor>
-                    }
+                <CardContent className={classes.cardContent}>
+                    <div className={classNames(overflow && classes.contentOverflow)}>
+                        {post.IMAGES && <Diashow post={post}></Diashow>}
+                        {editorState &&
+                            <Editor
+                                editorState={editorState}
+                                readOnly
+                            >
+                            </Editor>
+                        }
+                    </div>
                     <Typography variant="body2">von {post.CREATOR}</Typography>
                 </CardContent>
                 <CardActions className={classes.actions} disableActionSpacing>

@@ -7,6 +7,10 @@ export function editPost(post) {
     return { type: "EDIT_POST", payload: post };
 }
 
+export function getDayInfo() {
+    return { type: "GET_DAY_INFO" };
+}
+
 export function getPosts() {
     return { type: "GET_POSTS" };
 }

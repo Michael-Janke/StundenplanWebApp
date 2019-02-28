@@ -6,10 +6,10 @@ import { Grid, AppBar, Toolbar, Typography } from '@material-ui/core';
 import Post from '../post';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { getPosts } from '../actions';
-import grey from '@material-ui/core/colors/grey';
 import ClockDigital from './ClockDigital';
 import ClockAnalog from './ClockAnalog';
 import CurrentDate from './CurrentDate';
+import DayInfo from './DayInfo';
 /**
  * 
  * @param {import('@material-ui/core').Theme} theme 
@@ -17,7 +17,6 @@ import CurrentDate from './CurrentDate';
 const styles = theme => ({
     root: {
         width: '100%',
-        // padding: `${theme.spacing.unit * 8}px ${theme.spacing.unit * 6}px`,
         boxSizing: 'border-box',
         overflowY: 'auto',
         height: '100%',
@@ -26,10 +25,16 @@ const styles = theme => ({
         flexDirection: 'column',
         flexGrow: 1,
     },
+    postGridItem: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+    },
     post: {
         display: 'flex',
         flexWrap: 'wrap',
         padding: 20,
+        height: '100%',
     },
     postEnter: {
         opacity: 0,
@@ -53,9 +58,8 @@ const styles = theme => ({
         flexGrow: 1,
     },
     transportInfo: {
-        backgroundColor: grey[200],
-        flexGrow: 1,
-        height: 128,
+        backgroundColor: theme.palette.background.paper,
+        flex: '0 0 128px'
     },
     flexGrow: {
         flexGrow: 1,
@@ -63,7 +67,10 @@ const styles = theme => ({
 
     main: {
         padding: theme.spacing.unit,
-        backgroundColor: grey[200],
+        backgroundColor: theme.palette.background.paper,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
     },
     toolbar: {
         minHeight: 130,
@@ -99,6 +106,7 @@ class Posts extends React.Component {
                             <CurrentDate></CurrentDate>
                             <ClockDigital></ClockDigital>
                         </div>
+                        <DayInfo></DayInfo>
                     </Toolbar>
                 </AppBar>
                 <div className={classes.layout}>
@@ -111,7 +119,7 @@ class Posts extends React.Component {
                         <Grid item xs={9} className={classes.main}>
                             <Typography variant="h2" color="textSecondary" gutterBottom>
                                 Neuigkeiten
-                                </Typography>
+                            </Typography>
                             <Grid container component={TransitionGroup} className={classes.post}>
                                 {posts && posts.map(post => (
                                     <CSSTransition
@@ -123,19 +131,20 @@ class Posts extends React.Component {
                                         }}
                                         key={post.POST_ID}
                                         timeout={500}>
-                                        <Grid item xs>
-                                            <Post post={post} />
+                                        <Grid item xs className={classes.postGridItem}>
+                                            <Post overflow post={post} />
                                         </Grid>
                                     </CSSTransition>
                                 ))}
                             </Grid>
                         </Grid>
-                        <Grid xs={12} item className={classes.transportInfo}>
-
-
-                        </Grid>
+                        
                     </Grid>
                 </div>
+                <Grid xs={12} item className={classes.transportInfo}>
+
+
+                </Grid>
             </div>
         )
     }
