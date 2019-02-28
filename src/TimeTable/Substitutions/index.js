@@ -15,7 +15,10 @@ const styles = theme => ({
     root: {
         width: '100%',
         color: theme.palette.text.primary,
+        fontFamily: theme.typography.fontFamily,
         fontSize: '100%',
+        display: 'flex',
+        flexDirection: 'column',
     },
     rootHeader: {
         height: 80,
@@ -27,7 +30,6 @@ const styles = theme => ({
     },
     rootContent: {
         padding: theme.spacing.unit,
-        maxHeight: `calc(100vh - ${196}px)`,
         overflowY: 'auto',
         backgroundColor: theme.palette.background.default,
     },

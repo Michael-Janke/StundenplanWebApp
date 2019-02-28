@@ -220,11 +220,12 @@ const styles = theme => ({
         overflowY: 'auto'
     },
     rootLarge: {
-        maxHeight: `calc(100vh - ${180}px)`,
+        maxHeight: `calc(100vh - ${170}px)`,
     },
     table: {
         backgroundColor: theme.palette.background.default,
         flexShrink: 0,
+        height: 0,
     },
 });
 

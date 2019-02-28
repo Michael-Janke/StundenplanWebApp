@@ -7,8 +7,9 @@ export default function withApp(Component) {
         return (
             <>
                 <AppDrawer></AppDrawer>
-                <AppBar />
-                <Component />
+                <AppBar>
+                    <Component />
+                </AppBar>
             </>
         )
     }

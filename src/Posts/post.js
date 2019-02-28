@@ -117,7 +117,9 @@ class Post extends React.Component {
         );
         if (post.TEXT) {
             const rawContentState = JSON.parse(post.TEXT);
-            var editorState = EditorState.createWithContent(convertFromRaw(rawContentState));
+            if (rawContentState) {
+                var editorState = EditorState.createWithContent(convertFromRaw(rawContentState));
+            }
         }
 
         return (
@@ -137,11 +139,13 @@ class Post extends React.Component {
                 /> */}
                 <CardContent>
                     {post.IMAGES && <Diashow post={post}></Diashow>}
-                    <Editor
-                        editorState={editorState}
-                        readOnly
-                    >
-                    </Editor>
+                    {editorState && 
+                        <Editor
+                            editorState={editorState}
+                            readOnly
+                        >
+                        </Editor>
+                    }
                     <Typography variant="body2">von {post.CREATOR}</Typography>
                 </CardContent>
                 <CardActions className={classes.actions} disableActionSpacing>

@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 
 const defaultMapStateToProps = (state, props) => ({
-    small: state.browser.lessThan.medium,
     id: state.timetable.currentTimeTableId,
     type: state.timetable.currentTimeTableType,
     date: state.timetable.timetableDate,
@@ -39,8 +38,8 @@ const getCurrentTimetable = makeGetCurrentTimetable();
 
 const styles = ({
     root: {
-        width: '100%',
-        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
     }
 });
 

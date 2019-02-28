@@ -21,18 +21,13 @@ import { classNames } from '../../Common/const';
 import { connect } from 'react-redux';
 import { setTimeTable, addFavorite, removeFavorite, loadMe } from '../actions';
 
-
-const isTv = process.env.REACT_APP_MODE === 'tv';
-
 class Search extends React.PureComponent {
     state = { open: false, nonEmpty: false, value: "" };
 
     handleOpen = () => {
         if (!this.state.open) {
             this.input.focus();
-            if (!isTv) {
-                this.props.loadMe();
-            }
+            this.props.loadMe();
         }
         this.setState({ open: !this.state.open, value: "" });
     }
@@ -196,7 +191,7 @@ class Search extends React.PureComponent {
                                     !open && classes.dropDownClosed
                                 )}
                                 onClick={this.handleClick}
-                                toggleFavorite={this.toggleFavorite}
+                                toggleFavorite={this.props.tv ? null : this.toggleFavorite}
                                 filterBar={this.renderFilterBar()}>
                             </SearchResult>
                         </div>
