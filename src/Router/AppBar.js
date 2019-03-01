@@ -12,11 +12,8 @@ import UserSettingsMenu from '../Main/components/UserSettingsMenu';
 import indigo from '@material-ui/core/colors/indigo';
 import { toggleDrawer } from '../Main/actions';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { Typography } from '@material-ui/core';
-
-var MainAppBar = process.env.REACT_APP_MODE === 'tv'
-    ? require("../Main/components/TvAppBar").default
-    : require("../Main/components/AppBar").default;
+import { Typography, RootRef } from '@material-ui/core';
+import MainAppBar from '../Main/components/AppBar';
 
 
 const styles = theme => ({
@@ -25,6 +22,7 @@ const styles = theme => ({
         paddingLeft: 10,
         paddingRight: 10,
         zIndex: theme.zIndex.modal,
+        transition: theme.transitions.create('box-shadow')
     },
     toolbar: {
         minHeight: 64,
@@ -39,16 +37,35 @@ const styles = theme => ({
 });
 
 class AppBar extends React.Component {
+    state = { boxShadow: false };
+
     handleDrawerToggle = () => {
         this.props.toggleDrawer();
     };
+
+    handleRootRef = (ref) => {
+        if (this.body) {
+            this.body.removeEventListener('scroll', this.handleScroll);
+        }
+        this.body = ref;
+        if (this.body) {
+            this.body.addEventListener('scroll', this.handleScroll);
+        }
+    }
+    handleScroll = (e) => {
+        const boxShadow = this.state.boxShadow;
+        const scrollTop = Boolean(e.target.scrollTop !== 0);
+        if (boxShadow !== scrollTop) {
+            this.setState({ boxShadow: scrollTop });
+        }
+    }
 
     render() {
         const { classes, location, history } = this.props;
         const content = (
             <UserSettingsMenu />
         );
-        const appBarStyles = location.pathname === '/' ? { boxShadow: 'none' } : null;
+        const appBarStyles = (location.pathname === '/' && !this.state.boxShadow) ? { boxShadow: 'none' } : null;
         if (location.pathname.match(/posts\/.*/g)) {
             var state = {
                 back: true,
@@ -56,12 +73,10 @@ class AppBar extends React.Component {
             }
         }
         return (
-            <div>
+            <>
                 <AppBarComponent className={classes.appBar} style={appBarStyles}>
                     <Toolbar disableGutters variant="dense" className={classes.toolbar}>
-                        {process.env.REACT_APP_MODE !== 'tv'
-                            &&
-                            state && state.back ?
+                        {state && state.back ?
                             <IconButton
                                 color="inherit"
                                 aria-label="go back"
@@ -78,7 +93,7 @@ class AppBar extends React.Component {
                                 <MenuIcon />
                             </IconButton>
                         }
-                        {state && state.title && 
+                        {state && state.title &&
                             <Typography variant="h6" color="inherit" className={classes.title}>
                                 {state.title}
                             </Typography>
@@ -91,7 +106,10 @@ class AppBar extends React.Component {
                 </AppBarComponent>
 
                 <div className={classes.toolbar} />
-            </div>
+                <RootRef rootRef={this.handleRootRef}>
+                    {this.props.children}
+                </RootRef>
+            </>
         );
     }
 }

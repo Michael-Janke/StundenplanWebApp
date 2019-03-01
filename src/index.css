@@ -3,6 +3,7 @@ body {
   padding: 0;
   height: 100vh !important;
   overscroll-behavior: contain; /* disable pull-to-refresh */
+  -ms-scroll-chaining: chained;
 }
 
 @media (min-width:1920px) {
@@ -41,31 +42,33 @@ html, body, div#root, .app {
   height: 100%;
   display: flex;
   flex-direction: column;
+  -ms-scroll-chaining: chained;
 }
 
+@media (min-width:800px) {
+    ::-webkit-scrollbar {
+        background: transparent;
+        height: 8px;
+        width: 8px;
+    }
 
-::-webkit-scrollbar {
-    background: transparent;
-    height: 8px;
-    width: 8px;
-}
+    ::-webkit-scrollbar-thumb {
+        border: none;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        background: #ddd;
+        min-height: 40px;
+    }
 
-::-webkit-scrollbar-thumb {
-    border: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    background: #ddd;
-    min-height: 40px;
-}
+    :hover::-webkit-scrollbar-thumb {
+        background: #bdbdbd
+    }
 
-:hover::-webkit-scrollbar-thumb {
-    background: #bdbdbd
-}
+    ::-webkit-scrollbar-thumb:hover {
+        background: #bdbdbd
+    }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #bdbdbd
-}
-
-::-webkit-scrollbar-thumb:active {
-    background: #989898
+    ::-webkit-scrollbar-thumb:active {
+        background: #989898
+    }
 }

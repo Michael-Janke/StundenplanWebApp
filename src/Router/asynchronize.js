@@ -21,14 +21,16 @@ const Loading = ({ isLoading, error, retry }) => {
     }
 };
 
-const withSplashScreen = (importFunc) => {
-    return importFunc().then(component => {
-        hideSplash();
-        return component;
-    });
-}
 
-export const asynchronize = (importFunc) => Loadable({
-    loader: () => withSplashScreen(importFunc),
+export const asynchronize = (...postWrappers) => (importFunc) => Loadable({
+    loader: importFunc,
     loading: Loading,
+    render(loaded, props) {
+        const Component = loaded.default;
+        hideSplash();
+        return React.createElement(
+            postWrappers.reduce((fn, current) => current(fn), Component),
+            props
+        );
+    }
 });

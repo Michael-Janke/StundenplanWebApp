@@ -41,7 +41,7 @@ const styles = theme => ({
     list: {
         position: 'relative',
         overflow: 'auto',
-        flex: 1,
+        flex: '1 0 0',
         paddingTop: 0,
         backgroundColor: theme.palette.background.default,
     },

@@ -101,6 +101,9 @@ export class AuthenticationContext extends EventEmitter {
      * @param  {...('authentication' | 'public' | 'token')} variant
      */
     isAllowed(...variant) {
+        if (this.allowed === undefined) {
+            return undefined;
+        }
         if (variant && variant.length) {
             return variant.indexOf(this.allowed) !== -1;
         }

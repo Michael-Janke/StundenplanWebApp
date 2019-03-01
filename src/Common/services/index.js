@@ -5,6 +5,7 @@ import postsService from "./posts-service";
 import datesService from "./dates-service";
 import periodService from "./period-service";
 import authenticationService from "./authentication-service";
+import tvService from "./tv-service";
 
 export default [
     authenticationService,
@@ -13,5 +14,6 @@ export default [
     teamsService,
     postsService,
     datesService, 
-    periodService
+    periodService,
+    tvService,
 ];

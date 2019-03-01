@@ -15,10 +15,12 @@ const styles = theme => ({
     root: {
         width: '100%',
         color: theme.palette.text.primary,
+        fontFamily: theme.typography.fontFamily,
         fontSize: '100%',
+        display: 'flex',
+        flexDirection: 'column',
     },
     rootHeader: {
-        height: 80,
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
         padding: theme.spacing.unit,
         borderBottom: `1px solid ${theme.palette.divider}`,
@@ -27,9 +29,9 @@ const styles = theme => ({
     },
     rootContent: {
         padding: theme.spacing.unit,
-        maxHeight: `calc(100vh - ${196}px)`,
         overflowY: 'auto',
         backgroundColor: theme.palette.background.default,
+        flex: '1 0',
     },
     substitutionsHeader: {
         fontSize: '90%',

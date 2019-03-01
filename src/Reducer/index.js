@@ -12,16 +12,13 @@ import posts from './posts';
 import period from './period';
 import online from './online';
 import teams from './teams';
-
-let substitutions;
-if (process.env.REACT_APP_MODE === 'tv') {
-    substitutions = require('./substitutions').default;
-}
+import substitutions from './substitutions';
+import tv from './tv';
 
 export default combineReducers({
     browser: responsiveStateReducer,
-    ...(substitutions && { substitutions }),
-    ...(admin && { admin }),
+    substitutions,
+    admin,
     period,
     online,
     posts,
@@ -31,5 +28,6 @@ export default combineReducers({
     timetable,
     avatars,
     dates,
-    teams
+    teams,
+    tv
 });

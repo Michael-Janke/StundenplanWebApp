@@ -40,7 +40,7 @@ export function specifySubstitutionType(id, type, substitution) {
     let lesson = {};
     substitution = { ...substitution, id, type };
 
-    if (!substitution.isOld && substitution.TEXT === "Methodenkompetenz") {
+    if (substitution.TEXT === "Methodenkompetenz") {
         substitution.TYPE = "METH_COMP";
         substitution.TEXT = "";
     }

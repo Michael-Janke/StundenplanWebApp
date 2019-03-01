@@ -4,7 +4,6 @@ import { ObjectIcon } from './Avatars';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 
-const isTv = process.env.REACT_APP_MODE === 'tv';
 
 class SearchItem extends React.PureComponent {
 
@@ -32,7 +31,7 @@ class SearchItem extends React.PureComponent {
                     />
                 </ListItemIcon>
                 <ListItemText inset primary={text} secondary={secondary} />
-                {!isTv &&
+                {this.props.toggleFavorite &&
                     <ListItemSecondaryAction>
                         {secondary &&
                             <IconButton onClick={this.handleToggleFavorite}>
