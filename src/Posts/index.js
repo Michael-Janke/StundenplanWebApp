@@ -22,7 +22,7 @@ const styles = theme => ({
         height: '100%',
         backgroundColor: theme.palette.background.default
     },
-    post: {
+    postsGrid: {
         display: 'flex',
         flexWrap: 'wrap',
     },
@@ -40,7 +40,9 @@ const styles = theme => ({
         transition: theme.transitions.create(['opacity']),
         opacity: 0,
     },
-
+    postContainer: {
+        maxWidth: 400
+    },
     createButton: {
         position: 'absolute',
         right: theme.spacing.unit * 2,
@@ -54,11 +56,13 @@ const styles = theme => ({
         margin: '0 auto',
         padding: `${theme.spacing.unit * 2}px`,
     },
-    heroButtons: {
-        marginTop: theme.spacing.unit * 4,
+    topCreateButton: {
+        margin: theme.spacing.unit,
+        display: "flex",
+        justifyContent: "center"
     },
     layout: {
-        padding: `${theme.spacing.unit *2}px`,
+        padding: `${theme.spacing.unit }px`,
         width: 'auto',
         [theme.breakpoints.up(1100 + theme.spacing.unit * 3 * 2)]: {
             width: 1100,
@@ -102,26 +106,23 @@ class Posts extends React.Component {
                 <div className={classes.heroUnit}>
                     <div className={classes.heroContent}>
                         <Typography variant="h6" align="center" color="textSecondary" paragraph>
-                            Erstelle Beiträge, um über Neuigkeiten von Lehrern und Schülern zu informieren. 
+                            <div>Kuchenbasar? Kartenverkauf? Neuigkeiten?</div>
+                            <div>Informiere das Wolkenberg und poste etwas auf die Infotafel!</div>
                         </Typography>
                         {posts && !posts.length &&
                             <Typography variant="h6" align="center" color="error" paragraph>
                                 Es sind keine Neuigkeiten vorhanden!
                             </Typography>
                         }
-                        <div className={classes.heroButtons}>
-                            <Grid container justify="center">
-                                <Grid item>
-                                    <Button variant="contained" color="primary" onClick={this.handleCreate}>
-                                        Jetzt erstellen
-                                    </Button>
-                                </Grid>
-                            </Grid>
+                        <div className={classes.topCreateButton}>
+                            <Button variant="contained" color="primary" onClick={this.handleCreate}>
+                                Jetzt erstellen
+                            </Button>
                         </div>
                     </div>
                 </div>
                 <div className={classes.layout}>
-                    <Grid container component={TransitionGroup} spacing={40} className={classes.post}>
+                    <Grid container component={TransitionGroup} spacing={8} className={classes.postsGrid} justify="center">
                         {posts && posts.map(post => (
                             <CSSTransition
                                 classNames={{
@@ -132,7 +133,7 @@ class Posts extends React.Component {
                                 }}
                                 key={post.POST_ID}
                                 timeout={500}>
-                                <Grid item xs={12} md={6}>
+                                <Grid item xs={12} md={6} className={classes.postContainer}>
                                     <Post post={post} isAdmin={isAdmin} onEdit={this.handleOnEdit} />
                                 </Grid>
                             </CSSTransition>

@@ -4,13 +4,13 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
+import Mail from '@material-ui/icons/Mail';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ApproveIcon from '@material-ui/icons/Check';
 import EditIcon from '@material-ui/icons/Edit';
 import { withStyles, Menu, MenuItem, ListItemIcon, ListItemText, Badge, Typography } from '@material-ui/core';
+import grey from '@material-ui/core/colors/grey';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { ObjectIcon } from '../Main/components/Avatars';
@@ -23,10 +23,8 @@ import { classNames } from '../Common/const';
 
 const styles = theme => ({
     card: {
-        maxWidth: 600,
         display: 'flex',
         flexDirection: 'column',
-
     },
     media: {
         paddingTop: '56.5%'
@@ -38,6 +36,9 @@ const styles = theme => ({
     },
     contentOverflow: {
         overflowY: 'auto',
+    },
+    author: {
+        color: grey[500],
     }
 });
 
@@ -141,11 +142,6 @@ class Post extends React.Component {
                     title={post.TITLE}
                     subheader={post.DATE_FROM && moment(post.DATE_FROM.date).format("DD. MMMM, YYYY")}
                 />
-                {/* <CardMedia
-                    className={classes.media}
-                    image=""
-                    title="Contemplative Reptile"
-                /> */}
                 <CardContent className={classes.cardContent}>
                     <div className={classNames(overflow && classes.contentOverflow)}>
                         {post.IMAGES && <Diashow post={post}></Diashow>}
@@ -157,14 +153,11 @@ class Post extends React.Component {
                             </Editor>
                         }
                     </div>
-                    <Typography variant="body2">von {post.CREATOR}</Typography>
                 </CardContent>
                 <CardActions className={classes.actions} disableActionSpacing>
-                    <IconButton aria-label="Add to favorites">
-                        <FavoriteIcon />
-                    </IconButton>
-                    <IconButton aria-label="Share">
-                        <ShareIcon />
+                    <Typography className={classes.author} variant="body2">von {post.CREATOR}</Typography>
+                    <IconButton className={classes.author} href={"mailto:" + post.CREATOR}>
+                        <Mail fontSize="small"/>
                     </IconButton>
                 </CardActions>
             </Card>
