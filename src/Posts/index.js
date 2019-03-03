@@ -3,7 +3,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-import { Button, Grid } from '@material-ui/core';
+import { Button, Grid, Fab } from '@material-ui/core';
 import Post from './post';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { addPost, editPost, getPosts } from './actions';
@@ -149,9 +149,9 @@ class Posts extends React.Component {
                         ))}
                     </Grid>
                 </div>
-                <Button variant="fab" color="primary" className={classes.createButton} onClick={this.handleCreate}>
+                <Fab color="primary" className={classes.createButton} onClick={this.handleCreate}>
                     <AddIcon />
-                </Button>
+                </Fab>
             </div>
         )
     }

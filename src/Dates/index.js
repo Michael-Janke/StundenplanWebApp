@@ -4,7 +4,6 @@ import IconButton from '@material-ui/core/IconButton';
 import { connect } from 'react-redux';
 import { getDates, deleteDate, editDate, addDate } from "./actions";
 import Date from "./Date";
-import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import grey from '@material-ui/core/colors/grey';
 import CalendarIcon from '@material-ui/icons/Event';
@@ -16,7 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import moment from 'moment';
-import { RootRef } from "@material-ui/core";
+import { RootRef, Fab } from "@material-ui/core";
 import { classNames } from "../Common/const";
 import { asynchronize } from "../Router/asynchronize";
 
@@ -209,14 +208,13 @@ class Dates extends Component {
                     />}
                 </List>
                 {editMode &&
-                    <Button
-                        variant="fab"
-                        mini
+                    <Fab
+                        size="small"
                         className={classes.fabButton}
                         color="primary"
-                        onClick={this.openDialog} >
+                        onClick={this.openDialog}>
                         <AddIcon />
-                    </Button>}
+                    </Fab>}
             </div>
         );
     }

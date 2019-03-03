@@ -23,6 +23,7 @@ import moment from 'moment';
 
 import TimePickerComponent from 'material-ui-pickers/TimePicker/TimePickerInline';
 import datePickerEnhancer from '../../Dates/datePickerEnhancer';
+import { Fab } from '@material-ui/core';
 
 const TimePicker = datePickerEnhancer(TimePickerComponent);
 
@@ -163,16 +164,16 @@ export class ReminderSettings extends Component {
                                             />
                                         </ListItemText>
                                         <ListItemSecondaryAction>
-                                            <Button variant="fab" 
+                                            <Fab
                                                 style={{marginLeft:5}}
-                                                mini
+                                                size="small"
                                                 color="primary"
                                                 aria-label="Add" 
                                                 onClick={this.addEMail}
                                                 disabled={loading || !validateEmail(this.state.newEMail)}
                                             >
                                                 <AddIcon />
-                                            </Button>
+                                            </Fab>
                                         </ListItemSecondaryAction>
                                     </ListItem>
                                 </List>
