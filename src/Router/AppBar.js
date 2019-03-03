@@ -66,10 +66,16 @@ class AppBar extends React.Component {
             <UserSettingsMenu />
         );
         const appBarStyles = (location.pathname === '/' && !this.state.boxShadow) ? { boxShadow: 'none' } : null;
+        var state = null;
         if (location.pathname.match(/posts\/.*/g)) {
-            var state = {
+            state = {
                 back: true,
                 title: "Post editieren",
+            }
+        }
+        if (location.pathname.match(/posts$/g)) {
+            state = {
+                title: "InfoTafel",
             }
         }
         return (

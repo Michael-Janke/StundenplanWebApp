@@ -52,16 +52,14 @@ const styles = theme => ({
     heroContent: {
         maxWidth: 600,
         margin: '0 auto',
-        padding: `${theme.spacing.unit * 8}px 0 ${theme.spacing.unit * 6}px`,
+        padding: `${theme.spacing.unit * 2}px`,
     },
     heroButtons: {
         marginTop: theme.spacing.unit * 4,
     },
     layout: {
-        padding: `${theme.spacing.unit * 8}px 20px`,
+        padding: `${theme.spacing.unit *2}px`,
         width: 'auto',
-        marginLeft: theme.spacing.unit * 3,
-        marginRight: theme.spacing.unit * 3,
         [theme.breakpoints.up(1100 + theme.spacing.unit * 3 * 2)]: {
             width: 1100,
             marginLeft: 'auto',
@@ -103,9 +101,6 @@ class Posts extends React.Component {
             <div className={classes.root}>
                 <div className={classes.heroUnit}>
                     <div className={classes.heroContent}>
-                        <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                            Neuigkeiten
-                        </Typography>
                         <Typography variant="h6" align="center" color="textSecondary" paragraph>
                             Erstelle Beiträge, um über Neuigkeiten von Lehrern und Schülern zu informieren. 
                         </Typography>
@@ -121,11 +116,6 @@ class Posts extends React.Component {
                                         Jetzt erstellen
                                     </Button>
                                 </Grid>
-                                {/* <Grid item>
-                                    <Button variant="outlined" color="primary">
-                                        Secondary action
-                                    </Button>
-                                </Grid> */}
                             </Grid>
                         </div>
                     </div>
