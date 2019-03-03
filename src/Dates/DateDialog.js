@@ -18,11 +18,12 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 // import {DateFormatInput, TimeFormatInput} from 'material-ui-next-pickers';
 
-import { InlineDatePicker } from 'material-ui-pickers/DatePicker';
-import { InlineDateTimePicker } from 'material-ui-pickers/DateTimePicker';
+import { InlineDatePicker } from 'material-ui-pickers';
+import { InlineDateTimePicker } from 'material-ui-pickers';
 
 import datePickerEnhancer from './datePickerEnhancer';
 import PeriodRangePicker from './PeriodRangePicker';
+import { Typography } from '@material-ui/core';
 
 const EnhancedInlineDatePicker = datePickerEnhancer(InlineDatePicker);
 const EnhancedInlineDateTimePicker = datePickerEnhancer(InlineDateTimePicker);
@@ -133,18 +134,13 @@ export class AddDialog extends Component {
         });
     }
 
-    render() {
-        const { edit, classes, small } = this.props;
+    renderDialogContent = () => {
+        const { edit, classes } = this.props;
         const { timeEdit } = this.state;
         const DateTimePicker = timeEdit ? EnhancedInlineDateTimePicker : EnhancedInlineDatePicker;
         const mask = timeEdit ? DateTimeMask : DateMask;
-
         return (
-            <Dialog
-                open={this.props.open}
-                onClose={this.handleClose(true)}
-                fullScreen={small}
-            >
+            <>
                 <DialogTitle>
                     <CalendarIcon color="primary" style={{ marginRight: '1vmin' }} />
                     {"Termin " + (edit ? "editieren" : "hinzufügen")}
@@ -153,7 +149,7 @@ export class AddDialog extends Component {
                     <div className={classes.row}>
                         <FormControl className={classes.formControl}
                             error={!this.state.DATE_FROM}>
-                            <h4>Von</h4>
+                            <Typography variant="h6">Von</Typography>
                             <DateTimePicker
                                 value={this.state.DATE_FROM}
                                 onChange={(date) => this.handleFromDateChange(date)}
@@ -168,7 +164,7 @@ export class AddDialog extends Component {
 
                         <FormControl className={classes.formControl}
                             error={!this.state.DATE_TO}>
-                            <h4>Bis</h4>
+                            <Typography variant="h6">Bis</Typography>
                             <DateTimePicker
                                 value={this.state.DATE_TO}
                                 onChange={(date) => this.handleToDateChange(date)}
@@ -241,15 +237,30 @@ export class AddDialog extends Component {
                         onClick={this.handleClose(true)}
                     >
                         Abbrechen
-                    </Button>
+                            </Button>
                     <Button
                         color="primary"
                         variant="contained"
                         onClick={this.handleClose()}
                     >
                         Absenden
-                    </Button>
+                            </Button>
                 </DialogActions>
+            </>
+        );
+    }
+
+    render() {
+        const { small } = this.props;
+
+        // in fact we get many dialog instances wrapping content in new component saves cpu
+        return (
+            <Dialog
+                open={this.props.open}
+                onClose={this.handleClose(true)}
+                fullScreen={small}
+            >
+                {React.createElement(this.renderDialogContent)}
             </Dialog>
         )
     }

@@ -10,16 +10,16 @@ export default ({ date, open, handleClose, handleDelete }) => (
         aria-describedby="alert-dialog-description"
         fullWidth
     >
-        <DialogTitle id="alert-dialog-title">Wirklich löschen?</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{date && date.TEXT} löschen?</DialogTitle>
         <DialogContent style={{fontSize: '100%'}}>
             <Date date={date} />
         </DialogContent>
         <DialogActions>
-            <Button onClick={handleClose} color="primary">
-                Nein
+            <Button onClick={handleClose} color="secondary">
+                Abbrechen
             </Button>
             <Button onClick={handleDelete} color="primary" autoFocus>
-                Ja
+                Löschen
             </Button>
         </DialogActions>
     </Dialog>

@@ -20,8 +20,8 @@ import { RootRef } from "@material-ui/core";
 import { classNames } from "../Common/const";
 import { asynchronize } from "../Router/asynchronize";
 
-const DateDialog = asynchronize(() => import('./DateDialog'));
-const DateDeletionDialog = asynchronize(() => import("./DateDeletionDialog"));
+const DateDialog = asynchronize()(() => import('./DateDialog'));
+const DateDeletionDialog = asynchronize()(() => import("./DateDeletionDialog"));
 
 const styles = theme => ({
     root: {

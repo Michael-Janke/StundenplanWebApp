@@ -4,8 +4,8 @@ import { setNotification, setMyTimetable, sendLoginStatistic, changeTheme, setSo
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import createTheme from '../Common/theme';
 import { connectToServiceWorker } from '../Common/firebase';
-import MomentUtils from 'material-ui-pickers/utils/moment-utils';
-import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
+import MomentUtils from "@date-io/moment";
+import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import { HashRouter as Router } from 'react-router-dom';
 import Routes from './routes';
 import version from '../version.json';
