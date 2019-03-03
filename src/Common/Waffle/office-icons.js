@@ -9,7 +9,7 @@ export default {
         link: '/',
         router: true,
     },
-    'Neuigkeiten': {
+    'InfoTafel': {
         color: '#00233a',
         icon: TextSmsIcon,
         link: '/posts',
@@ -43,15 +43,7 @@ export default {
         }),
         link: "https://www.wolkenberg-gymnasium.de/",
     },
-    "alte Version": {
-        color: 'black',
-        icon: Icon(require('../icons/logoicon.png'), {
-            filter: 'invert(100%)',
-            WebkitFilter: 'invert(100%)',
-        }),
-        link: "https://www.wolkenberg-gymnasium.de/stundenplan/index2.php",
-    },
-    InfoTafel: {
+    'InfoTafel alt': {
         color: 'black',
         icon: Icon(require('../icons/logoicon.png'), {
             filter: 'invert(100%)',
