@@ -105,9 +105,11 @@ class Posts extends React.Component {
             <div className={classes.root}>
                 <div className={classes.heroUnit}>
                     <div className={classes.heroContent}>
-                        <Typography variant="h6" align="center" color="textSecondary" paragraph>
-                            <div>Kuchenbasar? Kartenverkauf? Neuigkeiten?</div>
-                            <div>Informiere das Wolkenberg und poste etwas auf die Infotafel!</div>
+                        <Typography variant="h6" align="center" color="textSecondary">
+                            Kuchenbasar? Kartenverkauf? Neuigkeiten?
+                        </Typography>
+                        <Typography variant="h6" align="center" color="textSecondary" gutterBottom>
+                            Informiere das Wolkenberg und poste etwas auf die Infotafel!
                         </Typography>
                         {posts && !posts.length &&
                             <Typography variant="h6" align="center" color="error" paragraph>
