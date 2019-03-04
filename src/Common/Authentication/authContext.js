@@ -1,19 +1,19 @@
-import { setAuthContext } from './storage';
-import { EventEmitter } from 'events';
-
+import { setAuthContext } from "./storage";
+import { EventEmitter } from "events";
+import { timeout } from "../utils";
 
 export class AuthenticationContext extends EventEmitter {
     static resources = {
-        'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/':
-            'https://wgmail.onmicrosoft.com/f863619c-ea91-4f1d-85f4-2f907c53963b/user_impersonation',
-        'https://graph.microsoft.com/': 'https://graph.microsoft.com/mail.read'
+        "https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/":
+            "https://wgmail.onmicrosoft.com/f863619c-ea91-4f1d-85f4-2f907c53963b/user_impersonation",
+        "https://graph.microsoft.com/": "https://graph.microsoft.com/mail.read",
     };
 
     toObject() {
         return {
             authCodes: this.authCodes,
             tokens: this.tokens,
-        }
+        };
     }
     constructor(obj) {
         super();
@@ -37,41 +37,33 @@ export class AuthenticationContext extends EventEmitter {
      * @param {string} resource if null all resources are included
      */
     getScope(resource) {
-        return [
-            'offline_access',
-            ...(resource ? [resource] : Object.values(AuthenticationContext.resources)),
-        ]
+        return ["offline_access", ...(resource ? [resource] : Object.values(AuthenticationContext.resources))];
     }
 
     logOut() {
-        window.location.replace(`
+        window.location.replace(
+            `
         https://login.microsoftonline.com/common/oauth2/v2.0/logout?
             post_logout_redirect_uri=${encodeURIComponent("https://wolkenberg-gymnasium.de/")}
-        `.replace(/ /g, ""));
+        `.replace(/ /g, "")
+        );
         this.tokens = {};
         this.tokenAcquisistions = [];
         this.authCodes = [];
         setAuthContext(null);
     }
 
-
     isLoggedIn() {
         const tokens = Object.values(this.tokens).length + this.tokenAcquisistions.length;
         const resources = Object.values(AuthenticationContext.resources).length;
-        return (
-            Math.max(this.authCodes.length, tokens)
-            >= resources
-        );
+        return Math.max(this.authCodes.length, tokens) >= resources;
     }
 
     isLoggingIn() {
         const tokens = Object.values(this.tokens).length + this.tokenAcquisistions.length;
         const resources = Object.values(AuthenticationContext.resources).length;
 
-        return (
-            this.authCodes.length <= (resources - tokens)
-            && this.authCodes.length
-        );
+        return this.authCodes.length <= resources - tokens && this.authCodes.length;
     }
 
     getAuthCodeLink() {
@@ -80,24 +72,24 @@ export class AuthenticationContext extends EventEmitter {
                 &response_type=code
                 &redirect_uri=${encodeURIComponent(window.location.href.split("?")[0].split("#")[0])}
                 &response_mode=query
-                &scope=${encodeURIComponent(this.getScope().join(' '))}
+                &scope=${encodeURIComponent(this.getScope().join(" "))}
                 &state=12345
         `.replace(/ /g, "");
     }
 
     loadAuthCode() {
-        if (!this.isAllowed('authentication')) {
+        if (!this.isAllowed("authentication")) {
             throw new Error("Authentication not allowed");
         }
         window.location.replace(this.getAuthCodeLink());
     }
 
     allow(variant) {
-        return this.allowed = variant;
+        return (this.allowed = variant);
     }
 
     /**
-     * 
+     *
      * @param  {...('authentication' | 'public' | 'token')} variant
      */
     isAllowed(...variant) {
@@ -111,7 +103,7 @@ export class AuthenticationContext extends EventEmitter {
     }
 
     login() {
-        if (!this.isAllowed('authentication')) {
+        if (!this.isAllowed("authentication")) {
             throw new Error("Authentication not allowed");
         }
         if (this.isLoggedIn() || this.isLoggingIn()) {
@@ -128,7 +120,7 @@ export class AuthenticationContext extends EventEmitter {
         if (!this.authCodes.find(authCode => authCode.code === code)) {
             const obj = { code, session_state, state };
             this.authCodes.push(obj);
-            this.emit('code', obj);
+            this.emit("code", obj);
             setAuthContext(this);
         }
     }
@@ -146,7 +138,7 @@ export class AuthenticationContext extends EventEmitter {
                     return;
                 }
             }
-            const listener = (event) => {
+            const listener = event => {
                 if (event.endpoint === endpoint) {
                     const { token, error } = event.target;
                     if (token) {
@@ -154,10 +146,10 @@ export class AuthenticationContext extends EventEmitter {
                     } else {
                         reject(error);
                     }
-                    this.removeListener('token', listener);
+                    this.removeListener("token", listener);
                 }
-            }
-            this.addListener('token', listener);
+            };
+            this.addListener("token", listener);
 
             let activeTokenAcquisition = this.tokenAcquisistions.indexOf(endpoint);
             if (activeTokenAcquisition === -1) {
@@ -178,24 +170,30 @@ export class AuthenticationContext extends EventEmitter {
                 code,
                 refresh_token,
                 state,
-                scope: this.getScope(AuthenticationContext.resources[endpoint]).join(" ")
+                scope: this.getScope(AuthenticationContext.resources[endpoint]).join(" "),
             };
-            const response = await fetch(`https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/token`, {
-                method: 'POST',
-                body: JSON.stringify(body),
-                headers: {
-                    "Content-Type": "Application/Json"
+            try {
+                const response = await timeout(
+                    6000,
+                    fetch(`https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/token`, {
+                        method: "POST",
+                        body: JSON.stringify(body),
+                        headers: {
+                            "Content-Type": "Application/Json",
+                        },
+                    })
+                );
+                const newToken = await response.json();
+                console.debug("got token for endpoint ", endpoint, newToken);
+                if (newToken.error) {
+                    throw newToken;
                 }
-            });
-            const newToken = await response.json();
-            console.debug("got token for endpoint ", endpoint, newToken);
-            if (!newToken.error) {
                 newToken.acquired = Date.now();
                 this.tokens[endpoint] = newToken;
-                this.emit('token', { endpoint, target: { token: newToken } })
+                this.emit("token", { endpoint, target: { token: newToken } });
                 setAuthContext(this);
-            } else {
-                const authCodeExpired = newToken.error_codes.indexOf(70008) !== -1;
+            } catch (newToken) {
+                const authCodeExpired = newToken.error_codes && newToken.error_codes.indexOf(70008) !== -1;
                 if (authCodeExpired) {
                     // get new authCode
                     this.login();
@@ -203,7 +201,7 @@ export class AuthenticationContext extends EventEmitter {
                 }
                 // an error occured
                 this.tokens[endpoint] = null;
-                this.emit('token', { endpoint, target: { error: newToken } })
+                this.emit("token", { endpoint, target: { error: newToken } });
                 setAuthContext(this);
             }
             this.tokenAcquisistions.splice(activeTokenAcquisition, 1);
