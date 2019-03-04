@@ -61,23 +61,16 @@ class AppBar extends React.Component {
     }
 
     render() {
-        const { classes, location, history } = this.props;
+        const { classes, history, title, back, noBoxShadow } = this.props;
         const content = (
             <UserSettingsMenu />
         );
-        const appBarStyles = (location.pathname === '/' && !this.state.boxShadow) ? { boxShadow: 'none' } : null;
-        var state = null;
-        if (location.pathname.match(/posts\/.*/g)) {
-            state = {
-                back: true,
-                title: "Post editieren",
-            }
+        const appBarStyles = (noBoxShadow && !this.state.boxShadow) ? { boxShadow: 'none' } : null;
+        var state = {
+            back,
+            title,
         }
-        if (location.pathname.match(/posts$/g)) {
-            state = {
-                title: "InfoTafel",
-            }
-        }
+        
         return (
             <>
                 <AppBarComponent className={classes.appBar} style={appBarStyles}>

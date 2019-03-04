@@ -8,13 +8,13 @@ import { TokenAuthContext } from '../Common/Authentication/tokenAuthContext';
  * @param {React.Component} Component 
  */
 export default function withAuthentication(variant, Component) {
-    return () => {
+    return (props) => {
         const authContext = getAuthContext();
         authContext.allow(variant);
         if (variant === 'authentication') {
             authContext.login();
             if (authContext.isLoggingIn() || authContext.isLoggedIn()) {
-                return <Component />;
+                return <Component {...props} />;
             }
             return null;
         } else {
@@ -23,7 +23,7 @@ export default function withAuthentication(variant, Component) {
                     throw new Error('authContext is not a TokenAuthContext');
                 }
             }
-            return <Component />
+            return <Component {...props} />
         }
     }
 }

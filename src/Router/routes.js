@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route as BrowserRoute, Switch, Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import NotFoundPage from './NotFoundPage';
 import { asynchronize } from "./asynchronize";
@@ -24,6 +24,13 @@ const Dates = withAuthentication('public', asynchronized(() => import("../Dates"
 const PublicPosts = withAuthentication('token', asynchronized(() => import("../Posts/public")));
 const PublicTimetable = withAuthentication('token', asynchronized(() => import("../TimeTable/public")));
 
+const Route = (props) => {
+    function renderComponent() {
+        return <props.component {...props} />
+    }
+    return <BrowserRoute {...props} render={renderComponent} component={undefined} />
+}
+
 class Routes extends React.Component {
 
     state = {};
@@ -45,12 +52,12 @@ class Routes extends React.Component {
         return (
             <>
                 <Switch>
-                    <Route exact path="/" component={Main} />
-                    <Route exact path="/posts" component={Posts} />
+                    <Route exact path="/" component={Main} noBoxShadow />
+                    <Route exact path="/posts" component={Posts} title="InfoTafel" />
                     <Route exact path="/public/dates" component={Dates} />
                     <Route exact path="/public/posts" component={PublicPosts} />
                     <Route exact path="/public/tv" component={PublicTimetable} />
-                    <Route exact path="/posts/:id" component={PostEditor} />
+                    <Route exact path="/posts/:id" component={PostEditor} title="Beitrag editieren" back />
                     <Route exact path="/admin" component={Statistics} />
                     <Route exact path="/error" component={NotFoundPage} />
                     <Redirect
