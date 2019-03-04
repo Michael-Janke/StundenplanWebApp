@@ -5,12 +5,13 @@ import { Paper, withStyles, RootRef, Grow, ClickAwayListener } from '@material-u
 
 const styles = theme => ({
     popper: {
-        zIndex: theme.zIndex.modal + 1,
+        zIndex: theme.zIndex.modal - 1,
         top: 64,
     },
     paper: {
         minWidth: 125,
-        maxWidth: '70vw',
+        maxWidth: 'calc(100vw - 64px)',
+        width: 400,
         maxHeight: 500,
         color: theme.palette.text.primary,
     }
@@ -86,16 +87,19 @@ class Popover extends React.PureComponent {
                     anchorEl={this.childrenRef}
                     transition
                     className={classes.popper}
+                    popperOptions={{
+                        modifiers: {
+                            preventOverflow: {
+                                boundariesElement: document.querySelector('#content-root')
+                            }
+                        }
+                    }}
                     onMouseLeave={this.handleMouseLeave}
                     onMouseEnter={this.handleMouseEnter}
                 >
                     {({ TransitionProps }) => (
                         <ClickAwayListener onClickAway={this.handleClickAway}>
                             <Grow {...TransitionProps}
-                                timeout={{
-                                    enter: 300,
-                                    exit: 0,
-                                }}
                                 style={{ transformOrigin: '50% 0 0' }}
                             >
                                 <Paper className={classes.paper} elevation={4}>

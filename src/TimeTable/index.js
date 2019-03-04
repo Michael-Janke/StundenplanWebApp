@@ -79,14 +79,14 @@ const useStyles = makeStyles(theme => ({
             maxWidth: 'initial',
         },
     }
-}), { name: "PublicDisplay" });
+}), { name: "TimeTableView" });
 
-function PublicDisplay() {
+function TimeTableView() {
     const classes = useStyles();
     const theme = useTheme();
     const small = useMediaQuery(theme.breakpoints.down(smallBreakpoint));
     return (
-        <div className={classes.root} key={0}>
+        <div className={classes.root} key={0} id="content-root">
             <div className={classes.extendedAppBar}></div>
             <div className={classes.panel}>
                 <Grid container spacing={8} className={classes.grid}>
@@ -121,4 +121,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PublicDisplay);
+export default connect(mapStateToProps, mapDispatchToProps)(TimeTableView);
