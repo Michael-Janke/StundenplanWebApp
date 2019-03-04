@@ -1,11 +1,11 @@
 import React from 'react';
 import { withStyles, Button, Paper, Typography, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter, Redirect, Link } from 'react-router-dom';
 import { hideSplash } from './SplashScreen';
 
 function NotFoundPage(props) {
-    const { classes, retry, location, history } = props;
+    const { classes, retry, location } = props;
     const { pathname } = (location.state && location.state.referrer) || location;
     let { error = 0, message: messageProp } = location.state || props;
 
@@ -27,7 +27,7 @@ function NotFoundPage(props) {
         <div className={classes.root}>
             <Paper className={classes.paper} elevation={0}>
                 <Typography variant="h5" paragraph>{message}</Typography>
-                <Button onClick={history.goBack}>Zurück</Button>
+                <Link to="/" replace={true}><Button>Zurück</Button></Link>
                 {retry && <Button onClick={retry}>Erneut versuchen</Button>}
                 <ExpansionPanel className={classes.expansionPanel} elevation={0} square>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
