@@ -19,6 +19,7 @@ const withAuth = (loader) => withAuthentication('authentication', asynchronize(w
 const Posts = withAuth(() => import("../Posts"));
 const PostEditor = withAuth(() => import("../Posts/Stepper/editPage"));
 const Main = withAuth(() => import("../Main"));
+const MainAppBar = asynchronized(() => import('../Main/components/AppBar'));
 const Statistics = withAuth(() => import("../Statistics"));
 const Dates = withAuthentication('public', asynchronized(() => import("../Dates")));
 const PublicPosts = withAuthentication('token', asynchronized(() => import("../Posts/public")));
@@ -52,7 +53,7 @@ class Routes extends React.Component {
         return (
             <>
                 <Switch>
-                    <Route exact path="/" component={Main} noBoxShadow />
+                    <Route exact path="/" component={Main} noBoxShadow appBarComponent={MainAppBar} />
                     <Route exact path="/posts" component={Posts} title="InfoTafel" />
                     <Route exact path="/public/dates" component={Dates} />
                     <Route exact path="/public/posts" component={PublicPosts} />

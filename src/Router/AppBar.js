@@ -11,9 +11,8 @@ import ArrowBack from '@material-ui/icons/ArrowBack';
 import UserSettingsMenu from '../Main/components/UserSettingsMenu';
 import indigo from '@material-ui/core/colors/indigo';
 import { toggleDrawer } from '../Main/actions';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Typography, RootRef } from '@material-ui/core';
-import MainAppBar from '../Main/components/AppBar';
 
 
 const styles = theme => ({
@@ -61,7 +60,7 @@ class AppBar extends React.Component {
     }
 
     render() {
-        const { classes, history, title, back, noBoxShadow } = this.props;
+        const { classes, history, title, back, noBoxShadow, appBarComponent: AppBarComp } = this.props;
         const content = (
             <UserSettingsMenu />
         );
@@ -70,7 +69,7 @@ class AppBar extends React.Component {
             back,
             title,
         }
-        
+
         return (
             <>
                 <AppBarComponent className={classes.appBar} style={appBarStyles}>
@@ -97,10 +96,7 @@ class AppBar extends React.Component {
                                 {state.title}
                             </Typography>
                         }
-                        <Switch>
-                            <Route path="/" exact render={() => <MainAppBar>{content}</MainAppBar>} />
-                            <Route render={() => <div>{content}</div>} />
-                        </Switch>
+                        {React.createElement(AppBarComp || React.Fragment, null, content)}
                     </Toolbar>
                 </AppBarComponent>
 
