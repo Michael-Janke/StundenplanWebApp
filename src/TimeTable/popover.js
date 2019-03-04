@@ -7,11 +7,11 @@ const styles = theme => ({
     popper: {
         zIndex: theme.zIndex.modal - 1,
         top: 64,
+        maxWidth: 'calc(100vw - 64px)',
     },
     paper: {
         minWidth: 125,
-        maxWidth: 'calc(100vw - 64px)',
-        width: 400,
+        maxWidth: 400,
         maxHeight: 500,
         color: theme.palette.text.primary,
     }
