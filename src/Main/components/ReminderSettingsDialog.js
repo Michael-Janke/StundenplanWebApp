@@ -21,7 +21,7 @@ import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 
-import TimePickerComponent from 'material-ui-pickers/TimePicker/TimePickerInline';
+import { InlineTimePicker as TimePickerComponent } from 'material-ui-pickers';
 import datePickerEnhancer from '../../Dates/datePickerEnhancer';
 import { Fab } from '@material-ui/core';
 
@@ -36,20 +36,20 @@ export class ReminderSettings extends Component {
 
     state = {}
 
-    static getDerivedStateFromProps(nextProps, prevState){
-        if((prevState.loading && !nextProps.loading) || prevState.loading === undefined)
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if ((prevState.loading && !nextProps.loading) || prevState.loading === undefined)
             return {
                 ...prevState,
                 remind: nextProps.remind === undefined ? true : nextProps.remind,
                 remindTime: moment(nextProps.remindTime || "18:00:00", 'HH:mm:ss'),
-                remindEMails: nextProps.remindEMails && nextProps.remindEMails.split 
-                    ? nextProps.remindEMails.split(";") 
+                remindEMails: nextProps.remindEMails && nextProps.remindEMails.split
+                    ? nextProps.remindEMails.split(";")
                     : [nextProps.upn],
                 loading: nextProps.loading
             };
         return {
             ...prevState,
-            loading: nextProps.loading 
+            loading: nextProps.loading
         };
     }
 
@@ -57,10 +57,10 @@ export class ReminderSettings extends Component {
         this.setState({ [name]: value });
     };
 
-    deleteEMail = (email)=> () => {
+    deleteEMail = (email) => () => {
         this.setState({
             remindEMails: [
-                ...this.state.remindEMails.filter((e) => e!==email)
+                ...this.state.remindEMails.filter((e) => e !== email)
             ]
         })
     }
@@ -68,7 +68,7 @@ export class ReminderSettings extends Component {
     addEMail = () => {
         this.setState({
             remindEMails: [
-                ...this.state.remindEMails.filter((e) => e.toLowerCase()!==this.state.newEMail.toLowerCase()),
+                ...this.state.remindEMails.filter((e) => e.toLowerCase() !== this.state.newEMail.toLowerCase()),
                 this.state.newEMail
             ],
             newEMail: ''
@@ -89,8 +89,8 @@ export class ReminderSettings extends Component {
     }
 
     render() {
-        const {loading} = this.props;
-        const {remind, remindTime, remindEMails} = this.state;
+        const { loading } = this.props;
+        const { remind, remindTime, remindEMails } = this.state;
         const customContentStyle = {
             maxWidth: 500,
             overflowY: 'auto',
@@ -126,9 +126,9 @@ export class ReminderSettings extends Component {
                                     ampm={this.props.small}
                                     value={remindTime}
                                     onChange={(time) => {
-                                        if(time.hours() < 15)
+                                        if (time.hours() < 15)
                                             time.hours(15);
-                                        time.minutes(Math.floor(time.minutes()/5)*5);
+                                        time.minutes(Math.floor(time.minutes() / 5) * 5);
                                         this.handleChange('remindTime', time)
                                     }}
                                     disabled={loading || !remind}
@@ -136,59 +136,59 @@ export class ReminderSettings extends Component {
                                 />
                             </Row>
                             {!loading && remind &&
-                            <div>
-                                <span>Empfänger:</span>
-                                <List>
-                                    {remindEMails.map((email) =>
-                                    <ListItem key={email}>
-                                        <ListItemText primary={email} />
-                                        <ListItemSecondaryAction>
-                                            <IconButton 
-                                                aria-label="Delete"
-                                                onClick={this.deleteEMail(email)}
-                                                disabled={loading}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
-                                    )}
-                                    <ListItem>
-                                        <ListItemText>
-                                            <TextField
-                                                label="Empfänger hinzufügen"
-                                                value={this.state.newEMail}
-                                                onChange={(event) => this.handleChange('newEMail', event.target.value)}
-                                                margin="normal"
-                                                fullWidth
-                                            />
-                                        </ListItemText>
-                                        <ListItemSecondaryAction>
-                                            <Fab
-                                                style={{marginLeft:5}}
-                                                size="small"
-                                                color="primary"
-                                                aria-label="Add" 
-                                                onClick={this.addEMail}
-                                                disabled={loading || !validateEmail(this.state.newEMail)}
-                                            >
-                                                <AddIcon />
-                                            </Fab>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
-                                </List>
-                            </div>}
+                                <div>
+                                    <span>Empfänger:</span>
+                                    <List>
+                                        {remindEMails.map((email) =>
+                                            <ListItem key={email}>
+                                                <ListItemText primary={email} />
+                                                <ListItemSecondaryAction>
+                                                    <IconButton
+                                                        aria-label="Delete"
+                                                        onClick={this.deleteEMail(email)}
+                                                        disabled={loading}
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </ListItemSecondaryAction>
+                                            </ListItem>
+                                        )}
+                                        <ListItem>
+                                            <ListItemText>
+                                                <TextField
+                                                    label="Empfänger hinzufügen"
+                                                    value={this.state.newEMail}
+                                                    onChange={(event) => this.handleChange('newEMail', event.target.value)}
+                                                    margin="normal"
+                                                    fullWidth
+                                                />
+                                            </ListItemText>
+                                            <ListItemSecondaryAction>
+                                                <Fab
+                                                    style={{ marginLeft: 5 }}
+                                                    size="small"
+                                                    color="primary"
+                                                    aria-label="Add"
+                                                    onClick={this.addEMail}
+                                                    disabled={loading || !validateEmail(this.state.newEMail)}
+                                                >
+                                                    <AddIcon />
+                                                </Fab>
+                                            </ListItemSecondaryAction>
+                                        </ListItem>
+                                    </List>
+                                </div>}
                         </FlexContainer>
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions> 
+                <DialogActions>
                     <Button
                         onClick={this.handleClose}
                         color="secondary"
                     >
                         Abbrechen
                     </Button>
-                    
+
                     <Button
                         onClick={this.handleUpdate}
                         disabled={loading}
