@@ -1,4 +1,3 @@
-
 export class TokenAuthContext {
     constructor(token) {
         this.token = token;
@@ -6,28 +5,24 @@ export class TokenAuthContext {
 
     toObject() {
         return {
-            token: this.token
-        }
+            token: this.token,
+        };
     }
 
     isAllowed(...variants) {
-        return variants.indexOf('token') !== -1
+        return variants.indexOf('token') !== -1;
     }
 
     async getToken(endpoint) {
         return { access_token: this.token };
     }
 
-    allow() {
-        
-    }
+    allow() {}
 
-    login() {
-
-    }
+    login() {}
 
     logOut() {
-        throw new Error("logging out not supported");
+        throw new Error('logging out not supported');
     }
 
     isLoggedIn() {
