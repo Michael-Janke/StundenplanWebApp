@@ -12,21 +12,18 @@ import Badge from '@material-ui/core/Badge';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import DoneIcon from '@material-ui/icons/Done';
 
-const Field = (field, props, customProps) =>
-    React.createElement(field, { ...props, ...customProps });
+const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
 const BindField = props => field => Field.bind(null, field, props);
 
-const SubstitutionText = ({ left, children }) => (
-    <SubstitutionTextContainer>({children})</SubstitutionTextContainer>
-);
+const SubstitutionText = ({ left, children }) => <SubstitutionTextContainer>({children})</SubstitutionTextContainer>;
 
 const AbstractLesson = props => {
     let {
         classes,
         theme,
         small,
-        last,
         multiple,
         specificSubstitutionType,
         substitutionText,
@@ -37,9 +34,7 @@ const AbstractLesson = props => {
         team,
         assignments,
     } = props;
-    const styles = specificSubstitutionType
-        ? specificSubstitutionType.style(theme)
-        : {};
+    const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
     if (continueation) {
         return (
             <Lesson
@@ -60,21 +55,16 @@ const AbstractLesson = props => {
 
     const NewFields = fields.new && fields.new.map(BoundField);
     const OldFields = fields.old && fields.old.map(BoundField);
-    const SubstitutingFields =
-        fields.substitution && fields.substitution.map(BoundField);
+    const SubstitutingFields = fields.substitution && fields.substitution.map(BoundField);
 
     let substitutionTextBig = substitutionText && substitutionText.length > 10;
     const substitutionType = specificSubstitutionType && (
         <SubstitutionType color={styles.color}>
-            {!substitutionText || substitutionTextBig
-                ? specificSubstitutionType.name
-                : substitutionText}
+            {!substitutionText || substitutionTextBig ? specificSubstitutionType.name : substitutionText}
         </SubstitutionType>
     );
 
-    const extraInfo = substitutionTextBig && (
-        <SubstitutionText left={small}>{substitutionText}</SubstitutionText>
-    );
+    const extraInfo = substitutionTextBig && <SubstitutionText left={small}>{substitutionText}</SubstitutionText>;
 
     const [Field1, Field2, Field3] = isNew ? NewFields : OldFields;
     const container = isNew ? ( // new
@@ -126,29 +116,20 @@ const AbstractLesson = props => {
     );
 
     const popoverActive = true;
-    const workingAssignments = assignments.some(assignment =>
-        assignment.submissions
-            ? assignment.submissions.some(
-                  submission => submission.status === 'working'
-              )
-            : true
+    const allDoneAssignments = assignments.every(assignment =>
+        assignment.submissions ? assignment.submissions.every(submission => submission.status === 'submitted') : false
     );
     return (
         <Popover active={popoverActive} key={reference.TIMETABLE_ID}>
             {(props, handleOpen) => (
                 <Badge
                     component="div"
-                    color="secondary"
-                    badgeContent={assignments.length}
-                    invisible={!workingAssignments}
-                    style={{ display: 'flex', flex: 'auto' }}
+                    color={allDoneAssignments ? 'default' : 'secondary'}
+                    badgeContent={allDoneAssignments ? <DoneIcon /> : assignments.length}
+                    invisible={assignments.length === 0}
+                    style={{ display: 'flex', flex: 'auto', backgroundColor: allDoneAssignments ? 'green' : null }}
                 >
-                    <Lesson
-                        type={theme.palette.type}
-                        color={styles.backgroundColor}
-                        {...props}
-                        onClick={handleOpen}
-                    >
+                    <Lesson type={theme.palette.type} color={styles.backgroundColor} {...props} onClick={handleOpen}>
                         <ColorBar lineColor={styles.color} />
                         <LessonWrapper small={small}>
                             {container}
@@ -160,9 +141,7 @@ const AbstractLesson = props => {
             {popoverActive && (
                 <List>
                     {specificSubstitutionType && (
-                        <ListSubheader component="div">
-                            {specificSubstitutionType.name}
-                        </ListSubheader>
+                        <ListSubheader component="div">{specificSubstitutionType.name}</ListSubheader>
                     )}
                     {SubstitutingFields && (
                         <React.Fragment>
@@ -178,9 +157,7 @@ const AbstractLesson = props => {
                     {team && (
                         <React.Fragment>
                             <Divider />
-                            <ListSubheader component="div">
-                                Office
-                            </ListSubheader>
+                            <ListSubheader component="div">Office</ListSubheader>
                             <OpenOfficeButton id={team.id} type="teams" />
                             <OpenOfficeButton id={team.id} type="notebook" />
                         </React.Fragment>
@@ -188,10 +165,7 @@ const AbstractLesson = props => {
                     {!!assignments.length && (
                         <React.Fragment>
                             <Divider />
-                            <Assignments
-                                assignments={assignments}
-                                team={team}
-                            />
+                            <Assignments assignments={assignments} team={team} />
                         </React.Fragment>
                     )}
                 </List>
@@ -272,8 +246,7 @@ const Lesson = styled.div`
     text-align: left;
     padding-right: 1vmin;
     flex-direction: row;
-    background-color: ${props =>
-        props.color || darken(indigo[50], props.type === 'dark' ? 0.6 : 0)};
+    background-color: ${props => props.color || darken(indigo[50], props.type === 'dark' ? 0.6 : 0)};
 `;
 
 export default withStyles(styles, { withTheme: true })(AbstractLesson);

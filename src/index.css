@@ -1,51 +1,59 @@
 body {
-  margin: 0;
-  padding: 0;
-  height: 100vh !important;
-  overscroll-behavior: contain; /* disable pull-to-refresh */
-  -ms-scroll-chaining: chained;
+    margin: 0;
+    padding: 0;
+    height: 100vh !important;
+    overscroll-behavior: contain; /* disable pull-to-refresh */
+    -ms-scroll-chaining: chained;
 }
 
-@media (min-width:1920px) {
-  body {
-    font-size: 17.5px;
-  }
+@media (max-width: 1920px) {
+    body {
+        font-size: 17.5px;
+    }
 }
-@media (min-width:1280px) {
-  body {
-    font-size: 17px;
-  }
+@media (max-width: 1280px) {
+    body {
+        font-size: 17px;
+    }
 }
-@media (min-width:960px) {
-  body {
-    font-size: 17px;
-  }
+@media (max-width: 960px) {
+    body {
+        font-size: 17px;
+    }
 }
-@media (max-width:959.95px) {
-  body {
-    font-size: 16px;
-  }
-}
-
-@media (max-width:599.95px) {
-  body {
-    font-size: 15px;
-  }
+@media (max-width: 800px) {
+    body {
+        font-size: 16.5px;
+    }
 }
 
-
-div[style*="margin: auto 16px;"] {
-  margin-right: 0px !important;
+@media (max-width: 600px) {
+    body {
+        font-size: 16px;
+    }
 }
 
-html, body, div#root, .app {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  -ms-scroll-chaining: chained;
+@media (max-width: 450px) {
+    body {
+        font-size: 15px;
+    }
 }
 
-@media (min-width:800px) {
+div[style*='margin: auto 16px;'] {
+    margin-right: 0px !important;
+}
+
+html,
+body,
+div#root,
+.app {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    -ms-scroll-chaining: chained;
+}
+
+@media (min-width: 800px) {
     ::-webkit-scrollbar {
         background: transparent;
         height: 8px;
@@ -61,14 +69,14 @@ html, body, div#root, .app {
     }
 
     :hover::-webkit-scrollbar-thumb {
-        background: #bdbdbd
+        background: #bdbdbd;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #bdbdbd
+        background: #bdbdbd;
     }
 
     ::-webkit-scrollbar-thumb:active {
-        background: #989898
+        background: #989898;
     }
 }

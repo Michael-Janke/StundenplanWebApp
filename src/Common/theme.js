@@ -10,4 +10,24 @@ export default themeType =>
             type: themeType,
             primary: blue,
         },
+        overrides: {
+            MuiListItemText: {
+                primary: {
+                    fontSize: '80%',
+                },
+                secondary: {
+                    fontSize: '70%',
+                },
+            },
+            MuiListItem: {
+                root: {
+                    fontSize: 'unset',
+                },
+            },
+            MuiListSubheader: {
+                root: {
+                    fontSize: '80%',
+                },
+            },
+        },
     });

@@ -1,13 +1,7 @@
 import React from 'react';
 
 import Popper from '@material-ui/core/Popper';
-import {
-    Paper,
-    withStyles,
-    RootRef,
-    Grow,
-    ClickAwayListener,
-} from '@material-ui/core';
+import { Paper, withStyles, RootRef, Grow, ClickAwayListener } from '@material-ui/core';
 
 const styles = theme => ({
     popper: {
@@ -82,9 +76,7 @@ class Popover extends React.PureComponent {
 
         return (
             <React.Fragment>
-                <RootRef rootRef={this.onRootRef}>
-                    {this.props.children[0](childrenProps, this.handleToggle)}
-                </RootRef>
+                <RootRef rootRef={this.onRootRef}>{this.props.children[0](childrenProps, this.handleToggle)}</RootRef>
                 <Popper
                     id={id}
                     open={open}
@@ -94,9 +86,7 @@ class Popover extends React.PureComponent {
                     popperOptions={{
                         modifiers: {
                             preventOverflow: {
-                                boundariesElement: document.querySelector(
-                                    '#content-root'
-                                ),
+                                boundariesElement: document.querySelector('#content-root'),
                             },
                         },
                     }}
@@ -105,10 +95,7 @@ class Popover extends React.PureComponent {
                 >
                     {({ TransitionProps }) => (
                         <ClickAwayListener onClickAway={this.handleClickAway}>
-                            <Grow
-                                {...TransitionProps}
-                                style={{ transformOrigin: '50% 0 0' }}
-                            >
+                            <Grow {...TransitionProps} style={{ transformOrigin: '50% 0 0' }}>
                                 <Paper className={classes.paper} elevation={4}>
                                     {this.props.children[1]}
                                 </Paper>
