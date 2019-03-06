@@ -55,7 +55,9 @@
         "push": "npm run build && npm run deploy",
         "push:tv": "npm run build:tv && npm run deploy:tv",
         "test": "react-scripts test --env=jsdom",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "lint": "eslint src/ --cache --fix && echo \"eslint: no lint errors\"",
+        "prettier": "prettier --write ./src/**/*.js"
     },
     "devDependencies": {
         "eslint": "5.6.0",
