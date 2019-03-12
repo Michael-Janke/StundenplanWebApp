@@ -108,9 +108,18 @@ const AbstractLesson = props => {
         // old
         <LessonContainer small={small}>
             {substitutionType}
-            <div>
-                <Field1 left />
-                {Field2 && <Field2 left />}
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-end',
+                    textAlign: 'right',
+                    overflow: 'hidden',
+                    paddingLeft: 5,
+                }}
+            >
+                <Field1 />
+                {Field2 && <Field2 />}
             </div>
         </LessonContainer>
     );
