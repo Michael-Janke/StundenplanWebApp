@@ -5,50 +5,57 @@ const initialState = {
     joinedTeams: {},
     assignments: [],
     teamUrls: {},
-    notebookUrls: {}
+    notebookUrls: {},
+    createAssignmentFor: null,
 };
 
 export default function teamsReducer(state = initialState, action = {}) {
     switch (action.type) {
-        case "GET_UNREAD_MESSAGES_RECEIVED":
+        case 'GET_UNREAD_MESSAGES_RECEIVED':
             return {
                 ...state,
-                unreadMessages: action.payload && action.payload.unreadItemCount
+                unreadMessages: action.payload && action.payload.unreadItemCount,
             };
-        case "GET_JOINED_TEAMS_RECEIVED": {
+        case 'GET_JOINED_TEAMS_RECEIVED': {
             return isEqual(state.assignments, action.payload.value) //only update on change
-                ? state 
+                ? state
                 : {
-                    ...state,
-                    joinedTeams: action.payload && action.payload.value
-                        .filter((team) => team.externalId && team.externalId>32000000 && team.externalId<40000000)
-                        .reduce((acc,team) => ({
-                            ...acc, 
-                            [team.externalId-32000000]: team
-                        }), {}
-                    )
-                };
+                      ...state,
+                      joinedTeams:
+                          action.payload &&
+                          action.payload.value
+                              .filter(
+                                  team => team.externalId && team.externalId > 32000000 && team.externalId < 40000000
+                              )
+                              .reduce(
+                                  (acc, team) => ({
+                                      ...acc,
+                                      [team.externalId - 32000000]: team,
+                                  }),
+                                  {}
+                              ),
+                  };
         }
-        case "GET_ASSIGNMENTS_RECEIVED": {
+        case 'GET_ASSIGNMENTS_RECEIVED': {
             return isEqual(state.assignments, action.payload.value) //only update on change
-                ? state 
+                ? state
                 : {
-                ...state,
-                assignments: action.payload && action.payload.value
-            };
+                      ...state,
+                      assignments: action.payload && action.payload.value,
+                  };
         }
-        case "GET_TEAMS_WEBURL_RECEIVED":
+        case 'GET_TEAMS_WEBURL_RECEIVED':
             return {
                 ...state,
                 teamUrls: {
                     ...state.teamUrls,
                     [action.id]: {
                         web: action.payload.webUrl,
-                        client: action.payload.webUrl.replace('https://teams.microsoft.com/', 'msteams:')
-                    }
-                }
-            }
-        case "GET_TEAMS_NOTEBOOK_RECEIVED": {
+                        client: action.payload.webUrl.replace('https://teams.microsoft.com/', 'msteams:'),
+                    },
+                },
+            };
+        case 'GET_TEAMS_NOTEBOOK_RECEIVED': {
             let notebook = action.payload.value.length ? action.payload.value[0] : action.payload.value;
             return {
                 ...state,
@@ -57,10 +64,17 @@ export default function teamsReducer(state = initialState, action = {}) {
                     [action.id]: {
                         web: notebook.links.oneNoteWebUrl.href,
                         client: notebook.links.oneNoteClientUrl.href,
-                    }
-                }
-            }
-        } 
+                    },
+                },
+            };
+        }
+        case 'OPEN_CREATE_ASSIGNMENT': {
+            return {
+                ...state,
+                createAssignmentFor: action.payload,
+            };
+        }
+
         default:
             return state;
     }
