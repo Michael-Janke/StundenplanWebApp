@@ -13,6 +13,7 @@ import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import DoneIcon from '@material-ui/icons/Done';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
 const BindField = props => field => Field.bind(null, field, props);
@@ -112,10 +113,9 @@ const AbstractLesson = props => {
                 style={{
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'flex-end',
-                    textAlign: 'right',
+                    alignItems: small ? 'flex-start' : 'flex-end',
+                    textAlign: small ? 'left' : 'right',
                     overflow: 'hidden',
-                    paddingLeft: 5,
                 }}
             >
                 <Field1 />
@@ -175,6 +175,7 @@ const AbstractLesson = props => {
                         <React.Fragment>
                             <Divider />
                             <Assignments assignments={assignments} team={team} />
+                            <MenuItem>Hausaufgabe erstellen</MenuItem>
                         </React.Fragment>
                     )}
                 </List>

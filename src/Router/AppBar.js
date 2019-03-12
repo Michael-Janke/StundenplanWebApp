@@ -14,15 +14,7 @@ import { toggleDrawer } from '../Main/actions';
 import { withRouter } from 'react-router-dom';
 import { Typography, RootRef } from '@material-ui/core';
 
-
-const styles = theme => ({
-    appBar: {
-        backgroundColor: indigo[600],
-        paddingLeft: 10,
-        paddingRight: 10,
-        zIndex: theme.zIndex.modal,
-        transition: theme.transitions.create('box-shadow')
-    },
+const styles = {
     toolbar: {
         minHeight: 64,
         justifyContent: 'space-between',
@@ -32,8 +24,21 @@ const styles = theme => ({
     },
     drawer: {
         marginRight: 20,
-    }
-});
+    },
+};
+
+const ColoredAppBar = withStyles(theme => ({
+    root: {
+        paddingLeft: 10,
+        paddingRight: 10,
+        zIndex: theme.zIndex.modal,
+        transition: theme.transitions.create('box-shadow'),
+    },
+    colorDefault: {
+        backgroundColor: indigo[600],
+        color: 'white',
+    },
+}))(AppBarComponent);
 
 class AppBar extends React.Component {
     state = { boxShadow: false };
@@ -42,7 +47,7 @@ class AppBar extends React.Component {
         this.props.toggleDrawer();
     };
 
-    handleRootRef = (ref) => {
+    handleRootRef = ref => {
         if (this.body) {
             this.body.removeEventListener('scroll', this.handleScroll);
         }
@@ -50,39 +55,39 @@ class AppBar extends React.Component {
         if (this.body) {
             this.body.addEventListener('scroll', this.handleScroll);
         }
-    }
-    handleScroll = (e) => {
+    };
+    handleScroll = e => {
         const boxShadow = this.state.boxShadow;
         const scrollTop = Boolean(e.target.scrollTop !== 0);
         if (boxShadow !== scrollTop) {
             this.setState({ boxShadow: scrollTop });
         }
-    }
+    };
 
     render() {
         const { classes, history, title, back, noBoxShadow, appBarComponent: AppBarComp } = this.props;
-        const content = (
-            <UserSettingsMenu />
-        );
-        const appBarStyles = (noBoxShadow && !this.state.boxShadow) ? { boxShadow: 'none' } : null;
+        const content = <UserSettingsMenu />;
+        const appBarStyles = noBoxShadow && !this.state.boxShadow ? { boxShadow: 'none' } : null;
         var state = {
             back,
             title,
-        }
+        };
 
         return (
             <>
-                <AppBarComponent className={classes.appBar} style={appBarStyles}>
+                <ColoredAppBar className={classes.appBar} style={appBarStyles} color="default">
                     <Toolbar disableGutters variant="dense" className={classes.toolbar}>
-                        {state && state.back ?
+                        {state && state.back ? (
                             <IconButton
                                 color="inherit"
                                 aria-label="go back"
                                 className={classes.drawer}
-                                onClick={history.goBack}>
+                                onClick={history.goBack}
+                            >
                                 <ArrowBack />
                             </IconButton>
-                            : <IconButton
+                        ) : (
+                            <IconButton
                                 color="inherit"
                                 className={classes.drawer}
                                 aria-label="open drawer"
@@ -90,20 +95,18 @@ class AppBar extends React.Component {
                             >
                                 <MenuIcon />
                             </IconButton>
-                        }
-                        {state && state.title &&
+                        )}
+                        {state && state.title && (
                             <Typography variant="h6" color="inherit" className={classes.title}>
                                 {state.title}
                             </Typography>
-                        }
+                        )}
                         {React.createElement(AppBarComp || React.Fragment, null, content)}
                     </Toolbar>
-                </AppBarComponent>
+                </ColoredAppBar>
 
                 <div className={classes.toolbar} />
-                <RootRef rootRef={this.handleRootRef}>
-                    {this.props.children}
-                </RootRef>
+                <RootRef rootRef={this.handleRootRef}>{this.props.children}</RootRef>
             </>
         );
     }
@@ -124,4 +127,9 @@ const mapDispatchToProps = dispatch => ({
     toggleDrawer: () => dispatch(toggleDrawer()),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { withTheme: true })(AppBar)));
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(withStyles(styles, { withTheme: true })(AppBar))
+);
