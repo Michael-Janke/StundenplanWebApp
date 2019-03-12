@@ -22,100 +22,98 @@ import { connect } from 'react-redux';
 import { setTimeTable, addFavorite, removeFavorite, loadMe } from '../actions';
 
 class Search extends React.PureComponent {
-    state = { open: false, nonEmpty: false, value: "" };
+    state = { open: false, nonEmpty: false, value: '' };
 
     handleOpen = () => {
         if (!this.state.open) {
             this.input.focus();
             this.props.loadMe();
         }
-        this.setState({ open: !this.state.open, value: "" });
-    }
+        this.setState({ open: !this.state.open, value: '' });
+    };
 
     handleFocus = () => {
         this.setState({ open: true });
-    }
+    };
 
-    handleInputRef = (ref) => {
+    handleInputRef = ref => {
         this.input = ref;
-    }
+    };
 
     handleClear = () => {
-        this.setState({ nonEmpty: false, value: "" });
-    }
+        this.setState({ nonEmpty: false, value: '' });
+    };
 
-    handleInput = (e) => {
+    handleInput = e => {
         let selectedFilter = this.state.selectedFilter;
         let value = e.target.value;
         let nonEmpty = value.length > 0;
         if (selectedFilter && !this.state.nonEmpty && nonEmpty) {
             // disable filter when typing in
-            selectedFilter = "";
+            selectedFilter = '';
         }
         this.setState({ nonEmpty, value, selectedFilter, open: true });
-    }
+    };
 
     handleClickAway = () => {
         if (this.state.open && !this.props.open) {
-            this.setState({ open: false, nonEmpty: false, value: "" });
+            this.setState({ open: false, nonEmpty: false, value: '' });
         }
-    }
+    };
 
-    handleClick = (obj) => {
-        this.setState({ open: false, nonEmpty: false, value: "" });
+    handleClick = obj => {
+        this.setState({ open: false, nonEmpty: false, value: '' });
         this.props.setTimetable(obj);
-    }
+    };
 
-    handleKeyUp = (e) => {
+    handleKeyUp = e => {
         if ((e.charCode === 13 || e.key === 'Enter') && this.state.result && this.state.result.length) {
             this.handleClick(this.state.result[0]);
         }
-        if ((e.keyCode === 27 || e.key === 'ESC')) {
-            this.setState({ open: false, value: "", nonEmpty: false });
+        if (e.keyCode === 27 || e.key === 'ESC') {
+            this.setState({ open: false, value: '', nonEmpty: false });
         }
-    }
-    handleKeyboardInput = (transform) => {
+    };
+    handleKeyboardInput = transform => {
         this.handleInput({ target: { value: transform(this.state.value) } });
-    }
+    };
 
     setFilter(selectedFilter) {
         this.setState({
-            selectedFilter: (this.state.selectedFilter === selectedFilter)
-                ? ""
-                : selectedFilter
+            selectedFilter: this.state.selectedFilter === selectedFilter ? '' : selectedFilter,
         });
     }
 
-    toggleFavorite = (object) => {
+    toggleFavorite = object => {
         object.favorite
             ? this.props.removeFavorite(object.upn || object.text)
-            : this.props.addFavorite(object.upn || object.text)
-    }
+            : this.props.addFavorite(object.upn || object.text);
+    };
 
     renderFilterBar = () => {
         const { classes, small } = this.props;
         const { selectedFilter } = this.state;
-        const filter = ["Lehrer", "Schüler", "Raum", "Klasse"];
-        return <ListItem
-            key={"Filter"}
-            className={classes.filter}
-        >
-            <ListItemIcon>
-                <FilterIcon />
-            </ListItemIcon>
-            <ListItemText className={classes.buttonGroup}>
-                {filter.map((type) =>
-                    <Button
-                        key={type}
-                        size={small ? "small" : "medium"}
-                        className={classes.button}
-                        onClick={() => this.setFilter(type)}
-                        variant={selectedFilter === type ? "contained" : "outlined"}>
-                        {type}
-                    </Button>
-                )}
-            </ListItemText>
-        </ListItem>
+        const filter = ['Lehrer', 'Schüler', 'Raum', 'Klasse'];
+        return (
+            <ListItem key={'Filter'} className={classes.filter}>
+                <ListItemIcon>
+                    <FilterIcon />
+                </ListItemIcon>
+                <ListItemText className={classes.buttonGroup}>
+                    {filter.map(type => (
+                        <Button
+                            key={type}
+                            size={small ? 'small' : 'medium'}
+                            className={classes.button}
+                            onClick={() => this.setFilter(type)}
+                            variant={selectedFilter === type ? 'contained' : 'outlined'}
+                        >
+                            {type}
+                        </Button>
+                    ))}
+                </ListItemText>
+            </ListItem>
+        );
     };
 
     render() {
@@ -126,14 +124,8 @@ class Search extends React.PureComponent {
             <div className={classes.root} style={style}>
                 <ClickAwayListener mouseEvent="onClick" onClickAway={this.handleClickAway}>
                     <div className={classes.searchbarWrapper}>
-                        <div className={classNames(
-                            classes.searchbar,
-                            !isOpen && classes.searchbarClosed
-                        )}>
-                            <div className={classNames(
-                                classes.inputField,
-                                isOpen && classes.inputFieldOpen
-                            )}>
+                        <div className={classNames(classes.searchbar, !isOpen && classes.searchbarClosed)}>
+                            <div className={classNames(classes.inputField, isOpen && classes.inputFieldOpen)}>
                                 <Input
                                     inputRef={this.handleInputRef}
                                     placeholder="Suchen"
@@ -147,21 +139,21 @@ class Search extends React.PureComponent {
                                     onKeyUp={this.handleKeyUp}
                                 />
                             </div>
-                            <IconButton onClick={this.handleOpen}
+                            <IconButton
+                                onClick={this.handleOpen}
                                 className={classNames(
                                     classes.icon,
                                     classes.searchIcon,
                                     nonEmpty && classes.iconHidden,
                                     !isOpen && classes.searchIconActive
-                                )}>
+                                )}
+                            >
                                 <SearchIcon />
                             </IconButton>
-                            <IconButton onClick={this.handleClear}
-                                className={classNames(
-                                    classes.icon,
-                                    classes.closeIcon,
-                                    !nonEmpty && classes.iconHidden
-                                )}>
+                            <IconButton
+                                onClick={this.handleClear}
+                                className={classNames(classes.icon, classes.closeIcon, !nonEmpty && classes.iconHidden)}
+                            >
                                 <ClearIcon />
                             </IconButton>
                         </div>
@@ -169,45 +161,37 @@ class Search extends React.PureComponent {
                             className={classNames(
                                 classes.dropDownContainer,
                                 !open && classes.dropDownContainerClosed,
-                                small && classes.dropDownContainerFullscreen,
-                            )}>
-                            {Keyboard &&
+                                small && classes.dropDownContainerFullscreen
+                            )}
+                        >
+                            {Keyboard && (
                                 <Keyboard
                                     className={classNames(
                                         classes.dropDown,
                                         classes.keyboard,
                                         !open && classes.dropDownClosed
                                     )}
-                                    onInput={this.handleKeyboardInput}>
-                                </Keyboard>
-                            }
+                                    onInput={this.handleKeyboardInput}
+                                />
+                            )}
                             <SearchResult
                                 open={this.state.open}
                                 value={this.state.value}
                                 selectedFilter={this.state.selectedFilter}
-                                className={classNames(
-                                    classes.dropDown,
-                                    classes.list,
-                                    !open && classes.dropDownClosed
-                                )}
+                                className={classNames(classes.dropDown, classes.list, !open && classes.dropDownClosed)}
                                 onClick={this.handleClick}
                                 toggleFavorite={this.props.tv ? null : this.toggleFavorite}
-                                filterBar={this.renderFilterBar()}>
-                            </SearchResult>
+                                filterBar={this.renderFilterBar()}
+                            />
                         </div>
                     </div>
                 </ClickAwayListener>
-                <div className={classNames(
-                    classes.children,
-                    isOpen && shrinkChildren && classes.childrenOpen
-                )}>
+                <div className={classNames(classes.children, isOpen && shrinkChildren && classes.childrenOpen)}>
                     {React.Children.map(this.props.children, child => {
                         if (!child) return;
                         return (
                             <Zoom in={!shrinkChildren || !isOpen} className={classes.child}>
-                                <div>
-                                    {child}
-                                </div>
+                                <div>{child}</div>
                             </Zoom>
                         );
                     })}
@@ -223,9 +207,9 @@ Search.getDerivedStateFromProps = (props, state) => {
 
     return {
         prevOpenProps: openProps,
-        open: (prevOpenProps !== openProps) ? openProps : open || openProps,
+        open: prevOpenProps !== openProps ? openProps : open || openProps,
     };
-}
+};
 
 const styles = theme => ({
     icon: {
@@ -235,7 +219,7 @@ const styles = theme => ({
         transform: 'scale(1,1)',
     },
     listItemSelected: {
-        backgroundColor: 'rgba(0, 0, 0, 0.08)'
+        backgroundColor: 'rgba(0, 0, 0, 0.08)',
     },
 
     iconHidden: {
@@ -255,15 +239,12 @@ const styles = theme => ({
         flex: 1,
         display: 'flex',
         justifyContent: 'space-between',
-
     },
-    rootClosed: {
-
-    },
+    rootClosed: {},
     searchbarWrapper: {
         width: '100%',
         position: 'relative',
-        maxWidth: 800,
+        maxWidth: 800 - 8,
     },
     searchbar: {
         width: '100%',
@@ -296,7 +277,6 @@ const styles = theme => ({
     dropDownContainerClosed: {
         opacity: 0,
         pointerEvents: 'none',
-
     },
     dropDown: {
         marginTop: theme.spacing.unit,
@@ -338,7 +318,7 @@ const styles = theme => ({
         // remove clear icon on edge
         '&::-ms-clear': {
             display: 'none',
-        }
+        },
     },
     inputField: {
         width: '0%',
@@ -367,25 +347,27 @@ const styles = theme => ({
         width: '100%',
     },
     type: {
-        color: grey[500]
+        color: grey[500],
     },
     name: {
         minWidth: 100,
-        display: 'inline-block'
-    }
+        display: 'inline-block',
+    },
 });
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     masterdata: state.timetable.masterdata,
     small: state.browser.lessThan.medium,
 });
 
 const mapDispatchToProps = dispatch => ({
-    setTimetable: (object) => dispatch(setTimeTable(object.type, object.id)),
-    addFavorite: (key) => dispatch(addFavorite(key)),
-    removeFavorite: (key) => dispatch(removeFavorite(key)),
+    setTimetable: object => dispatch(setTimeTable(object.type, object.id)),
+    addFavorite: key => dispatch(addFavorite(key)),
+    removeFavorite: key => dispatch(removeFavorite(key)),
     loadMe: () => dispatch(loadMe()),
 });
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Search));
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withStyles(styles)(Search));

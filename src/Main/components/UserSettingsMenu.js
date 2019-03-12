@@ -1,6 +1,6 @@
 import React from 'react';
 import firebase from 'firebase';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -29,62 +29,77 @@ import Feedback from './Feedback';
 import { getAuthContext } from '../../Common/Authentication/storage';
 
 class UserSettingsMenu extends React.Component {
-
     state = {
         reminderOpen: false,
         feedbackOpen: false,
     };
 
     profilePicChange = () => {
-        window.open("https://outlook.office365.com/ecp/PersonalSettings/EditAccount.aspx?chgPhoto=1&e" +
-            "xsvurl=1&realm=wgmail.de",
-            "popup", "width=600,height=400,status=yes,scrollbars=yes,resizable=yes");
-    }
+        window.open(
+            'https://outlook.office365.com/ecp/PersonalSettings/EditAccount.aspx?chgPhoto=1&e' +
+                'xsvurl=1&realm=wgmail.de',
+            'popup',
+            'width=600,height=400,status=yes,scrollbars=yes,resizable=yes'
+        );
+    };
 
     passwordChange = () => {
-        window.open("https://login.wgmail.de/adfs/portal/updatepassword?username=" + this.props.upn,
-            "popup", "width=400,height=600,status=yes,scrollbars=yes,resizable=yes");
-    }
+        window.open(
+            'https://login.wgmail.de/adfs/portal/updatepassword?username=' + this.props.upn,
+            'popup',
+            'width=400,height=600,status=yes,scrollbars=yes,resizable=yes'
+        );
+    };
 
     reset = () => {
         purge().finally(() => {
             localStorage.clear();
             unregister();
             window.location.reload();
-        })
-    }
+        });
+    };
 
     requestPermission = () => {
         const that = this;
         console.log('Requesting permission...');
         const messaging = firebase.messaging();
-        return messaging.requestPermission().then(function () {
-            console.log('Notification permission granted.');
-        }).catch(function (err) {
-            console.log('Unable to get permission to notify.', err);
-            that.props.showError("Browser gab keine Erlaubnis für Benachrichtungen");
-        });
-    }
+        return messaging
+            .requestPermission()
+            .then(function() {
+                console.log('Notification permission granted.');
+            })
+            .catch(function(err) {
+                console.log('Unable to get permission to notify.', err);
+                that.props.showError('Browser gab keine Erlaubnis für Benachrichtungen');
+            });
+    };
 
     setNotification = () => {
         if (this.props.notificationToken) {
             this.props.setNotification({
                 oldToken: this.props.notificationToken,
-                newToken: null
+                newToken: null,
             });
         } else {
             const messaging = firebase.messaging();
             const that = this;
             this.requestPermission()
-                .then(() => { return messaging.getToken() })
-                .then((token) => that.props.setNotification({
-                    oldToken: that.props.notificationToken,
-                    newToken: token
-                }))
-                .catch((error) => { this.props.showError(error); debugger });
+                .then(() => {
+                    return messaging.getToken();
+                })
+                .then(token =>
+                    that.props.setNotification({
+                        oldToken: that.props.notificationToken,
+                        newToken: token,
+                    })
+                )
+                .catch(error => {
+                    this.props.showError(error);
+                    debugger;
+                });
             connectToServiceWorker(this.props.setNotification, this.props.notificationToken);
         }
-    }
+    };
 
     handleClick = event => {
         this.setState({ anchorEl: event.currentTarget });
@@ -97,39 +112,33 @@ class UserSettingsMenu extends React.Component {
     logout = () => {
         this.props.logOut();
         getAuthContext().logOut();
-    }
+    };
 
     openFeedback = () => {
-        this.setState({feedbackOpen: true});
+        this.setState({ feedbackOpen: true });
         this.handleClose();
-    }
+    };
 
     openReminderSettings = () => {
         this.props.loadMe();
-        this.setState({reminderOpen: true});
+        this.setState({ reminderOpen: true });
         this.handleClose();
-    }
+    };
 
     closeReminderSettings = () => {
-        this.setState({reminderOpen: false});
-    }
+        this.setState({ reminderOpen: false });
+    };
 
     closeFeedback = () => {
-        this.setState({feedbackOpen: false });
-    }
+        this.setState({ feedbackOpen: false });
+    };
 
     render() {
         const { anchorEl } = this.state;
         return (
             <div>
-                <ReminderSettingsDialog 
-                    open={this.state.reminderOpen} 
-                    onClose={this.closeReminderSettings} 
-                />
-                <Feedback 
-                    open={this.state.feedbackOpen} 
-                    onClose={this.closeFeedback}
-                />
+                <ReminderSettingsDialog open={this.state.reminderOpen} onClose={this.closeReminderSettings} />
+                <Feedback open={this.state.feedbackOpen} onClose={this.closeFeedback} />
                 {/* https://github.com/mui-org/material-ui/issues/9343#issuecomment-377772257 */}
                 <Tooltip id="tooltip-settings" title="Benutzereinstellungen" disableFocusListener>
                     <IconButton
@@ -139,7 +148,7 @@ class UserSettingsMenu extends React.Component {
                         onClick={this.handleClick}
                         style={{ width: 48, height: 48, padding: 0, marginLeft: 8 }}
                     >
-                        <UserAvatar />
+                        <UserAvatar size={36} />
                     </IconButton>
                 </Tooltip>
                 <Menu
@@ -158,50 +167,51 @@ class UserSettingsMenu extends React.Component {
                     }}
                     getContentAnchorEl={undefined}
                 >
-                    <MenuItem
-                        onClick={this.openFeedback} >
+                    <MenuItem onClick={this.openFeedback}>
                         <ListItemIcon>
                             <FeedbackIcon />
                         </ListItemIcon>
                         <ListItemText inset primary="Feedback senden" />
                     </MenuItem>
-                    <MenuItem
-                        onClick={this.profilePicChange} >
+                    <MenuItem onClick={this.profilePicChange}>
                         <ListItemIcon>
                             <ProfilePicIcon />
                         </ListItemIcon>
                         <ListItemText inset primary="Profilbild ändern" />
                     </MenuItem>
-                    <MenuItem
-                        onClick={this.passwordChange}>
+                    <MenuItem onClick={this.passwordChange}>
                         <ListItemIcon>
                             <KeyIcon />
                         </ListItemIcon>
                         <ListItemText inset primary="Passwort ändern" />
                     </MenuItem>
-                    <MenuItem
-                        onClick={this.openReminderSettings}>
+                    <MenuItem onClick={this.openReminderSettings}>
                         <ListItemIcon>
                             <MailIcon />
                         </ListItemIcon>
                         <ListItemText inset primary="E-Mail-Erinnerungen" />
                     </MenuItem>
-                    <MenuItem
-                        onClick={this.reset}>
+                    <MenuItem onClick={this.reset}>
                         <ListItemIcon>
                             <RefreshIcon />
                         </ListItemIcon>
-                        <ListItemText inset primary="Reset"/>
+                        <ListItemText inset primary="Reset" />
                     </MenuItem>
-                    {false && <MenuItem
-                        onClick={this.setNotification}>
-                        <ListItemIcon>
-                            {this.props.notificationToken ? <NotificationsOff /> : <NotificationsOn />}
-                        </ListItemIcon>
-                        <ListItemText inset primary={"Benachrichtigungen " + (this.props.notificationToken ? "ausschalten" : "anschalten")} />
-                    </MenuItem>}
-                    <MenuItem
-                        onClick={this.logout}>
+                    {false && (
+                        <MenuItem onClick={this.setNotification}>
+                            <ListItemIcon>
+                                {this.props.notificationToken ? <NotificationsOff /> : <NotificationsOn />}
+                            </ListItemIcon>
+                            <ListItemText
+                                inset
+                                primary={
+                                    'Benachrichtigungen ' +
+                                    (this.props.notificationToken ? 'ausschalten' : 'anschalten')
+                                }
+                            />
+                        </MenuItem>
+                    )}
+                    <MenuItem onClick={this.logout}>
                         <ListItemIcon>
                             <LogOutIcon />
                         </ListItemIcon>
@@ -215,10 +225,18 @@ class UserSettingsMenu extends React.Component {
 
 const mapDispatchToProps = dispatch => {
     return {
-        logOut: () => { dispatch(logOut()) }, 
-        setNotification: (newToken, oldToken) => { dispatch(setNotification(newToken, oldToken)); },
-        showError: (text) => { dispatch(showError(text)); },
-        loadMe: () => { dispatch(loadMe()); },
+        logOut: () => {
+            dispatch(logOut());
+        },
+        setNotification: (newToken, oldToken) => {
+            dispatch(setNotification(newToken, oldToken));
+        },
+        showError: text => {
+            dispatch(showError(text));
+        },
+        loadMe: () => {
+            dispatch(loadMe());
+        },
     };
 };
 
@@ -229,7 +247,7 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme()(UserSettingsMenu));
-
-
-
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withTheme()(UserSettingsMenu));

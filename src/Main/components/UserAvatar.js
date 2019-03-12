@@ -1,27 +1,32 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react';
+import { connect } from 'react-redux';
 import { loadAvatars } from '../actions';
 
-import { ProfilePicture, checkAvatars } from "./Avatars";
+import { ProfilePicture, checkAvatars } from './Avatars';
 
 class UserAvatar extends React.Component {
     render() {
-        const { upn } = this.props;
+        const { upn, size } = this.props;
         checkAvatars([upn], this.props.loadAvatars);
-        return <ProfilePicture upn={upn} size={48} outline={true}/>;
+        return <ProfilePicture upn={upn} size={size} outline={true} />;
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        loadAvatars: (upns) => { dispatch(loadAvatars(upns)); },
+        loadAvatars: upns => {
+            dispatch(loadAvatars(upns));
+        },
     };
 };
 
 const makeMapStateToProps = () => {
-    return (state) => ({
+    return state => ({
         upn: state.user.upn,
     });
-}
+};
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(UserAvatar);
+export default connect(
+    makeMapStateToProps,
+    mapDispatchToProps
+)(UserAvatar);

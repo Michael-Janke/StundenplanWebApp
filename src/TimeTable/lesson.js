@@ -83,7 +83,7 @@ const AbstractLesson = props => {
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'flex-start',
-                        flex: 'none',
+                        overflow: 'hidden',
                     }}
                 >
                     {substitutionType}
@@ -193,10 +193,9 @@ const SubstitutionTextContainer = styled.div`
 const SubstitutionType = styled.div`
     font-size: 60%;
     font-weight: 600;
-    width: 30px;
     white-space: nowrap;
-    overflow: hidden;
     color: ${props => props.color};
+    overflow: hidden;
 `;
 
 const LessonContainer = styled.div`

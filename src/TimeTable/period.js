@@ -5,10 +5,13 @@ import Absence from './absence';
 import { equalPeriods } from '../Selector/timetable';
 import { getFields } from './Fields';
 
-
 class Period extends React.Component {
     shouldComponentUpdate(nextProps) {
-        if (nextProps.type !== this.props.type || nextProps.small !== this.props.small) {
+        if (
+            nextProps.type !== this.props.type ||
+            nextProps.small !== this.props.small ||
+            nextProps.children !== this.props.children
+        ) {
             return true;
         }
         let l1 = this.props.lessons;
@@ -24,7 +27,7 @@ class Period extends React.Component {
         return false;
     }
     render() {
-        const { lessons, type, small, supervisions, continueation, setTimeTable } = this.props;
+        const { lessons, type, small, continueation, setTimeTable } = this.props;
         if (!lessons || !type) {
             return null;
         }
@@ -34,21 +37,15 @@ class Period extends React.Component {
                 {lessons.map((lesson, i) => {
                     let { classes, subject, teachers, room, ...other } = lesson;
                     if (other.absence) {
-                        return (
-                            <Absence
-                                {...other}
-                                key={other.absence.ABSENCE_ID}
-                                table
-                            />
-                        );
+                        return <Absence {...other} key={other.absence.ABSENCE_ID} table />;
                     } else {
                         return (
                             <AbstractLesson
                                 {...other}
                                 continueation={continueation}
                                 key={lesson.reference.TIMETABLE_ID || -i}
-                                supervisions={supervisions}
                                 last={lessons.length - 1 === i}
+                                first={i === 0}
                                 multiple={lessons.length > 1}
                                 small={small}
                                 setTimeTable={setTimeTable}

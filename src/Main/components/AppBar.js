@@ -14,22 +14,21 @@ import Badge from '@material-ui/core/Badge';
 import PrintDialog from '../../TimeTable/Print';
 import MailDialog from './Mail';
 
-
-const styles = ({
+const styles = {
     icon: {
-        color: grey[100]
+        color: grey[100],
     },
-});
+};
 
-const UnreadMessages = connect(({teams}) => ({unreadMessages: teams.unreadMessages || 0}))(
-    withStyles(styles)(({unreadMessages, classes}) => 
-    <Badge badgeContent={unreadMessages} invisible={!unreadMessages} color="secondary">
-        <MailIcon className={classes.icon} />
-    </Badge>
-));
+const UnreadMessages = connect(({ teams }) => ({ unreadMessages: teams.unreadMessages || 0 }))(
+    withStyles(styles)(({ unreadMessages, classes }) => (
+        <Badge badgeContent={unreadMessages} invisible={!unreadMessages} color="secondary">
+            <MailIcon className={classes.icon} />
+        </Badge>
+    ))
+);
 
 class AppBar extends React.Component {
-
     state = { printOpen: false, mailOpen: false };
 
     componentDidMount() {
@@ -45,8 +44,8 @@ class AppBar extends React.Component {
             event.preventDefault();
             this.setState({ printOpen: true });
         }
-    }
-    
+    };
+
     handleDrawerToggle = () => {
         this.props.toggleDrawer();
     };
@@ -54,36 +53,35 @@ class AppBar extends React.Component {
     onPrintTimetable = () => {
         // window.setTimeout(window.print, 0);
         this.setState({ printOpen: true });
-    }
+    };
 
     handlePrintClose = () => {
         this.setState({ printOpen: false });
-    }
+    };
 
     onMailOpen = () => {
         // window.setTimeout(window.print, 0);
         this.setState({ mailOpen: true });
-    }
+    };
 
     handleMailClose = () => {
         this.setState({ mailOpen: false });
-    }
-
+    };
 
     render() {
         const { classes, small, large } = this.props;
         const { printOpen, mailOpen } = this.state;
         return (
             <React.Fragment>
-                <Icons style={{ marginLeft: large ? 300-20 : undefined }}>
+                <Icons style={{ marginLeft: large ? 270 : undefined }}>
                     <Search shrinkChildren={small} alwaysOpen={!small}>
-                        {!small &&
+                        {!small && (
                             <Tooltip id="tooltip-print" title="Stundenplan drucken">
                                 <IconButton onClick={this.onPrintTimetable}>
                                     <PrintIcon className={classes.icon} />
                                 </IconButton>
                             </Tooltip>
-                        }
+                        )}
                         <Tooltip id="tooltip-print" title="Ungelesene Nachrichten">
                             <IconButton onClick={this.onMailOpen}>
                                 <UnreadMessages />
@@ -121,4 +119,7 @@ const mapDispatchToProps = dispatch => ({
     toggleDrawer: () => dispatch(toggleDrawer()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AppBar));
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withStyles(styles)(AppBar));
