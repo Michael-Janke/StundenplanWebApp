@@ -1,5 +1,7 @@
+import version from '../version.json';
+
 export const createFeedbackMail = feedback => {
-    const subject = feedback.subject + ' (' + process.env.REACT_APP_VERSION + ')';
+    const subject = feedback.subject + ' (' + version.build + ')';
     return {
         message: {
             subject: subject,
