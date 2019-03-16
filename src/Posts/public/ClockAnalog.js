@@ -51,11 +51,11 @@ const useStyles = makeStyles(theme => ({
             transform: 'translate(-50%, -50%)',
             top: '50%',
             left: 14,
-        }
-    }
+        },
+    },
 }));
 
-function Clock({className}) {
+function Clock({ className }) {
     const classes = useStyles();
     const [time, setTime] = useState(() => +new Date());
     useEffect(() => {
@@ -73,25 +73,24 @@ function Clock({className}) {
     var minAngle = 360 * (minute / 60) + (360 / 60) * (seconds / 60);
     // then work out hour angle
     // first the hour then the hour + mins
-    var hourAngle = (360 * (hours / 12)) + ((360 / 12) * (minute / 60));
+    var hourAngle = 360 * (hours / 12) + (360 / 12) * (minute / 60);
 
     const secondsStyle = {
         transform: `translate(-16px, -50%) rotate(${secAngle - 90}deg)`,
-    }
+    };
     const hoursStyle = {
         transform: `translate(0, -50%) rotate(${hourAngle - 90}deg)`,
-    }
+    };
     const minutesStyle = {
         transform: `translate(0, -50%) rotate(${minAngle - 90}deg)`,
-    }
+    };
     return (
         <div className={classNames(className, classes.root)}>
-            <div className={classNames(classes.pointer, classes.hours)} style={hoursStyle}></div>
-            <div className={classNames(classes.pointer, classes.minutes)} style={minutesStyle}></div>
-            <div className={classNames(classes.pointer, classes.seconds)} style={secondsStyle}></div>
+            <div className={classNames(classes.pointer, classes.hours)} style={hoursStyle} />
+            <div className={classNames(classes.pointer, classes.minutes)} style={minutesStyle} />
+            <div className={classNames(classes.pointer, classes.seconds)} style={secondsStyle} />
         </div>
     );
 }
-
 
 export default Clock;

@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Description from './description';
 
-const extractClasses = (classes) => {
-    classes = classes.map((_class) => {
-        let split = _class.NAME.match(/[a-zA-Z]+|[0-9]+/g)
+const extractClasses = classes => {
+    classes = classes.map(_class => {
+        let split = _class.NAME.match(/[a-zA-Z]+|[0-9]+/g);
         return {
             grade: parseInt(split[0], 10),
             letter: { letter: split[1], id: _class },
-        }
+        };
     });
     return classes.reduce((prev, current) => {
         let object = prev[current.grade];
@@ -19,15 +19,16 @@ const extractClasses = (classes) => {
         object.letters.push(current.letter);
         return prev;
     }, {});
-}
+};
 function Container({ className, description, type, children, setTimeTable, classes }) {
     if (description) {
-        return classes.map((klass) => (
+        return classes.map(klass => (
             <Description
                 key={klass.CLASS_ID}
-                onClick={(() => setTimeTable('class', klass.CLASS_ID))}
+                onClick={() => setTimeTable('class', klass.CLASS_ID)}
                 type="class"
-                instead={type}>
+                instead={type}
+            >
                 {klass.NAME}
             </Description>
         ));
@@ -36,22 +37,20 @@ function Container({ className, description, type, children, setTimeTable, class
     return (
         <div className={className}>
             <CContainer className={className}>
-                {Object.keys(extracted).map((key) => {
+                {Object.keys(extracted).map(key => {
                     let classes = extracted[key];
                     return (
                         <ClassContainer key={key}>
                             <Grade>{key}</Grade>
-                            {classes.letters.map((letter, i) =>
-                                <Class key={letter.id.CLASS_ID}>
-                                    {letter.letter}
-                                </Class>
-                            )}
+                            {classes.letters.map((letter, i) => (
+                                <Class key={letter.id.CLASS_ID}>{letter.letter}</Class>
+                            ))}
                         </ClassContainer>
-                    )
+                    );
                 })}
             </CContainer>
         </div>
-    )
+    );
 }
 
 const ClassesContainer = type => classes => ({ small, left, themeClasses, description, setTimeTable }) => {
@@ -70,15 +69,13 @@ const ClassesContainer = type => classes => ({ small, left, themeClasses, descri
             setTimeTable={setTimeTable}
             description={description}
             classes={field}
-            className={themeClasses['classes']}>
-        </Container>
+            className={themeClasses['classes']}
+        />
     );
-}
+};
 
 export const classStyles = theme => ({
-    'classes': {
-
-    },
+    classes: {},
 });
 
 ClassesContainer.propTypes = {

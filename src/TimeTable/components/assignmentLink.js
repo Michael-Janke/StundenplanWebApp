@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { getTeamsWebUrl } from '../../Main/actions';
 import OpenOfficeButton from './openOfficeLink';
 
-
-
 class AssignmentLink extends React.Component {
     constructor(props) {
         super(props);
@@ -27,9 +25,11 @@ class AssignmentLink extends React.Component {
     }
 }
 
-
-export default connect(({ teams }, { id, type }) => ({
-    url: teams.teamUrls && teams.teamUrls[id],
-}), (dispatch) => ({
-    getTeamsWebUrl: (id) => dispatch(getTeamsWebUrl(id)),
-}))(AssignmentLink);
+export default connect(
+    ({ teams }, { id, type }) => ({
+        url: teams.teamUrls && teams.teamUrls[id],
+    }),
+    dispatch => ({
+        getTeamsWebUrl: id => dispatch(getTeamsWebUrl(id)),
+    })
+)(AssignmentLink);

@@ -25,24 +25,19 @@ const styles = theme => ({
     },
     dialog: {
         padding: 0,
-    }
+    },
 });
 
 function handleChange(props) {
-    return (e) => {
+    return e => {
         e.preventDefault();
         props.onChange(e, props.value);
     };
 }
 
-const ToggleButton = (props) => (
-    <MUIToggleButton onMouseDown={handleChange(props)} {...props} onClick={null} />
-);
-
-
+const ToggleButton = props => <MUIToggleButton onMouseDown={handleChange(props)} {...props} onClick={null} />;
 
 class PostEditor extends Component {
-
     state = { editorState: EditorState.createEmpty() };
     static getDerivedStateFromProps(props, state) {
         const post = props.post;
@@ -50,10 +45,10 @@ class PostEditor extends Component {
             return {
                 post,
                 TITLE: post.TITLE,
-                editorState: post.TEXT ?
-                    EditorState.createWithContent(convertFromRaw(JSON.parse(post.TEXT)))
+                editorState: post.TEXT
+                    ? EditorState.createWithContent(convertFromRaw(JSON.parse(post.TEXT)))
                     : EditorState.createEmpty(),
-            }
+            };
         }
         return state;
     }
@@ -76,30 +71,25 @@ class PostEditor extends Component {
             TEXT: JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent())),
             TITLE: this.state.TITLE,
         };
-    }
+    };
 
-    handleEmojiSelected = (emoji) => {
+    handleEmojiSelected = emoji => {
         const editorState = this.state.editorState;
         const selection = editorState.getSelection();
         const contentState = editorState.getCurrentContent();
         const ncs = Modifier.replaceText(contentState, selection, emoji);
         const es = EditorState.push(editorState, ncs, 'insert-fragment');
         this.handleEditorStateChanged(es);
-    }
+    };
 
-    handleColorSelected = (toggledColor) => {
+    handleColorSelected = toggledColor => {
         const { editorState } = this.state;
         const selection = editorState.getSelection();
         // Let's just allow one color at a time. Turn off all active colors.
-        const nextContentState = Object.keys(COLOR_STYLE_MAP)
-            .reduce((contentState, color) => {
-                return Modifier.removeInlineStyle(contentState, selection, color)
-            }, editorState.getCurrentContent());
-        let nextEditorState = EditorState.push(
-            editorState,
-            nextContentState,
-            'change-inline-style'
-        );
+        const nextContentState = Object.keys(COLOR_STYLE_MAP).reduce((contentState, color) => {
+            return Modifier.removeInlineStyle(contentState, selection, color);
+        }, editorState.getCurrentContent());
+        let nextEditorState = EditorState.push(editorState, nextContentState, 'change-inline-style');
         const currentStyle = editorState.getCurrentInlineStyle();
         // Unset style override for current color.
         if (selection.isCollapsed()) {
@@ -109,42 +99,42 @@ class PostEditor extends Component {
         }
         // If the color is being toggled on, apply it.
         if (!currentStyle.has(toggledColor)) {
-            nextEditorState = RichUtils.toggleInlineStyle(
-                nextEditorState,
-                toggledColor
-            );
+            nextEditorState = RichUtils.toggleInlineStyle(nextEditorState, toggledColor);
         }
         this.handleEditorStateChanged(nextEditorState);
-    }
+    };
 
-    handleEditorStateChanged = (state) => {
+    handleEditorStateChanged = state => {
         this.setState({ editorState: state });
-    }
+    };
 
-    handleChange = key => (event) => {
+    handleChange = key => event => {
         this.setState({ [key]: event.target.value });
-    }
+    };
 
     handleFormat = (e, formats) => {
         switch (formats) {
-            case "BOLD":
-            case "ITALIC":
-            case "UNDERLINE":
+            case 'BOLD':
+            case 'ITALIC':
+            case 'UNDERLINE':
                 this.handleEditorStateChanged(RichUtils.toggleInlineStyle(this.state.editorState, formats));
                 break;
-            default: break;
+            default:
+                break;
         }
         this.handleEditorStateChanged(RichUtils.toggleBlockType(this.state.editorState, formats));
-    }
+    };
 
-    handleEmojiDropDown = (e) => {
+    handleEmojiDropDown = e => {
         e.preventDefault();
-    }
+    };
 
     render() {
         const { classes } = this.props;
-        const inlineStyle = [...this.state.editorState.getCurrentInlineStyle(),
-        RichUtils.getCurrentBlockType(this.state.editorState)];
+        const inlineStyle = [
+            ...this.state.editorState.getCurrentInlineStyle(),
+            RichUtils.getCurrentBlockType(this.state.editorState),
+        ];
 
         return (
             <>
@@ -155,7 +145,7 @@ class PostEditor extends Component {
                         name="text"
                         fullWidth
                         value={this.state.TITLE}
-                        onChange={this.handleChange("TITLE")}
+                        onChange={this.handleChange('TITLE')}
                     />
                     <FormHelperText id="component-error-text">Ein Titel wird benötigt</FormHelperText>
                 </FormControl>
@@ -170,7 +160,9 @@ class PostEditor extends Component {
                         <FormatUnderlinedIcon />
                     </ToggleButton>
                     <ToggleButton value="small">
-                        <Typography variant="body2" color="textSecondary">small</Typography>
+                        <Typography variant="body2" color="textSecondary">
+                            small
+                        </Typography>
                     </ToggleButton>
                     <ColorPicker value={inlineStyle} onColorSelected={this.handleColorSelected} />
                     <EmojiPicker onEmojiSelected={this.handleEmojiSelected} />
@@ -189,6 +181,6 @@ class PostEditor extends Component {
 
 const mapStateToProps = state => ({
     small: state.browser.lessThan.medium,
-})
+});
 
 export default connect(mapStateToProps)(withStyles(styles)(PostEditor));

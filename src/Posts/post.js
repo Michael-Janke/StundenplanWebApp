@@ -27,7 +27,7 @@ const styles = theme => ({
         flexDirection: 'column',
     },
     media: {
-        paddingTop: '56.5%'
+        paddingTop: '56.5%',
     },
     cardContent: {
         flex: 1,
@@ -39,7 +39,7 @@ const styles = theme => ({
     },
     author: {
         color: grey[500],
-    }
+    },
 });
 
 class Post extends React.Component {
@@ -54,7 +54,7 @@ class Post extends React.Component {
 
     handleOpenDelete = () => {
         this.setState({ deleteOpen: true, anchorEl: null });
-    }
+    };
 
     handleEdit = () => {
         this.setState({ anchorEl: null, deleteOpen: false });
@@ -63,7 +63,7 @@ class Post extends React.Component {
 
     handleApprove = () => {
         this.setState({ anchorEl: null, deleteOpen: false });
-        this.props.editPost({ ...this.props.post, APPROVED: !this.props.post.APPROVED })
+        this.props.editPost({ ...this.props.post, APPROVED: !this.props.post.APPROVED });
     };
     handleClose = () => {
         this.setState({ anchorEl: null, deleteOpen: false });
@@ -71,7 +71,7 @@ class Post extends React.Component {
     handleDelete = () => {
         this.setState({ anchorEl: null, deleteOpen: false });
         this.props.deletePost(this.props.post);
-    }
+    };
 
     render() {
         const { anchorEl, deleteOpen } = this.state;
@@ -80,49 +80,48 @@ class Post extends React.Component {
         const menu = (post.USER_CREATED || isAdmin) && (
             <React.Fragment>
                 <IconButton onClick={this.handleClick}>
-                    {!isAdmin || approved ? <MoreVertIcon /> :
+                    {!isAdmin || approved ? (
+                        <MoreVertIcon />
+                    ) : (
                         <Badge badgeContent={1} color="primary">
                             <MoreVertIcon />
                         </Badge>
-                    }
+                    )}
                 </IconButton>
-                <Menu
-                    id="post-menu"
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={this.handleClose}
-                >
-                    {(post.USER_CREATED || isAdmin) &&
+                <Menu id="post-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
+                    {(post.USER_CREATED || isAdmin) && (
                         <MenuItem onClick={this.handleOpenDelete}>
                             <ListItemIcon>
                                 <DeleteIcon />
                             </ListItemIcon>
                             <ListItemText inset primary="Löschen" />
                         </MenuItem>
-                    }
-                    {(post.USER_CREATED || isAdmin) &&
+                    )}
+                    {(post.USER_CREATED || isAdmin) && (
                         <MenuItem onClick={this.handleEdit}>
                             <ListItemIcon>
                                 <EditIcon />
                             </ListItemIcon>
                             <ListItemText inset primary="Editieren" />
                         </MenuItem>
-                    }
+                    )}
 
-                    {isAdmin &&
+                    {isAdmin && (
                         <MenuItem onClick={this.handleApprove}>
                             <ListItemIcon>
                                 <ApproveIcon />
                             </ListItemIcon>
-                            <ListItemText inset primary={approved ? "Sperren" : "Freigeben"} />
+                            <ListItemText inset primary={approved ? 'Sperren' : 'Freigeben'} />
                         </MenuItem>
-                    }
+                    )}
                 </Menu>
-                {<PostDeletionDialog
-                    open={deleteOpen}
-                    handleClose={this.handleClose}
-                    handleDelete={this.handleDelete}
-                />}
+                {
+                    <PostDeletionDialog
+                        open={deleteOpen}
+                        handleClose={this.handleClose}
+                        handleDelete={this.handleDelete}
+                    />
+                }
             </React.Fragment>
         );
         if (post.TEXT) {
@@ -135,29 +134,23 @@ class Post extends React.Component {
         return (
             <Card className={classes.card}>
                 <CardHeader
-                    avatar={
-                        <ObjectIcon size={0} upn={post.CREATOR} />
-                    }
+                    avatar={<ObjectIcon size={0} upn={post.CREATOR} />}
                     action={menu}
                     title={post.TITLE}
-                    subheader={post.DATE_FROM && moment(post.DATE_FROM.date).format("DD. MMMM, YYYY")}
+                    subheader={post.DATE_FROM && moment(post.DATE_FROM.date).format('DD. MMMM, YYYY')}
                 />
                 <CardContent className={classes.cardContent}>
                     <div className={classNames(overflow && classes.contentOverflow)}>
-                        {post.IMAGES && <Diashow post={post}></Diashow>}
-                        {editorState &&
-                            <Editor
-                                editorState={editorState}
-                                readOnly
-                            >
-                            </Editor>
-                        }
+                        {post.IMAGES && <Diashow post={post} />}
+                        {editorState && <Editor editorState={editorState} readOnly />}
                     </div>
                 </CardContent>
                 <CardActions className={classes.actions} disableActionSpacing>
-                    <Typography className={classes.author} variant="body2">von {post.CREATOR}</Typography>
-                    <IconButton className={classes.author} href={"mailto:" + post.CREATOR}>
-                        <Mail fontSize="small"/>
+                    <Typography className={classes.author} variant="body2">
+                        von {post.CREATOR}
+                    </Typography>
+                    <IconButton className={classes.author} href={'mailto:' + post.CREATOR}>
+                        <Mail fontSize="small" />
                     </IconButton>
                 </CardActions>
             </Card>
@@ -165,14 +158,14 @@ class Post extends React.Component {
     }
 }
 
-
-const mapStateToProps = state => ({
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
-    deletePost: (post) => dispatch(deletePost(post)),
-    editPost: (post) => dispatch(editPost(post)),
+    deletePost: post => dispatch(deletePost(post)),
+    editPost: post => dispatch(editPost(post)),
 });
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Post));
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withStyles(styles)(Post));

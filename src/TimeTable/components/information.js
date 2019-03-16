@@ -13,12 +13,12 @@ const styles = theme => ({
         transition: theme.transitions.create('padding'),
         [theme.breakpoints.down('xs')]: {
             padding: 0,
-        }
+        },
     },
     item: {
         paddingRight: 0,
-    }
-})
+    },
+});
 
 const CurrentTimetableInformation = ({ type, id, masterdata, lastUpdate, small, classes }) => {
     if (!masterdata || !type || !id) return null;
@@ -40,12 +40,12 @@ const CurrentTimetableInformation = ({ type, id, masterdata, lastUpdate, small, 
                 disableTypography
                 primary={
                     <Typography variant="subtitle2" noWrap>
-                        {object.LASTNAME ? object.FIRSTNAME + " " + object.LASTNAME : object.NAME}
+                        {object.LASTNAME ? object.FIRSTNAME + ' ' + object.LASTNAME : object.NAME}
                     </Typography>
                 }
                 secondary={
                     <Typography variant="caption" noWrap>
-                        {(small ? "" : "Letzte Änderung ") + lastUpdate}
+                        {(small ? '' : 'Letzte Änderung ') + lastUpdate}
                     </Typography>
                 }
             />
@@ -54,7 +54,9 @@ const CurrentTimetableInformation = ({ type, id, masterdata, lastUpdate, small, 
 };
 const mapStateToProps = (state, { print }) => ({
     masterdata: state.timetable.masterdata,
-    lastUpdate: print ? moment(state.user.lastUpdate).format("[am] dd, DD. MMMM YYYY") : moment(state.user.lastUpdate).fromNow(),
+    lastUpdate: print
+        ? moment(state.user.lastUpdate).format('[am] dd, DD. MMMM YYYY')
+        : moment(state.user.lastUpdate).fromNow(),
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(CurrentTimetableInformation));

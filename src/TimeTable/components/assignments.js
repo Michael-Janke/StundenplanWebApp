@@ -11,41 +11,42 @@ function getAssignmentLink(assignment, link) {
     const match = reg.exec(link);
 
     const subEntityId = JSON.stringify({
-        "version": "1.0",
-        "config": {
-            "classes": [
+        version: '1.0',
+        config: {
+            classes: [
                 {
-                    "id": assignment.classId,
-                    "assignmentIds": [
-                        assignment.id
-                    ]
-                }
-            ]
+                    id: assignment.classId,
+                    assignmentIds: [assignment.id],
+                },
+            ],
         },
-        "action": "navigate",
-        "view": "assignment-viewer",
+        action: 'navigate',
+        view: 'assignment-viewer',
     });
 
-
-    return `${link.substring(0, match.index)}entity/66aeee93-507d-479a-a3ef-8f494af43945/classroom?context=${
-        encodeURIComponent(JSON.stringify({
+    return `${link.substring(
+        0,
+        match.index
+    )}entity/66aeee93-507d-479a-a3ef-8f494af43945/classroom?context=${encodeURIComponent(
+        JSON.stringify({
             subEntityId,
-            "channelId": decodeURIComponent(match[1]),
+            channelId: decodeURIComponent(match[1]),
         })
-        )}`;
+    )}`;
 }
 
 export default function Assignments(props) {
     return (
         <React.Fragment>
             <ListSubheader component="div">Hausaufgaben</ListSubheader>
-            {props.assignments.map((assignment) => {
-                const turnedIn = assignment.submissions &&
+            {props.assignments.map(assignment => {
+                const turnedIn =
+                    assignment.submissions &&
                     assignment.submissions.some(submission => submission.status === 'submitted');
-                const reg = /(?:<p>)(.*?)(?:<\/p>)/ig;
+                const reg = /(?:<p>)(.*?)(?:<\/p>)/gi;
                 let match;
                 const content = [];
-                while (!!(match = reg.exec(assignment.instructions ? assignment.instructions.content : ""))) {
+                while (!!(match = reg.exec(assignment.instructions ? assignment.instructions.content : ''))) {
                     content.push(match[1]);
                 }
                 return (
@@ -53,7 +54,8 @@ export default function Assignments(props) {
                         key={assignment.id}
                         id={props.team.id}
                         icon={turnedIn ? <AssignmentTurnedInIcon /> : <AssignmentIcon />}
-                        getUrl={getAssignmentLink.bind(null, assignment)}>
+                        getUrl={getAssignmentLink.bind(null, assignment)}
+                    >
                         <ListItemText
                             primary={assignment.displayName}
                             primaryTypographyProps={{ noWrap: true }}

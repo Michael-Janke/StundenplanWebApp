@@ -1,19 +1,19 @@
 import ls from 'local-storage';
 import { AuthenticationContext } from './authContext';
 
-const CONTEXT_KEY = "authorization_v2";
+const CONTEXT_KEY = 'authorization_v2';
 
 // remove old keys
-["authorization"].forEach(ls.remove);
+['authorization'].forEach(ls.remove);
 
 /**
- * @param {Window} win 
+ * @param {Window} win
  * @returns {AuthenticationContext}
  */
 export const getAuthContext = (win = window) => {
     let authContext = win[CONTEXT_KEY] || ls(CONTEXT_KEY);
     if (authContext) {
-        if (!(authContext.toObject)) {
+        if (!authContext.toObject) {
             authContext = new AuthenticationContext(authContext);
             win[CONTEXT_KEY] = authContext;
             setAuthContext(authContext, win);
@@ -21,9 +21,9 @@ export const getAuthContext = (win = window) => {
         return authContext;
     }
     return null;
-}
+};
 
 export const setAuthContext = (authContext, win = window) => {
     win[CONTEXT_KEY] = authContext;
     ls(CONTEXT_KEY, authContext && authContext.toObject());
-}
+};

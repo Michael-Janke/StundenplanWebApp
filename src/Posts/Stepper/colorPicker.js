@@ -22,12 +22,10 @@ const styles = theme => ({
     },
     colorBoxActive: {
         borderRadius: '50%',
-    }
+    },
 });
 
-
 class ColorPicker extends React.Component {
-
     state = {
         anchorEl: null,
     };
@@ -45,7 +43,7 @@ class ColorPicker extends React.Component {
         e.preventDefault();
         this.handleClose();
         this.props.onColorSelected(color);
-    }
+    };
 
     render() {
         const { anchorEl } = this.state;
@@ -82,10 +80,10 @@ class ColorPicker extends React.Component {
                                         <ButtonBase
                                             className={classNames(classes.colorBox, isActive && classes.colorBoxActive)}
                                             style={{ backgroundColor: color }}
-                                            onMouseDown={(e) => this.handleColor(e, isActive ? null : name)}>
-                                        </ButtonBase>
+                                            onMouseDown={e => this.handleColor(e, isActive ? null : name)}
+                                        />
                                     </Grid>
-                                )
+                                );
                             })}
                         </Grid>
                     </div>

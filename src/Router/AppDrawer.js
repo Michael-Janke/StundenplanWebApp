@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 import officeIcons from '../Common/Waffle/office-icons';
 import Waffle from '../Common/Waffle/Waffle';
 import Drawer from '@material-ui/core/SwipeableDrawer';
 import ProfilePicture from '../Main/components/ProfilePicture';
 import Divider from '@material-ui/core/Divider';
-import Loadable from "react-loadable";
+import Loadable from 'react-loadable';
 
 import grey from '@material-ui/core/colors/grey';
 import { withStyles, Typography } from '@material-ui/core';
@@ -14,10 +14,9 @@ import { connect } from 'react-redux';
 const styles = theme => ({
     drawer: {
         width: 300,
-
     },
     icon: {
-        color: grey[100]
+        color: grey[100],
     },
     links: {
         padding: theme.spacing.unit * 2,
@@ -26,11 +25,10 @@ const styles = theme => ({
     linksList: {
         display: 'flex',
         flexWrap: 'wrap',
-    }
-})
+    },
+});
 
 class AppDrawer extends React.Component {
-
     render() {
         const { classes } = this.props;
         const links = (
@@ -40,9 +38,7 @@ class AppDrawer extends React.Component {
                 </Typography>
                 <div className={classes.linksList}>
                     {Object.entries(officeIcons).map(([key, value]) => {
-                        return (
-                            <Waffle name={key} waffle={value} key={key} onClick={this.props.closeDrawer} />
-                        );
+                        return <Waffle name={key} waffle={value} key={key} onClick={this.props.closeDrawer} />;
                     })}
                 </div>
             </div>
@@ -63,7 +59,6 @@ class AppDrawer extends React.Component {
                     open={this.props.open}
                     onClose={this.props.toggleDrawer}
                     onOpen={this.props.toggleDrawer}
-
                     ModalProps={{
                         keepMounted: true, // Better open performance on mobile.
                     }}
@@ -71,7 +66,7 @@ class AppDrawer extends React.Component {
                     {drawer}
                 </Drawer>
             </div>
-        )
+        );
     }
 }
 
@@ -82,7 +77,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     toggleDrawer: () => dispatch(toggleDrawer()),
     closeDrawer: () => dispatch(closeDrawer()),
-})
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AppDrawer));
-
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withStyles(styles)(AppDrawer));

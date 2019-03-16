@@ -27,29 +27,28 @@ import { Fab } from '@material-ui/core';
 
 const TimePicker = datePickerEnhancer(TimePickerComponent);
 
-
 function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
 export class ReminderSettings extends Component {
-
-    state = {}
+    state = {};
 
     static getDerivedStateFromProps(nextProps, prevState) {
         if ((prevState.loading && !nextProps.loading) || prevState.loading === undefined)
             return {
                 ...prevState,
                 remind: nextProps.remind === undefined ? true : nextProps.remind,
-                remindTime: moment(nextProps.remindTime || "18:00:00", 'HH:mm:ss'),
-                remindEMails: nextProps.remindEMails && nextProps.remindEMails.split
-                    ? nextProps.remindEMails.split(";")
-                    : [nextProps.upn],
-                loading: nextProps.loading
+                remindTime: moment(nextProps.remindTime || '18:00:00', 'HH:mm:ss'),
+                remindEMails:
+                    nextProps.remindEMails && nextProps.remindEMails.split
+                        ? nextProps.remindEMails.split(';')
+                        : [nextProps.upn],
+                loading: nextProps.loading,
             };
         return {
             ...prevState,
-            loading: nextProps.loading
+            loading: nextProps.loading,
         };
     }
 
@@ -57,36 +56,34 @@ export class ReminderSettings extends Component {
         this.setState({ [name]: value });
     };
 
-    deleteEMail = (email) => () => {
+    deleteEMail = email => () => {
         this.setState({
-            remindEMails: [
-                ...this.state.remindEMails.filter((e) => e !== email)
-            ]
-        })
-    }
+            remindEMails: [...this.state.remindEMails.filter(e => e !== email)],
+        });
+    };
 
     addEMail = () => {
         this.setState({
             remindEMails: [
-                ...this.state.remindEMails.filter((e) => e.toLowerCase() !== this.state.newEMail.toLowerCase()),
-                this.state.newEMail
+                ...this.state.remindEMails.filter(e => e.toLowerCase() !== this.state.newEMail.toLowerCase()),
+                this.state.newEMail,
             ],
-            newEMail: ''
-        })
-    }
+            newEMail: '',
+        });
+    };
 
     handleClose = () => {
         this.props.onClose();
-    }
+    };
 
     handleUpdate = () => {
         this.handleClose();
         this.props.updateRemindSettings({
             remind: this.state.remind,
-            remindTime: moment(this.state.remindTime).format("HH:mm:ss"),
-            remindEMails: this.state.remindEMails.join(";")
+            remindTime: moment(this.state.remindTime).format('HH:mm:ss'),
+            remindEMails: this.state.remindEMails.join(';'),
         });
-    }
+    };
 
     render() {
         const { loading } = this.props;
@@ -104,18 +101,19 @@ export class ReminderSettings extends Component {
             >
                 <DialogTitle>
                     <Title>
-                        <MailIcon style={{ marginRight: '1vmin' }} />{"E-Mail-Erinnerungen"}
+                        <MailIcon style={{ marginRight: '1vmin' }} />
+                        {'E-Mail-Erinnerungen'}
                     </Title>
                 </DialogTitle>
                 <DialogContent style={customContentStyle}>
-                    {loading && "Daten werden geladen"}
+                    {loading && 'Daten werden geladen'}
                     <DialogContentText>
                         <FlexContainer>
                             <Row>
                                 <span>E-Mail-Erinnerung:</span>
                                 <Switch
                                     checked={remind}
-                                    onChange={(event) => this.handleChange('remind', event.target.checked)}
+                                    onChange={event => this.handleChange('remind', event.target.checked)}
                                     disabled={loading}
                                     color="primary"
                                 />
@@ -125,21 +123,20 @@ export class ReminderSettings extends Component {
                                 <TimePicker
                                     ampm={this.props.small}
                                     value={remindTime}
-                                    onChange={(time) => {
-                                        if (time.hours() < 15)
-                                            time.hours(15);
+                                    onChange={time => {
+                                        if (time.hours() < 15) time.hours(15);
                                         time.minutes(Math.floor(time.minutes() / 5) * 5);
-                                        this.handleChange('remindTime', time)
+                                        this.handleChange('remindTime', time);
                                     }}
                                     disabled={loading || !remind}
                                     okToConfirm={false}
                                 />
                             </Row>
-                            {!loading && remind &&
+                            {!loading && remind && (
                                 <div>
                                     <span>Empfänger:</span>
                                     <List>
-                                        {remindEMails.map((email) =>
+                                        {remindEMails.map(email => (
                                             <ListItem key={email}>
                                                 <ListItemText primary={email} />
                                                 <ListItemSecondaryAction>
@@ -152,13 +149,15 @@ export class ReminderSettings extends Component {
                                                     </IconButton>
                                                 </ListItemSecondaryAction>
                                             </ListItem>
-                                        )}
+                                        ))}
                                         <ListItem>
                                             <ListItemText>
                                                 <TextField
                                                     label="Empfänger hinzufügen"
                                                     value={this.state.newEMail}
-                                                    onChange={(event) => this.handleChange('newEMail', event.target.value)}
+                                                    onChange={event =>
+                                                        this.handleChange('newEMail', event.target.value)
+                                                    }
                                                     margin="normal"
                                                     fullWidth
                                                 />
@@ -177,28 +176,22 @@ export class ReminderSettings extends Component {
                                             </ListItemSecondaryAction>
                                         </ListItem>
                                     </List>
-                                </div>}
+                                </div>
+                            )}
                         </FlexContainer>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        onClick={this.handleClose}
-                        color="secondary"
-                    >
+                    <Button onClick={this.handleClose} color="secondary">
                         Abbrechen
                     </Button>
 
-                    <Button
-                        onClick={this.handleUpdate}
-                        disabled={loading}
-                        color="primary"
-                    >
+                    <Button onClick={this.handleUpdate} disabled={loading} color="primary">
                         Absenden
                     </Button>
                 </DialogActions>
             </Dialog>
-        )
+        );
     }
 }
 
@@ -213,7 +206,7 @@ const FlexContainer = styled.div`
 `;
 
 const Row = styled.div`
-    width:100%;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -221,20 +214,23 @@ const Row = styled.div`
     flex-wrap: wrap;
 `;
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     remind: state.user.remind,
     remindTime: state.user.remindTime,
     remindEMails: state.user.remindEMails,
     loading: state.user.loading,
     upn: state.user.upn,
-    small: state.browser.lessThan.medium
+    small: state.browser.lessThan.medium,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    updateRemindSettings: (settings) => dispatch(updateRemindSettings(settings))
+const mapDispatchToProps = dispatch => ({
+    updateRemindSettings: settings => dispatch(updateRemindSettings(settings)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReminderSettings);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ReminderSettings);
 
 function validateEmail(email) {
     var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

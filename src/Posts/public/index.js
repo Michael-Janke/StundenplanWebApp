@@ -11,8 +11,8 @@ import ClockAnalog from './ClockAnalog';
 import CurrentDate from './CurrentDate';
 import DayInfo from './DayInfo';
 /**
- * 
- * @param {import('@material-ui/core').Theme} theme 
+ *
+ * @param {import('@material-ui/core').Theme} theme
  */
 const styles = theme => ({
     root: {
@@ -59,7 +59,7 @@ const styles = theme => ({
     },
     transportInfo: {
         backgroundColor: theme.palette.background.paper,
-        flex: '0 0 128px'
+        flex: '0 0 128px',
     },
     flexGrow: {
         flexGrow: 1,
@@ -83,12 +83,10 @@ const styles = theme => ({
     },
     image: {
         filter: `invert(100%) drop-shadow(1px 1px 0px rgba(0,0,0,0.2))`,
-    }
+    },
 });
 
 class Posts extends React.Component {
-
-
     componentWillMount() {
         this.props.getPosts();
     }
@@ -97,56 +95,51 @@ class Posts extends React.Component {
         const { classes, posts } = this.props;
         return (
             <div className={classes.root}>
-
                 <AppBar position="static">
                     <Toolbar className={classes.toolbar}>
-                        <img className={classes.image} src={require('../../Common/icons/wolkenberg.png')} alt=""></img>
-                        <ClockAnalog/>
+                        <img className={classes.image} src={require('../../Common/icons/wolkenberg.png')} alt="" />
+                        <ClockAnalog />
                         <div className={classes.dateTime}>
-                            <CurrentDate></CurrentDate>
-                            <ClockDigital></ClockDigital>
+                            <CurrentDate />
+                            <ClockDigital />
                         </div>
-                        <DayInfo></DayInfo>
+                        <DayInfo />
                     </Toolbar>
                 </AppBar>
                 <div className={classes.layout}>
                     <Grid container item className={classes.flexGrow}>
                         <Grid item xs={3}>
-                            <div className={classes.sidebar}>
-
-                            </div>
+                            <div className={classes.sidebar} />
                         </Grid>
                         <Grid item xs={9} className={classes.main}>
                             <Typography variant="h2" color="textSecondary" gutterBottom>
                                 Neuigkeiten
                             </Typography>
                             <Grid container component={TransitionGroup} className={classes.post}>
-                                {posts && posts.map(post => (
-                                    <CSSTransition
-                                        classNames={{
-                                            enter: classes.postEnter,
-                                            enterActive: classes.postEnterActive,
-                                            exit: classes.postExit,
-                                            exitActive: classes.postExitActive,
-                                        }}
-                                        key={post.POST_ID}
-                                        timeout={500}>
-                                        <Grid item xs className={classes.postGridItem}>
-                                            <Post overflow post={post} />
-                                        </Grid>
-                                    </CSSTransition>
-                                ))}
+                                {posts &&
+                                    posts.map(post => (
+                                        <CSSTransition
+                                            classNames={{
+                                                enter: classes.postEnter,
+                                                enterActive: classes.postEnterActive,
+                                                exit: classes.postExit,
+                                                exitActive: classes.postExitActive,
+                                            }}
+                                            key={post.POST_ID}
+                                            timeout={500}
+                                        >
+                                            <Grid item xs className={classes.postGridItem}>
+                                                <Post overflow post={post} />
+                                            </Grid>
+                                        </CSSTransition>
+                                    ))}
                             </Grid>
                         </Grid>
-                        
                     </Grid>
                 </div>
-                <Grid xs={12} item className={classes.transportInfo}>
-
-
-                </Grid>
+                <Grid xs={12} item className={classes.transportInfo} />
             </div>
-        )
+        );
     }
 }
 
@@ -156,7 +149,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     getPosts: () => dispatch(getPosts()),
-
 });
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Posts));
+export default withStyles(styles)(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(Posts)
+);

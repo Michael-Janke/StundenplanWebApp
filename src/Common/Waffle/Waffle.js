@@ -2,8 +2,7 @@ import React from 'react';
 import { withStyles, ButtonBase, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 const styles = theme => ({
-    root: {
-    },
+    root: {},
     button: {
         display: 'flex',
         flex: 1,
@@ -15,19 +14,17 @@ const styles = theme => ({
         '&:hover': {
             color: 'var(--color)',
             boxShadow: `0 .2rem .4rem -.075rem rgba(0,0,0,.1)`,
-        }
+        },
     },
     ripple: {
         color: 'var(--color)',
     },
-    icon: {
-    },
+    icon: {},
     name: {
         paddingLeft: theme.spacing.unit * 1.5,
         color: 'inherit',
-    }
+    },
 });
-
 
 const Waffle = ({ classes, name, waffle, onClick }) => {
     return (
@@ -36,26 +33,22 @@ const Waffle = ({ classes, name, waffle, onClick }) => {
             className={classes.button}
             style={{ '--color': waffle.color }}
             onClick={onClick}
-            {...(
-                waffle.router ?
-                    {
-                        component: Link,
-                        to: waffle.link,
-                        replace: false,
-                    }
-                    : {
-                        href: waffle.link,
-                        component: 'a',
-                        target: "_blank",
-                    }
-            )}>
+            {...(waffle.router
+                ? {
+                      component: Link,
+                      to: waffle.link,
+                      replace: false,
+                  }
+                : {
+                      href: waffle.link,
+                      component: 'a',
+                      target: '_blank',
+                  })}
+        >
             <waffle.icon className={classes.icon} />
-            <Typography className={classes.name}>
-                {name}
-            </Typography>
+            <Typography className={classes.name}>{name}</Typography>
         </ButtonBase>
     );
-}
+};
 
-
-export default withStyles(styles)(Waffle)
+export default withStyles(styles)(Waffle);

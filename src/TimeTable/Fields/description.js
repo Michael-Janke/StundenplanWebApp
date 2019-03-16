@@ -13,7 +13,7 @@ function Description({ upn, children, type, onClick }) {
             </ListItemIcon>
             <ListItemText primary={children} />
         </ListItem>
-    )
+    );
 }
 
 export default Description;

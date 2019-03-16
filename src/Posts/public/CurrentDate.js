@@ -6,10 +6,9 @@ import { classNames } from '../../Common/const';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        color: 'white'
+        color: 'white',
     },
 }));
-
 
 function CurrentDate({ className }) {
     const classes = useStyles();

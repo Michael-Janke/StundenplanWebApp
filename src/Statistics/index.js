@@ -14,15 +14,14 @@ import moment from 'moment';
 const styles = theme => ({
     root: {
         padding: theme.spacing.unit,
-    }
+    },
 });
 
 class Statistics extends React.Component {
-
     state = {
         week: 0,
         year: 0,
-    }
+    };
 
     componentWillMount() {
         this.props.loadLogIns(this.state.week, this.state.year);
@@ -30,7 +29,9 @@ class Statistics extends React.Component {
 
     render() {
         const { classes, logIns } = this.props;
-        const data = logIns ? logIns.map(entry => ({ date: moment(entry.DATE).format("DD.MM"), count: entry.COUNT })) : [];
+        const data = logIns
+            ? logIns.map(entry => ({ date: moment(entry.DATE).format('DD.MM'), count: entry.COUNT }))
+            : [];
         return (
             <div className={classes.root}>
                 <Typography variant="h2">Anmeldungen</Typography>
@@ -49,11 +50,14 @@ class Statistics extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     logIns: state.admin.LogIn,
 });
 const mapDispatchToProps = dispatch => ({
     loadLogIns: (week, year) => dispatch({ type: 'GET_LOGIN_STATISTICS', payload: { action: 'LogIn', week, year } }),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Statistics));
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withStyles(styles)(Statistics));

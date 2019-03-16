@@ -1,4 +1,4 @@
-import { createSelector } from "reselect";
+import { createSelector } from 'reselect';
 
 // state.user changes reference everytime something changes in user reducer
 // one solution could be putting non-userinformation into another level (state.user.user)

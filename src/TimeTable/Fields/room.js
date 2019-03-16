@@ -8,19 +8,12 @@ import Description from './description';
 function Container({ className, description, type, children, setTimeTable, room }) {
     if (description) {
         return (
-            <Description
-                onClick={(() => setTimeTable('room', room.ROOM_ID))}
-                type="room"
-                instead={type}>
+            <Description onClick={() => setTimeTable('room', room.ROOM_ID)} type="room" instead={type}>
                 {children}
             </Description>
-        )
+        );
     }
-    return (
-        <div className={className}>
-            {children}
-        </div>
-    )
+    return <div className={className}>{children}</div>;
 }
 
 const RoomContainer = type => room => ({ small, themeClasses, description, setTimeTable }) => {
@@ -31,7 +24,8 @@ const RoomContainer = type => room => ({ small, themeClasses, description, setTi
                 description={description}
                 setTimeTable={setTimeTable}
                 room={room.old}
-                className={themeClasses['room-old']}>
+                className={themeClasses['room-old']}
+            >
                 {room.old ? room.old.NAME : '-'}
             </Container>
         );
@@ -42,7 +36,8 @@ const RoomContainer = type => room => ({ small, themeClasses, description, setTi
                 description={description}
                 setTimeTable={setTimeTable}
                 room={room.new}
-                className={themeClasses[changed ? 'room-new' : 'room']}>
+                className={themeClasses[changed ? 'room-new' : 'room']}
+            >
                 {room.new ? room.new.NAME : '-'}
             </Container>
         );
@@ -53,17 +48,17 @@ const RoomContainer = type => room => ({ small, themeClasses, description, setTi
                 description={description}
                 setTimeTable={setTimeTable}
                 room={room.new}
-                className={themeClasses[changed ? 'room-new' : 'room']}>
+                className={themeClasses[changed ? 'room-new' : 'room']}
+            >
                 {room.substitution ? room.substitution.NAME : '-'}
             </Container>
         );
     }
-}
+};
 
-export const roomStyles = (theme) => ({
-    'room': {
+export const roomStyles = theme => ({
+    room: {
         fontSize: '70%',
-
     },
     'room-new': {
         fontSize: '70%',

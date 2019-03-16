@@ -20,8 +20,8 @@ const styles = theme => ({
         display: 'flex',
         overflowY: 'hidden',
         [theme.breakpoints.down('sm')]: {
-            display: 'block'
-        }
+            display: 'block',
+        },
     },
     root: {
         display: 'flex',
@@ -39,7 +39,7 @@ const styles = theme => ({
     },
     pageA4: {
         height: 800,
-        width: `${800 * 1 / Math.sqrt(2)}px`,
+        width: `${(800 * 1) / Math.sqrt(2)}px`,
     },
     formControl: {
         margin: theme.spacing.unit,
@@ -63,27 +63,21 @@ class PrintDialog extends React.PureComponent {
 
     onPrint = () => {
         this.setState({ openPrint: true });
-    }
+    };
     handlePrintClose = () => {
         this.setState({ openPrint: false });
         this.props.onClose();
-    }
+    };
 
     render() {
         const { open, onClose, classes } = this.props;
         return (
-            <Dialog
-                open={open}
-                onClose={onClose}
-                fullWidth
-                maxWidth="md"
-                TransitionComponent={Grow}
-            >
+            <Dialog open={open} onClose={onClose} fullWidth maxWidth="md" TransitionComponent={Grow}>
                 <div className={classes.wrapper}>
                     <div className={classes.root}>
                         <DialogTitle>
                             <ListItemIcon>
-                                <PrintIcon></PrintIcon>
+                                <PrintIcon />
                             </ListItemIcon>
                             Drucken
                         </DialogTitle>
@@ -123,7 +117,8 @@ class PrintDialog extends React.PureComponent {
                                                 <Checkbox
                                                     checked={this.state.substitutions}
                                                     onChange={this.handleChange}
-                                                    name="substitutions" />
+                                                    name="substitutions"
+                                                />
                                             }
                                             label="Vertretungen anzeigen"
                                         />
@@ -132,7 +127,8 @@ class PrintDialog extends React.PureComponent {
                                                 <Checkbox
                                                     checked={!this.state.exact}
                                                     onChange={this.handleChange}
-                                                    name="exact" />
+                                                    name="exact"
+                                                />
                                             }
                                             label="Hintergrund anzeigen"
                                         />
@@ -143,7 +139,7 @@ class PrintDialog extends React.PureComponent {
                         <DialogActions>
                             <Button onClick={onClose} color="secondary">
                                 Abbrechen
-                        </Button>
+                            </Button>
                             <Button onClick={this.onPrint} color="primary">
                                 Drucken
                             </Button>
@@ -163,7 +159,7 @@ class PrintDialog extends React.PureComponent {
                     </div>
                 </div>
             </Dialog>
-        )
+        );
     }
 }
 

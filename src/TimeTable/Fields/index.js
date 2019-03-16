@@ -1,17 +1,20 @@
-import { SUBJECT_COLORS_MAP } from "../../Common/const";
-import RoomContainer, { roomStyles } from "./room";
-import SubjectContainer, { subjectStyles } from "./subject";
-import TeachersContainer, { teacherStyles } from "./teachers";
-import ClassesContainer, { classStyles } from "./classes";
+import { SUBJECT_COLORS_MAP } from '../../Common/const';
+import RoomContainer, { roomStyles } from './room';
+import SubjectContainer, { subjectStyles } from './subject';
+import TeachersContainer, { teacherStyles } from './teachers';
+import ClassesContainer, { classStyles } from './classes';
 
-const extractSubject = (name) => {
-    return name.replace(/[0-9]/g, "").substring(0, 3).toLowerCase();
-}
+const extractSubject = name => {
+    return name
+        .replace(/[0-9]/g, '')
+        .substring(0, 3)
+        .toLowerCase();
+};
 
-const ColorBar = (subject) => {
+const ColorBar = subject => {
     const object = subject.new || subject.old;
-    return object && SUBJECT_COLORS_MAP[extractSubject(object.NAME)]
-}
+    return object && SUBJECT_COLORS_MAP[extractSubject(object.NAME)];
+};
 
 export const styles = theme => ({
     ...subjectStyles(theme),
@@ -25,7 +28,7 @@ export function getFields(type) {
         student: getStudentFields,
         teacher: getTeacherFields,
         room: getRoomFields,
-        class: getStudentFields
+        class: getStudentFields,
     }[type.toLowerCase()];
 }
 
@@ -39,16 +42,13 @@ export function getStudentFields(lesson) {
                 RoomContainer('new')(room),
                 TeachersContainer('new')(teachers),
             ],
-            old: lesson.isOld && [
-                SubjectContainer('old')(subject),
-                TeachersContainer('old')(teachers),
-            ],
+            old: lesson.isOld && [SubjectContainer('old')(subject), TeachersContainer('old')(teachers)],
             substitution: lesson.substitutionInfo && [
                 SubjectContainer(lesson.substitutionInfo)(subject),
                 TeachersContainer(lesson.substitutionInfo)(teachers),
             ],
-        }
-    }
+        },
+    };
 }
 
 export function getTeacherFields(lesson) {
@@ -61,17 +61,13 @@ export function getTeacherFields(lesson) {
                 ClassesContainer('new')(classes),
                 RoomContainer('new')(room),
             ],
-            old: lesson.isOld && [
-                SubjectContainer('old')(subject),
-                ClassesContainer('old')(classes),
-            ],
+            old: lesson.isOld && [SubjectContainer('old')(subject), ClassesContainer('old')(classes)],
             substitution: lesson.substitutionInfo && [
                 SubjectContainer(lesson.substitutionInfo)(subject),
                 TeachersContainer(lesson.substitutionInfo)(teachers),
             ],
-
         },
-    }
+    };
 }
 
 export function getRoomFields(lesson) {
@@ -84,10 +80,7 @@ export function getRoomFields(lesson) {
                 ClassesContainer('new')(classes),
                 TeachersContainer('new')(teachers),
             ],
-            old: lesson.isOld && [
-                ClassesContainer('old')(classes),
-                TeachersContainer('old')(teachers),
-            ]
+            old: lesson.isOld && [ClassesContainer('old')(classes), TeachersContainer('old')(teachers)],
         },
-    }
+    };
 }

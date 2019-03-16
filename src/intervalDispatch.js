@@ -1,10 +1,10 @@
-import { getAuthContext } from "./Common/Authentication/storage";
+import { getAuthContext } from './Common/Authentication/storage';
 
-const enhanceStore = (createStore) => (reducer, preloadedState, enhancer) => {
+const enhanceStore = createStore => (reducer, preloadedState, enhancer) => {
     const store = createStore(reducer, preloadedState, enhancer);
-    
+
     const dispatchReduxAction = () => {
-        const isAllowed = getAuthContext().isAllowed('authentication', 'token')
+        const isAllowed = getAuthContext().isAllowed('authentication', 'token');
         if (!isAllowed && isAllowed !== undefined) {
             stopInterval();
             return;
@@ -31,17 +31,17 @@ const enhanceStore = (createStore) => (reducer, preloadedState, enhancer) => {
         stopInterval();
         intervalId = setInterval(dispatchReduxAction, 1000 * 60);
         dispatchReduxAction();
-    }
+    };
     const stopInterval = () => {
         if (intervalId) {
             clearInterval(intervalId);
             intervalId = undefined;
         }
-    }
+    };
     startInterval();
     window.addEventListener('blur', stopInterval);
     window.addEventListener('focus', startInterval);
-    
+
     if (module.hot) {
         module.hot.dispose(() => {
             stopInterval();
@@ -50,6 +50,6 @@ const enhanceStore = (createStore) => (reducer, preloadedState, enhancer) => {
         });
     }
     return store;
-}
+};
 
 export default enhanceStore;

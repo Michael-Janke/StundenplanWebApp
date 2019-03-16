@@ -1,4 +1,4 @@
-import { getTimetableCacheKey, getSubstitutionsCacheKey } from "./const";
+import { getTimetableCacheKey, getSubstitutionsCacheKey } from './const';
 
 const cacheService = store => next => action => {
     let state = store.getState();
@@ -6,13 +6,13 @@ const cacheService = store => next => action => {
         return next(action);
     }
     switch (action.type) {
-        case "GET_TIMETABLE": {
+        case 'GET_TIMETABLE': {
             if (!state.timetable.timetables[getTimetableCacheKey(action.payload)]) {
                 next(action);
             }
             break;
         }
-        case "GET_SUBSTITUTIONS": {
+        case 'GET_SUBSTITUTIONS': {
             if (!state.timetable.substitutions[getSubstitutionsCacheKey(action.payload)]) {
                 next(action);
             }
@@ -20,7 +20,7 @@ const cacheService = store => next => action => {
         }
         default:
             next(action);
-    };
+    }
 };
 
 export default cacheService;

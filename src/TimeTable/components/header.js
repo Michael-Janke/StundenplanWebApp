@@ -64,27 +64,38 @@ const styles = theme => ({
         textOverflow: 'clip',
         [theme.breakpoints.down('sm')]: {
             maxWidth: 0,
-        }
+        },
     },
     offlineIcon: {
         transition: theme.transitions.create(['margin-right']),
         [theme.breakpoints.down('sm')]: {
             marginRight: 0,
-        }
-    }
+        },
+    },
 });
 
 const TimeTableHeader = ({ classes, offline, lastCheck, small, date, id, type, print, isMin, isMax, ...other }) => {
-    const dateIterator = date ? date.clone().startOf('day').weekday(0) : moment().startOf('day').weekday(0);
+    const dateIterator = date
+        ? date
+              .clone()
+              .startOf('day')
+              .weekday(0)
+        : moment()
+              .startOf('day')
+              .weekday(0);
     return (
         <React.Fragment>
             <div className={classNames(classes.tableToolbar, classes.tableHeader)}>
                 <CollapseVertical in={offline}>
                     <ListItem className={classes.offline} disableGutters>
-                        <Tooltip title={lastCheck && "Letzte Verbindung " + lastCheck}>
-                            <ListItemIcon className={classes.offlineIcon}><OfflinePin fontSize="small" /></ListItemIcon>
+                        <Tooltip title={lastCheck && 'Letzte Verbindung ' + lastCheck}>
+                            <ListItemIcon className={classes.offlineIcon}>
+                                <OfflinePin fontSize="small" />
+                            </ListItemIcon>
                         </Tooltip>
-                        <Typography className={classes.offlineText} color="textSecondary" noWrap>Offline</Typography>
+                        <Typography className={classes.offlineText} color="textSecondary" noWrap>
+                            Offline
+                        </Typography>
                     </ListItem>
                 </CollapseVertical>
                 <TimeTableInformation id={id} type={type} print={print} small={small} />
@@ -93,11 +104,11 @@ const TimeTableHeader = ({ classes, offline, lastCheck, small, date, id, type, p
                         <IconButton disabled={isMin} onClick={other.setPreviousWeek}>
                             <BackIcon />
                         </IconButton>
-                        {small ||
+                        {small || (
                             <IconButton onClick={other.setThisWeek}>
                                 <ResetIcon />
                             </IconButton>
-                        }
+                        )}
                         <IconButton disabled={isMax} onClick={other.setNextWeek}>
                             <NextIcon />
                         </IconButton>
@@ -106,12 +117,15 @@ const TimeTableHeader = ({ classes, offline, lastCheck, small, date, id, type, p
             </div>
             <Table className={classes.tableHeader}>
                 <TableHead>
-                    <TableRow
-                        className={classNames(classes.tableHeaderRow, small && classes.tableHeaderRowSmall)}>
+                    <TableRow className={classNames(classes.tableHeaderRow, small && classes.tableHeaderRowSmall)}>
                         <PeriodCell small={small} />
                         {WEEKDAY_NAMES.map((day, i) => {
                             const mDate = dateIterator.clone().add(i, 'days');
-                            const isToday = date && moment().startOf('day').diff(mDate, 'days') === 0;
+                            const isToday =
+                                date &&
+                                moment()
+                                    .startOf('day')
+                                    .diff(mDate, 'days') === 0;
                             return (
                                 <TableCell
                                     key={i}
@@ -128,7 +142,7 @@ const TimeTableHeader = ({ classes, offline, lastCheck, small, date, id, type, p
                 </TableHead>
             </Table>
         </React.Fragment>
-    )
+    );
 };
 
 const mapStateToProps = state => ({
@@ -141,4 +155,7 @@ const mapDispatchToProps = dispatch => ({
     setPreviousWeek: () => dispatch(changeWeek(-1)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(TimeTableHeader));
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withStyles(styles)(TimeTableHeader));

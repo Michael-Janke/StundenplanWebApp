@@ -1,17 +1,16 @@
-
 const defaultState = {
     open: false,
 };
 
 function drawerReducer(state = defaultState, action) {
     switch (action.type) {
-        case "OPEN_DRAWER":
+        case 'OPEN_DRAWER':
             return { ...state, open: true };
-        case "CLOSE_DRAWER":
+        case 'CLOSE_DRAWER':
             return { ...state, open: false };
-        case "TOGGLE_DRAWER":
+        case 'TOGGLE_DRAWER':
             return { ...state, open: !state.open };
-        default: ;
+        default:
     }
     return state;
 }

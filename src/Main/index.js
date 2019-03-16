@@ -1,14 +1,7 @@
-import React, {
-    Component
-} from "react";
-import {
-    connect
-} from "react-redux";
-import {
-    loadJoinedTeams,
-    loadAssignments
-} from "./actions";
-import TimeTable from "../TimeTable";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { loadJoinedTeams, loadAssignments } from './actions';
+import TimeTable from '../TimeTable';
 
 class Main extends Component {
     constructor(props) {
@@ -18,22 +11,22 @@ class Main extends Component {
     }
 
     render() {
-        return (
-            <TimeTable />
-        );
+        return <TimeTable />;
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         loadJoinedTeams: () => dispatch(loadJoinedTeams()),
-        loadAssignments: () => dispatch(loadAssignments())
+        loadAssignments: () => dispatch(loadAssignments()),
     };
 };
 
 const mapStateToProps = state => {
-    return {
-    };
+    return {};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Main);

@@ -17,92 +17,90 @@ const initialState = {
 
 export default function userReducer(state = initialState, action = {}) {
     switch (action.type) {
-        case "LOGOUT": {
-            return {
-                
-            };
+        case 'LOGOUT': {
+            return {};
         }
-        case "COUNTER_RECEIVED":
+        case 'COUNTER_RECEIVED':
             return {
                 ...state,
                 counterChanged: state.counter !== action.payload.COUNTER ? 'detected' : 'none',
                 counter: action.payload.COUNTER,
                 lastUpdate: +moment(action.payload.LAST_CHANGE.date),
                 lastCheck: +moment(),
-                offline: false
+                offline: false,
             };
-        case "REFRESH_COMPLETE":
+        case 'REFRESH_COMPLETE':
             return {
                 ...state,
                 counterChanged: 'none',
             };
-        case "REFRESH_LOADING":
+        case 'REFRESH_LOADING':
             return {
                 ...state,
                 counterChanged: 'loading',
             };
-        case "CHANGE_THEME":
+        case 'CHANGE_THEME':
             return {
                 ...state,
                 themeType: action.payload,
             };
-        case "COUNTER_ERROR":
+        case 'COUNTER_ERROR':
             return {
                 ...state,
-                offline: true
+                offline: true,
             };
-        case "GET_ME":
+        case 'GET_ME':
             return {
                 ...state,
-                loading: true
+                loading: true,
             };
-        case "GET_ME_ERROR":
+        case 'GET_ME_ERROR':
             return {
                 ...state,
-                loading: false
+                loading: false,
             };
-        case "GET_ME_RECEIVED":
+        case 'GET_ME_RECEIVED':
             return {
                 ...state,
                 loading: false,
                 ...action.payload,
             };
-        case "PATCH_REMIND_SETTINGS":
+        case 'PATCH_REMIND_SETTINGS':
             return {
                 ...state,
-                loading: true
+                loading: true,
             };
-        case "FEEDBACK_RECEIVED":
+        case 'FEEDBACK_RECEIVED':
             return {
                 ...state,
                 feedbackSuccess: true,
-            }
-        case "PROFILE_PICTURE_RECEIVED":
+            };
+        case 'PROFILE_PICTURE_RECEIVED':
             return {
                 ...state,
-                profilePicture: URL.createObjectURL(action.payload.blob)
+                profilePicture: URL.createObjectURL(action.payload.blob),
             };
-        case "PROFILE_PICTURE_SMALL_RECEIVED":
+        case 'PROFILE_PICTURE_SMALL_RECEIVED':
             return {
                 ...state,
-                profilePictureSmall: URL.createObjectURL(action.payload.blob)
+                profilePictureSmall: URL.createObjectURL(action.payload.blob),
             };
-        case "SET_NOTIFICATION_RECEIVED":
+        case 'SET_NOTIFICATION_RECEIVED':
             return {
                 ...state,
-                notificationToken: action.payload.newToken && action.payload.newToken.TOKEN
+                notificationToken: action.payload.newToken && action.payload.newToken.TOKEN,
             };
-        case "ADD_FAVORITE":
+        case 'ADD_FAVORITE':
             return {
                 ...state,
-                favorites: [...state.favorites, action.payload]
+                favorites: [...state.favorites, action.payload],
             };
-        case "REMOVE_FAVORITE":
+        case 'REMOVE_FAVORITE':
             return {
                 ...state,
-                favorites: [...state.favorites.filter((fav) => fav !== action.payload)]
+                favorites: [...state.favorites.filter(fav => fav !== action.payload)],
             };
- 
+
         default:
             return state;
     }

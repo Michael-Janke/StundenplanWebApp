@@ -9,35 +9,35 @@ class OpenOfficeLink extends React.Component {
 
     openUrl = () => {
         window.open(this.props.url.web, '_blank');
-    }
+    };
 
     openClient = () => {
-        window.addEventListener("blur", this.successClient);
-        if (navigator.platform === "Win32") {
+        window.addEventListener('blur', this.successClient);
+        if (navigator.platform === 'Win32') {
             this.iframe.current.src = this.props.url.client;
         } else {
             this.openUrl();
         }
 
         let timer = setTimeout(this.errorClient, 6000);
-        this.setState({ webTimer: timer })
-    }
+        this.setState({ webTimer: timer });
+    };
 
     errorClient = () => {
-        this.iframe.current.src = "";
+        this.iframe.current.src = '';
         this.setState({ webTimer: undefined, useUrl: true });
-    }
+    };
 
     successClient = () => {
         clearTimeout(this.state.webTimer);
         this.setState({ webTimer: undefined });
-        window.removeEventListener("blur", this.successClient);
-        this.iframe.current.src = "";
-    }
+        window.removeEventListener('blur', this.successClient);
+        this.iframe.current.src = '';
+    };
 
     componentWillUnmount = () => {
         this.successClient();
-    }
+    };
 
     render() {
         const { url, icon } = this.props;
@@ -49,11 +49,7 @@ class OpenOfficeLink extends React.Component {
                     disabled={!url || !!this.state.webTimer}
                     button
                 >
-                    <ListItemIcon>
-                        {(!url || this.state.webTimer)
-                            ? <CircularProgress size={24} />
-                            : icon}
-                    </ListItemIcon>
+                    <ListItemIcon>{!url || this.state.webTimer ? <CircularProgress size={24} /> : icon}</ListItemIcon>
                     {this.props.children}
                 </ListItem>
             </React.Fragment>

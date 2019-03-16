@@ -13,16 +13,15 @@ const useStyles = makeStyles(theme => ({
     },
     time: {
         color: 'white',
-        fontWeight: 200
+        fontWeight: 200,
     },
     seconds: {
-        padding: theme.spacing.unit*2,
+        padding: theme.spacing.unit * 2,
         color: 'rgba(255,255,255,0.7)',
-    }
+    },
 }));
 
-
-function Clock({className}) {
+function Clock({ className }) {
     const classes = useStyles();
     const [time, setTime] = useState(() => +new Date());
     useEffect(() => {
@@ -46,6 +45,5 @@ function Clock({className}) {
         </div>
     );
 }
-
 
 export default Clock;

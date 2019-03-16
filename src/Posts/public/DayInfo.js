@@ -77,7 +77,7 @@ function DayInfo({ dayInfo = [], getDayInfo }) {
             setCurrentId(newId);
         }, 20 * 1000);
         return () => clearInterval(id);
-    })
+    });
     const info = dayInfo[currentId] || {};
     return (
         <div className={classes.root}>
@@ -91,7 +91,8 @@ function DayInfo({ dayInfo = [], getDayInfo }) {
                         exitActive: classes.headerExitActive,
                     }}
                     key={info.header}
-                    timeout={300}>
+                    timeout={300}
+                >
                     <Typography variant="h4" color="inherit">
                         {info.header}
                     </Typography>
@@ -107,7 +108,8 @@ function DayInfo({ dayInfo = [], getDayInfo }) {
                         exitActive: classes.textExitActive,
                     }}
                     key={info.text}
-                    timeout={300}>
+                    timeout={300}
+                >
                     <div>
                         <Typography variant="body2" color="inherit">
                             {info.text}
@@ -119,15 +121,18 @@ function DayInfo({ dayInfo = [], getDayInfo }) {
                 </CSSTransition>
             </TransitionGroup>
         </div>
-    )
+    );
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     dayInfo: state.tv.dayInfo,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     getDayInfo: () => dispatch(getDayInfo()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DayInfo);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(DayInfo);

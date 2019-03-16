@@ -5,23 +5,16 @@ import Immutable from 'immutable';
 import { Typography } from '@material-ui/core';
 
 const blockRenderMap = Immutable.Map({
-    'small': {
+    small: {
         element: 'span',
-        wrapper: <Typography variant="body2" component="div"></Typography>
+        wrapper: <Typography variant="body2" component="div" />,
     },
-    'unstyled': {
+    unstyled: {
         element: 'span',
-        wrapper: <Typography variant="body1" component="div"></Typography>
-    }
+        wrapper: <Typography variant="body1" component="div" />,
+    },
 });
 
-export default React.forwardRef(function (props, ref) {
-    return (
-        <Editor
-            {...props}
-            ref={ref}
-            blockRenderMap={blockRenderMap}
-            customStyleMap={COLOR_STYLE_MAP}
-        />
-    )
-})
+export default React.forwardRef(function(props, ref) {
+    return <Editor {...props} ref={ref} blockRenderMap={blockRenderMap} customStyleMap={COLOR_STYLE_MAP} />;
+});

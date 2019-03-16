@@ -4,11 +4,7 @@ import { getToken } from '../Authentication';
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
 
-const timeout = (timeout, success) =>
-    new Promise((resolve, reject) =>
-        setTimeout(resolve, timeout)
-    );
-
+const timeout = (timeout, success) => new Promise((resolve, reject) => setTimeout(resolve, timeout));
 
 async function fetchData(url, options) {
     if (window.AbortController) {
@@ -16,9 +12,9 @@ async function fetchData(url, options) {
         var signal = controller.signal;
         timeout(10 * 1000).then(() => controller.abort());
     }
-    let response = await fetch(url, { ...options, signal }).catch((err) => {
+    let response = await fetch(url, { ...options, signal }).catch(err => {
         if (/abort/.test(err.message)) {
-            throw new Error("fetch timed out");
+            throw new Error('fetch timed out');
         }
         throw err;
     });
@@ -28,26 +24,26 @@ async function fetchData(url, options) {
     throw await response.json();
 }
 
-export const requestApiGenerator = next => async (endpoint, route, action, METHOD = "GET", body) => {
+export const requestApiGenerator = next => async (endpoint, route, action, METHOD = 'GET', body) => {
     let token;
     let data;
     try {
         if (!navigator.onLine) {
-            throw new Error("navigator offline");
+            throw new Error('navigator offline');
         }
         token = await getToken(endpoint);
         data = await fetchData(endpoint + route, {
             method: METHOD,
             body,
             headers: {
-                "Authorization": 'Bearer ' + token,
-                "Content-Type": "Application/Json"
-            }
+                Authorization: 'Bearer ' + token,
+                'Content-Type': 'Application/Json',
+            },
         });
         next({
             ...action,
             type: action.type + '_RECEIVED',
-            payload: data
+            payload: data,
         });
         return;
     } catch (err) {
@@ -55,63 +51,66 @@ export const requestApiGenerator = next => async (endpoint, route, action, METHO
         next({
             ...action,
             type: action.type + '_ERROR',
-            payload: error.message ? { text: error.message } : error
-        })
+            payload: error.message ? { text: error.message } : error,
+        });
     }
-}
+};
 
 export const getImageGenerator = next => (endpoint, route, action) => {
-    getToken(endpoint).then((token) =>
+    getToken(endpoint).then(token =>
         fetch(endpoint + route, {
             headers: {
-                "Authorization": 'Bearer ' + token
-            }
+                Authorization: 'Bearer ' + token,
+            },
         })
             .then(res => res.blob())
-            .then((blob) =>
+            .then(blob =>
                 next({
                     ...action,
                     type: action.type + '_RECEIVED',
-                    payload: { blob }
+                    payload: { blob },
                 })
             )
-            .catch((err) =>
+            .catch(err =>
                 next({
                     type: action.type + '_ERROR',
-                    payload: err
+                    payload: err,
                 })
             )
-    )
-}
+    );
+};
 
 export const getBatchGenerator = next => (payload, name) => {
-    getToken(GRAPH_URL).then((token) =>
+    getToken(GRAPH_URL).then(token =>
         fetch(GRAPH_URL + 'v1.0/$batch', {
-            method: "POST",
+            method: 'POST',
             body: JSON.stringify(payload),
             headers: {
-                "Authorization": 'Bearer ' + token,
-                "Content-Type": "Application/Json"
-            }
+                Authorization: 'Bearer ' + token,
+                'Content-Type': 'Application/Json',
+            },
         })
             .then(res => res.json())
-            .then((res) =>
+            .then(res =>
                 next({
                     type: name + '_RECEIVED',
-                    payload: res.responses.reduce((acc, response) => ({
-                        ...acc,
-                        [response.id]: {
-                            img: response.body.error ? null : response.body,
-                            expires: +moment().add('7', 'days')
-                        }
-                    }), {})
+                    payload: res.responses.reduce(
+                        (acc, response) => ({
+                            ...acc,
+                            [response.id]: {
+                                img: response.body.error ? null : response.body,
+                                expires: +moment().add('7', 'days'),
+                            },
+                        }),
+                        {}
+                    ),
                 })
             )
-            .catch((err) =>
+            .catch(err =>
                 next({
                     type: name + '_ERROR',
-                    payload: err
+                    payload: err,
                 })
             )
-    )
-}
+    );
+};

@@ -58,8 +58,7 @@ class Diashow extends React.Component {
         const images = post.IMAGES;
         const maxSteps = images.length;
 
-
-        return ( 
+        return (
             <div className={classes.root}>
                 <Paper square elevation={0} className={classes.header}>
                     <Typography>{images[activeStep].TITLE}</Typography>

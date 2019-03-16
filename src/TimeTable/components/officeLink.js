@@ -11,16 +11,16 @@ const styles = theme => ({
     button: {
         justifyContent: 'space-between',
         margin: theme.spacing.unit,
-    }
+    },
 });
 
 class OfficeLink extends React.Component {
     constructor(props) {
         super(props);
-        if (props.type === "teams" && !props.url) {
+        if (props.type === 'teams' && !props.url) {
             props.getTeamsWebUrl(props.id);
         }
-        if (props.type === "notebook" && !props.url) {
+        if (props.type === 'notebook' && !props.url) {
             props.getTeamsNotebook(props.id);
         }
     }
@@ -29,11 +29,11 @@ class OfficeLink extends React.Component {
         const { url } = this.props;
         const Icon = {
             teams: Icons.Teams,
-            notebook: Icons.OneNote
+            notebook: Icons.OneNote,
         }[this.props.type];
         const text = {
-            teams: "Team öffnen",
-            notebook: "Notizbuch öffnen"
+            teams: 'Team öffnen',
+            notebook: 'Notizbuch öffnen',
         }[this.props.type];
         return (
             <OpenOfficeButton url={url} icon={<Icon.icon />}>
@@ -43,13 +43,15 @@ class OfficeLink extends React.Component {
     }
 }
 
-
-export default connect(({ teams }, { id, type }) => ({
-    url: {
-        teams: teams.teamUrls && teams.teamUrls[id],
-        notebook: teams.notebookUrls && teams.notebookUrls[id],
-    }[type]
-}), (dispatch) => ({
-    getTeamsWebUrl: (id) => dispatch(getTeamsWebUrl(id)),
-    getTeamsNotebook: (id) => dispatch(getTeamsNotebook(id))
-}))(withStyles(styles)(OfficeLink));
+export default connect(
+    ({ teams }, { id, type }) => ({
+        url: {
+            teams: teams.teamUrls && teams.teamUrls[id],
+            notebook: teams.notebookUrls && teams.notebookUrls[id],
+        }[type],
+    }),
+    dispatch => ({
+        getTeamsWebUrl: id => dispatch(getTeamsWebUrl(id)),
+        getTeamsNotebook: id => dispatch(getTeamsNotebook(id)),
+    })
+)(withStyles(styles)(OfficeLink));

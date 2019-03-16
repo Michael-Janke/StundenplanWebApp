@@ -10,8 +10,8 @@ import { addPost, editPost, getPosts } from './actions';
 import { withRouter } from 'react-router';
 
 /**
- * 
- * @param {import('@material-ui/core').Theme} theme 
+ *
+ * @param {import('@material-ui/core').Theme} theme
  */
 const styles = theme => ({
     root: {
@@ -20,7 +20,7 @@ const styles = theme => ({
         boxSizing: 'border-box',
         overflowY: 'auto',
         height: '100%',
-        backgroundColor: theme.palette.background.default
+        backgroundColor: theme.palette.background.default,
     },
     postsGrid: {
         display: 'flex',
@@ -41,7 +41,7 @@ const styles = theme => ({
         opacity: 0,
     },
     postContainer: {
-        maxWidth: 400
+        maxWidth: 400,
     },
     createButton: {
         position: 'absolute',
@@ -58,11 +58,11 @@ const styles = theme => ({
     },
     topCreateButton: {
         margin: theme.spacing.unit,
-        display: "flex",
-        justifyContent: "center"
+        display: 'flex',
+        justifyContent: 'center',
     },
     layout: {
-        padding: `${theme.spacing.unit }px`,
+        padding: `${theme.spacing.unit}px`,
         width: 'auto',
         [theme.breakpoints.up(1100 + theme.spacing.unit * 3 * 2)]: {
             width: 1100,
@@ -73,13 +73,12 @@ const styles = theme => ({
 });
 
 class Posts extends React.Component {
-
     state = { dialogOpen: false };
 
     componentWillMount() {
         this.props.getPosts();
     }
-    handleDialogClose = (post) => {
+    handleDialogClose = post => {
         this.setState({ dialogOpen: false });
         if (!post) {
             return;
@@ -89,15 +88,15 @@ class Posts extends React.Component {
         } else {
             this.props.addPost(post);
         }
-    }
+    };
 
     handleCreate = () => {
-        this.props.history.push("/posts/new");
-    }
+        this.props.history.push('/posts/new');
+    };
 
-    handleOnEdit = (post) => {
-        this.props.history.push("/posts/" + post.POST_ID);
-    }
+    handleOnEdit = post => {
+        this.props.history.push('/posts/' + post.POST_ID);
+    };
 
     render() {
         const { classes, posts, isAdmin } = this.props;
@@ -111,11 +110,11 @@ class Posts extends React.Component {
                         <Typography variant="h6" align="center" color="textSecondary" gutterBottom>
                             Informiere das Wolkenberg und poste etwas auf die Infotafel!
                         </Typography>
-                        {posts && !posts.length &&
+                        {posts && !posts.length && (
                             <Typography variant="h6" align="center" color="error" paragraph>
                                 Es sind keine Neuigkeiten vorhanden!
                             </Typography>
-                        }
+                        )}
                         <div className={classes.topCreateButton}>
                             <Button variant="contained" color="primary" onClick={this.handleCreate}>
                                 Jetzt erstellen
@@ -124,29 +123,37 @@ class Posts extends React.Component {
                     </div>
                 </div>
                 <div className={classes.layout}>
-                    <Grid container component={TransitionGroup} spacing={8} className={classes.postsGrid} justify="center">
-                        {posts && posts.map(post => (
-                            <CSSTransition
-                                classNames={{
-                                    enter: classes.postEnter,
-                                    enterActive: classes.postEnterActive,
-                                    exit: classes.postExit,
-                                    exitActive: classes.postExitActive,
-                                }}
-                                key={post.POST_ID}
-                                timeout={500}>
-                                <Grid item xs={12} md={6} className={classes.postContainer}>
-                                    <Post post={post} isAdmin={isAdmin} onEdit={this.handleOnEdit} />
-                                </Grid>
-                            </CSSTransition>
-                        ))}
+                    <Grid
+                        container
+                        component={TransitionGroup}
+                        spacing={8}
+                        className={classes.postsGrid}
+                        justify="center"
+                    >
+                        {posts &&
+                            posts.map(post => (
+                                <CSSTransition
+                                    classNames={{
+                                        enter: classes.postEnter,
+                                        enterActive: classes.postEnterActive,
+                                        exit: classes.postExit,
+                                        exitActive: classes.postExitActive,
+                                    }}
+                                    key={post.POST_ID}
+                                    timeout={500}
+                                >
+                                    <Grid item xs={12} md={6} className={classes.postContainer}>
+                                        <Post post={post} isAdmin={isAdmin} onEdit={this.handleOnEdit} />
+                                    </Grid>
+                                </CSSTransition>
+                            ))}
                     </Grid>
                 </div>
                 <Fab color="primary" className={classes.createButton} onClick={this.handleCreate}>
                     <AddIcon />
                 </Fab>
             </div>
-        )
+        );
     }
 }
 
@@ -157,8 +164,15 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     getPosts: () => dispatch(getPosts()),
-    addPost: (post) => dispatch(addPost(post)),
-    editPost: (post) => dispatch(editPost(post)),
+    addPost: post => dispatch(addPost(post)),
+    editPost: post => dispatch(editPost(post)),
 });
 
-export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(Posts)));
+export default withStyles(styles)(
+    withRouter(
+        connect(
+            mapStateToProps,
+            mapDispatchToProps
+        )(Posts)
+    )
+);

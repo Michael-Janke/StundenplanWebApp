@@ -20,7 +20,7 @@ const styles = theme => ({
         color: theme.palette.type === 'dark' ? orange[200] : orange[600],
     },
     NORMAL: {
-        color: theme.palette.type === 'dark' ? grey[200] : grey[800]
+        color: theme.palette.type === 'dark' ? grey[200] : grey[800],
     },
     EXAM: {
         color: theme.palette.type === 'dark' ? red[200] : red[800],
@@ -35,7 +35,6 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         width: '25%',
-
     },
     dateFrom: {
         fontSize: '80%',
@@ -54,14 +53,14 @@ const styles = theme => ({
     },
     secondary: {
         fontSize: '60%',
-    }
+    },
 });
 function Date({ date, onEdit, onDelete, classes }) {
     if (!date) return null;
-    let dateFrom = date.DATE_FROM && moment(date.DATE_FROM.date).format("DD.MM.");
-    let dateTo = date.DATE_TO && moment(date.DATE_TO.date).format("DD.MM.");
-    let timeFrom = date.DATE_FROM && moment(date.DATE_FROM.date).format("HH:mm");
-    let timeTo = date.DATE_TO && moment(date.DATE_TO.date).format("HH:mm");
+    let dateFrom = date.DATE_FROM && moment(date.DATE_FROM.date).format('DD.MM.');
+    let dateTo = date.DATE_TO && moment(date.DATE_TO.date).format('DD.MM.');
+    let timeFrom = date.DATE_FROM && moment(date.DATE_FROM.date).format('HH:mm');
+    let timeTo = date.DATE_TO && moment(date.DATE_TO.date).format('HH:mm');
     return (
         <Paper elevation={0} className={classes.root}>
             <div className={classes.dateStrings}>
@@ -82,10 +81,18 @@ function Date({ date, onEdit, onDelete, classes }) {
                     {date.SUBTEXT}
                 </Typography>
             </div>
-            {onEdit && <IconButton onClick={onEdit}><EditIcon /></IconButton>}
-            {onDelete && <IconButton onClick={onDelete}><DeleteIcon /></IconButton>}
+            {onEdit && (
+                <IconButton onClick={onEdit}>
+                    <EditIcon />
+                </IconButton>
+            )}
+            {onDelete && (
+                <IconButton onClick={onDelete}>
+                    <DeleteIcon />
+                </IconButton>
+            )}
         </Paper>
-    )
+    );
 }
 
 export default withStyles(styles)(Date);

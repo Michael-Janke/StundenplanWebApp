@@ -6,28 +6,21 @@ class PeriodRangePicker extends React.Component {
     state = {
         anchorEl: null,
         open: false,
-        period: {
-
-        }
+        period: {},
     };
 
     handleChange = period => () => {
         const periods = this.state.period;
-        const selectedType = periods.to === period
-            ? 'to'
-            : periods.from === period
-                ? 'from' : false;
-        let type = periods.from
-            && (periods.from.PERIOD_TIME_ID < period.PERIOD_TIME_ID || !periods.to) ? 'to' : 'from';
+        const selectedType = periods.to === period ? 'to' : periods.from === period ? 'from' : false;
+        let type = periods.from && (periods.from.PERIOD_TIME_ID < period.PERIOD_TIME_ID || !periods.to) ? 'to' : 'from';
         type = selectedType || type;
-
 
         this.setState({
             period: {
                 ...periods,
                 [type]: selectedType ? null : period,
-            }
-        })
+            },
+        });
     };
 
     handleClick = event => {
@@ -55,7 +48,7 @@ class PeriodRangePicker extends React.Component {
         to = to.toDate();
         this.props.onChange(from, to);
         this.handleClick({});
-    }
+    };
 
     render() {
         const { classes, periods } = this.props;
@@ -67,7 +60,7 @@ class PeriodRangePicker extends React.Component {
                     Stunden auswählen
                 </Button>
                 <Popover id={id} open={open} anchorEl={anchorEl} onClose={this.handleClick}>
-                    <DialogTitle id="alert-dialog-title">{"Stunden auswählen"}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">{'Stunden auswählen'}</DialogTitle>
                     <DialogContent className={classes.content}>
                         {Object.values(periods).map((period, i) => {
                             return (
@@ -85,14 +78,14 @@ class PeriodRangePicker extends React.Component {
                     <DialogActions>
                         <Button onClick={this.handleClick} color="primary">
                             Abbrechen
-                         </Button>
+                        </Button>
                         <Button onClick={this.handleClose} color="primary" autoFocus>
                             OK
                         </Button>
                     </DialogActions>
                 </Popover>
             </div>
-        )
+        );
     }
 }
 
@@ -105,11 +98,11 @@ const styles = theme => ({
     checkboxContainer: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     content: {
         display: 'flex',
-    }
+    },
 });
 
 const mapStateToProps = state => ({

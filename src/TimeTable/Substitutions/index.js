@@ -44,7 +44,6 @@ const styles = theme => ({
     substitutionsContainer: {
         fontSize: '100%',
         padding: theme.spacing.unit,
-
     },
     icon: {
         fontSize: '70%',
@@ -53,36 +52,43 @@ const styles = theme => ({
         height: 32,
         width: 32,
         padding: 0,
-    }
+    },
 });
 
 class Header extends React.Component {
     state = {};
     callback = () => {
         this.forceUpdate();
-    }
+    };
     render() {
         const { addDays, lastUpdate, className } = this.props;
         return (
             <div className={className}>
-                <div>{moment().add(addDays, 'days').format("dddd[, der ]DD.MM.")}</div>
-                {!addDays &&
-                    <LastUpdate>Letzte Änderung {moment(lastUpdate).fromNow()}</LastUpdate>}
-                {!addDays &&
-                    <ReactInterval timeout={60 * 1000} enabled={true} callback={this.callback} />}
+                <div>
+                    {moment()
+                        .add(addDays, 'days')
+                        .format('dddd[, der ]DD.MM.')}
+                </div>
+                {!addDays && <LastUpdate>Letzte Änderung {moment(lastUpdate).fromNow()}</LastUpdate>}
+                {!addDays && <ReactInterval timeout={60 * 1000} enabled={true} callback={this.callback} />}
             </div>
         );
     }
 }
 
-const getAddDays = (props) => {
-    let date = moment().startOf('day').add(props.addDays, 'days');
+const getAddDays = props => {
+    let date = moment()
+        .startOf('day')
+        .add(props.addDays, 'days');
     while (date.isoWeekday() > 5) {
         date.add(1, 'day');
     }
-    return Math.abs(moment().startOf('day').diff(date, 'days'));
-}
-
+    return Math.abs(
+        moment()
+            .startOf('day')
+            .diff(date, 'days')
+    );
+};
 
 class Substitutions extends React.Component {
     state = {};
@@ -102,19 +108,17 @@ class Substitutions extends React.Component {
 
     renderName(entry) {
         let field = entry.name[0];
-        return (
-            field ? field.LASTNAME ? (field.FIRSTNAME[0] + ". " + field.LASTNAME) : field.NAME : ""
-        );
+        return field ? (field.LASTNAME ? field.FIRSTNAME[0] + '. ' + field.LASTNAME : field.NAME) : '';
     }
 
-    handleSelectTimetable = (entry) => {
+    handleSelectTimetable = entry => {
         let object = entry.name[0];
         if (!object) {
             return;
         }
         const { singular } = this.props.sortBy.type;
-        this.props.setTimetable(singular, object[singular.toUpperCase() + "_ID"]);
-    }
+        this.props.setTimetable(singular, object[singular.toUpperCase() + '_ID']);
+    };
 
     render() {
         console.log(this.props.substitutions);
@@ -128,7 +132,8 @@ class Substitutions extends React.Component {
                     addDays={substitutions.addDays}
                     lastUpdate={lastUpdate}
                     className={classes.rootHeader}
-                    key={1} />
+                    key={1}
+                />
                 <div className={classes.rootContent}>
                     {substitutions.substitutions.map((entry, i) => (
                         <SubstitutionsContainer key={i}>
@@ -137,17 +142,19 @@ class Substitutions extends React.Component {
                                 <IconButton
                                     mini
                                     className={classes.button}
-                                    onClick={this.handleSelectTimetable.bind(this, entry)}>
+                                    onClick={this.handleSelectTimetable.bind(this, entry)}
+                                >
                                     <LinkIcon fontSize="small" />
                                 </IconButton>
                             </div>
                             <div className={classes.substitutionsContainer}>
-                                {entry.substitutions.map((substitution, i) =>
+                                {entry.substitutions.map((substitution, i) => (
                                     <SubstitutionEntry
                                         substitution={substitution}
                                         type={sortBy.type.singular}
-                                        key={substitution.SUBSTITUTION_ID} />
-                                )}
+                                        key={substitution.SUBSTITUTION_ID}
+                                    />
+                                ))}
                             </div>
                         </SubstitutionsContainer>
                     ))}
@@ -159,7 +166,7 @@ class Substitutions extends React.Component {
 
 const LastUpdate = styled.div`
     font-size: 50%;
-`
+`;
 
 const SubstitutionsContainer = styled.div`
     display: flex;
@@ -175,8 +182,8 @@ const makeStateToProps = () => {
         loading: state.user.counterChanged,
         lastUpdate: state.user.lastUpdate,
     });
-}
-const mapDispatchToProps = (dispatch) => ({
+};
+const mapDispatchToProps = dispatch => ({
     getSubstitutions: (week, year) => {
         dispatch(getSubstitutions(0, 'all', week, year));
     },
@@ -184,7 +191,11 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(getTimetable(0, 'all'));
     },
     setTimetable: (type, id) => dispatch(setTimeTable(type, id)),
-
 });
 
-export default withStyles(styles)(connect(makeStateToProps, mapDispatchToProps)(Substitutions));
+export default withStyles(styles)(
+    connect(
+        makeStateToProps,
+        mapDispatchToProps
+    )(Substitutions)
+);

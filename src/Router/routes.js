@@ -2,7 +2,7 @@ import React from 'react';
 import { Route as BrowserRoute, Switch, Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import NotFoundPage from './NotFoundPage';
-import { asynchronize } from "./asynchronize";
+import { asynchronize } from './asynchronize';
 import withAuthentication from './withAuthentication';
 import withApp from './withApp';
 
@@ -11,29 +11,28 @@ import withApp from './withApp';
  */
 const asynchronized = asynchronize();
 /*
-* withAuthentication('authentication', withApp())
-* is authenticated route with appbar
-*/
-const withAuth = (loader) => withAuthentication('authentication', asynchronize(withApp)(loader));
+ * withAuthentication('authentication', withApp())
+ * is authenticated route with appbar
+ */
+const withAuth = loader => withAuthentication('authentication', asynchronize(withApp)(loader));
 
-const Posts = withAuth(() => import("../Posts"));
-const PostEditor = withAuth(() => import("../Posts/Stepper/editPage"));
-const Main = withAuth(() => import("../Main"));
+const Posts = withAuth(() => import('../Posts'));
+const PostEditor = withAuth(() => import('../Posts/Stepper/editPage'));
+const Main = withAuth(() => import('../Main'));
 const MainAppBar = asynchronized(() => import('../Main/components/AppBar'));
-const Statistics = withAuth(() => import("../Statistics"));
-const Dates = withAuthentication('public', asynchronized(() => import("../Dates")));
-const PublicPosts = withAuthentication('token', asynchronized(() => import("../Posts/public")));
-const PublicTimetable = withAuthentication('token', asynchronized(() => import("../TimeTable/public")));
+const Statistics = withAuth(() => import('../Statistics'));
+const Dates = withAuthentication('public', asynchronized(() => import('../Dates')));
+const PublicPosts = withAuthentication('token', asynchronized(() => import('../Posts/public')));
+const PublicTimetable = withAuthentication('token', asynchronized(() => import('../TimeTable/public')));
 
-const Route = (props) => {
+const Route = props => {
     function renderComponent() {
-        return <props.component {...props} />
+        return <props.component {...props} />;
     }
-    return <BrowserRoute {...props} render={renderComponent} component={undefined} />
-}
+    return <BrowserRoute {...props} render={renderComponent} component={undefined} />;
+};
 
 class Routes extends React.Component {
-
     state = {};
 
     componentDidCatch(error, info) {
@@ -43,7 +42,7 @@ class Routes extends React.Component {
             const { location } = this.props;
             this.props.history.push({
                 pathname: '/error',
-                state: { referrer: location, error: 500, message: error.message + "\n" + info.componentStack }
+                state: { referrer: location, error: 500, message: error.message + '\n' + info.componentStack },
             });
         }
     }
@@ -63,8 +62,8 @@ class Routes extends React.Component {
                     <Route exact path="/error" component={NotFoundPage} />
                     <Redirect
                         to={{
-                            pathname: "/error",
-                            state: { referrer: location, error: 404 }
+                            pathname: '/error',
+                            state: { referrer: location, error: 404 },
                         }}
                         push
                     />

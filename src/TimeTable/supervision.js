@@ -9,7 +9,7 @@ const styles = theme => ({
         display: 'flex',
         justifyContent: 'center',
     },
-    'supervision': {
+    supervision: {
         marginTop: 'calc(-8px + -0.5vmin)',
         fontSize: '60%',
         height: 16,
@@ -17,27 +17,27 @@ const styles = theme => ({
         zIndex: 1,
     },
     'supervision-normal': {
-        maxWidth: '100%'
+        maxWidth: '100%',
     },
     label: {
-        display:'block',
+        display: 'block',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-    }
+    },
 });
 
 class Supervision extends React.Component {
-
     render() {
         const { classes, supervision } = this.props;
         return (
             <div className={classes.root}>
                 <Chip
-                    label={supervision.LOCATION || "Aufsicht"}
-                    classes={{label: classes.label}}
+                    label={supervision.LOCATION || 'Aufsicht'}
+                    classes={{ label: classes.label }}
                     style={{
-                        backgroundColor: (supervision.TYPE === "NORMAL" ? "rgba(67, 160, 71, 0.85)" : "rgba(229, 57, 53, 0.85)"),
-                        textDecorationLine: (supervision.TYPE === "ELIMINATION" ? "line-through" : ""),
+                        backgroundColor:
+                            supervision.TYPE === 'NORMAL' ? 'rgba(67, 160, 71, 0.85)' : 'rgba(229, 57, 53, 0.85)',
+                        textDecorationLine: supervision.TYPE === 'ELIMINATION' ? 'line-through' : '',
                         maxWidth: '100%',
                     }}
                     className={classes.supervision}

@@ -5,10 +5,10 @@ import CollectionsIcon from '@material-ui/icons/Collections';
 import { Typography } from '@material-ui/core';
 
 const types = {
-    "TEXT": {
-        value: "TEXT",
-        label: "Text",
-        description:
+    TEXT: {
+        value: 'TEXT',
+        label: 'Text',
+        description: (
             <>
                 <Typography variant="h5" paragraph>
                     Schreibe einen Text
@@ -17,13 +17,13 @@ const types = {
                     Erreiche Schüler und Lehrer mit einem einfachen Text.
                 </Typography>
             </>
-        ,
+        ),
         icon: CreateIcon,
     },
-    "PICTURE": {
-        value: "PICTURE",
-        label: "Bild",
-        description:
+    PICTURE: {
+        value: 'PICTURE',
+        label: 'Bild',
+        description: (
             <>
                 <Typography variant="h5" paragraph>
                     Erstelle ein Bild
@@ -32,13 +32,13 @@ const types = {
                     Erreiche Schüler und Lehrer mit einem einfachen Bild.
                 </Typography>
             </>
-        ,
+        ),
         icon: ImageIcon,
     },
-    "DIASHOW": {
-        value: "DIASHOW",
-        label: "Diashow",
-        description:
+    DIASHOW: {
+        value: 'DIASHOW',
+        label: 'Diashow',
+        description: (
             <>
                 <Typography variant="h5" paragraph>
                     Erstelle eine Diashow
@@ -47,10 +47,9 @@ const types = {
                     Erreiche Schüler und Lehrer mit einer faszinierenden Diashow.
                 </Typography>
             </>
-        ,
+        ),
         icon: CollectionsIcon,
-
-    }
-}
+    },
+};
 
 export default types;

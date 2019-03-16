@@ -5,25 +5,22 @@ import types from './types';
 const styles = theme => ({
     root: {
         backgroundColor: theme.palette.background.default,
-
     },
     content: {
         padding: theme.spacing.unit * 3,
-    }
+    },
 });
-
-
 
 class Choose extends React.Component {
     state = {
-        currentTab: types["TEXT"],
-    }
+        currentTab: types['TEXT'],
+    };
     static getDerivedStateFromProps(props, state) {
         if (props.post !== state.post) {
             return {
                 post: props.post,
-                currentTab: types[props.post.TYPE || "TEXT"],
-            }
+                currentTab: types[props.post.TYPE || 'TEXT'],
+            };
         }
         return null;
     }
@@ -34,7 +31,7 @@ class Choose extends React.Component {
             ...prevPost,
             TYPE: this.state.currentTab.value,
         };
-    }
+    };
 
     componentDidMount() {
         this.props.handleNextFunction(this.handleNext);
@@ -42,7 +39,7 @@ class Choose extends React.Component {
 
     handleChange = (e, value) => {
         this.setState({ currentTab: value });
-    }
+    };
 
     render() {
         const { currentTab } = this.state;
@@ -50,7 +47,6 @@ class Choose extends React.Component {
         return (
             <div className={classes.root}>
                 <Paper square elevation={0}>
-
                     <Tabs
                         value={currentTab}
                         onChange={this.handleChange}
@@ -59,15 +55,10 @@ class Choose extends React.Component {
                         variant="fullWidth"
                     >
                         {Object.values(types).map(tab => {
-                            return (
-                                <Tab key={tab.label} label={tab.label} value={tab} icon={<tab.icon />} />
-                            )
+                            return <Tab key={tab.label} label={tab.label} value={tab} icon={<tab.icon />} />;
                         })}
                     </Tabs>
-                    <div className={classes.content}>
-
-                        {currentTab.description}
-                    </div>
+                    <div className={classes.content}>{currentTab.description}</div>
                 </Paper>
             </div>
         );

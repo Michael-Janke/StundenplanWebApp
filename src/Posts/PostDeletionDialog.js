@@ -10,9 +10,7 @@ export default ({ open, handleClose, handleDelete }) => (
         fullWidth
     >
         <DialogTitle id="alert-dialog-title">Wirklich löschen?</DialogTitle>
-        <DialogContent style={{fontSize: '100%'}}>
-            hey
-        </DialogContent>
+        <DialogContent style={{ fontSize: '100%' }}>hey</DialogContent>
         <DialogActions>
             <Button onClick={handleClose} color="primary">
                 Nein

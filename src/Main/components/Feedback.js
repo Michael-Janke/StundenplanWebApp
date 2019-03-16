@@ -22,17 +22,17 @@ export class Feedback extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            messageText: ""
+            messageText: '',
         };
     }
 
     clearError = () => {
         this.setState({ error: null });
-    }
+    };
 
     handleClose = () => {
         this.props.onClose();
-    }
+    };
 
     handleChange = name => event => {
         this.setState({
@@ -48,13 +48,12 @@ export class Feedback extends Component {
         }
         this.handleClose();
         this.props.sendFeedback({
-            subject: "User Feedback",
+            subject: 'User Feedback',
             content,
         });
-    }
+    };
 
     render() {
-
         const customContentStyle = {
             maxWidth: 500,
             overflowY: 'auto',
@@ -68,14 +67,14 @@ export class Feedback extends Component {
             >
                 <DialogTitle>
                     <FeedbackTitle>
-                        <FeedbackIcon color='primary' style={{ marginRight: '1vmin' }} />{"Feedback geben"}
+                        <FeedbackIcon color="primary" style={{ marginRight: '1vmin' }} />
+                        {'Feedback geben'}
                     </FeedbackTitle>
                 </DialogTitle>
                 <DialogContent style={customContentStyle}>
                     <DialogContentText>
-                        Danke, dass du diese App verwendest.
-                        Ideen, Wünsche, Anregungen? Schreib sie uns gerne!
-                        <br/>
+                        Danke, dass du diese App verwendest. Ideen, Wünsche, Anregungen? Schreib sie uns gerne!
+                        <br />
                         Buildnummer: {version.build}
                     </DialogContentText>
                     <TextField
@@ -91,21 +90,15 @@ export class Feedback extends Component {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        onClick={this.handleClose}
-                        color="secondary"
-                    >
+                    <Button onClick={this.handleClose} color="secondary">
                         Abbrechen
                     </Button>
-                    <Button
-                        onClick={this.handleSendFeedback}
-                        color="primary"
-                    >
+                    <Button onClick={this.handleSendFeedback} color="primary">
                         Absenden
                     </Button>
                 </DialogActions>
             </Dialog>
-        )
+        );
     }
 }
 
@@ -114,12 +107,15 @@ const FeedbackTitle = styled.div`
     align-items: center;
 `;
 
-const mapStateToProps = (state) => ({
-    small: state.browser.lessThan.medium
+const mapStateToProps = state => ({
+    small: state.browser.lessThan.medium,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    sendFeedback: (feedback) => dispatch(sendFeedback(feedback))
+const mapDispatchToProps = dispatch => ({
+    sendFeedback: feedback => dispatch(sendFeedback(feedback)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Feedback);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Feedback);

@@ -6,15 +6,12 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import grey from '@material-ui/core/colors/grey';
 import ActionInfo from '@material-ui/icons/Info';
 
-
 const Field = (field, props, customProps) => (
-    <SubstitutionField>
-        {React.createElement(field, { ...props, ...customProps })}
-    </SubstitutionField>
+    <SubstitutionField>{React.createElement(field, { ...props, ...customProps })}</SubstitutionField>
 );
-const BindField = (props) => field => Field.bind(null, field, props);
+const BindField = props => field => Field.bind(null, field, props);
 
-const SubstitutionEntry = (props) => {
+const SubstitutionEntry = props => {
     const { substitution, type, classes, theme } = props;
     const { substitutionText, specificSubstitutionType, period, substitutionInfo } = substitution;
     const { fields } = getFields(type)(substitution);
@@ -33,66 +30,67 @@ const SubstitutionEntry = (props) => {
 
     const substitutionType = specificSubstitutionType && (
         <SubstitutionType color={isOld ? grey[700] : styles.color}>
-            {(!substitutionText || substitutionTextBig) ? specificSubstitutionType.name : substitutionText}
+            {!substitutionText || substitutionTextBig ? specificSubstitutionType.name : substitutionText}
         </SubstitutionType>
     );
 
-    const extraInfo = (substitutionTextBig) && (
-        <SubstitutionText>
-            {substitutionText}
-        </SubstitutionText>
-    );
+    const extraInfo = substitutionTextBig && <SubstitutionText>{substitutionText}</SubstitutionText>;
 
-    let InsteadBy = substitutionInfo === 'instead-by' ?
-        (
+    let InsteadBy =
+        substitutionInfo === 'instead-by' ? (
             <SubstitutionRow>
                 <InsteadInformation>durch:</InsteadInformation>
                 <SubstitutionContent>
-                    {SubstitutingFields.map((Field, i) => <Field key={i} />)}
+                    {SubstitutingFields.map((Field, i) => (
+                        <Field key={i} />
+                    ))}
                     <SubstitutionField />
                 </SubstitutionContent>
             </SubstitutionRow>
-        )
-        : null;
+        ) : null;
 
-    let InsteadOf = substitutionInfo === 'instead-of' ?
-        (
+    let InsteadOf =
+        substitutionInfo === 'instead-of' ? (
             <SubstitutionRow>
                 <InsteadInformation>statt:</InsteadInformation>
                 <SubstitutionContent>
-                    {SubstitutingFields.map((Field, i) => <Field key={i} />)}
+                    {SubstitutingFields.map((Field, i) => (
+                        <Field key={i} />
+                    ))}
                     <SubstitutionField />
                 </SubstitutionContent>
             </SubstitutionRow>
-        )
+        ) : null;
+
+    const New = isNew
+        ? () => {
+              const [Field1, Field2, Field3] = NewFields;
+              return (
+                  <SubstitutionRow>
+                      <SubstitutionContent>
+                          <Field1 />
+                          <Field2 />
+                          <Field3 />
+                      </SubstitutionContent>
+                  </SubstitutionRow>
+              );
+          }
         : null;
 
-    const New = isNew ? () => {
-        const [Field1, Field2, Field3] = NewFields;
-        return (
-            <SubstitutionRow>
-                <SubstitutionContent>
-                    <Field1 />
-                    <Field2 />
-                    <Field3 />
-                </SubstitutionContent>
-            </SubstitutionRow>
-        );
-    } : null;
-
-    const Old = isOld ? () => {
-        const [Field1, Field2] = OldFields;
-        return (
-            <SubstitutionRow>
-                <SubstitutionContent className={classes.substitutionsContentOld}>
-                    <Field1 />
-                    <Field2 />
-                    <SubstitutionField />
-                </SubstitutionContent>
-            </SubstitutionRow>
-        );
-    } : null;
-
+    const Old = isOld
+        ? () => {
+              const [Field1, Field2] = OldFields;
+              return (
+                  <SubstitutionRow>
+                      <SubstitutionContent className={classes.substitutionsContentOld}>
+                          <Field1 />
+                          <Field2 />
+                          <SubstitutionField />
+                      </SubstitutionContent>
+                  </SubstitutionRow>
+              );
+          }
+        : null;
 
     return (
         <SubstitutionRow>
@@ -131,7 +129,6 @@ const SubstitutionTextContainer = styled.div`
     margin: 0 8px 8px;
 `;
 
-
 const InsteadInformation = styled.div`
     font-size: 50%;
     font-weight: 600;
@@ -154,7 +151,6 @@ const SubstitutionField = styled.div`
     justify-content: center;
 `;
 
-
 const SubstitutionRow = styled.div`
     display: flex;
     flex-direction: row;
@@ -170,7 +166,6 @@ const SubstitutionContent = styled.div`
     flex-direction: row;
     flex: 2;
     overflow: hidden;
-
 `;
 
 const SubstitutionType = styled.div`
@@ -183,19 +178,18 @@ const SubstitutionType = styled.div`
     color: ${props => props.color};
 `;
 
-
 const ColorBar = styled.div`
     width: 2px;
-    margin-right:5px;
+    margin-right: 5px;
     background-color: ${props => props.lineColor || indigo[100]};
     align-self: normal;
 `;
 
-const extendStyles = (theme) => ({
-    ...(styles(theme)),
+const extendStyles = theme => ({
+    ...styles(theme),
     substitutionsContentOld: {
-        textDecoration: 'line-through ' + (theme.palette.type === 'dark' ? "white" : "black"),
-    }
-})
+        textDecoration: 'line-through ' + (theme.palette.type === 'dark' ? 'white' : 'black'),
+    },
+});
 
 export default withStyles(extendStyles, { withTheme: true })(SubstitutionEntry);

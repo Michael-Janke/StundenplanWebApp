@@ -4,11 +4,9 @@ import AddIcon from '@material-ui/icons/Add';
 import gray from '@material-ui/core/colors/grey';
 
 const styles = theme => ({
-    button: {
-
-    },
+    button: {},
     root: {
-        width: 124 * 16 / 9,
+        width: (124 * 16) / 9,
         height: 124,
         padding: theme.spacing.unit,
         border: `3px solid ${theme.palette.divider}`,
@@ -22,22 +20,18 @@ const styles = theme => ({
 });
 
 function Thumbnail({ classes, image, onClick }) {
-    const src = image ? image.src:null;
-    const alt = image ? image.alt:null;
+    const src = image ? image.src : null;
+    const alt = image ? image.alt : null;
     return (
         <ButtonBase className={classes.root} onClick={onClick}>
             <div className={classes.button}>
-                {src ? <img
-                    src={src}
-                    alt={alt}
-                    height=""
-                    width="100%"
-                ></img>
-                    :
+                {src ? (
+                    <img src={src} alt={alt} height="" width="100%" />
+                ) : (
                     <div className={classes.buttonAdd}>
-                        <AddIcon fontSize="large" color="action"></AddIcon>
+                        <AddIcon fontSize="large" color="action" />
                     </div>
-                }
+                )}
             </div>
         </ButtonBase>
     );

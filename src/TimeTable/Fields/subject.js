@@ -3,7 +3,7 @@ import React from 'react';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
 
-const SubjectContainer = type => subject => (props) => {
+const SubjectContainer = type => subject => props => {
     const { themeClasses, description } = props;
     const field = description ? 'DESCRIPTION' : 'NAME';
 
@@ -12,13 +12,13 @@ const SubjectContainer = type => subject => (props) => {
     if (type === 'new') {
         const ClassNormal = changed ? NewSubject : Subject;
         output = (
-            <ClassNormal className={themeClasses[changed ? 'subject-new' : 'subject-normal']}>{subject.new ? subject.new[field] : '-'}</ClassNormal>
+            <ClassNormal className={themeClasses[changed ? 'subject-new' : 'subject-normal']}>
+                {subject.new ? subject.new[field] : '-'}
+            </ClassNormal>
         );
     }
     if (type === 'old') {
-        output = (
-            <OldSubject className={themeClasses['subject-old']}>{subject.old[field]}</OldSubject>
-        );
+        output = <OldSubject className={themeClasses['subject-old']}>{subject.old[field]}</OldSubject>;
     }
     if (type === 'instead-by' || type === 'instead-of') {
         if (!changed) {
@@ -32,7 +32,6 @@ const SubjectContainer = type => subject => (props) => {
     }
     return description ? null : output;
 };
-
 
 export const subjectStyles = theme => ({
     'subject-normal': {
@@ -48,12 +47,12 @@ export const subjectStyles = theme => ({
         color: theme.palette.type === 'dark' ? grey[300] : grey[600],
         fontSize: '70%',
         fontWeight: 600,
-        textDecoration: 'line-through ' + (theme.palette.type === 'dark' ? "white" : "black"),
+        textDecoration: 'line-through ' + (theme.palette.type === 'dark' ? 'white' : 'black'),
     },
     'subject-description': {
         fontSize: '70%',
         fontWeight: 600,
-    }
+    },
 });
 
 const Subject = 'div';

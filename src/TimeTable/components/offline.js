@@ -1,5 +1,14 @@
 import React from 'react';
-import { withStyles, CardContent, Card, Typography, ListItem, ListItemIcon, Button, CardActions } from '@material-ui/core';
+import {
+    withStyles,
+    CardContent,
+    Card,
+    Typography,
+    ListItem,
+    ListItemIcon,
+    Button,
+    CardActions,
+} from '@material-ui/core';
 import CloudOff from '@material-ui/icons/CloudOff';
 import purple from '@material-ui/core/colors/purple';
 const styles = theme => ({
@@ -16,11 +25,10 @@ const styles = theme => ({
     },
     cardActions: {
         justifyContent: 'flex-end',
-    }
-})
+    },
+});
 
 function OfflinePaper({ classes, retry }) {
-
     return (
         <Card elevation={0} className={classes.root}>
             <CardContent>
@@ -29,9 +37,7 @@ function OfflinePaper({ classes, retry }) {
                         <CloudOff fontSize="large" className={classes.icon} />
                     </ListItemIcon>
                     <div>
-                        <Typography variant="h6">
-                            Offline
-                        </Typography>
+                        <Typography variant="h6">Offline</Typography>
                         <Typography>
                             Du bist offline. Bitte überprüfe deine Interneteinstellungen und versuche es erneut.
                         </Typography>

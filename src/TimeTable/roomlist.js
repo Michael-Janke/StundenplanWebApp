@@ -6,7 +6,6 @@ import green from '@material-ui/core/colors/green';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import { classNames } from '../Common/const';
 class RoomList extends React.Component {
-
     extractRooms(rooms) {
         let e = {};
         rooms.forEach(r => {
@@ -29,7 +28,13 @@ class RoomList extends React.Component {
                         <div className={classes.floor}>{key}</div>
                         <div className={classes.numbers}>
                             {entry.map(room => (
-                                <div key={room.number} className={classNames(classes.number, room.status ? classes.numberFree : classes.numberBlocked)}>
+                                <div
+                                    key={room.number}
+                                    className={classNames(
+                                        classes.number,
+                                        room.status ? classes.numberFree : classes.numberBlocked
+                                    )}
+                                >
                                     {room.number}
                                 </div>
                             ))}
@@ -47,7 +52,6 @@ const styles = theme => ({
         backgroundColor: darken(indigo[50], theme.palette.type === 'dark' ? 0.6 : 0),
         flex: 1,
         height: '100%',
-
     },
     wrapper: {
         display: 'flex',
@@ -73,10 +77,10 @@ const styles = theme => ({
         color: green[theme.palette.type === 'dark' ? 300 : 600],
         fontSize: '140%',
     },
-    numberBlocked: {        
+    numberBlocked: {
         padding: `0 ${theme.spacing.unit / 2}px`,
         fontSize: '100%',
-        color: red[theme.palette.type === 'dark' ? 300 : 600] + "5c",
+        color: red[theme.palette.type === 'dark' ? 300 : 600] + '5c',
     },
 });
 

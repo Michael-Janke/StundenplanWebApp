@@ -1,17 +1,16 @@
-
 const initialState = {
     currentPeriod: null,
-}
+};
 
 export default function periodReducer(state = initialState, action) {
-    switch(action.type){
-        case "SET_CURRENT_PERIOD": {
+    switch (action.type) {
+        case 'SET_CURRENT_PERIOD': {
             return {
                 ...state,
-                currentPeriod: action.payload
+                currentPeriod: action.payload,
             };
         }
-        default: ;
+        default:
     }
     return state;
 }

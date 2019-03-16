@@ -21,16 +21,12 @@ const shallowEqual = (a, b) => {
         }
     }
     return true;
-}
+};
 
-const createEqualSelector = createSelectorCreator(
-    defaultMemoize,
-    shallowEqual
-);
+const createEqualSelector = createSelectorCreator(defaultMemoize, shallowEqual);
 
-
-const getEffectiveAvatars = state => Object.keys(state.avatars)
-    .reduce((prev, current) => {
+const getEffectiveAvatars = state =>
+    Object.keys(state.avatars).reduce((prev, current) => {
         const object = state.avatars[current];
         if (object && object.img) {
             prev[current] = object;
@@ -39,26 +35,19 @@ const getEffectiveAvatars = state => Object.keys(state.avatars)
     }, {});
 
 const makeGetEffectiveAvatars = () => {
-    return createEqualSelector(
-        getEffectiveAvatars,
-        c => c,
-    );
+    return createEqualSelector(getEffectiveAvatars, c => c);
 };
 
 const getEffectiveAvatar = (state, props) => {
     const avatar = state.avatars[props.upn];
-    if(avatar && avatar.img){
+    if (avatar && avatar.img) {
         return avatar;
     }
     return null;
-}
-
+};
 
 const makeGetEffectiveAvatar = () => {
-    return createEqualSelector(
-        getEffectiveAvatar,
-        c => c,
-    )
+    return createEqualSelector(getEffectiveAvatar, c => c);
 };
 
 export { makeGetEffectiveAvatar };

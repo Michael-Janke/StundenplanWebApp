@@ -1,5 +1,5 @@
 import React from 'react';
-import {  CSSTransition } from 'react-transition-group';
+import { CSSTransition } from 'react-transition-group';
 import { withStyles } from '@material-ui/core';
 import { classNames } from '../../Common/const';
 
@@ -13,16 +13,20 @@ const styles = theme => ({
     appearActive: { opacity: 1, maxWidth: '100%' },
     enter: { opacity: 1, maxWidth: '100%' },
     enterDone: { opacity: 1, maxWidth: '100%' },
-    exitActive: { opacity: .2, maxWidth: 0 },
+    exitActive: { opacity: 0.2, maxWidth: 0 },
     exit: { opacity: 0, maxWidth: 0 },
-})
+});
 
 const CollapseVertical = ({ children, in: inProp, classes, className }) => {
     return (
-        <CSSTransition appear in={inProp} timeout={500} classNames={classes} className={classNames(classes.root,className)}>
-            <div>
-                {children}
-            </div>
+        <CSSTransition
+            appear
+            in={inProp}
+            timeout={500}
+            classNames={classes}
+            className={classNames(classes.root, className)}
+        >
+            <div>{children}</div>
         </CSSTransition>
     );
 };

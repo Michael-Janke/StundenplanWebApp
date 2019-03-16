@@ -11,7 +11,7 @@ export default ({ date, open, handleClose, handleDelete }) => (
         fullWidth
     >
         <DialogTitle id="alert-dialog-title">{date && date.TEXT} löschen?</DialogTitle>
-        <DialogContent style={{fontSize: '100%'}}>
+        <DialogContent style={{ fontSize: '100%' }}>
             <Date date={date} />
         </DialogContent>
         <DialogActions>

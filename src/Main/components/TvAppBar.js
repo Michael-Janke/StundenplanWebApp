@@ -16,20 +16,15 @@ class TvAppBar extends React.Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <div style={{ flex: 1, marginRight: '2vw' }}></div>
-                <Search
-                    alwaysOpen
-                    open={this.props.open}
-                    Keyboard={Keyboard}>
-                </Search>
+                <div style={{ flex: 1, marginRight: '2vw' }} />
+                <Search alwaysOpen open={this.props.open} Keyboard={Keyboard} />
             </div>
         );
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     open: !state.timetable.currentTimeTableId,
 });
-
 
 export default connect(mapStateToProps)(withStyles(styles)(TvAppBar));

@@ -48,5 +48,5 @@ const mapDispatchToProps = dispatch => bindActionCreators({ removeSnackbar }, di
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps,
+    mapDispatchToProps
 )(withSnackbar(Notifier));

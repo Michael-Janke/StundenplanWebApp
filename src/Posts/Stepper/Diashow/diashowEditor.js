@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles, FormControl, InputLabel, Input, FormHelperText, Paper, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
-import ImageEditor from './imageEditor';    
+import ImageEditor from './imageEditor';
 import Thumbnail from './Thumbnail';
 import Slider from '@material-ui/lab/Slider';
 
@@ -44,9 +44,7 @@ const styles = theme => ({
     },
 });
 
-
 class DiashowEditor extends Component {
-
     state = { activeStep: 0, images: [] };
 
     static getDerivedStateFromProps(props, state) {
@@ -56,7 +54,7 @@ class DiashowEditor extends Component {
                 post,
                 ...post,
                 images: post.IMAGES || [],
-            }
+            };
         }
         return state;
     }
@@ -79,39 +77,39 @@ class DiashowEditor extends Component {
             TITLE: this.state.TITLE,
             IMAGES: this.state.images.filter(image => !!image.src),
         };
-    }
+    };
 
-    handleChange = (key) => (event, value) => {
+    handleChange = key => (event, value) => {
         this.setState({ [key]: value || event.target.value });
-    }
+    };
 
     handleImageChange = (image, key) => (event, value) => {
         image[key] = value || event.target.value;
         this.setState({});
-    }
+    };
 
-    handleThumbnailClicked = (value) => {
-        this.setState({ activeStep: value })
-    }
+    handleThumbnailClicked = value => {
+        this.setState({ activeStep: value });
+    };
 
-    handleImageEdit = (image) => {
+    handleImageEdit = image => {
         const images = this.state.images;
         images[this.state.activeStep] = { ...images[this.state.activeStep], ...image };
         if (!images.find(image => !image.src)) {
             images.push({
                 DURATION: 1,
-                TITLE: "",
+                TITLE: '',
             });
         }
         this.setState({ images });
-    }
+    };
 
     render() {
         const { classes } = this.props;
         const { activeStep, images } = this.state;
         const currentImage = (images[activeStep] = images[activeStep] || {
             DURATION: 1,
-            TITLE: "",
+            TITLE: '',
         });
 
         return (
@@ -123,7 +121,7 @@ class DiashowEditor extends Component {
                         name="text"
                         fullWidth
                         value={this.state.TITLE}
-                        onChange={this.handleChange("TITLE")}
+                        onChange={this.handleChange('TITLE')}
                     />
                     <FormHelperText id="title">Ein Titel wird benötigt</FormHelperText>
                 </FormControl>
@@ -138,7 +136,7 @@ class DiashowEditor extends Component {
                                         name="text"
                                         fullWidth
                                         value={currentImage.TITLE}
-                                        onChange={this.handleImageChange(currentImage, "TITLE")}
+                                        onChange={this.handleImageChange(currentImage, 'TITLE')}
                                     />
                                 </FormControl>
                             </Paper>
@@ -147,7 +145,9 @@ class DiashowEditor extends Component {
                         <div className={classes.editor}>
                             <Typography variant="h4">Bild {activeStep + 1}</Typography>
                             <FormControl className={classes.formControl} error={!this.state.TITLE}>
-                                <Typography id="label" paragraph>Länge {currentImage.DURATION}s</Typography>
+                                <Typography id="label" paragraph>
+                                    Länge {currentImage.DURATION}s
+                                </Typography>
                                 <Slider
                                     classes={{ container: classes.slider }}
                                     value={currentImage.DURATION}
@@ -155,7 +155,7 @@ class DiashowEditor extends Component {
                                     min={1}
                                     max={5}
                                     step={1}
-                                    onChange={this.handleImageChange(currentImage, "DURATION")}
+                                    onChange={this.handleImageChange(currentImage, 'DURATION')}
                                 />
                             </FormControl>
                         </div>
@@ -173,6 +173,6 @@ class DiashowEditor extends Component {
 
 const mapStateToProps = state => ({
     small: state.browser.lessThan.medium,
-})
+});
 
 export default connect(mapStateToProps)(withStyles(styles)(DiashowEditor));

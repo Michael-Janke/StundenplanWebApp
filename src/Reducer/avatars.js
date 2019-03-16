@@ -1,7 +1,6 @@
-
 export default function avatarsReducer(state = { loading: false }, action = {}) {
     switch (action.type) {
-        case "persist/REHYDRATE": {
+        case 'persist/REHYDRATE': {
             // prevent dead error objects in avatars
             // can happen if upgrading from old persisted state
             if (!action.payload || !action.payload.avatars) return state;
@@ -14,17 +13,17 @@ export default function avatarsReducer(state = { loading: false }, action = {}) 
             }, {});
             return {
                 ...state,
-                ...filtered
+                ...filtered,
             };
         }
-        case "GET_BATCH_AVATARS":
+        case 'GET_BATCH_AVATARS':
             return state;
-        case "BATCH_AVATARS_RECEIVED":
+        case 'BATCH_AVATARS_RECEIVED':
             return {
                 ...state,
-                ...action.payload
+                ...action.payload,
             };
-        case "BATCH_AVATARS_ERROR":
+        case 'BATCH_AVATARS_ERROR':
             return state;
         default:
             return state;

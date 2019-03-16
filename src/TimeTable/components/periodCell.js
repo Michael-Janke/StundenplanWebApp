@@ -19,9 +19,11 @@ const styles = {
 const PeriodCell = ({ classes, small, children }) => (
     <TableCell
         padding="none"
-        className={classNames(classes.tableHeaderCell,
+        className={classNames(
+            classes.tableHeaderCell,
             classes.tableHeaderCellPeriod,
-            small && classes.tableHeaderCellPeriodSmall)}
+            small && classes.tableHeaderCellPeriodSmall
+        )}
     >
         {children}
     </TableCell>

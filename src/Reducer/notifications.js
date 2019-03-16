@@ -5,26 +5,26 @@ const defaultState = {
 function errorDescription(type) {
     switch (type) {
         case 'COUNTER_ERROR':
-            return "Prüfen der aktuellen Version fehlgeschlagen";
+            return 'Prüfen der aktuellen Version fehlgeschlagen';
         case 'GET_DATES_ERROR':
-            return "Abrufen der Termine fehlgeschlagen";
+            return 'Abrufen der Termine fehlgeschlagen';
         case 'GET_ME_ERROR':
-            return "Abrufen der Benutzerinformationen fehlgeschlagen";
+            return 'Abrufen der Benutzerinformationen fehlgeschlagen';
         case 'GET_TIMETABLE_ERROR':
-            return "Abrufen des Stundenplans fehlgeschlagen";
+            return 'Abrufen des Stundenplans fehlgeschlagen';
         case 'GET_SUBSTITUTIONS_ERROR':
-            return "Abrufen der Vertretungen fehlgeschlagen";
-        case "GET_UNREAD_MESSAGES_ERROR":
-            return "Abrufen von ungelesenen Nachrichten fehlgeschlagen";
-        case "GET_ASSIGNMENTS_ERROR":
-            return "Abrufen von Aufgaben fehlgeschlagen";
-        default: ;
+            return 'Abrufen der Vertretungen fehlgeschlagen';
+        case 'GET_UNREAD_MESSAGES_ERROR':
+            return 'Abrufen von ungelesenen Nachrichten fehlgeschlagen';
+        case 'GET_ASSIGNMENTS_ERROR':
+            return 'Abrufen von Aufgaben fehlgeschlagen';
+        default:
     }
-    return "Unbekannter Fehler";
+    return 'Unbekannter Fehler';
 }
 
 export default (state = defaultState, action) => {
-    const addNotification = (notification) => ({
+    const addNotification = notification => ({
         ...state,
         notifications: [
             ...state.notifications,
@@ -49,21 +49,21 @@ export default (state = defaultState, action) => {
                 options: {
                     variant: 'error',
                 },
-            });    
+            });
         }
     }
     if (action.type.endsWith('_RECEIVED')) {
         const text = {
-            [action.type.startsWith('EDIT')]: "editiert",
-            [action.type.startsWith('ADD')]: "hinzugefügt",
-            [action.type.startsWith('DELETE')]: "gelöscht",
-            [action.type.startsWith('SEND')]: "gesendet",
-            [action.type.startsWith('SEND_FEEDBACK')]: "gesendet. Danke für dein Feedback!",
+            [action.type.startsWith('EDIT')]: 'editiert',
+            [action.type.startsWith('ADD')]: 'hinzugefügt',
+            [action.type.startsWith('DELETE')]: 'gelöscht',
+            [action.type.startsWith('SEND')]: 'gesendet',
+            [action.type.startsWith('SEND_FEEDBACK')]: 'gesendet. Danke für dein Feedback!',
         }[true];
         if (text) {
             return addNotification({
                 key: new Date().getTime() + Math.random(),
-                message: "Erfolgreich " + text,
+                message: 'Erfolgreich ' + text,
                 options: {
                     variant: 'success',
                 },
@@ -76,16 +76,13 @@ export default (state = defaultState, action) => {
         case 'REMOVE_SNACKBAR':
             return {
                 ...state,
-                notifications: state.notifications.filter(
-                    notification => notification.key !== action.key,
-                ),
+                notifications: state.notifications.filter(notification => notification.key !== action.key),
             };
 
         default:
             return state;
     }
 };
-
 
 // export default function errorReducer(state = { error: null }, action = {}) {
 //     if (action.type.endsWith("_ERROR")) {

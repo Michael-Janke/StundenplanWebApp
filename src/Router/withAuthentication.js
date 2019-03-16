@@ -1,14 +1,14 @@
 import React from 'react';
-import { getAuthContext } from "../Common/Authentication/storage";
+import { getAuthContext } from '../Common/Authentication/storage';
 import { TokenAuthContext } from '../Common/Authentication/tokenAuthContext';
 
 /**
- * 
- * @param {'public' | 'authentication' | 'token'} variant 
- * @param {React.Component} Component 
+ *
+ * @param {'public' | 'authentication' | 'token'} variant
+ * @param {React.Component} Component
  */
 export default function withAuthentication(variant, Component) {
-    return (props) => {
+    return props => {
         const authContext = getAuthContext();
         authContext.allow(variant);
         if (variant === 'authentication') {
@@ -23,7 +23,7 @@ export default function withAuthentication(variant, Component) {
                     throw new Error('authContext is not a TokenAuthContext');
                 }
             }
-            return <Component {...props} />
+            return <Component {...props} />;
         }
-    }
+    };
 }

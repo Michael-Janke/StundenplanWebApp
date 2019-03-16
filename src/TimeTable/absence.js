@@ -11,7 +11,7 @@ const styles = theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
 });
 
 const Absence = ({ absence, classes, table }) => {
@@ -20,11 +20,7 @@ const Absence = ({ absence, classes, table }) => {
     return (
         <div className={classes.container}>
             {absence.TEXT}
-            {table || from === -1 ||
-                ` (${from === to 
-                    ? `${from}.`
-                    : `${from}. - ${to}.`})`
-            }
+            {table || from === -1 || ` (${from === to ? `${from}.` : `${from}. - ${to}.`})`}
         </div>
     );
 };

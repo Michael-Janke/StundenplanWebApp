@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
 import { connect } from 'react-redux';
-import { getDates, deleteDate, editDate, addDate } from "./actions";
-import Date from "./Date";
+import { getDates, deleteDate, editDate, addDate } from './actions';
+import Date from './Date';
 import AddIcon from '@material-ui/icons/Add';
 import grey from '@material-ui/core/colors/grey';
 import CalendarIcon from '@material-ui/icons/Event';
@@ -15,12 +15,12 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import moment from 'moment';
-import { RootRef, Fab } from "@material-ui/core";
-import { classNames } from "../Common/const";
-import { asynchronize } from "../Router/asynchronize";
+import { RootRef, Fab } from '@material-ui/core';
+import { classNames } from '../Common/const';
+import { asynchronize } from '../Router/asynchronize';
 
 const DateDialog = asynchronize()(() => import('./DateDialog'));
-const DateDeletionDialog = asynchronize()(() => import("./DateDeletionDialog"));
+const DateDeletionDialog = asynchronize()(() => import('./DateDeletionDialog'));
 
 const styles = theme => ({
     root: {
@@ -29,7 +29,7 @@ const styles = theme => ({
         height: '100%',
     },
     fabButton: {
-        position: "absolute",
+        position: 'absolute',
         right: theme.spacing.unit * 2,
         bottom: theme.spacing.unit * 2,
         zIndex: 2,
@@ -52,7 +52,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
     },
     buffer: {
-        height: '75vh'
+        height: '75vh',
     },
     listSection: {
         backgroundColor: 'inherit',
@@ -65,7 +65,6 @@ const styles = theme => ({
 });
 
 class Dates extends Component {
-
     constructor(props) {
         super(props);
         this.props.getDates();
@@ -77,10 +76,10 @@ class Dates extends Component {
         };
     }
 
-    handleDateAddEdit = (date) => {
+    handleDateAddEdit = date => {
         this.setState({
             dialogOpen: false,
-            selectedDate: {}
+            selectedDate: {},
         });
         if (!date) return;
         if (date.DATE_ID) {
@@ -88,28 +87,28 @@ class Dates extends Component {
         } else {
             this.props.addDate(date);
         }
-    }
+    };
 
-    openDialog = (date) => {
+    openDialog = date => {
         this.setState({
             selectedDate: date || {},
             edit: !!date,
-            dialogOpen: true
+            dialogOpen: true,
         });
-    }
+    };
 
-    openDeleteDialog = (date) => {
+    openDeleteDialog = date => {
         this.setState({
             dialogDeleteOpen: true,
             deleteDate: date,
         });
-    }
+    };
 
     handleDeletionDialogClose = () => {
         this.setState({
             dialogDeleteOpen: false,
-        })
-    }
+        });
+    };
 
     deleteDate = () => {
         if (this.state.deleteDate) {
@@ -119,21 +118,23 @@ class Dates extends Component {
             dialogDeleteOpen: false,
             deleteDate: null,
         });
-    }
+    };
 
     setEditMode = () => {
         this.setState({ editMode: !this.state.editMode });
-    }
+    };
 
     renderDates = (dates, singleMonth) => {
         let array = [];
         Object.entries(dates).forEach(([key, value]) => {
-            if(singleMonth && singleMonth !== key) { return; }
-            const month = moment(key, "M-YYYY");
-            array.push({ month, key, title: month.format("MMMM YYYY"), dates: value });
+            if (singleMonth && singleMonth !== key) {
+                return;
+            }
+            const month = moment(key, 'M-YYYY');
+            array.push({ month, key, title: month.format('MMMM YYYY'), dates: value });
         });
         return array;
-    }
+    };
 
     componentDidMount() {
         this.scrollToMonth(this.props);
@@ -145,12 +146,12 @@ class Dates extends Component {
 
     monthRefs = {};
 
-    scrollToMonth = (props) => {
+    scrollToMonth = props => {
         if (props.singleMonth) return;
         const selectedMonth = props.month;
-        this.monthRefs[selectedMonth]
-            && this.monthRefs[selectedMonth].scrollIntoView({ block: 'start', behavior: 'smooth', inline: 'start' });
-    }
+        this.monthRefs[selectedMonth] &&
+            this.monthRefs[selectedMonth].scrollIntoView({ block: 'start', behavior: 'smooth', inline: 'start' });
+    };
 
     render() {
         const { classes, isAdmin, singleMonth, dates, month } = this.props;
@@ -164,76 +165,86 @@ class Dates extends Component {
                     </ListItemIcon>
                     <ListItemText primary="Termine" />
                     <ListItemSecondaryAction>
-                        {isAdmin && <IconButton onClick={this.setEditMode}><EditIcon /></IconButton>}
+                        {isAdmin && (
+                            <IconButton onClick={this.setEditMode}>
+                                <EditIcon />
+                            </IconButton>
+                        )}
                     </ListItemSecondaryAction>
                 </ListItem>
                 <List className={classNames(classes.list, singleMonth && classes.listSmall)}>
-                    {this.renderDates(dates, singleMonth && month)
-                        .map(month => (
-                            <RootRef key={month.title} rootRef={(node) => this.monthRefs[month.key] = node}>
-                                <ul className={classes.ul}>
-                                    <ListSubheader
-                                        key={-1}
-                                        className={classes.subheader}>
-                                        {month.title}
-                                    </ListSubheader>
-                                    {month.dates.map((date, i) => (
-                                        <Date
-                                            date={date}
-                                            key={date.DATE_ID}
-                                            onEdit={isAdmin && editMode && date.DATE_ID > 0 ? () => this.openDialog(date) : undefined}
-                                            onDelete={isAdmin && editMode && date.DATE_ID > 0 ? () => this.openDeleteDialog(date) : undefined}
-                                        />
-                                    ))}
-                                </ul>
-                            </RootRef>
-                        ))}
+                    {this.renderDates(dates, singleMonth && month).map(month => (
+                        <RootRef key={month.title} rootRef={node => (this.monthRefs[month.key] = node)}>
+                            <ul className={classes.ul}>
+                                <ListSubheader key={-1} className={classes.subheader}>
+                                    {month.title}
+                                </ListSubheader>
+                                {month.dates.map((date, i) => (
+                                    <Date
+                                        date={date}
+                                        key={date.DATE_ID}
+                                        onEdit={
+                                            isAdmin && editMode && date.DATE_ID > 0
+                                                ? () => this.openDialog(date)
+                                                : undefined
+                                        }
+                                        onDelete={
+                                            isAdmin && editMode && date.DATE_ID > 0
+                                                ? () => this.openDeleteDialog(date)
+                                                : undefined
+                                        }
+                                    />
+                                ))}
+                            </ul>
+                        </RootRef>
+                    ))}
 
-                    {!singleMonth && <div className={classes.buffer}>
-                        {!dates && "Keine Termine eingetragen"}
-                    </div>}
+                    {!singleMonth && <div className={classes.buffer}>{!dates && 'Keine Termine eingetragen'}</div>}
 
-                    {isAdmin && editMode && <DateDeletionDialog
-                        open={this.state.dialogDeleteOpen}
-                        handleClose={this.handleDeletionDialogClose}
-                        handleDelete={this.deleteDate}
-                        date={this.state.deleteDate}
-                    />}
+                    {isAdmin && editMode && (
+                        <DateDeletionDialog
+                            open={this.state.dialogDeleteOpen}
+                            handleClose={this.handleDeletionDialogClose}
+                            handleDelete={this.deleteDate}
+                            date={this.state.deleteDate}
+                        />
+                    )}
 
-                    {isAdmin && editMode && <DateDialog
-                        open={this.state.dialogOpen}
-                        handleClose={this.handleDateAddEdit}
-                        date={this.state.selectedDate}
-                        edit={this.state.edit}
-                    />}
+                    {isAdmin && editMode && (
+                        <DateDialog
+                            open={this.state.dialogOpen}
+                            handleClose={this.handleDateAddEdit}
+                            date={this.state.selectedDate}
+                            edit={this.state.edit}
+                        />
+                    )}
                 </List>
-                {editMode &&
-                    <Fab
-                        size="small"
-                        className={classes.fabButton}
-                        color="primary"
-                        onClick={this.openDialog}>
+                {editMode && (
+                    <Fab size="small" className={classes.fabButton} color="primary" onClick={this.openDialog}>
                         <AddIcon />
-                    </Fab>}
+                    </Fab>
+                )}
             </div>
         );
     }
 }
 
-
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
         month: state.timetable.timetableDate.format('M-YYYY'),
         dates: state.dates.dates,
-        isAdmin: state.user.scope === 'admin'
-    }
-}
+        isAdmin: state.user.scope === 'admin',
+    };
+};
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     getDates: () => dispatch(getDates()),
-    deleteDate: (date) => dispatch(deleteDate(date)),
-    addDate: (date) => dispatch(addDate(date)),
-    editDate: (date) => dispatch(editDate(date)),
+    deleteDate: date => dispatch(deleteDate(date)),
+    addDate: date => dispatch(addDate(date)),
+    editDate: date => dispatch(editDate(date)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Dates)); 
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withStyles(styles)(Dates));

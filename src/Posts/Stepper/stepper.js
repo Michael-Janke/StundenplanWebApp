@@ -1,5 +1,16 @@
-import React, { PureComponent } from 'react'
-import { withStyles, Stepper, Step, Typography, Button, DialogActions, StepButton, Collapse, Paper, MobileStepper } from '@material-ui/core';
+import React, { PureComponent } from 'react';
+import {
+    withStyles,
+    Stepper,
+    Step,
+    Typography,
+    Button,
+    DialogActions,
+    StepButton,
+    Collapse,
+    Paper,
+    MobileStepper,
+} from '@material-ui/core';
 import ChooseStep from './choose';
 import TextEditor from './textEditor';
 import Finalize from './finalize';
@@ -30,33 +41,33 @@ const styles = theme => ({
     },
     mobileStepper: {
         flexShrink: 0,
-    }
+    },
 });
 
 const steps = [
     {
-        Label: () => "Auswählen",
+        Label: () => 'Auswählen',
         Component: ({ innerRef, ...other }) => <ChooseStep ref={innerRef} {...other} />,
     },
     {
-        Label: ({ post }) => types[post.TYPE] ? (types[post.TYPE].label + " bearbeiten") : "Inhalt bearbeiten",
-        Component: (props) => {
+        Label: ({ post }) => (types[post.TYPE] ? types[post.TYPE].label + ' bearbeiten' : 'Inhalt bearbeiten'),
+        Component: props => {
             switch (props.post.TYPE) {
-                case "TEXT":
-                    return <TextEditor ref={props.innerRef} {...props}></TextEditor>
-                case "PICTURE":
-                    return "Bild";
-                case "DIASHOW":
-                    return <DiashowEditor {...props}></DiashowEditor>
+                case 'TEXT':
+                    return <TextEditor ref={props.innerRef} {...props} />;
+                case 'PICTURE':
+                    return 'Bild';
+                case 'DIASHOW':
+                    return <DiashowEditor {...props} />;
                 default:
                     return null;
             }
-        }
+        },
     },
     {
-        Label: () => "Zusammenfassung",
-        Component: ({ innerRef, ...other }) => <Finalize ref={innerRef} {...other} />
-    }
+        Label: () => 'Zusammenfassung',
+        Component: ({ innerRef, ...other }) => <Finalize ref={innerRef} {...other} />,
+    },
 ];
 
 class PostStepper extends PureComponent {
@@ -73,14 +84,14 @@ class PostStepper extends PureComponent {
                 return {
                     open: true,
                     activeStep: 1,
-                    post
-                }
+                    post,
+                };
             } else {
                 return {
                     open: true,
                     activeStep: 0,
-                    post: {}
-                }
+                    post: {},
+                };
             }
         }
         return null;
@@ -106,13 +117,13 @@ class PostStepper extends PureComponent {
 
     handleClose = () => {
         this.props.onClose();
-    }
+    };
 
     handleNextFunction = index => fn => {
         this.functions[index] = fn;
-    }
+    };
 
-    handleStep = (e) => {
+    handleStep = e => {
         let post = this.functions[this.state.activeStep]();
         if (!post) {
             return;
@@ -123,16 +134,16 @@ class PostStepper extends PureComponent {
         } else {
             this.setState(state => ({
                 activeStep: state.activeStep + diff,
-                post
+                post,
             }));
         }
-    }
+    };
 
-    handleClick = (index) => (e) => {
+    handleClick = index => e => {
         this.setState({
             activeStep: index,
-        })
-    }
+        });
+    };
 
     renderComponent = (Component, post, index) => {
         return (
@@ -140,10 +151,10 @@ class PostStepper extends PureComponent {
                 handleNextFunction={this.handleNextFunction(index)}
                 handleStep={this.handleStep}
                 key={index}
-                post={post}>
-            </Component>
-        )
-    }
+                post={post}
+            />
+        );
+    };
 
     render() {
         const { classes, small } = this.props;
@@ -152,21 +163,27 @@ class PostStepper extends PureComponent {
             <div className={classes.root}>
                 <div className={classes.content}>
                     <Paper elevation={0} className={classes.paper}>
-                        {small && <Typography variant="h5" gutterBottom>{React.createElement(steps[activeStep].Label, { post })}</Typography>}
-                        {!small && <Stepper activeStep={activeStep} orientation={"horizontal"}>
-                            {steps.map(({ Label, Component }, index) => {
-                                return (
-                                    <Step key={index}>
-                                        <StepButton
-                                            onClick={this.handleClick(index)}
-                                            completed={index <= activeStep - 1}
-                                        >
-                                            <Label post={post} />
-                                        </StepButton>
-                                    </Step>
-                                );
-                            })}
-                        </Stepper>}
+                        {small && (
+                            <Typography variant="h5" gutterBottom>
+                                {React.createElement(steps[activeStep].Label, { post })}
+                            </Typography>
+                        )}
+                        {!small && (
+                            <Stepper activeStep={activeStep} orientation={'horizontal'}>
+                                {steps.map(({ Label, Component }, index) => {
+                                    return (
+                                        <Step key={index}>
+                                            <StepButton
+                                                onClick={this.handleClick(index)}
+                                                completed={index <= activeStep - 1}
+                                            >
+                                                <Label post={post} />
+                                            </StepButton>
+                                        </Step>
+                                    );
+                                })}
+                            </Stepper>
+                        )}
                         {steps.map(({ Component }, index) => {
                             return (
                                 <Collapse in={index === activeStep} key={index}>
@@ -176,7 +193,7 @@ class PostStepper extends PureComponent {
                         })}
                     </Paper>
                 </div>
-                {small ?
+                {small ? (
                     <MobileStepper
                         steps={steps.length}
                         position="static"
@@ -184,7 +201,7 @@ class PostStepper extends PureComponent {
                         className={classes.mobileStepper}
                         nextButton={
                             <Button size="small" onClick={this.handleStep}>
-                                {activeStep < steps.length - 1 ? "Weiter" : "Erstellen"}
+                                {activeStep < steps.length - 1 ? 'Weiter' : 'Erstellen'}
                                 <KeyboardArrowRight />
                             </Button>
                         }
@@ -195,30 +212,23 @@ class PostStepper extends PureComponent {
                             </Button>
                         }
                     />
-                    :
+                ) : (
                     <DialogActions>
-                        <Button
-                            onClick={this.handleBack}
-                            disabled={activeStep === 0}
-                        >
+                        <Button onClick={this.handleBack} disabled={activeStep === 0}>
                             Zurück
-                            </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={this.handleStep}
-                        >
-                            {activeStep < steps.length - 1 ? "Weiter" : "Erstellen"}
+                        </Button>
+                        <Button variant="contained" color="primary" onClick={this.handleStep}>
+                            {activeStep < steps.length - 1 ? 'Weiter' : 'Erstellen'}
                         </Button>
                     </DialogActions>
-                }
+                )}
             </div>
-        )
+        );
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     small: state.browser.lessThan.medium,
-})
+});
 
 export default connect(mapStateToProps)(withStyles(styles)(PostStepper));

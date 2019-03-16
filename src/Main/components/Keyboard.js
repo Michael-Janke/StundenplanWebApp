@@ -17,41 +17,35 @@ const styles = theme => ({
     key: {
         flex: 1,
         minWidth: 0,
-    }
+    },
 });
 
-const Key = (props) => (
+const Key = props => (
     <Button className={props.className} onClick={props.onPress}>
         {props.name}
     </Button>
 );
 
 class Keyboard extends React.PureComponent {
-
     onKeyPress(key) {
         this.props.onInput(name => name + key);
     }
 
     onBackPress = () => {
         this.props.onInput(name => name.slice(0, -1));
-    }
+    };
 
     render() {
         const { className, classes } = this.props;
         return (
-            <div className={className + " " + classes.keyboard}>
+            <div className={className + ' ' + classes.keyboard}>
                 <div className={classes.row} key={-2}>
-                    {"1234567890".split('').map((name, i) => (
-                        <Key
-                            className={classes.key}
-                            key={i}
-                            onPress={this.onKeyPress.bind(this, name)}
-                            name={name}
-                        />
+                    {'1234567890'.split('').map((name, i) => (
+                        <Key className={classes.key} key={i} onPress={this.onKeyPress.bind(this, name)} name={name} />
                     ))}
-                    <Key className={classes.key} onPress={this.onBackPress} name={<BackSpace></BackSpace>} />
+                    <Key className={classes.key} onPress={this.onBackPress} name={<BackSpace />} />
                 </div>
-                {["QWERTZUIOPÜ", "ASDFGHJKLÖÄ", "YXCVBNM"].map((row, j) => (
+                {['QWERTZUIOPÜ', 'ASDFGHJKLÖÄ', 'YXCVBNM'].map((row, j) => (
                     <div className={classes.row} key={j}>
                         {row.split('').map((name, i) => (
                             <Key
@@ -64,7 +58,7 @@ class Keyboard extends React.PureComponent {
                     </div>
                 ))}
                 <div className={classes.row} key={-1}>
-                    <Key className={classes.key} onPress={this.onKeyPress.bind(this, " ")} name="SPACE" />
+                    <Key className={classes.key} onPress={this.onKeyPress.bind(this, ' ')} name="SPACE" />
                 </div>
             </div>
         );

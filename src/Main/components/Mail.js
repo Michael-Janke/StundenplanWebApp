@@ -19,17 +19,17 @@ export class Mail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            messageText: ""
+            messageText: '',
         };
     }
 
     clearError = () => {
         this.setState({ error: null });
-    }
+    };
 
     handleClose = () => {
         this.props.onClose();
-    }
+    };
 
     handleChange = name => event => {
         this.setState({
@@ -45,13 +45,13 @@ export class Mail extends Component {
         }
         this.handleClose();
         this.props.sendFeedback({
-            subject: "User Feedback",
+            subject: 'User Feedback',
             content,
         });
-    }
+    };
 
     openWebOutlook() {
-        window.location = "https://outlook.office365.com";
+        window.location = 'https://outlook.office365.com';
     }
 
     render() {
@@ -69,7 +69,7 @@ export class Mail extends Component {
             >
                 <DialogTitle>
                     <FeedbackTitle>
-                        <MailIcon color='primary' style={{ marginRight: '1vmin' }} />
+                        <MailIcon color="primary" style={{ marginRight: '1vmin' }} />
                         Ungelesene Nachrichten
                     </FeedbackTitle>
                 </DialogTitle>
@@ -78,59 +78,70 @@ export class Mail extends Component {
                         Du hast ungelesene Nachrichten in deinem Schul-E-Mail-Account.
                     </Typography>
                     <Button variant="contained" style={{ margin: 10 }} onClick={this.openWebOutlook}>
-                        <Icons.Outlook.icon /> &nbsp;
-                        Zur Web-Version
+                        <Icons.Outlook.icon /> &nbsp; Zur Web-Version
                     </Button>
-                    {isMobile ?
+                    {isMobile ? (
                         <>
                             <Typography variant="h6" gutterBottom>
                                 Apps installieren
                             </Typography>
                             <Typography variant="body1">
-                                Wir empfehlen dir die App zu installieren. Damit bekommst du sofort eine Benachrichtigung auf dein Smartphone.
+                                Wir empfehlen dir die App zu installieren. Damit bekommst du sofort eine
+                                Benachrichtigung auf dein Smartphone.
                             </Typography>
                             <div>
-                                <a href='https://play.google.com/store/apps/details?id=com.microsoft.office.outlook&hl=de'>
-                                    <img alt='Jetzt bei Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/de_badge_web_generic.png'
-                                        style={{ display: 'inline', width: 150, height: 60 }} />
+                                <a href="https://play.google.com/store/apps/details?id=com.microsoft.office.outlook&hl=de">
+                                    <img
+                                        alt="Jetzt bei Google Play"
+                                        src="https://play.google.com/intl/en_us/badges/images/generic/de_badge_web_generic.png"
+                                        style={{ display: 'inline', width: 150, height: 60 }}
+                                    />
                                 </a>
-                                <a href='https://itunes.apple.com/de/app/microsoft-outlook/id951937596?mt=8'
-                                    style={{ display: 'inline-block', overflow: 'hidden', margin: 10, background: 'url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2015-01-29&kind=iossoftware&bubble=ios_apps) no-repeat', width: 135, height: 40 }}>
-                                </a>
+                                <a
+                                    href="https://itunes.apple.com/de/app/microsoft-outlook/id951937596?mt=8"
+                                    style={{
+                                        display: 'inline-block',
+                                        overflow: 'hidden',
+                                        margin: 10,
+                                        background:
+                                            'url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2015-01-29&kind=iossoftware&bubble=ios_apps) no-repeat',
+                                        width: 135,
+                                        height: 40,
+                                    }}
+                                />
                             </div>
-                        </> :
+                        </>
+                    ) : (
                         <>
                             <Typography variant="h6" gutterBottom>
                                 Outlook auf dem PC/Mac installieren
                             </Typography>
                             <Typography variant="body1">
-                                Auf deinem Computer kannst du <a href="https://portal.office.com/OLS/MySoftware.aspx">Microsoft Office ProPlus</a> kostenlos installieren. Damit wird auch Outlook installiert und mit deinem Konto verbunden.
+                                Auf deinem Computer kannst du{' '}
+                                <a href="https://portal.office.com/OLS/MySoftware.aspx">Microsoft Office ProPlus</a>{' '}
+                                kostenlos installieren. Damit wird auch Outlook installiert und mit deinem Konto
+                                verbunden.
                             </Typography>
                         </>
-                    }
-
-
+                    )}
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        onClick={this.handleClose}
-                        color="secondary"
-                    >
+                    <Button onClick={this.handleClose} color="secondary">
                         Schließen
                     </Button>
                 </DialogActions>
             </Dialog>
-        )
+        );
     }
 }
 
 const FeedbackTitle = styled.div`
-            display: flex;
-            align-items: center;
-        `;
+    display: flex;
+    align-items: center;
+`;
 
-const mapStateToProps = (state) => ({
-    small: state.browser.lessThan.medium
+const mapStateToProps = state => ({
+    small: state.browser.lessThan.medium,
 });
 
 export default connect(mapStateToProps)(Mail);

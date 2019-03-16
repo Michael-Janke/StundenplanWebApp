@@ -11,7 +11,7 @@ const styles = theme => ({
         justifyContent: 'center',
         flexDirection: 'column',
     },
-})
+});
 
 class ErrorBoundary extends React.Component {
     constructor(props) {
@@ -29,9 +29,15 @@ class ErrorBoundary extends React.Component {
         if (error) {
             return (
                 <div className={classes.root}>
-                    <Typography gutterBottom><ErrorIcon color="error" /></Typography>
-                    <Typography variant="body1" color="textPrimary">Ein Fehler ist aufgetreten</Typography>
-                    <Typography variant="body2" color="textSecondary">Bitte versuche es später erneut</Typography>
+                    <Typography gutterBottom>
+                        <ErrorIcon color="error" />
+                    </Typography>
+                    <Typography variant="body1" color="textPrimary">
+                        Ein Fehler ist aufgetreten
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        Bitte versuche es später erneut
+                    </Typography>
                 </div>
             );
         }
