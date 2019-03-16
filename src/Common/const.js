@@ -83,7 +83,7 @@ function normalize(v) {
 
 export function specifySubstitutionType(id, type, substitution) {
     let lesson = {};
-    substitution = { ...substitution, id, type };
+    substitution = { ...substitution, id: Number(id), type };
 
     if (substitution.TEXT === 'Methodenkompetenz') {
         substitution.TYPE = 'METH_COMP';
