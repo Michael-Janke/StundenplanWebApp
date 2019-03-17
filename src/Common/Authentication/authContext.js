@@ -74,6 +74,7 @@ export class AuthenticationContext extends EventEmitter {
                 &response_mode=query
                 &scope=${encodeURIComponent(this.getScope().join(' '))}
                 &state=12345
+                &domain_hint=wgmail.de
         `.replace(/ /g, '');
     }
 
