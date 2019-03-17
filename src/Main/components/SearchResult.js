@@ -10,7 +10,7 @@ import SearchItem from './SearchItem';
 const growthFactor = 18;
 
 class SearchResult extends React.PureComponent {
-    state = {};
+    state = { elements: [] };
     static getResults(props, start, end) {
         const results = props.results.slice(start, end);
         checkAvatars(results.map(e => e.upn), props.loadAvatars);
@@ -27,9 +27,7 @@ class SearchResult extends React.PureComponent {
             props.open !== state.open;
 
         return {
-            open: props.open,
-            results: props.results,
-            resultChanged: resultChanged,
+            ...props,
             elements:
                 props.results !== state.results
                     ? SearchResult.getResults(
@@ -40,11 +38,13 @@ class SearchResult extends React.PureComponent {
                     : state.elements,
         };
     }
+
     componentDidUpdate(prevState, prevProps) {
         if (this.state.resultChanged) {
             this.scroll.scrollTop = 0;
         }
         this.onScroll();
+        this.props.setCurrentItem && this.props.setCurrentItem(this.state.elements[this.props.selected]);
     }
 
     onScroll = () => {
@@ -75,19 +75,20 @@ class SearchResult extends React.PureComponent {
     }
 
     render() {
-        const { className } = this.props;
+        const { className, selected } = this.props;
         return (
             <RootRef rootRef={this.handleRef}>
                 <List component="div" className={className}>
                     {this.state.elements ? (
                         <React.Fragment>
                             {this.props.filterBar}
-                            {this.state.elements.map(object => (
+                            {this.state.elements.map((object, i) => (
                                 <SearchItem
                                     key={object.id + object.type}
                                     {...object}
                                     onClick={this.props.onClick}
                                     toggleFavorite={this.props.toggleFavorite}
+                                    selected={selected === i}
                                 />
                             ))}
                         </React.Fragment>

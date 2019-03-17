@@ -14,11 +14,12 @@ class SearchItem extends React.PureComponent {
     };
 
     render() {
-        const { type, upn, text, secondary, favorite } = this.props;
+        const { type, upn, text, secondary, favorite, selected } = this.props;
         return (
             <ListItem
                 dense
                 button
+                selected={selected}
                 onClick={this.handleClick}
                 // {...(i === 0 && { className: classes.listItemSelected })}
             >

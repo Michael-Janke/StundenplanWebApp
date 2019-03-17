@@ -22,7 +22,7 @@ import { connect } from 'react-redux';
 import { setTimeTable, addFavorite, removeFavorite, loadMe } from '../actions';
 
 class Search extends React.PureComponent {
-    state = { open: false, nonEmpty: false, value: '' };
+    state = { open: false, nonEmpty: false, value: '', select: 0 };
 
     handleOpen = () => {
         if (!this.state.open) {
@@ -41,7 +41,7 @@ class Search extends React.PureComponent {
     };
 
     handleClear = () => {
-        this.setState({ nonEmpty: false, value: '' });
+        this.setState({ nonEmpty: false, value: '', select: 0 });
     };
 
     handleInput = e => {
@@ -52,7 +52,7 @@ class Search extends React.PureComponent {
             // disable filter when typing in
             selectedFilter = '';
         }
-        this.setState({ nonEmpty, value, selectedFilter, open: true });
+        this.setState({ nonEmpty, value, selectedFilter, open: true, select: 0 });
     };
 
     handleClickAway = () => {
@@ -67,8 +67,15 @@ class Search extends React.PureComponent {
     };
 
     handleKeyUp = e => {
-        if ((e.charCode === 13 || e.key === 'Enter') && this.state.result && this.state.result.length) {
-            this.handleClick(this.state.result[0]);
+        if (e.charCode === 13 || e.key === 'Enter') {
+            this.state.currentItem && this.handleClick(this.state.currentItem);
+            this.setState({ open: false, value: '', nonEmpty: false, currentItem: null });
+        }
+        if (e.keyCode === 38 || e.key === 'ArrowUp') {
+            this.setState({ select: Math.max(this.state.select - 1, -1) });
+        }
+        if (e.keyCode === 40 || e.key === 'ArrowDown') {
+            this.setState({ select: this.state.select + 1 });
         }
         if (e.keyCode === 27 || e.key === 'ESC') {
             this.setState({ open: false, value: '', nonEmpty: false });
@@ -88,6 +95,10 @@ class Search extends React.PureComponent {
         object.favorite
             ? this.props.removeFavorite(object.upn || object.text)
             : this.props.addFavorite(object.upn || object.text);
+    };
+
+    setCurrentItem = object => {
+        this.setState({ currentItem: object });
     };
 
     renderFilterBar = () => {
@@ -182,6 +193,8 @@ class Search extends React.PureComponent {
                                 onClick={this.handleClick}
                                 toggleFavorite={this.props.tv ? null : this.toggleFavorite}
                                 filterBar={this.renderFilterBar()}
+                                selected={this.state.select}
+                                setCurrentItem={this.setCurrentItem}
                             />
                         </div>
                     </div>
