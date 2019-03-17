@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web and AsyncStorage for react-native
+import localForage from 'localforage';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import rootReducer from './Reducer';
 import thunk from 'redux-thunk';
@@ -16,8 +16,9 @@ if (process.env.REACT_APP_MODE === 'tv') {
 
 const persistConfig = {
     key: 'root',
-    storage,
+    storage: localForage,
     blacklist: ['browser', 'error', 'favorites'],
+    version: 1,
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

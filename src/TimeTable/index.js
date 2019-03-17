@@ -69,6 +69,7 @@ const useStyles = makeStyles(
         },
         timetable: {
             maxWidth: 800,
+            flexDirection: 'column',
         },
         dates: {
             maxWidth: 340,
@@ -86,8 +87,8 @@ function TimeTableView({ small, smallTimetable }) {
         <div className={classes.root} key={0} id="content-root">
             <div className={classes.extendedAppBar} />
             <div className={classes.panel}>
-                <Grid container spacing={8} className={classes.grid}>
-                    <Grid item xs className={classNames(classes.timetable, classes.gridItem)} direction="column">
+                <Grid container spacing={8} className={classes.grid} direction="row">
+                    <Grid item xs className={classNames(classes.timetable, classes.gridItem)}>
                         <Paper className={classes.paper} square>
                             <ErrorBoundary>
                                 <TimeTableContainer small={smallTimetable} />
