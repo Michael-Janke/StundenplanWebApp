@@ -1,5 +1,4 @@
 import React from 'react';
-import firebase from 'firebase';
 import { connect } from 'react-redux';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -19,7 +18,6 @@ import MailIcon from '@material-ui/icons/Mail';
 
 import { purge } from '../../store';
 import { unregister } from '../../serviceWorker';
-import { connectToServiceWorker } from '../../Common/firebase';
 import { setNotification, showError, loadMe, logOut } from '../actions';
 import UserAvatar from './UserAvatar';
 import withTheme from '@material-ui/core/styles/withTheme';
@@ -57,48 +55,6 @@ class UserSettingsMenu extends React.Component {
             unregister();
             window.location.reload();
         });
-    };
-
-    requestPermission = () => {
-        const that = this;
-        console.log('Requesting permission...');
-        const messaging = firebase.messaging();
-        return messaging
-            .requestPermission()
-            .then(function() {
-                console.log('Notification permission granted.');
-            })
-            .catch(function(err) {
-                console.log('Unable to get permission to notify.', err);
-                that.props.showError('Browser gab keine Erlaubnis für Benachrichtungen');
-            });
-    };
-
-    setNotification = () => {
-        if (this.props.notificationToken) {
-            this.props.setNotification({
-                oldToken: this.props.notificationToken,
-                newToken: null,
-            });
-        } else {
-            const messaging = firebase.messaging();
-            const that = this;
-            this.requestPermission()
-                .then(() => {
-                    return messaging.getToken();
-                })
-                .then(token =>
-                    that.props.setNotification({
-                        oldToken: that.props.notificationToken,
-                        newToken: token,
-                    })
-                )
-                .catch(error => {
-                    this.props.showError(error);
-                    debugger;
-                });
-            connectToServiceWorker(this.props.setNotification, this.props.notificationToken);
-        }
     };
 
     handleClick = event => {

@@ -14,7 +14,6 @@ import Icons from '../../Common/Waffle/office-icons';
 function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
-
 export class Mail extends Component {
     constructor(props) {
         super(props);
@@ -108,7 +107,9 @@ export class Mail extends Component {
                                         width: 135,
                                         height: 40,
                                     }}
-                                />
+                                >
+                                    AppStore
+                                </a>
                             </div>
                         </>
                     ) : (

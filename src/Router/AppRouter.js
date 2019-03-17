@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { setNotification, setMyTimetable, sendLoginStatistic, changeTheme, setSortBy } from '../Main/actions';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import createTheme from '../Common/theme';
-import { connectToServiceWorker } from '../Common/firebase';
 import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import { HashRouter as Router } from 'react-router-dom';
@@ -31,9 +30,6 @@ class AppRouter extends Component {
             version: version.version,
             production: process.env.NODE_ENV === 'production',
         });
-        if (this.props.notificationToken) {
-            connectToServiceWorker(this.props.setNotification, this.props.notificationToken);
-        }
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {

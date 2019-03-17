@@ -7,7 +7,6 @@ import { withRouter } from 'react-router';
 const Loading = ({ isLoading, error, retry }) => {
     // Handle the loading state
     if (isLoading) {
-        console.log('is loading');
         return null;
     }
     hideSplash();
