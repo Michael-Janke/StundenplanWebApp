@@ -44,7 +44,7 @@ class SearchResult extends React.PureComponent {
             this.scroll.scrollTop = 0;
         }
         this.onScroll();
-        this.props.setCurrentItem && this.props.setCurrentItem(this.state.elements[this.props.selected]);
+        this.props.setCurrentItem && this.props.setCurrentItem(this.state.elements[Math.max(this.props.selected, 0)]);
     }
 
     onScroll = () => {

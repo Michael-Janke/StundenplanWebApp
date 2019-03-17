@@ -12,15 +12,6 @@ const sortName = (o1, o2) => (o1.LASTNAME || o1.NAME).localeCompare(o2.LASTNAME 
 const computeData = (masterdata, favorites, user) => {
     favorites = favorites || [];
     let data = [
-        {
-            searchString: '',
-            type: 'all',
-            id: -1,
-            favorite: true,
-            text: 'Freie Räume',
-            secondary: '',
-            filterType: 'Raum',
-        },
         ...(!user.id
             ? []
             : [
@@ -35,6 +26,15 @@ const computeData = (masterdata, favorites, user) => {
                       filterType: '',
                   },
               ]),
+        {
+            searchString: '',
+            type: 'all',
+            id: -1,
+            favorite: true,
+            text: 'Freie Räume',
+            secondary: '',
+            filterType: 'Raum',
+        },
         ...Object.values(masterdata.Class)
             .filter(o => o.NAME !== '07-08')
             .sort(sortName)

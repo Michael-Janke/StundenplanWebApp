@@ -193,7 +193,7 @@ class Search extends React.PureComponent {
                                 onClick={this.handleClick}
                                 toggleFavorite={this.props.tv ? null : this.toggleFavorite}
                                 filterBar={this.renderFilterBar()}
-                                selected={this.state.select}
+                                selected={small ? -1 : this.state.select}
                                 setCurrentItem={this.setCurrentItem}
                             />
                         </div>
