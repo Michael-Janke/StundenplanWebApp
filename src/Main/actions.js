@@ -1,3 +1,5 @@
+import version from '../version.json';
+
 export function loadMe() {
     return { type: 'GET_ME' };
 }
@@ -54,7 +56,19 @@ export function checkCounter() {
 }
 
 export function sendLoginStatistic(data) {
-    return { type: 'SEND_LOGIN_STATISTIC', payload: data };
+    return {
+        type: 'SEND_LOGIN_STATISTIC',
+        payload: {
+            device: {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                browser: navigator.userAgent,
+            },
+            buildNumber: version.build,
+            version: version.version,
+            production: process.env.NODE_ENV === 'production',
+        },
+    };
 }
 
 export function setSortBy(sortBy) {

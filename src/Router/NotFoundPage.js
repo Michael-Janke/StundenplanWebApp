@@ -11,6 +11,8 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { withRouter, Redirect, Link } from 'react-router-dom';
 import { hideSplash } from './SplashScreen';
+import { API_URL } from '../Common/services/generator';
+import version from '../version.json';
 
 function NotFoundPage(props) {
     const { classes, retry, location } = props;
@@ -28,6 +30,26 @@ function NotFoundPage(props) {
 
     // make sure splash is hidden
     hideSplash();
+
+    try {
+        fetch(API_URL + 'error', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                upn: '',
+                browser: navigator.userAgent,
+                buildNumber: version.build,
+                version: version.version,
+                errorCode: error,
+                error: {
+                    message,
+                    messageProp,
+                },
+            }),
+        });
+    } catch (e) {}
 
     return (
         <div className={classes.root}>

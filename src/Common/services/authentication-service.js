@@ -7,7 +7,6 @@ export default store => next => action => {
             case 'ADD_DATE':
             case 'DELETE_DATE':
             case 'EDIT_DATE':
-            case 'SEND_LOGIN_STATISTIC':
             case 'SEND_FEEDBACK':
             case 'PATCH_REMIND_SETTINGS':
             case 'ADD_FAVORITE':

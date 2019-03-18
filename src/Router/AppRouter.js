@@ -7,7 +7,6 @@ import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import { HashRouter as Router } from 'react-router-dom';
 import Routes from './routes';
-import version from '../version.json';
 import Notifier from './Notifier';
 import { SnackbarProvider } from 'notistack';
 
@@ -20,16 +19,6 @@ class AppRouter extends Component {
             this.props.setSortBy(window.params.sortBy || 'class');
         }
         this.props.setMyTimetable();
-        this.props.sendLoginStatistic({
-            device: {
-                width: window.innerWidth,
-                height: window.innerHeight,
-                browser: navigator.userAgent,
-            },
-            buildNumber: version.build,
-            version: version.version,
-            production: process.env.NODE_ENV === 'production',
-        });
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -38,7 +27,15 @@ class AppRouter extends Component {
         }
         return {};
     }
+
+    sendLoginOnce = () => {
+        this.props.sendLoginStatistic();
+        window.addEventListener('focus', this.props.sendLoginStatistic);
+        this.sendLoginOnce = () => true;
+    };
+
     render() {
+        this.sendLoginOnce();
         return (
             <Router>
                 <MuiThemeProvider theme={this.state.theme}>
