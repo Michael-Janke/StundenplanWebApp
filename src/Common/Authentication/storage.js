@@ -15,7 +15,6 @@ export const getAuthContext = (win = window) => {
     if (authContext) {
         if (!authContext.toObject) {
             authContext = new AuthenticationContext(authContext);
-            win[CONTEXT_KEY] = authContext;
             setAuthContext(authContext, win);
         }
         return authContext;

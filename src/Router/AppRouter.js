@@ -19,6 +19,10 @@ class AppRouter extends Component {
             this.props.setSortBy(window.params.sortBy || 'class');
         }
         this.props.setMyTimetable();
+        window.setTimeout(() => {
+            window.addEventListener('focus', this.props.sendLoginStatistic);
+            this.props.sendLoginStatistic();
+        }, 1000);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -28,14 +32,7 @@ class AppRouter extends Component {
         return {};
     }
 
-    sendLoginOnce = () => {
-        this.props.sendLoginStatistic();
-        window.addEventListener('focus', this.props.sendLoginStatistic);
-        this.sendLoginOnce = () => true;
-    };
-
     render() {
-        this.sendLoginOnce();
         return (
             <Router>
                 <MuiThemeProvider theme={this.state.theme}>
