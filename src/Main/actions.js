@@ -1,4 +1,5 @@
 import version from '../version.json';
+import { detect } from 'detect-browser';
 
 export function loadMe() {
     return { type: 'GET_ME' };
@@ -62,7 +63,7 @@ export function sendLoginStatistic(data) {
             device: {
                 width: window.innerWidth,
                 height: window.innerHeight,
-                browser: navigator.userAgent,
+                browser: detect(),
             },
             buildNumber: version.build,
             version: version.version,

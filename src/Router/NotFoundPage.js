@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { withRouter, Redirect, Link } from 'react-router-dom';
+import { detect } from 'detect-browser';
 import { hideSplash } from './SplashScreen';
 import { API_URL } from '../Common/services/generator';
 import version from '../version.json';
@@ -39,7 +40,7 @@ function NotFoundPage(props) {
             },
             body: JSON.stringify({
                 upn: '',
-                browser: navigator.userAgent,
+                browser: detect(),
                 buildNumber: version.build,
                 version: version.version,
                 errorCode: error,
