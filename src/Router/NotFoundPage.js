@@ -9,6 +9,7 @@ import {
     ExpansionPanelDetails,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { connect } from 'react-redux';
 import { withRouter, Redirect, Link } from 'react-router-dom';
 import { detect } from 'detect-browser';
 import { hideSplash } from './SplashScreen';
@@ -39,7 +40,7 @@ function NotFoundPage(props) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                upn: '',
+                upn: props.upn,
                 browser: detect(),
                 buildNumber: version.build,
                 version: version.version,
@@ -110,4 +111,4 @@ const styles = theme => ({
     },
 });
 
-export default withRouter(withStyles(styles)(NotFoundPage));
+export default withRouter(withStyles(styles)(connect(({ user }) => ({ upn: user.upn }))(NotFoundPage)));
