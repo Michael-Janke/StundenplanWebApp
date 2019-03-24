@@ -7,6 +7,7 @@ import Dates from '../Dates';
 import ErrorBoundary from '../Common/ErrorBoundary';
 import { makeStyles } from '@material-ui/styles';
 import { classNames } from '../Common/const';
+import AssignmentCreation from './components/AssignmentCreation';
 
 const smallBreakpoint = 800;
 
@@ -104,6 +105,7 @@ function TimeTableView({ small, smallTimetable }) {
                     </Grid>
                 </Grid>
             </div>
+            <AssignmentCreation />
         </div>
     );
 }

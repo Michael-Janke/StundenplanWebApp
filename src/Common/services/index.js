@@ -6,6 +6,7 @@ import datesService from './dates-service';
 import periodService from './period-service';
 import authenticationService from './authentication-service';
 import tvService from './tv-service';
+import assignmentsService from './assignments-service';
 
 export default [
     authenticationService,
@@ -16,4 +17,5 @@ export default [
     datesService,
     periodService,
     tvService,
+    assignmentsService,
 ];

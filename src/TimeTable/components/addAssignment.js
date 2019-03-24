@@ -6,23 +6,20 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { openCreateAssignment } from '../actions';
 
-const AddAssignment = ({ isTeacher, team, openCreateAssignment }) =>
-    isTeacher ? (
-        <MenuItem onClick={() => openCreateAssignment(team)}>
-            <ListItemIcon>
-                <AssignmentAddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Hausaufgabe erstellen" />
-        </MenuItem>
-    ) : null;
-
-const mapStateToProps = ({ user }) => ({ isTeacher: user.type === 'teacher' });
+const AddAssignment = ({ date, team, openCreateAssignment }) => (
+    <MenuItem onClick={() => openCreateAssignment({ date, team })}>
+        <ListItemIcon>
+            <AssignmentAddIcon />
+        </ListItemIcon>
+        <ListItemText primary="Aufgabe erstellen" />
+    </MenuItem>
+);
 
 const mapDispatchToProps = dispatch => ({
-    openCreateAssignment: team => dispatch(openCreateAssignment(team)),
+    openCreateAssignment: data => dispatch(openCreateAssignment(data)),
 });
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(AddAssignment);

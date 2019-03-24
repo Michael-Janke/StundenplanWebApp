@@ -68,12 +68,6 @@ export default function teamsReducer(state = initialState, action = {}) {
                 },
             };
         }
-        case 'OPEN_CREATE_ASSIGNMENT': {
-            return {
-                ...state,
-                createAssignmentFor: action.payload,
-            };
-        }
 
         default:
             return state;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import indigo from '@material-ui/core/colors/indigo';
 import grey from '@material-ui/core/colors/grey';
@@ -13,6 +14,7 @@ import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import DoneIcon from '@material-ui/icons/Done';
+import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
 import AddAssignment from './components/addAssignment';
 
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
@@ -34,6 +36,8 @@ const AbstractLesson = props => {
         reference,
         team,
         assignments,
+        isTeacher,
+        date,
     } = props;
     const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
     if (continueation) {
@@ -128,13 +132,20 @@ const AbstractLesson = props => {
     const allDoneAssignments = assignments.every(assignment =>
         assignment.submissions ? assignment.submissions.every(submission => submission.status === 'submitted') : false
     );
+    const badgeContent = isTeacher ? (
+        <AssignmentIcon style={{ fontSize: '1rem', marginRight: '5px', marginTop: '5px' }} />
+    ) : allDoneAssignments ? (
+        <DoneIcon />
+    ) : (
+        assignments.length
+    );
     return (
         <Popover active={popoverActive} key={reference.TIMETABLE_ID}>
             {(props, handleOpen) => (
                 <Badge
                     component="div"
                     color={allDoneAssignments ? 'default' : 'secondary'}
-                    badgeContent={allDoneAssignments ? <DoneIcon /> : assignments.length}
+                    badgeContent={badgeContent}
                     invisible={assignments.length === 0}
                     style={{ display: 'flex', flex: 'auto', backgroundColor: allDoneAssignments ? 'green' : null }}
                 >
@@ -166,16 +177,15 @@ const AbstractLesson = props => {
                     {team && (
                         <React.Fragment>
                             <Divider />
-                            <ListSubheader component="div">Office</ListSubheader>
                             <OpenOfficeButton id={team.id} type="teams" />
                             <OpenOfficeButton id={team.id} type="notebook" />
+                            {isTeacher && <AddAssignment team={team} date={date} />}
                         </React.Fragment>
                     )}
                     {!!assignments.length && (
                         <React.Fragment>
                             <Divider />
                             <Assignments assignments={assignments} team={team} />
-                            {false && team && <AddAssignment team={team} />}
                         </React.Fragment>
                     )}
                 </List>
@@ -222,12 +232,6 @@ const LessonContainer = styled.div`
         align-items: center; 
         justify-content: space-between;
     `}
-    ${props =>
-        props.tab &&
-        props.small &&
-        `
-        padding-left: 0.5vmin;
-    `}
 `;
 
 const LessonWrapper = styled.div`
@@ -257,5 +261,5 @@ const Lesson = styled.div`
     flex-direction: row;
     background-color: ${props => props.color || darken(indigo[50], props.type === 'dark' ? 0.6 : 0)};
 `;
-
-export default withStyles(styles, { withTheme: true })(AbstractLesson);
+const mapStateToProps = ({ user }) => ({ isTeacher: user.type === 'teacher' });
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(AbstractLesson));

@@ -87,12 +87,20 @@ class TimeTableGrid extends React.Component {
             if (!period) {
                 return null;
             }
+            let time = periods[periodNumber].START_TIME;
+            let periodDate =
+                date &&
+                date
+                    .clone()
+                    .weekday(day)
+                    .hour(Math.floor(time / 100))
+                    .minute(time % 100);
             return (
                 <TableCell
                     key={day}
                     style={{
                         textAlign: 'center',
-                        padding: '0.5vmin',
+                        padding: small ? 2 : 4,
                         overflow: 'visible',
                         fontSize: '100%',
                     }}
@@ -104,6 +112,7 @@ class TimeTableGrid extends React.Component {
                         <PeriodColumn
                             continueation={period.continueation}
                             lessons={period.lessons}
+                            date={periodDate}
                             type={type}
                             small={small}
                             setTimeTable={setTimeTable}

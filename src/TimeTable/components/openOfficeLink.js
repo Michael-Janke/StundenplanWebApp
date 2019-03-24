@@ -2,9 +2,13 @@ import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Button from '@material-ui/core/Button';
 
 class OpenOfficeLink extends React.Component {
-    state = { webTimer: undefined };
+    state = {
+        webTimer: undefined,
+        useUrl: false,
+    };
     iframe = React.createRef();
 
     openUrl = () => {
@@ -13,7 +17,7 @@ class OpenOfficeLink extends React.Component {
 
     openClient = () => {
         window.addEventListener('blur', this.successClient);
-        if (navigator.platform === 'Win32') {
+        if (['Win32', 'MacIntel'].indexOf(navigator.platform) >= 0) {
             this.iframe.current.src = this.props.url.client;
         } else {
             this.openUrl();
@@ -33,6 +37,7 @@ class OpenOfficeLink extends React.Component {
         this.setState({ webTimer: undefined });
         window.removeEventListener('blur', this.successClient);
         this.iframe.current.src = '';
+        this.props.onClick && this.props.onClick();
     };
 
     componentWillUnmount = () => {
@@ -40,18 +45,26 @@ class OpenOfficeLink extends React.Component {
     };
 
     render() {
-        const { url, icon } = this.props;
+        const { url, icon, button, dense } = this.props;
+        const list = button === undefined || button === false;
+        const Comp = list ? ListItem : Button;
         return (
             <React.Fragment>
                 <iframe style={{ display: 'none' }} title="openframe" ref={this.iframe} />
-                <ListItem
+                <Comp
                     onClick={this.state.useUrl ? this.openUrl : this.openClient}
                     disabled={!url || !!this.state.webTimer}
-                    button
+                    variant={button && 'contained'}
+                    button={true}
+                    dense={dense}
                 >
-                    <ListItemIcon>{!url || this.state.webTimer ? <CircularProgress size={24} /> : icon}</ListItemIcon>
+                    {list && (
+                        <ListItemIcon>
+                            {!url || this.state.webTimer ? <CircularProgress size={24} /> : icon}
+                        </ListItemIcon>
+                    )}
                     {this.props.children}
-                </ListItem>
+                </Comp>
             </React.Fragment>
         );
     }

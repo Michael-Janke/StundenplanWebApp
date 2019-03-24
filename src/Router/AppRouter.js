@@ -25,6 +25,10 @@ class AppRouter extends Component {
         }, 1000);
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('focus', this.props.sendLoginStatistic);
+    }
+
     static getDerivedStateFromProps(nextProps, prevState) {
         if (!prevState.theme || (nextProps.themeType && prevState.theme.palette.type !== nextProps.themeType)) {
             return { theme: createTheme(nextProps.themeType) };

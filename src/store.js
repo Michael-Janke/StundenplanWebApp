@@ -17,7 +17,7 @@ if (process.env.REACT_APP_MODE === 'tv') {
 const persistConfig = {
     key: 'root',
     storage: localForage,
-    blacklist: ['browser', 'error', 'favorites'],
+    blacklist: ['browser', 'error', 'favorites', 'assignments'],
     version: 1,
 };
 

@@ -14,6 +14,7 @@ import online from './online';
 import teams from './teams';
 import substitutions from './substitutions';
 import tv from './tv';
+import assignments from './assignments';
 
 export default combineReducers({
     browser: createResponsiveStateReducer({
@@ -36,4 +37,5 @@ export default combineReducers({
     dates,
     teams,
     tv,
+    assignments,
 });

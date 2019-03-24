@@ -16,7 +16,7 @@ const teamsService = store => next => action => {
             return requestApiGenerator(next)(
                 GRAPH_URL,
                 `beta/education/me/assignments?${[
-                    '$select=instructions,id,classid,duedatetime,displayname',
+                    '$select=instructions,id,classid,duedatetime,displayname,status',
                     `$filter=duedatetime gt ${date}T00:00:00Z`,
                     '$expand=submissions($select=status)',
                     '$orderby=duedatetime',
