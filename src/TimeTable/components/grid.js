@@ -101,6 +101,8 @@ class TimeTableGrid extends React.Component {
                     style={{
                         textAlign: 'center',
                         padding: small ? 2 : 4,
+                        paddingRight: 2,
+                        borderLeft: period.skip ? '1px solid rgba(224, 224, 224, 1)' : '',
                         overflow: 'visible',
                         fontSize: '100%',
                     }}
