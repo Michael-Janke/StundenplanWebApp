@@ -8,6 +8,8 @@ const teamsService = store => next => action => {
             return requestApiGenerator(next)(GRAPH_URL, 'beta/education/me/classes', { type: 'GET_JOINED_TEAMS' });
         case 'GET_UNREAD_MESSAGES':
             return requestApiGenerator(next)(GRAPH_URL, 'v1.0/me/mailFolders/inbox', { type: 'GET_UNREAD_MESSAGES' });
+        case 'CREATE_ASSIGNMENT_RECEIVED':
+        case 'PUBLISH_ASSIGNMENT_RECEIVED':
         case 'GET_ASSIGNMENTS': {
             let date = moment()
                 .subtract(1, 'weeks')
