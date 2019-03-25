@@ -50,7 +50,7 @@ export class Mail extends Component {
     };
 
     openWebOutlook() {
-        window.location = 'https://outlook.office365.com';
+        window.open('https://outlook.office365.com', '_blank');
     }
 
     render() {
@@ -108,7 +108,7 @@ export class Mail extends Component {
                                         height: 40,
                                     }}
                                 >
-                                    AppStore
+                                    &nbsp;
                                 </a>
                             </div>
                         </>
