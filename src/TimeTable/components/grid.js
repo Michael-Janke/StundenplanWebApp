@@ -156,7 +156,7 @@ class TimeTableGrid extends React.Component {
         return (
             <TableRow style={{ height: 'unset' }} key={-2}>
                 <PeriodCell small={small}>
-                    <Times>{small ? 'HA' : 'Hausaufgaben'}</Times>
+                    <Times>{small ? 'HA' : 'Aufgaben'}</Times>
                 </PeriodCell>
                 {WEEKDAY_NAMES.map((name, i) => {
                     const day = timetable[i];

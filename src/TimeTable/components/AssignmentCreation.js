@@ -83,7 +83,7 @@ export class AssignmentCreation extends Component {
                 <DialogTitle>
                     <Title>
                         <AssignmentIcon color="primary" style={{ marginRight: '1vmin' }} />
-                        Hausaufgabe {created ? 'erstellt' : 'erstellen'}
+                        Aufgabe {created ? 'erstellt' : 'erstellen'}
                     </Title>
                 </DialogTitle>
                 {!created && (
