@@ -25,11 +25,11 @@ const enhanceStore = createStore => (reducer, preloadedState, enhancer) => {
     window.addEventListener('online', store.dispatch.bind(null, { type: 'NETWORK_ONLINE' }));
     window.addEventListener('offline', store.dispatch.bind(null, { type: 'NETWORK_OFFLINE' }));
 
-    // call action every minute
+    // call action every 10 seconds
     let intervalId;
     const startInterval = () => {
         stopInterval();
-        intervalId = setInterval(dispatchReduxAction, 1000 * 60);
+        intervalId = setInterval(dispatchReduxAction, 1000 * 10);
         dispatchReduxAction();
     };
     const stopInterval = () => {
@@ -39,14 +39,34 @@ const enhanceStore = createStore => (reducer, preloadedState, enhancer) => {
         }
     };
     startInterval();
-    window.addEventListener('blur', stopInterval);
-    window.addEventListener('focus', startInterval);
+
+    var hidden, visibilityChange;
+    if (typeof document.hidden !== 'undefined') {
+        // Opera 12.10 and Firefox 18 and later support
+        hidden = 'hidden';
+        visibilityChange = 'visibilitychange';
+    } else if (typeof document.msHidden !== 'undefined') {
+        hidden = 'msHidden';
+        visibilityChange = 'msvisibilitychange';
+    } else if (typeof document.webkitHidden !== 'undefined') {
+        hidden = 'webkitHidden';
+        visibilityChange = 'webkitvisibilitychange';
+    }
+
+    function handleVisibilityChange() {
+        if (document[hidden]) {
+            stopInterval();
+        } else {
+            startInterval();
+        }
+    }
+
+    document.addEventListener(visibilityChange, handleVisibilityChange, false);
 
     if (module.hot) {
         module.hot.dispose(() => {
             stopInterval();
-            window.removeEventListener('blur', stopInterval);
-            window.removeEventListener('focus', startInterval);
+            document.removeEventListener(visibilityChange, handleVisibilityChange);
         });
     }
     return store;
