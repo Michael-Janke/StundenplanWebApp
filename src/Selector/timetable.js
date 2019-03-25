@@ -395,12 +395,31 @@ export function translateLesson(masterdata, lesson, teams = {}, assignmentsMatch
     if (lesson.absence) {
         return { absence: lesson.absence };
     }
-    let team = teams[(lesson.SUBJECT_ID || lesson.SUBJECT_ID_OLD) * 10000 + lesson.LESSON_ID];
+    let matchedTeams = Object.values(teams).filter(team => {
+        const [className, subject] = team.externalName.split(' ');
+        const classIsGrade = !(className || '').match(/[a-z]/i); //10 Inf1
+        const matchingClass = (lesson.CLASS_IDS || []).some(c => {
+            const lessonClassName = masterdata.Class[c].NAME;
+            if (lessonClassName === className) return true;
+            if (classIsGrade) return lessonClassName.indexOf(className) >= 0;
+            return false;
+        });
+        const matchingClassOld = (lesson.CLASS_IDS_OLD || []).some(c => {
+            const lessonClassName = masterdata.Class[c].NAME;
+            if (lessonClassName === className) return true;
+            if (classIsGrade) return lessonClassName.indexOf(className) >= 0;
+            return false;
+        });
+        const matchingSubject = lesson.SUBJECT_ID && masterdata.Subject[lesson.SUBJECT_ID].NAME === subject;
+        const matchingSubjectOld = lesson.SUBJECT_ID_OLD && masterdata.Subject[lesson.SUBJECT_ID_OLD].NAME === subject;
+        return (matchingClass && matchingSubject) || (matchingClassOld && matchingSubjectOld);
+    });
+
     let validAssignments = [];
     let stillToMatch = [];
 
     assignmentsMatching.toMatch.forEach(assignment => {
-        if (team && assignment.classId === team.id) {
+        if (matchedTeams.some(t => t.id === assignment.classId)) {
             validAssignments.push(assignment);
         } else {
             stillToMatch.push(assignment);
@@ -436,7 +455,7 @@ export function translateLesson(masterdata, lesson, teams = {}, assignmentsMatch
             old: lesson.CLASS_IDS_OLD && lesson.CLASS_IDS_OLD.map(c => masterdata.Class[c]),
             substitution: lesson.CLASS_IDS_SUBSTITUTING && lesson.CLASS_IDS_SUBSTITUTING.map(c => masterdata.Class[c]),
         },
-        team,
+        teams: matchedTeams,
         assignments: validAssignments,
     };
 }

@@ -26,7 +26,7 @@ class OfficeLink extends React.Component {
     }
 
     render() {
-        const { url } = this.props;
+        const { url, subtitle } = this.props;
         const Icon = {
             teams: Icons.Teams,
             notebook: Icons.OneNote,
@@ -37,7 +37,7 @@ class OfficeLink extends React.Component {
         }[this.props.type];
         return (
             <OpenOfficeButton url={url} icon={<Icon.icon />}>
-                <ListItemText primary={text} />
+                <ListItemText primary={text} secondary={subtitle} />
             </OpenOfficeButton>
         );
     }

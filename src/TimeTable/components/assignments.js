@@ -22,7 +22,7 @@ export default function Assignments(props) {
                 return (
                     <AssignmentLink
                         key={assignment.id}
-                        id={props.team.id}
+                        id={assignment.classId}
                         icon={
                             draft ? <AssignmentDraftIcon /> : turnedIn ? <AssignmentTurnedInIcon /> : <AssignmentIcon />
                         }

@@ -34,7 +34,7 @@ const AbstractLesson = props => {
         continueation,
         setTimeTable,
         reference,
-        team,
+        teams,
         assignments,
         isTeacher,
         date,
@@ -174,18 +174,19 @@ const AbstractLesson = props => {
                     <Field1 description />
                     <Field2 description />
                     {Field3 && <Field3 description />}
-                    {team && (
-                        <React.Fragment>
+                    {teams.map(team => (
+                        <React.Fragment key={team.id}>
                             <Divider />
+                            {teams.length === 0 && <ListSubheader component="div">{team.displayName}</ListSubheader>}
                             <OpenOfficeButton id={team.id} type="teams" />
                             <OpenOfficeButton id={team.id} type="notebook" />
                             {isTeacher && <AddAssignment team={team} date={date} />}
                         </React.Fragment>
-                    )}
+                    ))}
                     {!!assignments.length && (
                         <React.Fragment>
                             <Divider />
-                            <Assignments assignments={assignments} team={team} />
+                            <Assignments assignments={assignments} />
                         </React.Fragment>
                     )}
                 </List>
