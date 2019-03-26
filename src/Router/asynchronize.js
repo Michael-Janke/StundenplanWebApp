@@ -13,7 +13,9 @@ const Loading = ({ isLoading, error, retry }) => {
     // Handle the error state
     console.error(error);
     if (error) {
-        return React.createElement(withRouter(() => <NotFoundPage error={400} retry={retry} message={error} />));
+        return React.createElement(
+            withRouter(() => <NotFoundPage error={400} retry={retry} message={error.message} />)
+        );
     } else {
         return null;
     }

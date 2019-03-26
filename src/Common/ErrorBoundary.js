@@ -1,7 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withStyles, Typography } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
-
+import trackError from '../Common/trackError';
 const styles = theme => ({
     root: {
         height: '100%',
@@ -21,6 +22,7 @@ class ErrorBoundary extends React.Component {
 
     componentDidCatch(error, info) {
         this.setState({ error: { error, info } });
+        trackError({ upn: this.props.upn, error: info, code: 500 });
     }
 
     render() {
@@ -45,4 +47,4 @@ class ErrorBoundary extends React.Component {
     }
 }
 
-export default withStyles(styles)(ErrorBoundary);
+export default withStyles(styles)(connect(({ user }) => ({ upn: user.upn }))(ErrorBoundary));

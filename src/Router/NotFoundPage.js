@@ -11,10 +11,8 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { connect } from 'react-redux';
 import { withRouter, Redirect, Link } from 'react-router-dom';
-import { detect } from 'detect-browser';
 import { hideSplash } from './SplashScreen';
-import { API_URL } from '../Common/services/generator';
-import version from '../version.json';
+import trackError from '../Common/trackError';
 
 function NotFoundPage(props) {
     const { classes, retry, location } = props;
@@ -33,25 +31,7 @@ function NotFoundPage(props) {
     // make sure splash is hidden
     hideSplash();
 
-    try {
-        fetch(API_URL + 'error', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                upn: props.upn,
-                browser: detect(),
-                buildNumber: version.build,
-                version: version.version,
-                errorCode: error,
-                error: {
-                    message,
-                    messageProp,
-                },
-            }),
-        });
-    } catch (e) {}
+    trackError({ upn: props.upn, error: messageProp, code: error });
 
     return (
         <div className={classes.root}>
@@ -74,6 +54,7 @@ function NotFoundPage(props) {
                             </Typography>
                             <Typography variant="body2" paragraph>
                                 {messageProp &&
+                                    messageProp.split &&
                                     messageProp.split('\n').map((paragraph, i) => (
                                         <React.Fragment key={i}>
                                             {paragraph}
