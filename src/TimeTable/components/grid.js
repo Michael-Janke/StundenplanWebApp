@@ -201,7 +201,7 @@ class TimeTableGrid extends React.Component {
                 {WEEKDAY_NAMES.map((name, i) => {
                     const day = timetable[i];
                     return (
-                        <TableCell key={i} style={{ padding: 0, fontSize: '100%' }}>
+                        <TableCell key={day} style={{ padding: 0, fontSize: '100%' }}>
                             {day.absences &&
                                 day.absences.map(absence => <Absence key={absence.ABSENCE_ID} absence={absence} />)}
                         </TableCell>

@@ -76,13 +76,23 @@ class AppBar extends React.Component {
                 <Icons style={{ marginLeft: large ? 270 : undefined }}>
                     <Search shrinkChildren={small} alwaysOpen={!small}>
                         {!small && (
-                            <Tooltip id="tooltip-print" title="Stundenplan drucken">
+                            <Tooltip
+                                id="tooltip-print"
+                                title="Stundenplan drucken"
+                                disableTouchListener
+                                disableFocusListener
+                            >
                                 <IconButton onClick={this.onPrintTimetable}>
                                     <PrintIcon className={classes.icon} />
                                 </IconButton>
                             </Tooltip>
                         )}
-                        <Tooltip id="tooltip-print" title="Ungelesene Nachrichten">
+                        <Tooltip
+                            id="tooltip-print"
+                            title="Ungelesene Nachrichten"
+                            disableTouchListener
+                            disableFocusListener
+                        >
                             <IconButton onClick={this.onMailOpen}>
                                 <UnreadMessages />
                             </IconButton>
