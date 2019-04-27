@@ -201,7 +201,7 @@ export class AuthenticationContext extends EventEmitter {
                     return;
                 }
                 // an error occured
-                this.tokens[endpoint] = null;
+                delete this.tokens[endpoint];
                 this.emit('token', { endpoint, target: { error: newToken } });
                 setAuthContext(this);
             }

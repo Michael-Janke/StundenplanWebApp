@@ -1,10 +1,10 @@
 import ls from 'local-storage';
 import { AuthenticationContext } from './authContext';
 
-const CONTEXT_KEY = 'authorization_v2';
+const CONTEXT_KEY = 'authorization_v3';
 
 // remove old keys
-['authorization'].forEach(ls.remove);
+['authorization', 'authorization_v2'].forEach(ls.remove);
 
 /**
  * @param {Window} win
