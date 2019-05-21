@@ -1,6 +1,7 @@
 import { setAuthContext } from './storage';
 import { EventEmitter } from 'events';
 import { timeout } from '../utils';
+import trackError from '../trackError';
 
 export class AuthenticationContext extends EventEmitter {
     static resources = {
@@ -193,17 +194,19 @@ export class AuthenticationContext extends EventEmitter {
                 this.tokens[endpoint] = newToken;
                 this.emit('token', { endpoint, target: { token: newToken } });
                 setAuthContext(this);
-            } catch (newToken) {
-                const authCodeExpired = newToken.error_codes && newToken.error_codes.indexOf(70008) !== -1;
+            } catch (error) {
+                const authCodeExpired = error.error_codes && error.error_codes.indexOf(70008) !== -1;
                 if (authCodeExpired) {
                     // get new authCode
                     this.login();
                     return;
                 }
                 // an error occured
+                trackError({ error, code: 1000 });
                 delete this.tokens[endpoint];
-                this.emit('token', { endpoint, target: { error: newToken } });
+                this.emit('token', { endpoint, target: { error } });
                 setAuthContext(this);
+                this.login();
             }
             this.tokenAcquisistions.splice(activeTokenAcquisition, 1);
         });
