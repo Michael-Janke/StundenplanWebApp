@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withStyles, FormControl, InputLabel, Input, FormHelperText, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { EditorState, RichUtils, convertFromRaw, convertToRaw, Modifier } from 'draft-js';
+
 import FormatBoldIcon from '@material-ui/icons/FormatBold';
 import FormatItalicIcon from '@material-ui/icons/FormatItalic';
 import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
@@ -11,6 +12,7 @@ import EmojiPicker from './emojiPicker';
 import ColorPicker from './colorPicker';
 import { COLOR_STYLE_MAP } from '../../Common/const';
 import Editor from '../editor';
+import Upload from './upload';
 
 const styles = theme => ({
     textArea: {
@@ -41,7 +43,7 @@ class PostEditor extends Component {
     state = { editorState: EditorState.createEmpty() };
     static getDerivedStateFromProps(props, state) {
         const post = props.post;
-        if (post !== state.post && post.TYPE) {
+        if (post !== state.post) {
             return {
                 post,
                 TITLE: post.TITLE,
@@ -51,14 +53,6 @@ class PostEditor extends Component {
             };
         }
         return state;
-    }
-
-    componentDidMount() {
-        this.props.handleNextFunction(this.handleNext);
-    }
-
-    componentWillUnmount() {
-        this.props.handleNextFunction(null);
     }
 
     handleNext = () => {
@@ -149,6 +143,7 @@ class PostEditor extends Component {
                     />
                     <FormHelperText id="component-error-text">Ein Titel wird benötigt</FormHelperText>
                 </FormControl>
+                <Upload />
                 <ToggleButtonGroup exclusive value={inlineStyle} onChange={this.handleFormat}>
                     <ToggleButton value="BOLD">
                         <FormatBoldIcon />

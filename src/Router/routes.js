@@ -17,7 +17,7 @@ const asynchronized = asynchronize();
 const withAuth = loader => withAuthentication('authentication', asynchronize(withApp)(loader));
 
 const Posts = withAuth(() => import('../Posts'));
-const PostEditor = withAuth(() => import('../Posts/Stepper/editPage'));
+const PostEditor = withAuth(() => import('../Posts/PostCreation'));
 const Main = withAuth(() => import('../Main'));
 const MainAppBar = asynchronized(() => import('../Main/components/AppBar'));
 const Statistics = withAuth(() => import('../Statistics'));

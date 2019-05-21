@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Stepper from './stepper';
+import TextEditor from './textEditor';
 import { withRouter } from 'react-router';
 import { addPost, editPost, getPosts } from '../actions';
 
@@ -26,7 +26,7 @@ class EditPage extends Component {
     };
 
     render() {
-        return <Stepper onClose={this.handleClose} post={this.props.post} />;
+        return <TextEditor onClose={this.handleClose} post={this.props.post || {}} />;
     }
 }
 

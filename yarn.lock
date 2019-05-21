@@ -4242,6 +4242,16 @@ filename-regex@^2.0.0:
   resolved "https://registry.yarnpkg.com/filename-regex/-/filename-regex-2.0.1.tgz#c1c4b9bee3e09725ddb106b75c1e301fe2f18b26"
   integrity sha1-wcS5vuPglyXdsQa3XB4wH+LxiyY=
 
+filepond-plugin-image-preview@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-image-preview/-/filepond-plugin-image-preview-4.0.5.tgz#61585a1d1bef421b429e3c94e12d218019bfbe7b"
+  integrity sha512-RSXtNtqAFX/nnnERcuuW8y5RBfAWhGVwfuaqSEDvcpRC0GId9e4JULxvA3ZxL93zNh1j7Qa/s4czqew4JNQ8rQ==
+
+filepond@^4.3.5:
+  version "4.3.5"
+  resolved "https://registry.yarnpkg.com/filepond/-/filepond-4.3.5.tgz#3a454ab18e6bbba96b63009d6856a477bf3eee2c"
+  integrity sha512-qJlGCZ2SJvHT7tTcr1X9yMbm7f7US7Qg1LapB3cCCb27BEwM2fiw/rUWL58kuYKx6Bd0VTsx9wRxV7KeXcp7ug==
+
 fileset@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/fileset/-/fileset-2.0.3.tgz#8e7548a96d3cc2327ee5e674168723a333bba2a0"
@@ -8818,6 +8828,11 @@ react-fast-compare@^2.0.3, react-fast-compare@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
+
+react-filepond@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/react-filepond/-/react-filepond-7.0.1.tgz#caf96526287140884a31a1476b8328d9d6ecdee2"
+  integrity sha512-PitNM44JP0K5hXnkSYV3HRlkObsWbhqaJRWizMrdHpS3pPz9/iyiOGmRpc+4T4ST3vblmiUTLRYq/+1bDcSqQw==
 
 react-interval@^2.0.2:
   version "2.0.2"

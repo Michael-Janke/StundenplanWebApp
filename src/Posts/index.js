@@ -117,7 +117,10 @@ class Posts extends React.Component {
                         )}
                         <div className={classes.topCreateButton}>
                             <Button variant="contained" color="primary" onClick={this.handleCreate}>
-                                Jetzt erstellen
+                                Beitrag erstellen
+                            </Button>
+                            <Button variant="contained" color="primary" onClick={this.handleCreate}>
+                                Diashow erstellen
                             </Button>
                         </div>
                     </div>
