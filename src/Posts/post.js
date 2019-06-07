@@ -94,7 +94,7 @@ class Post extends React.Component {
                             <ListItemIcon>
                                 <DeleteIcon />
                             </ListItemIcon>
-                            <ListItemText inset primary="Löschen" />
+                            <ListItemText primary="Löschen" />
                         </MenuItem>
                     )}
                     {(post.USER_CREATED || isAdmin) && (
@@ -102,7 +102,7 @@ class Post extends React.Component {
                             <ListItemIcon>
                                 <EditIcon />
                             </ListItemIcon>
-                            <ListItemText inset primary="Editieren" />
+                            <ListItemText primary="Editieren" />
                         </MenuItem>
                     )}
 
@@ -111,7 +111,7 @@ class Post extends React.Component {
                             <ListItemIcon>
                                 <ApproveIcon />
                             </ListItemIcon>
-                            <ListItemText inset primary={approved ? 'Sperren' : 'Freigeben'} />
+                            <ListItemText primary={approved ? 'Sperren' : 'Freigeben'} />
                         </MenuItem>
                     )}
                 </Menu>

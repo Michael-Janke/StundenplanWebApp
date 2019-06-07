@@ -24,8 +24,8 @@ function Transition(props) {
 
 const styles = theme => ({
     actionButtons: {
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit * 4,
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(4),
     },
     root: {
         maxWidth: 500,

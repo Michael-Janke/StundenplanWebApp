@@ -66,7 +66,7 @@ const styles = theme => ({
     },
 
     main: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         backgroundColor: theme.palette.background.paper,
         height: '100%',
         display: 'flex',
@@ -79,7 +79,7 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
     },
     image: {
         filter: `invert(100%) drop-shadow(1px 1px 0px rgba(0,0,0,0.2))`,

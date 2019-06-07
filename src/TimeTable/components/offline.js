@@ -13,7 +13,7 @@ import CloudOff from '@material-ui/icons/CloudOff';
 import purple from '@material-ui/core/colors/purple';
 const styles = theme => ({
     root: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         backgroundColor: theme.palette.background.default,
     },
     content: {

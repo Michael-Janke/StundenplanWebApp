@@ -9,14 +9,14 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
     },
     time: {
         color: 'white',
         fontWeight: 200,
     },
     seconds: {
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
         color: 'rgba(255,255,255,0.7)',
     },
 }));

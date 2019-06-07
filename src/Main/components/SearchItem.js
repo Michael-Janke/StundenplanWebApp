@@ -26,7 +26,7 @@ class SearchItem extends React.PureComponent {
                 <ListItemIcon>
                     <ObjectIcon type={type} upn={upn} />
                 </ListItemIcon>
-                <ListItemText inset primary={text} secondary={secondary} />
+                <ListItemText primary={text} secondary={secondary} />
                 {this.props.toggleFavorite && (
                     <ListItemSecondaryAction>
                         {secondary && (

@@ -292,7 +292,7 @@ const styles = theme => ({
         pointerEvents: 'none',
     },
     dropDown: {
-        marginTop: theme.spacing.unit,
+        marginTop: theme.spacing(1),
         boxShadow: theme.shadows[4],
         borderRadius: 2,
         transition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
@@ -340,7 +340,7 @@ const styles = theme => ({
         WebkitTransition: theme.transitions.create(['width', 'opacity']),
         willChange: 'width, opacity',
         height: '100%',
-        padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+        padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
     },
     inputFieldOpen: {
         width: '100%',

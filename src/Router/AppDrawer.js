@@ -19,7 +19,7 @@ const styles = theme => ({
         color: grey[100],
     },
     links: {
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
     },
 
     linksList: {

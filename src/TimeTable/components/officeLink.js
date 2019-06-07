@@ -10,7 +10,7 @@ import OpenOfficeButton from './openOfficeLink';
 const styles = theme => ({
     button: {
         justifyContent: 'space-between',
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
     },
 });
 

@@ -16,7 +16,6 @@ import { withRouter } from 'react-router';
 const styles = theme => ({
     root: {
         width: '100%',
-        // padding: `${theme.spacing.unit * 8}px ${theme.spacing.unit * 6}px`,
         boxSizing: 'border-box',
         overflowY: 'auto',
         height: '100%',
@@ -45,8 +44,8 @@ const styles = theme => ({
     },
     createButton: {
         position: 'absolute',
-        right: theme.spacing.unit * 2,
-        bottom: theme.spacing.unit * 2,
+        right: theme.spacing(2),
+        bottom: theme.spacing(2),
     },
     heroUnit: {
         backgroundColor: theme.palette.background.paper,
@@ -54,17 +53,17 @@ const styles = theme => ({
     heroContent: {
         maxWidth: 600,
         margin: '0 auto',
-        padding: `${theme.spacing.unit * 2}px`,
+        padding: `${theme.spacing(2)}px`,
     },
     topCreateButton: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
         display: 'flex',
         justifyContent: 'center',
     },
     layout: {
-        padding: `${theme.spacing.unit}px`,
+        padding: `${theme.spacing(1)}px`,
         width: 'auto',
-        [theme.breakpoints.up(1100 + theme.spacing.unit * 3 * 2)]: {
+        [theme.breakpoints.up(1100 + theme.spacing(3) * 2)]: {
             width: 1100,
             marginLeft: 'auto',
             marginRight: 'auto',
@@ -126,7 +125,7 @@ class Posts extends React.Component {
                     <Grid
                         container
                         component={TransitionGroup}
-                        spacing={8}
+                        spacing={1}
                         className={classes.postsGrid}
                         justify="center"
                     >

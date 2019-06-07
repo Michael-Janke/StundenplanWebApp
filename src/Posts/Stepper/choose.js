@@ -7,7 +7,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.default,
     },
     content: {
-        padding: theme.spacing.unit * 3,
+        padding: theme.spacing(3),
     },
 });
 

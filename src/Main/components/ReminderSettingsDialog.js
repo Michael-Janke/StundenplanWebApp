@@ -21,11 +21,8 @@ import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 
-import { InlineTimePicker as TimePickerComponent } from 'material-ui-pickers';
-import datePickerEnhancer from '../../Dates/datePickerEnhancer';
+import { TimePicker } from '@material-ui/pickers';
 import { Fab } from '@material-ui/core';
-
-const TimePicker = datePickerEnhancer(TimePickerComponent);
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
@@ -121,15 +118,17 @@ export class ReminderSettings extends Component {
                             <Row>
                                 <span>Uhrzeit:</span>
                                 <TimePicker
-                                    ampm={this.props.small}
+                                    ampm={false}
                                     value={remindTime}
                                     onChange={time => {
                                         if (time.hours() < 15) time.hours(15);
                                         time.minutes(Math.floor(time.minutes() / 5) * 5);
                                         this.handleChange('remindTime', time);
                                     }}
+                                    autoOk={true}
                                     disabled={loading || !remind}
-                                    okToConfirm={false}
+                                    cancelLabel="Abbrechen"
+                                    invalidDateMessage="Ungültiges Datumsformat"
                                 />
                             </Row>
                             {!loading && remind && (

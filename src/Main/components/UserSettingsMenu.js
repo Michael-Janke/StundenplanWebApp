@@ -127,31 +127,31 @@ class UserSettingsMenu extends React.Component {
                         <ListItemIcon>
                             <FeedbackIcon />
                         </ListItemIcon>
-                        <ListItemText inset primary="Feedback senden" />
+                        <ListItemText primary="Feedback senden" />
                     </MenuItem>
                     <MenuItem onClick={this.profilePicChange}>
                         <ListItemIcon>
                             <ProfilePicIcon />
                         </ListItemIcon>
-                        <ListItemText inset primary="Profilbild ändern" />
+                        <ListItemText primary="Profilbild ändern" />
                     </MenuItem>
                     <MenuItem onClick={this.passwordChange}>
                         <ListItemIcon>
                             <KeyIcon />
                         </ListItemIcon>
-                        <ListItemText inset primary="Passwort ändern" />
+                        <ListItemText primary="Passwort ändern" />
                     </MenuItem>
                     <MenuItem onClick={this.openReminderSettings}>
                         <ListItemIcon>
                             <MailIcon />
                         </ListItemIcon>
-                        <ListItemText inset primary="E-Mail-Erinnerungen" />
+                        <ListItemText primary="E-Mail-Erinnerungen" />
                     </MenuItem>
                     <MenuItem onClick={this.reset}>
                         <ListItemIcon>
                             <RefreshIcon />
                         </ListItemIcon>
-                        <ListItemText inset primary="Reset" />
+                        <ListItemText primary="Reset" />
                     </MenuItem>
                     {false && (
                         <MenuItem onClick={this.setNotification}>
@@ -159,7 +159,6 @@ class UserSettingsMenu extends React.Component {
                                 {this.props.notificationToken ? <NotificationsOff /> : <NotificationsOn />}
                             </ListItemIcon>
                             <ListItemText
-                                inset
                                 primary={
                                     'Benachrichtigungen ' +
                                     (this.props.notificationToken ? 'ausschalten' : 'anschalten')
@@ -171,7 +170,7 @@ class UserSettingsMenu extends React.Component {
                         <ListItemIcon>
                             <LogOutIcon />
                         </ListItemIcon>
-                        <ListItemText inset primary="Logout" />
+                        <ListItemText primary="Logout" />
                     </MenuItem>
                 </Menu>
             </div>
@@ -206,4 +205,4 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(withTheme()(UserSettingsMenu));
+)(withTheme(UserSettingsMenu));

@@ -4,9 +4,7 @@ import './index.css';
 import { register } from './serviceWorker';
 import moment from 'moment';
 import 'moment/locale/de';
-import { install } from '@material-ui/styles';
 moment.locale('de');
-install();
 
 console.log('REACT_APP_MODE: ' + process.env.REACT_APP_MODE);
 

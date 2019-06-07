@@ -28,7 +28,7 @@ const styles = theme => ({
     },
     root: {
         display: 'flex',
-        padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+        padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
         backgroundColor: 'initial',
     },
     dateStrings: {

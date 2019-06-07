@@ -32,7 +32,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.grey[300],
     },
     printPreview: {
-        padding: theme.spacing.unit * 3,
+        padding: theme.spacing(3),
         overflowY: 'auto',
         height: '100%',
         boxSizing: 'border-box',
@@ -42,7 +42,7 @@ const styles = theme => ({
         width: `${(800 * 1) / Math.sqrt(2)}px`,
     },
     formControl: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
         minWidth: 120,
     },
 });

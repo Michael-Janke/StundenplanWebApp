@@ -75,7 +75,7 @@ const styles = theme => ({
         height: '100%',
         width: '100%',
         overflow: 'auto',
-        padding: `12.5% ${theme.spacing.unit * 4}px`,
+        padding: `12.5% ${theme.spacing(4)}px`,
         boxSizing: 'border-box',
     },
     paper: {
@@ -83,7 +83,7 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'space-between',
         flexDirection: 'column',
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
     },
     expansionPanel: {
         '&:before': {

@@ -88,7 +88,7 @@ function TimeTableView({ small, smallTimetable }) {
         <div className={classes.root} key={0} id="content-root">
             <div className={classes.extendedAppBar} />
             <div className={classes.panel}>
-                <Grid container spacing={8} className={classes.grid} direction="row">
+                <Grid container spacing={1} className={classes.grid} direction="row">
                     <Grid item xs className={classNames(classes.timetable, classes.gridItem)}>
                         <Paper className={classes.paper} square>
                             <ErrorBoundary>

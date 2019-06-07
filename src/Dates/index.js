@@ -30,8 +30,8 @@ const styles = theme => ({
     },
     fabButton: {
         position: 'absolute',
-        right: theme.spacing.unit * 2,
-        bottom: theme.spacing.unit * 2,
+        right: theme.spacing(2),
+        bottom: theme.spacing(2),
         zIndex: 2,
     },
     header: {

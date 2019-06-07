@@ -54,9 +54,9 @@ const styles = theme => ({
         color: theme.palette.text.secondary,
         paddingTop: 4,
         paddingBottom: 4,
-        paddingLeft: theme.spacing.unit * 2,
+        paddingLeft: theme.spacing(2),
         borderRight: `1.5px solid ${theme.palette.divider}`,
-        paddingRight: theme.spacing.unit * 2,
+        paddingRight: theme.spacing(2),
     },
     offlineText: {
         transition: theme.transitions.create(['max-width']),
