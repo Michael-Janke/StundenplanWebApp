@@ -1,7 +1,8 @@
 /* eslint-disable no-restricted-globals */
 self.addEventListener('message', function handleSkipWaiting(event) {
-    if (event.data === 'skipWaiting') { self.skipWaiting(); }
+    if (event.data === 'skipWaiting') {
+        self.skipWaiting();
+    }
 });
 
-workbox.skipWaiting();
-workbox.clientsClaim();
+workbox.core.skipWaiting();
