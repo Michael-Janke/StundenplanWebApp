@@ -1,6 +1,5 @@
 const initialState = {
     counter: true,
-    adal: true,
     timetable: true,
 };
 
@@ -16,16 +15,6 @@ export default function onlineReducer(state = initialState, action) {
                 ...state,
                 counter: true,
             };
-        case 'ADAL_ERROR':
-            return {
-                ...state,
-                adal: false,
-            };
-        case 'ADAL_RECEIVED':
-            return {
-                ...state,
-                adal: true,
-            };
         case 'GET_SUBSTITUTIONS_ERROR':
         case 'GET_TIMETABLE_ERROR': {
             return {
@@ -35,6 +24,7 @@ export default function onlineReducer(state = initialState, action) {
         }
         case 'GET_SUBSTITUTIONS':
         case 'GET_TIMETABLE':
+        case 'RETRY_TIMETABLE':
             return {
                 ...state,
                 timetable: true,

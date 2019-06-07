@@ -20,7 +20,7 @@ const getCurrentTimetable = makeGetCurrentTimetable();
         periods: state.timetable.masterdata.Period_Time,
         warning: state.user.warning,
         counterChanged: state.user.counterChanged,
-        offline: !state.online.timetable || !state.online.adal,
+        offline: !state.online.timetable,
         me:
             state.timetable.currentTimeTableType === state.user.type &&
             state.timetable.currentTimeTableId === state.user.id,

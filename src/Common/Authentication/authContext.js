@@ -104,11 +104,11 @@ export class AuthenticationContext extends EventEmitter {
         return !!this.allowed;
     }
 
-    login() {
-        if (!this.isAllowed('authentication')) {
+    login(force = false) {
+        if (!force && !this.isAllowed('authentication')) {
             throw new Error('Authentication not allowed');
         }
-        if (this.isLoggedIn() || this.isLoggingIn()) {
+        if ((!force && this.isLoggedIn()) || this.isLoggingIn()) {
             return;
         }
         // invalidate current tokens, in fact we get new access tokens soon
@@ -187,26 +187,19 @@ export class AuthenticationContext extends EventEmitter {
                 );
                 const newToken = await response.json();
                 console.debug('got token for endpoint ', endpoint, newToken);
-                if (newToken.error) {
-                    throw newToken;
+                if (newToken.error && newToken.error.error_codes && newToken.error.error_codes.indexOf(70008) !== -1) {
+                    //expired
+                    this.login(true);
+                    return;
                 }
                 newToken.acquired = Date.now();
                 this.tokens[endpoint] = newToken;
                 this.emit('token', { endpoint, target: { token: newToken } });
                 setAuthContext(this);
             } catch (error) {
-                const authCodeExpired = error.error_codes && error.error_codes.indexOf(70008) !== -1;
-                if (authCodeExpired) {
-                    // get new authCode
-                    this.login();
-                    return;
-                }
                 // an error occured
                 trackError({ error, code: 1000 });
-                delete this.tokens[endpoint];
-                this.emit('token', { endpoint, target: { error } });
-                setAuthContext(this);
-                this.login();
+                return this.login(true);
             }
             this.tokenAcquisistions.splice(activeTokenAcquisition, 1);
         });
