@@ -11,9 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import Icons from '../../Common/Waffle/office-icons';
 
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" {...props} ref={ref} />);
 export class Mail extends Component {
     constructor(props) {
         super(props);

@@ -24,12 +24,10 @@ import moment from 'moment';
 import { TimePicker } from '@material-ui/pickers';
 import { Fab } from '@material-ui/core';
 
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" {...props} ref={ref} />);
 
 export class ReminderSettings extends Component {
-    state = {};
+    state = { newEMail: '' };
 
     static getDerivedStateFromProps(nextProps, prevState) {
         if ((prevState.loading && !nextProps.loading) || prevState.loading === undefined)

@@ -18,9 +18,7 @@ import AssignmentLink from './assignmentLink';
 import { connect } from 'react-redux';
 import { closeCreateAssignment, createAssignment, publishAssignment } from '../actions';
 
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" {...props} ref={ref} />);
 
 const styles = theme => ({
     actionButtons: {

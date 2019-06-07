@@ -14,10 +14,7 @@ import Slide from '@material-ui/core/Slide';
 
 import version from '../../version.json';
 
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
-
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" {...props} ref={ref} />);
 export class Feedback extends Component {
     constructor(props) {
         super(props);

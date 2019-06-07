@@ -2,13 +2,10 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 function ClearTimetable({ id, clearTimetable }) {
-    useEffect(
-        () => {
-            let timeout = setTimeout(clearTimetable, 60 * 1000);
-            return () => clearTimeout(timeout);
-        },
-        [id]
-    );
+    useEffect(() => {
+        let timeout = setTimeout(clearTimetable, 60 * 1000);
+        return () => clearTimeout(timeout);
+    }, [clearTimetable, id]);
     return null;
 }
 
