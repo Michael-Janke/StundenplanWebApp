@@ -29,7 +29,7 @@ const useStyles = makeStyles(
             flexDirection: 'row',
             alignItems: 'center',
             width: '100%',
-            height: 104,
+            height: 64,
             position: 'absolute',
             backgroundColor: indigo[600],
         },

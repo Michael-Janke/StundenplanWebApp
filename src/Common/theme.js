@@ -20,11 +20,7 @@ export default themeType =>
                 },
             },
 
-            MuiListItemIcon: {
-                root: {
-                    minWidth: '40px',
-                },
-            },
+            MuiListItemIcon: {},
             MuiListSubheader: {
                 root: {
                     fontSize: '0.875rem',

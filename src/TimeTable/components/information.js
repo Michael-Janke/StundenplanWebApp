@@ -17,6 +17,8 @@ const styles = theme => ({
     },
     item: {
         paddingRight: 0,
+        paddingTop: 0,
+        paddingBottom: 0,
     },
 });
 
@@ -33,7 +35,7 @@ const CurrentTimetableInformation = ({ type, id, masterdata, lastUpdate, small, 
     return (
         <ListItem className={classes.item}>
             <ListItemIcon>
-                <ObjectIcon upn={object.UPN} type={type} profilePicSize={34} />
+                <ObjectIcon upn={object.UPN} type={type} profilePicSize={40} />
             </ListItemIcon>
             <ListItemText
                 className={classes.text}

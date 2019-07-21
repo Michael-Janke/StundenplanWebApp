@@ -24,7 +24,6 @@ const styles = theme => ({
     tableToolbar: {
         borderBottom: `1px solid ${theme.palette.divider}`,
         flex: '1 0 48px',
-        minHeight: 0,
         width: '100%',
         display: 'flex',
         justifyContent: 'flex-end',
