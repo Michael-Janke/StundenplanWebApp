@@ -121,7 +121,6 @@ class Substitutions extends React.Component {
     };
 
     render() {
-        console.log(this.props.substitutions);
         if (!this.props.substitutions) {
             return null;
         }

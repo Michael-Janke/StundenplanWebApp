@@ -47,9 +47,10 @@ export class Mail extends Component {
         });
     };
 
-    openWebOutlook() {
+    openWebOutlook = () => {
         window.open('https://outlook.office365.com', '_blank');
-    }
+        this.props.onClose();
+    };
 
     render() {
         var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

@@ -2,30 +2,14 @@ import React from 'react';
 import EditIcon from '@material-ui/icons/Create';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import IconButton from '@material-ui/core/IconButton';
-import grey from '@material-ui/core/colors/grey';
-import orange from '@material-ui/core/colors/orange';
-import green from '@material-ui/core/colors/green';
-import red from '@material-ui/core/colors/red';
+
 import moment from 'moment';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Typography, Paper } from '@material-ui/core';
-import { classNames } from '../Common/const';
+import { classNames, DATE_COLORS } from '../Common/const';
 
 const styles = theme => ({
-    HOLIDAY: {
-        color: theme.palette.type === 'dark' ? green[200] : green[600],
-        fontWeight: 'bold',
-    },
-    EXKURSION: {
-        color: theme.palette.type === 'dark' ? orange[200] : orange[600],
-    },
-    NORMAL: {
-        color: theme.palette.type === 'dark' ? grey[200] : grey[800],
-    },
-    EXAM: {
-        color: theme.palette.type === 'dark' ? red[200] : red[800],
-        fontWeight: 'bolder',
-    },
+    ...DATE_COLORS(theme),
     root: {
         display: 'flex',
         padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,

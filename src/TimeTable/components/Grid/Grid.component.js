@@ -5,18 +5,18 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import PeriodColumn from '../period';
-import { WEEKDAY_NAMES, classNames } from '../../Common/const';
-import { setTimeTable, retryTimetable } from '../../Main/actions';
-import Holiday from '../Holiday';
+import PeriodColumn from '../../period';
+import { WEEKDAY_NAMES, classNames } from '../../../Common/const';
+import { setTimeTable, retryTimetable } from '../../../Main/actions';
+import Holiday from '../../Holiday';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Tooltip from '@material-ui/core/Tooltip';
-import RoomList from '../roomlist';
-import Supervision from '../supervision';
-import Absence from '../absence';
+import RoomList from '../../roomlist';
+import Supervision from '../../supervision';
+import Absence from '../../absence';
 import { LinearProgress } from '@material-ui/core';
-import PeriodCell from './periodCell';
-import Offline from './offline';
+import PeriodCell from '../periodCell';
+import Offline from '../offline';
 
 class TimeTableGrid extends React.Component {
     shouldComponentUpdate(nextProps) {

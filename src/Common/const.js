@@ -2,6 +2,11 @@ import * as colors from '@material-ui/core/colors';
 import { createMask, transform, fromViewer, addSubstitutionInformation, removeIf } from './masks';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 
+import grey from '@material-ui/core/colors/grey';
+import orange from '@material-ui/core/colors/orange';
+import green from '@material-ui/core/colors/green';
+import red from '@material-ui/core/colors/red';
+
 export const WEEKDAY_NAMES = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
 
 const colorsArray = [
@@ -238,3 +243,20 @@ export const SUBSTITUTION_MAP = {
 
 export const getSubstitutionsCacheKey = ({ id, type, week, year }) => `substitutions-${id}-${type}@${week}-${year}`;
 export const getTimetableCacheKey = ({ id, type }) => `timetable-${id}-${type}`;
+
+export const DATE_COLORS = theme => ({
+    HOLIDAY: {
+        color: theme.palette.type === 'dark' ? green[200] : green[600],
+        fontWeight: 'bold',
+    },
+    EXKURSION: {
+        color: theme.palette.type === 'dark' ? orange[200] : orange[600],
+    },
+    NORMAL: {
+        color: theme.palette.type === 'dark' ? grey[200] : grey[800],
+    },
+    EXAM: {
+        color: theme.palette.type === 'dark' ? red[200] : red[800],
+        fontWeight: 'bolder',
+    },
+});

@@ -136,7 +136,7 @@ function PublicDisplay({ open }) {
                     <Grid item xs={3} className={classes.gridItem}>
                         <Paper className={classNames(classes.dates, classes.paper)} square>
                             <ErrorBoundary>
-                                <Dates singleMonth={small} />
+                                <Dates filterDate={small} />
                             </ErrorBoundary>
                         </Paper>
                     </Grid>

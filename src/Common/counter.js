@@ -5,7 +5,7 @@ const counterMiddleware = store => next => action => {
             if (store.getState().user.counterChanged === 'detected') {
                 store.dispatch({ type: 'GET_ME' });
                 store.dispatch({ type: 'GET_MASTERDATA' });
-                next({ type: 'COUNTER_CHANGED' });
+                store.dispatch({ type: 'COUNTER_CHANGED' });
             }
             break;
         case 'GET_ME_RECEIVED':

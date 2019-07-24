@@ -67,6 +67,7 @@ const useStyles = makeStyles(
             [theme.breakpoints.down(smallBreakpoint)]: {
                 flexGrow: 1,
             },
+            width: '100%',
         },
         timetable: {
             maxWidth: 800,
@@ -99,7 +100,7 @@ function TimeTableView({ small, smallTimetable }) {
                     <Grid item xs className={classNames(classes.dates, classes.gridItem)}>
                         <Paper className={classes.paper} square>
                             <ErrorBoundary>
-                                <Dates singleMonth={small} />
+                                <Dates filterDate={small} />
                             </ErrorBoundary>
                         </Paper>
                     </Grid>
