@@ -8,14 +8,14 @@ const styles = theme => ({
     root: {
         width: (124 * 16) / 9,
         height: 124,
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         border: `3px solid ${theme.palette.divider}`,
         overflow: 'hidden',
     },
     buttonAdd: {
         border: `3px dashed ${gray[600]}`,
         borderRadius: '50%',
-        padding: theme.spacing.unit * 1,
+        padding: theme.spacing(1),
     },
 });
 

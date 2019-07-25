@@ -10,6 +10,7 @@ import cacheService from './Common/cache-service';
 import counterChanged from './Common/counter';
 import { responsiveStoreEnhancer } from 'redux-responsive';
 import periodEnhancer from './intervalDispatch';
+import version from './version.json';
 if (process.env.REACT_APP_MODE === 'tv') {
     var tvBarrier = require('./Common/tv-barrier').default;
 }
@@ -17,8 +18,13 @@ if (process.env.REACT_APP_MODE === 'tv') {
 const persistConfig = {
     key: 'root',
     storage: localForage,
-    blacklist: ['browser', 'error', 'favorites', 'assignments'],
-    version: 1,
+    blacklist: ['browser', 'error', 'favorites', 'assignments', 'notifications'],
+    version: version.build,
+    migrate: state => {
+        if (state._persist.version === version.build) return Promise.resolve(state);
+        console.log('purge state, new build');
+        return Promise.resolve({});
+    },
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

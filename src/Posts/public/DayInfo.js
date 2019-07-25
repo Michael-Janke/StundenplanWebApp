@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         flexBasis: 0,
         color: 'white',
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
         height: '100%',
     },
     headerContainer: {

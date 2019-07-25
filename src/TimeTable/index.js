@@ -29,7 +29,7 @@ const useStyles = makeStyles(
             flexDirection: 'row',
             alignItems: 'center',
             width: '100%',
-            height: 104,
+            height: 64,
             position: 'absolute',
             backgroundColor: indigo[600],
         },
@@ -67,6 +67,7 @@ const useStyles = makeStyles(
             [theme.breakpoints.down(smallBreakpoint)]: {
                 flexGrow: 1,
             },
+            width: '100%',
         },
         timetable: {
             maxWidth: 800,
@@ -88,7 +89,7 @@ function TimeTableView({ small, smallTimetable }) {
         <div className={classes.root} key={0} id="content-root">
             <div className={classes.extendedAppBar} />
             <div className={classes.panel}>
-                <Grid container spacing={8} className={classes.grid} direction="row">
+                <Grid container spacing={1} className={classes.grid} direction="row">
                     <Grid item xs className={classNames(classes.timetable, classes.gridItem)}>
                         <Paper className={classes.paper} square>
                             <ErrorBoundary>
@@ -99,7 +100,7 @@ function TimeTableView({ small, smallTimetable }) {
                     <Grid item xs className={classNames(classes.dates, classes.gridItem)}>
                         <Paper className={classes.paper} square>
                             <ErrorBoundary>
-                                <Dates singleMonth={small} />
+                                <Dates filterDate={small} />
                             </ErrorBoundary>
                         </Paper>
                     </Grid>

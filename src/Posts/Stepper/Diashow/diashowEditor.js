@@ -7,7 +7,7 @@ import Slider from '@material-ui/lab/Slider';
 
 const styles = theme => ({
     formControl: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         minWidth: 140,
         width: '100%',
         boxSizing: 'border-box',
@@ -16,7 +16,7 @@ const styles = theme => ({
         padding: 0,
     },
     content: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         maxWidth: 480,
         flex: 3,
     },
@@ -26,20 +26,20 @@ const styles = theme => ({
         flexWrap: 'wrap',
     },
     editor: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         flex: 1,
         backgroundColor: theme.palette.background.default,
     },
     thumbnails: {
         width: '100%',
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         backgroundColor: theme.palette.background.default,
     },
     header: {
         display: 'flex',
         alignItems: 'center',
         height: 50,
-        paddingLeft: theme.spacing.unit * 4,
+        paddingLeft: theme.spacing(4),
         backgroundColor: theme.palette.background.default,
     },
 });

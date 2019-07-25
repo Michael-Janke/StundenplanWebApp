@@ -69,16 +69,16 @@ const styles = theme => ({
         alignItems: 'center',
     },
     number: {
-        margin: `${theme.spacing.unit / 3}px`,
+        margin: `${theme.spacing(0.333)}px`,
     },
     numberFree: {
-        padding: `0 ${theme.spacing.unit / 2 - 1}px`,
+        padding: `0 ${theme.spacing(0.5) - 1}px`,
         fontWeight: 600,
         color: green[theme.palette.type === 'dark' ? 300 : 600],
         fontSize: '140%',
     },
     numberBlocked: {
-        padding: `0 ${theme.spacing.unit / 2}px`,
+        padding: `0 ${theme.spacing(0.5)}px`,
         fontSize: '100%',
         color: red[theme.palette.type === 'dark' ? 300 : 600] + '5c',
     },

@@ -17,10 +17,10 @@ import Upload from './upload';
 const styles = theme => ({
     textArea: {
         border: `1px solid ${theme.palette.divider}`,
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
     },
     formControl: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         minWidth: 140,
         width: '100%',
         boxSizing: 'border-box',

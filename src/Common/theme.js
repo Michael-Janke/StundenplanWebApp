@@ -13,20 +13,17 @@ export default themeType =>
         overrides: {
             MuiListItemText: {
                 primary: {
-                    fontSize: '80%',
+                    fontSize: '0.875rem',
                 },
                 secondary: {
-                    fontSize: '70%',
+                    fontSize: '0.8rem',
                 },
             },
-            MuiListItem: {
-                root: {
-                    fontSize: 'unset',
-                },
-            },
+
+            MuiListItemIcon: {},
             MuiListSubheader: {
                 root: {
-                    fontSize: '80%',
+                    fontSize: '0.875rem',
                 },
             },
         },

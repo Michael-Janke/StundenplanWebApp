@@ -1,19 +1,10 @@
 export default function avatarsReducer(state = { loading: false }, action = {}) {
     switch (action.type) {
         case 'persist/REHYDRATE': {
-            // prevent dead error objects in avatars
-            // can happen if upgrading from old persisted state
             if (!action.payload || !action.payload.avatars) return state;
-            let filtered = Object.keys(action.payload.avatars).reduce((prev, key) => {
-                let object = action.payload.avatars[key];
-                if (object && object.img && !object.img.error) {
-                    prev[key] = object;
-                }
-                return prev;
-            }, {});
             return {
                 ...state,
-                ...filtered,
+                ...action.payload.avatars,
             };
         }
         case 'GET_BATCH_AVATARS':

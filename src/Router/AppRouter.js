@@ -4,7 +4,7 @@ import { setNotification, setMyTimetable, sendLoginStatistic, changeTheme, setSo
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import createTheme from '../Common/theme';
 import MomentUtils from '@date-io/moment';
-import { MuiPickersUtilsProvider } from 'material-ui-pickers';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { HashRouter as Router } from 'react-router-dom';
 import Routes from './routes';
 import Notifier from './Notifier';

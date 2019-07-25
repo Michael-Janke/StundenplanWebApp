@@ -6,7 +6,7 @@ const initialState = {
     upn: null,
     loading: false,
     counter: 0,
-    counterChanged: true,
+    counterChanged: 'detected',
     lastUpdate: null,
     lastCheck: null,
     warning: true,
@@ -27,7 +27,6 @@ export default function userReducer(state = initialState, action = {}) {
                 counter: action.payload.COUNTER,
                 lastUpdate: +moment(action.payload.LAST_CHANGE.date),
                 lastCheck: +moment(),
-                offline: false,
             };
         case 'REFRESH_COMPLETE':
             return {
@@ -47,7 +46,6 @@ export default function userReducer(state = initialState, action = {}) {
         case 'COUNTER_ERROR':
             return {
                 ...state,
-                offline: true,
             };
         case 'GET_ME':
             return {

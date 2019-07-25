@@ -16,17 +16,11 @@ import SelectField from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
-// import {DateFormatInput, TimeFormatInput} from 'material-ui-next-pickers';
 
-import { InlineDatePicker } from 'material-ui-pickers';
-import { InlineDateTimePicker } from 'material-ui-pickers';
+import { DatePicker, DateTimePicker } from '@material-ui/pickers';
 
-import datePickerEnhancer from './datePickerEnhancer';
 import PeriodRangePicker from './PeriodRangePicker';
 import { Typography } from '@material-ui/core';
-
-const EnhancedInlineDatePicker = datePickerEnhancer(InlineDatePicker);
-const EnhancedInlineDateTimePicker = datePickerEnhancer(InlineDateTimePicker);
 
 const DateTimeMask = {
     format: 'DD.MM.YYYY HH:mm',
@@ -45,7 +39,7 @@ const styles = theme => ({
         flexDirection: 'row',
     },
     formControl: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
         minWidth: 140,
         width: '100%',
     },
@@ -145,7 +139,7 @@ export class AddDialog extends Component {
     renderDialogContent = () => {
         const { edit, classes } = this.props;
         const { timeEdit } = this.state;
-        const DateTimePicker = timeEdit ? EnhancedInlineDateTimePicker : EnhancedInlineDatePicker;
+        const Picker = timeEdit ? DateTimePicker : DatePicker;
         const mask = timeEdit ? DateTimeMask : DateMask;
         return (
             <>
@@ -157,12 +151,15 @@ export class AddDialog extends Component {
                     <div className={classes.row}>
                         <FormControl className={classes.formControl} error={!this.state.DATE_FROM}>
                             <Typography variant="h6">Von</Typography>
-                            <DateTimePicker
+                            <Picker
                                 value={this.state.DATE_FROM}
                                 onChange={date => this.handleFromDateChange(date)}
                                 {...mask}
                                 keyboard
                                 ampm={false}
+                                variant="inline"
+                                cancelLabel="Abbrechen"
+                                invalidDateMessage="Ungültiges Datumsformat"
                             />
                             {!timeEdit && <Button onClick={() => this.editTime(true)}>Zeit hinzufügen</Button>}
 
@@ -171,12 +168,15 @@ export class AddDialog extends Component {
 
                         <FormControl className={classes.formControl} error={!this.state.DATE_TO}>
                             <Typography variant="h6">Bis</Typography>
-                            <DateTimePicker
+                            <Picker
                                 value={this.state.DATE_TO}
                                 onChange={date => this.handleToDateChange(date)}
                                 {...mask}
                                 keyboard
                                 ampm={false}
+                                variant="inline"
+                                cancelLabel="Abbrechen"
+                                invalidDateMessage="Ungültiges Datumsformat"
                             />
 
                             {timeEdit && (

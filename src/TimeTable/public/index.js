@@ -9,7 +9,7 @@ import Substitutions from '../Substitutions';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import Search from '../../Main/components/Search';
 import Keyboard from '../../Main/components/Keyboard';
-import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { classNames } from '../../Common/const';
 import ClearTimetable from './ClearTimetable';
 
@@ -118,7 +118,7 @@ function PublicDisplay({ open }) {
             </AppBar>
             <div className={classes.extendedAppBar} />
             <div className={classes.panel}>
-                <Grid container spacing={8} className={classes.grid}>
+                <Grid container spacing={1} className={classes.grid}>
                     <Grid item xs className={classes.gridItem} direction="column">
                         <Paper className={classNames(classes.timetable, classes.paper)} square>
                             <ErrorBoundary>
@@ -136,7 +136,7 @@ function PublicDisplay({ open }) {
                     <Grid item xs={3} className={classes.gridItem}>
                         <Paper className={classNames(classes.dates, classes.paper)} square>
                             <ErrorBoundary>
-                                <Dates singleMonth={small} />
+                                <Dates filterDate={small} />
                             </ErrorBoundary>
                         </Paper>
                     </Grid>

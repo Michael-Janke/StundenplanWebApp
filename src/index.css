@@ -6,35 +6,40 @@ body {
     -ms-scroll-chaining: chained;
 }
 
+html {
+    font-family: Roboto, system, -apple-system, system-ui, BlinkMacSystemFont, 'Helvetica Neue', 'Lucida Grande',
+        'Segoe UI', 'Ubuntu', 'Cantarell', 'Fira Sans', sans-serif;
+}
+
 @media (max-width: 1920px) {
-    body {
+    html {
         font-size: 17.5px;
     }
 }
 @media (max-width: 1280px) {
-    body {
+    html {
         font-size: 17px;
     }
 }
 @media (max-width: 960px) {
-    body {
+    html {
         font-size: 17px;
     }
 }
 @media (max-width: 800px) {
-    body {
+    html {
         font-size: 16.5px;
     }
 }
 
 @media (max-width: 600px) {
-    body {
+    html {
         font-size: 16px;
     }
 }
 
 @media (max-width: 450px) {
-    body {
+    html {
         font-size: 15px;
     }
 }

@@ -6,25 +6,22 @@ import moment from 'moment';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import NextIcon from '@material-ui/icons/ArrowForward';
 import ResetIcon from '@material-ui/icons/ArrowDownward';
-import { connect } from 'react-redux';
-import TimeTableInformation from './information';
-import { changeWeek } from '../../Main/actions';
+import TimeTableInformation from '../information';
 import grey from '@material-ui/core/colors/grey';
-import { classNames, WEEKDAY_NAMES } from '../../Common/const';
+import { classNames, WEEKDAY_NAMES } from '../../../Common/const';
 import OfflinePin from '@material-ui/icons/OfflinePin';
 import TableHead from '@material-ui/core/TableHead';
 import Table from '@material-ui/core/Table';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import PeriodCell from './periodCell';
+import PeriodCell from '../periodCell';
 import { Typography, ListItem, ListItemIcon } from '@material-ui/core';
-import CollapseVertical from './CollapseVertical';
+import CollapseVertical from '../CollapseVertical';
 
 const styles = theme => ({
     tableToolbar: {
         borderBottom: `1px solid ${theme.palette.divider}`,
         flex: '1 0 48px',
-        minHeight: 0,
         width: '100%',
         display: 'flex',
         justifyContent: 'flex-end',
@@ -54,9 +51,9 @@ const styles = theme => ({
         color: theme.palette.text.secondary,
         paddingTop: 4,
         paddingBottom: 4,
-        paddingLeft: theme.spacing.unit * 2,
+        paddingLeft: theme.spacing(2),
         borderRight: `1.5px solid ${theme.palette.divider}`,
-        paddingRight: theme.spacing.unit * 2,
+        paddingRight: theme.spacing(2),
     },
     offlineText: {
         transition: theme.transitions.create(['max-width']),
@@ -145,17 +142,4 @@ const TimeTableHeader = ({ classes, offline, lastCheck, small, date, id, type, p
     );
 };
 
-const mapStateToProps = state => ({
-    isMin: state.timetable.dateIsMin,
-    isMax: state.timetable.dateIsMax,
-});
-const mapDispatchToProps = dispatch => ({
-    setNextWeek: () => dispatch(changeWeek(1)),
-    setThisWeek: () => dispatch(changeWeek('now')),
-    setPreviousWeek: () => dispatch(changeWeek(-1)),
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(withStyles(styles)(TimeTableHeader));
+export default withStyles(styles)(TimeTableHeader);

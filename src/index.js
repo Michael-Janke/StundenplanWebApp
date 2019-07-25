@@ -16,7 +16,7 @@ let deparam = function(querystring) {
     return params;
 };
 let params = (window.params = deparam(window.location.href));
-console.log(window.params);
+
 if (params.token) {
     runApplicationToken(params.token, () => {
         // eslint-disable-next-line

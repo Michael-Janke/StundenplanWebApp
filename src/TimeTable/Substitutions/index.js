@@ -22,13 +22,13 @@ const styles = theme => ({
     },
     rootHeader: {
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         borderBottom: `1px solid ${theme.palette.divider}`,
         display: 'flex',
         flexDirection: 'column',
     },
     rootContent: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         overflowY: 'auto',
         backgroundColor: theme.palette.background.default,
         flex: '1 0',
@@ -36,14 +36,14 @@ const styles = theme => ({
     substitutionsHeader: {
         fontSize: '90%',
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
     substitutionsContainer: {
         fontSize: '100%',
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
     },
     icon: {
         fontSize: '70%',
@@ -121,7 +121,6 @@ class Substitutions extends React.Component {
     };
 
     render() {
-        console.log(this.props.substitutions);
         if (!this.props.substitutions) {
             return null;
         }

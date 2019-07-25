@@ -13,7 +13,7 @@ const styles = theme => ({
     buttonAdd: {
         border: `3px dashed ${gray[600]}`,
         borderRadius: '50%',
-        padding: theme.spacing.unit * 3,
+        padding: theme.spacing(3),
     },
     container: {
         position: 'absolute',

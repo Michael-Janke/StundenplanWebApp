@@ -22,7 +22,7 @@ class ErrorBoundary extends React.Component {
 
     componentDidCatch(error, info) {
         this.setState({ error: { error, info } });
-        trackError({ upn: this.props.upn, error: info, code: 500 });
+        trackError({ upn: this.props.upn, error, code: 500 });
     }
 
     render() {

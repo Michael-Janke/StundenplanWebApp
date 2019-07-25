@@ -6,9 +6,9 @@ const styles = theme => ({
     button: {
         display: 'flex',
         flex: 1,
-        margin: theme.spacing.unit / 2,
+        margin: theme.spacing(0.5),
         justifyContent: 'flex-start',
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         transition: theme.transitions.create(['box-shadow', 'color']),
         boxShadow: theme.shadows[0],
         '&:hover': {
@@ -21,7 +21,7 @@ const styles = theme => ({
     },
     icon: {},
     name: {
-        paddingLeft: theme.spacing.unit * 1.5,
+        paddingLeft: theme.spacing(1.5),
         color: 'inherit',
     },
 });
