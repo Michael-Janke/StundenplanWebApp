@@ -4,6 +4,7 @@ export default store => next => action => {
     if (!getAuthContext().isAllowed('authentication')) {
         switch (action.type) {
             case 'GET_ME':
+            case 'GET_COUNTER':
             case 'ADD_DATE':
             case 'DELETE_DATE':
             case 'EDIT_DATE':

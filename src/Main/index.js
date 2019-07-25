@@ -1,24 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadJoinedTeams, loadAssignments } from './actions';
+import { loadJoinedTeams } from './actions';
 import TimeTable from '../TimeTable';
+import { intervalCheckStart, intervalCheckStop } from './intervalCheck';
 
 class Main extends Component {
     constructor(props) {
         super(props);
         props.loadJoinedTeams();
-        props.loadAssignments();
+        intervalCheckStart();
     }
 
     render() {
         return <TimeTable />;
+    }
+
+    componentWillUnmount() {
+        intervalCheckStop();
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         loadJoinedTeams: () => dispatch(loadJoinedTeams()),
-        loadAssignments: () => dispatch(loadAssignments()),
     };
 };
 

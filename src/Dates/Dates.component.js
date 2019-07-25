@@ -66,7 +66,6 @@ const styles = theme => ({
 class Dates extends Component {
     constructor(props) {
         super(props);
-        this.props.getDates();
         this.state = {
             selectedDate: {},
             dialogOpen: false,

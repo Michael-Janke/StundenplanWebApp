@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import Dates from './Dates.component';
-import { getDates, deleteDate, editDate, addDate } from './actions';
+import { deleteDate, editDate, addDate } from './actions';
 
 const mapStateToProps = state => {
     return {
@@ -11,7 +11,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    getDates: () => dispatch(getDates()),
     deleteDate: date => dispatch(deleteDate(date)),
     addDate: date => dispatch(addDate(date)),
     editDate: date => dispatch(editDate(date)),
