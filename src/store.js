@@ -21,7 +21,7 @@ const persistConfig = {
     blacklist: ['browser', 'error', 'favorites', 'assignments', 'notifications'],
     version: version.build,
     migrate: state => {
-        if (state._persist.version === version.build) return Promise.resolve(state);
+        if (state._persist && state._persist.version === version.build) return Promise.resolve(state);
         console.log('purge state, new build');
         return Promise.resolve({});
     },
