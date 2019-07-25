@@ -1,5 +1,4 @@
 import { requestApiGenerator, API_URL } from './generator';
-import { getAuthContext } from '../Authentication/storage';
 
 export default store => next => action => {
     next(action);
@@ -27,15 +26,17 @@ export default store => next => action => {
                 'PATCH',
                 JSON.stringify(action.payload)
             );
+        case 'COUNTER_RECEIVED': {
+            const dates = store.getState().dates;
+            if (dates.loading || dates.currentHash === action.payload.DATES_HASH) return;
+            store.dispatch({ type: 'GET_DATES' });
+            break;
+        }
         case 'GET_DATES':
         case 'ADD_DATE_RECEIVED':
         case 'DELETE_DATE_RECEIVED':
         case 'EDIT_DATE_RECEIVED':
-            return requestApiGenerator(store.dispatch)(
-                API_URL,
-                getAuthContext().isAllowed('authentication', 'token') ? 'dates/' : 'dates/public',
-                { type: 'GET_DATES' }
-            );
+            return requestApiGenerator(store.dispatch)(API_URL, 'dates/', { type: 'GET_DATES' });
         default:
     }
 };
