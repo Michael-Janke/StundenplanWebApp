@@ -26,6 +26,10 @@ const styles = theme => ({
         display: 'flex',
         flexWrap: 'wrap',
     },
+    link: {
+        fontSize: '80%',
+        width: 110,
+    },
 });
 
 class AppDrawer extends React.Component {
@@ -38,7 +42,15 @@ class AppDrawer extends React.Component {
                 </Typography>
                 <div className={classes.linksList}>
                     {Object.entries(officeIcons).map(([key, value]) => {
-                        return <Waffle name={key} waffle={value} key={key} onClick={this.props.closeDrawer} />;
+                        return (
+                            <Waffle
+                                name={key}
+                                waffle={value}
+                                key={key}
+                                onClick={this.props.closeDrawer}
+                                className={classes.link}
+                            />
+                        );
                     })}
                 </div>
             </div>
