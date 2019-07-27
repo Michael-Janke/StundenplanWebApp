@@ -3,17 +3,17 @@ import TimeTable from '../TimeTable';
 import { intervalCheckStart, intervalCheckStop } from './intervalCheck';
 
 class Main extends Component {
-    constructor(props) {
-        super(props);
+    componentDidMount() {
         intervalCheckStart();
-    }
-
-    render() {
-        return <TimeTable />;
     }
 
     componentWillUnmount() {
         intervalCheckStop();
     }
+
+    render() {
+        return <TimeTable />;
+    }
 }
+
 export default Main;

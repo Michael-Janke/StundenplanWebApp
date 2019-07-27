@@ -17,8 +17,9 @@ let deparam = function(querystring) {
 };
 let params = (window.params = deparam(window.location.href));
 
-if (params.token) {
-    runApplicationToken(params.token, () => {
+let token = localStorage.getItem('token');
+if (token || params.token) {
+    runApplicationToken(token || params.token, () => {
         // eslint-disable-next-line
         require('./indexReact.js');
     });
