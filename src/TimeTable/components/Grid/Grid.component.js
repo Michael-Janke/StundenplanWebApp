@@ -226,7 +226,8 @@ class TimeTableGrid extends React.Component {
 const styles = theme => ({
     root: {},
     rootLarge: {
-        maxHeight: `calc(100vh - ${170}px)`,
+        maxHeight: `calc(100vh - ${190}px)`,
+        overflowY: 'auto',
     },
     table: {
         backgroundColor: theme.palette.background.default,
