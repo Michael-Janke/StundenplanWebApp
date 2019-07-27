@@ -15,11 +15,11 @@ let deparam = function(querystring) {
 
     return params;
 };
-let params = (window.params = deparam(window.location.href));
+window.params = deparam(window.location.href);
 
-let token = localStorage.getItem('token');
-if (token || params.token) {
-    runApplicationToken(token || params.token, () => {
+if ((window.location.hash = '/public/tv')) {
+    let client_secret = localStorage.getItem('public_tv_token');
+    runApplicationToken(client_secret, () => {
         // eslint-disable-next-line
         require('./indexReact.js');
     });

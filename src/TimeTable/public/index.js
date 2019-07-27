@@ -105,6 +105,10 @@ function PublicDisplay({ open }) {
         return stopIntervalCheck;
     }, []);
 
+    if (!localStorage.getItem('public_tv_token')) {
+        return 'Leider bin ich noch nicht vollständig eingerichtet';
+    }
+
     return (
         <div className={classes.root}>
             <ClearTimetable />

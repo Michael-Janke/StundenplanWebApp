@@ -11,9 +11,6 @@ import counterChanged from './Common/counter';
 import { responsiveStoreEnhancer } from 'redux-responsive';
 import networkStatusEnhancer from './networkStatusEnhancer';
 import version from './version.json';
-if (process.env.REACT_APP_MODE === 'tv') {
-    var tvBarrier = require('./Common/tv-barrier').default;
-}
 
 const persistConfig = {
     key: 'root',
@@ -33,9 +30,7 @@ const store = createStore(
     persistedReducer,
     composeWithDevTools(
         networkStatusEnhancer,
-        applyMiddleware(
-            ...[...(tvBarrier ? [tvBarrier] : []), actionRedirector, cacheService, ...services, counterChanged, thunk]
-        ),
+        applyMiddleware(actionRedirector, cacheService, ...services, counterChanged, thunk),
         responsiveStoreEnhancer
     )
 );

@@ -14,10 +14,10 @@ export default store => next => action => {
             case 'SET_NOTIFICATION':
             case 'GET_PROFILE_PICTURE':
             case 'GET_PROFILE_PICTURE_SMALL':
-            case 'GET_BATCH_AVATARS':
             case 'GET_UNREAD_MESSAGES':
             case 'GET_ASSIGNMENTS':
             case 'GET_JOINED_TEAMS':
+            case 'SEND_LOGIN_STATISTIC':
                 return;
             default:
         }
@@ -26,6 +26,7 @@ export default store => next => action => {
         switch (action.type) {
             case 'GET_COUNTER':
             case 'GET_DATES':
+            case 'GET_BATCH_AVATARS':
                 return;
             default:
         }

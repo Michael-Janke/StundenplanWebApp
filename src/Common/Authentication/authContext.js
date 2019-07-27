@@ -42,12 +42,8 @@ export class AuthenticationContext extends EventEmitter {
     }
 
     logOut() {
-        window.location.replace(
-            `
-        https://login.microsoftonline.com/common/oauth2/v2.0/logout?
-            post_logout_redirect_uri=${encodeURIComponent('https://wolkenberg-gymnasium.de/')}
-        `.replace(/ /g, '')
-        );
+        window.location.replace("https://login.microsoftonline.com/common/oauth2/v2.0/logout?" +
+            "post_logout_redirect_uri=" + encodeURIComponent('https://wolkenberg-gymnasium.de/'));
         this.tokens = {};
         this.tokenAcquisistions = [];
         this.authCodes = [];
