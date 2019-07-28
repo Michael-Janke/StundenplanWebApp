@@ -42,8 +42,11 @@ export class AuthenticationContext extends EventEmitter {
     }
 
     logOut() {
-        window.location.replace("https://login.microsoftonline.com/common/oauth2/v2.0/logout?" +
-            "post_logout_redirect_uri=" + encodeURIComponent('https://wolkenberg-gymnasium.de/'));
+        window.location.replace(
+            'https://login.microsoftonline.com/common/oauth2/v2.0/logout?' +
+                'post_logout_redirect_uri=' +
+                encodeURIComponent('https://wolkenberg-gymnasium.de/')
+        );
         this.tokens = {};
         this.tokenAcquisistions = [];
         this.authCodes = [];
@@ -159,7 +162,7 @@ export class AuthenticationContext extends EventEmitter {
             // use first authCode as code is recycled from initial login
             let authCode = this.authCodes.findIndex(authCode => {
                 let state = JSON.parse(authCode.state);
-                return !state.resource ||state.resource === endpoint;
+                return !state.resource || state.resource === endpoint;
             })[0];
             authCode = this.authCodes.splice(authCode, 1)[0];
             if (!authCode && !refresh_token) {
@@ -195,13 +198,15 @@ export class AuthenticationContext extends EventEmitter {
                 newToken.acquired = Date.now();
                 this.tokens[endpoint] = newToken;
                 this.emit('token', { endpoint, target: { token: newToken } });
+                this.tokenAcquisistions.splice(activeTokenAcquisition, 1);
                 setAuthContext(this);
             } catch (error) {
                 // an error occured
+                this.tokenAcquisistions.splice(activeTokenAcquisition, 1);
+                this.emit('token', { endpoint, target: { error } });
                 trackError({ error, code: 1000 });
                 return this.login(true);
             }
-            this.tokenAcquisistions.splice(activeTokenAcquisition, 1);
         });
     }
 }

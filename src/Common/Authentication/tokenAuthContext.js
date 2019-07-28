@@ -116,13 +116,13 @@ export class TokenAuthContext extends EventEmitter {
                 this.tokens[endpoint] = newToken;
                 this.emit('token', { endpoint, target: { token: newToken } });
                 setAuthContext(this);
+                delete this.tokenAcquisistions[endpoint];
             } catch (error) {
                 // an error occured
                 trackError({ error, code: 1000 });
-                return this.login(true);
+                this.emit('token', { endpoint, target: { error } });
+                delete this.tokenAcquisistions[endpoint];
             }
-
-            delete this.tokenAcquisistions[endpoint];
         });
     }
 }
