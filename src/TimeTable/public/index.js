@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import TimeTableContainer from '../components/container';
 import indigo from '@material-ui/core/colors/indigo';
@@ -12,6 +12,7 @@ import Keyboard from '../../Main/components/Keyboard';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { classNames } from '../../Common/const';
 import ClearTimetable from './ClearTimetable';
+import { startIntervalCheck, stopIntervalCheck } from './intervalCheck';
 
 const smallBreakpoint = 800;
 
@@ -83,6 +84,7 @@ const useStyles = makeStyles(
         },
         dates: {
             maxWidth: 340,
+            width: '100%',
             [theme.breakpoints.down(smallBreakpoint)]: {
                 maxWidth: 'initial',
             },
@@ -98,6 +100,14 @@ function PublicDisplay({ open }) {
     const classes = useStyles();
     const theme = useTheme();
     const small = useMediaQuery(theme.breakpoints.down(smallBreakpoint));
+    useEffect(() => {
+        startIntervalCheck();
+        return stopIntervalCheck;
+    }, []);
+
+    if (!localStorage.getItem('public_tv_token')) {
+        return 'Leider bin ich noch nicht vollständig eingerichtet';
+    }
 
     return (
         <div className={classes.root}>

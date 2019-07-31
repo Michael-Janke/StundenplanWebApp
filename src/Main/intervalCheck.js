@@ -17,12 +17,18 @@ const dispatchReduxAction = () => {
     dispatch({
         type: 'GET_COUNTER',
     });
-    if (intervalCount === 0) {
+    if (intervalCount % 6 === 0) {
         dispatch({
             type: 'GET_ASSIGNMENTS',
         });
     }
-    intervalCount = (intervalCount + 1) % 6;
+    if (intervalCount === 1) {
+        //not immedantly
+        dispatch({
+            type: 'GET_JOINED_TEAMS',
+        });
+    }
+    intervalCount = (intervalCount + 1) % (6 * 60 * 24); // at least once a day;
 };
 
 // call action every 10 seconds
