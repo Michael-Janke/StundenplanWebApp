@@ -3,7 +3,7 @@ import isEqual from 'react-fast-compare';
 const initialState = {
     unreadMessages: 0,
     schoolyear: 0,
-    joinedTeams: {},
+    joinedTeams: [],
     assignments: [],
     teamUrls: {},
     notebookUrls: {},
