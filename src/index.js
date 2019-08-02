@@ -1,5 +1,5 @@
 import { runApplication, runApplicationToken } from './Common/Authentication';
-import 'babel-polyfill';
+import 'react-app-polyfill/stable';
 
 let deparam = function(querystring) {
     // remove any preceding url and split
