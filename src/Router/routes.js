@@ -50,25 +50,23 @@ class Routes extends React.Component {
     render() {
         const { location } = this.props;
         return (
-            <>
-                <Switch>
-                    <Route exact path="/" component={Main} noBoxShadow appBarComponent={MainAppBar} />
-                    <Route exact path="/posts" component={Posts} title="InfoTafel" />
-                    <Route exact path="/public/dates" component={Dates} />
-                    <Route exact path="/public/posts" component={PublicPosts} />
-                    <Route exact path="/public/tv" component={PublicTimetable} />
-                    <Route exact path="/posts/:id" component={PostEditor} title="Beitrag editieren" back />
-                    <Route exact path="/admin" component={Statistics} />
-                    <Route exact path="/error" component={NotFoundPage} />
-                    <Redirect
-                        to={{
-                            pathname: '/error',
-                            state: { referrer: location, error: 404 },
-                        }}
-                        push
-                    />
-                </Switch>
-            </>
+            <Switch>
+                <Route exact path="/" component={Main} noBoxShadow appBarComponent={MainAppBar} />
+                <Route exact path="/posts" component={Posts} title="InfoTafel" />
+                <Route exact path="/public/dates" component={Dates} />
+                <Route exact path="/public/posts" component={PublicPosts} />
+                <Route exact path="/public/tv" component={PublicTimetable} />
+                <Route exact path="/posts/:id" component={PostEditor} title="Beitrag editieren" back />
+                <Route exact path="/admin" component={Statistics} />
+                <Route exact path="/error" component={NotFoundPage} />
+                <Redirect
+                    to={{
+                        pathname: '/error',
+                        state: { referrer: location, error: 404 },
+                    }}
+                    push
+                />
+            </Switch>
         );
     }
 }

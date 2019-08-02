@@ -395,7 +395,7 @@ export function translateLesson(masterdata, lesson, teams = {}, assignmentsMatch
     if (lesson.absence) {
         return { absence: lesson.absence };
     }
-    let matchedTeams = Object.values(teams).filter(team => {
+    let matchedTeams = teams.filter(team => {
         if (!team.externalName) return false;
         const [className, subject] = team.externalName.split(' ');
         const classIsGrade = !(className || '').match(/[a-z]/i); //10 Inf1

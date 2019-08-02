@@ -2,6 +2,7 @@ import isEqual from 'react-fast-compare';
 
 const initialState = {
     unreadMessages: 0,
+    schoolyear: 0,
     joinedTeams: {},
     assignments: [],
     teamUrls: {},
@@ -16,6 +17,12 @@ export default function teamsReducer(state = initialState, action = {}) {
                 ...state,
                 unreadMessages: action.payload && action.payload.unreadItemCount,
             };
+
+        case 'GET_ME_RECEIVED':
+            return {
+                ...state,
+                schoolyear: action.payload && action.payload.schoolyear,
+            };
         case 'GET_JOINED_TEAMS_RECEIVED': {
             return isEqual(state.assignments, action.payload.value) //only update on change
                 ? state
@@ -23,17 +30,9 @@ export default function teamsReducer(state = initialState, action = {}) {
                       ...state,
                       joinedTeams:
                           action.payload &&
-                          action.payload.value
-                              .filter(
-                                  team => team.externalId && team.externalId > 32000000 && team.externalId < 40000000
-                              )
-                              .reduce(
-                                  (acc, team) => ({
-                                      ...acc,
-                                      [team.externalId - 32000000]: team,
-                                  }),
-                                  {}
-                              ),
+                          action.payload.value.filter(
+                              team => team.externalId && team.externalId.startsWith(state.schoolyear)
+                          ),
                   };
         }
         case 'GET_ASSIGNMENTS_RECEIVED': {
