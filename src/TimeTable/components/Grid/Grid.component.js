@@ -14,22 +14,11 @@ import Tooltip from '@material-ui/core/Tooltip';
 import RoomList from '../../roomlist';
 import Supervision from '../../supervision';
 import Absence from '../../absence';
-import { LinearProgress } from '@material-ui/core';
 import PeriodCell from '../periodCell';
-import Offline from '../offline';
+import Offline from './offline';
+import OfflineLesson from './OfflineLesson';
 
 class TimeTableGrid extends React.Component {
-    shouldComponentUpdate(nextProps) {
-        // controlled non-updating to update data in background
-        const nextDetected = nextProps.counterChanged === 'detected';
-        const nowDetected = this.props.counterChanged === 'detected';
-        return (
-            nextProps.offline !== this.props.offline ||
-            !!nextProps.currentTimetable ||
-            (nextDetected && !nowDetected) ||
-            (!nowDetected && nextProps.currentTimetable !== this.props.currentTimetable)
-        );
-    }
 
     periodTime(timeAsNumber) {
         const lpad2 = number => (number < 10 ? '0' : '') + number;
@@ -62,7 +51,24 @@ class TimeTableGrid extends React.Component {
         const { currentTimetable, periods, type, small, date, setTimeTable } = this.props;
 
         if (!currentTimetable) {
-            return <TableCell key={day} rowSpan={1} />;
+
+            return (
+                <TableCell
+                    key={day}
+                    rowSpan={1}
+                    style={{
+                        textAlign: 'center',
+                        padding: small ? 2 : 4,
+                        paddingRight: 2,
+                        overflow: 'visible',
+                        fontSize: '100%',
+                    }}>
+                    <div style={{ height: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        {periodNumber > 1 && periodNumber < (10 - (day*2) % 3) && <OfflineLesson day={day} periodNumber={periodNumber} />}
+                    </div>
+
+                </TableCell>
+            );
         }
         let dayObject = currentTimetable[day];
         if (dayObject.holiday) {
@@ -72,10 +78,10 @@ class TimeTableGrid extends React.Component {
             let colSpan = currentTimetable.slice(day).filter(dayX => dayX.holiday === dayObject.holiday).length;
             let mDate = date
                 ? date
-                      .clone()
-                      .weekday(0)
-                      .add(day, 'days')
-                      .format('DD.MM')
+                    .clone()
+                    .weekday(0)
+                    .add(day, 'days')
+                    .format('DD.MM')
                 : null;
             return (
                 <TableCell key={day} rowSpan={Object.values(periods).length} style={{ padding: 0 }} colSpan={colSpan}>
@@ -111,40 +117,38 @@ class TimeTableGrid extends React.Component {
                     {period.freeRooms ? (
                         <RoomList rooms={period.freeRooms} />
                     ) : (
-                        <PeriodColumn
-                            continueation={period.continueation}
-                            lessons={period.lessons}
-                            date={periodDate}
-                            type={type}
-                            small={small}
-                            setTimeTable={setTimeTable}
-                        >
-                            {period.supervision && <Supervision supervision={period.supervision} />}
-                        </PeriodColumn>
-                    )}
+                            <PeriodColumn
+                                continueation={period.continueation}
+                                lessons={period.lessons}
+                                date={periodDate}
+                                type={type}
+                                small={small}
+                                setTimeTable={setTimeTable}
+                            >
+                                {period.supervision && <Supervision supervision={period.supervision} />}
+                            </PeriodColumn>
+                        )}
                 </TableCell>
             );
         }
     }
 
     renderRows() {
-        const { small, periods, offline, currentTimetable: timetable, retry } = this.props;
+        const { small, periods } = this.props;
         return [
             this.renderAbsences(),
             this.renderUnmatchedAssignments(),
-            ...(offline && !timetable
-                ? [<Offline retry={retry} />]
-                : Object.values(periods).map(period => (
-                      <TableRow style={{ height: '100%' }} key={period.PERIOD_TIME_ID}>
-                          <PeriodCell small={small}>
-                              <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
-                                  {small || this.renderPeriodTimes(period)}
-                                  {this.renderPeriodHeader(period)}
-                              </div>
-                          </PeriodCell>
-                          {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
-                      </TableRow>
-                  ))),
+            ...(Object.values(periods).map(period => (
+                <TableRow style={{ height: '100%' }} key={period.PERIOD_TIME_ID}>
+                    <PeriodCell small={small}>
+                        <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
+                            {small || this.renderPeriodTimes(period)}
+                            {this.renderPeriodHeader(period)}
+                        </div>
+                    </PeriodCell>
+                    {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
+                </TableRow>
+            ))),
         ];
     }
 
@@ -181,14 +185,7 @@ class TimeTableGrid extends React.Component {
             return null;
         }
         if (!timetable) {
-            return (
-                <TableRow key={-1} style={{ height: 'unset' }}>
-                    <PeriodCell small={small} />
-                    <td colSpan={WEEKDAY_NAMES.length}>
-                        <LinearProgress variant="query" />
-                    </td>
-                </TableRow>
-            );
+            return;
         }
         const absences = WEEKDAY_NAMES.map((name, i) => timetable[i]);
         if (absences.every(day => !day.absences)) {
@@ -212,19 +209,22 @@ class TimeTableGrid extends React.Component {
     }
 
     render() {
-        const { classes, small, print } = this.props;
+        const { classes, small, print, offline, currentTimetable: timetable, retry } = this.props;
         return (
-            <div className={classNames(classes.root, !small && !print && classes.rootLarge)}>
-                <GrayoutTable className={classes.table} disabled={this.props.counterChanged === 'detected'}>
+            <Offline retry={retry} in={offline && !timetable}
+                className={classNames(classes.root, !small && !print && classes.rootLarge)}>
+                <Table className={classes.table}>
                     <TableBody>{this.renderRows()}</TableBody>
-                </GrayoutTable>
-            </div>
+                </Table>
+            </Offline>
         );
     }
 }
 
 const styles = theme => ({
-    root: {},
+    root: {
+        position: 'relative',
+    },
     rootLarge: {
         maxHeight: `calc(100vh - ${190}px)`,
         overflowY: 'auto',
@@ -233,23 +233,12 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.default,
         flexShrink: 0,
         height: 0,
+        tableLayout: 'fixed',
+        width: '100%',
+        borderCollapse: 'separate',
     },
 });
 
-const GrayoutTable = styled(Table)`
-    ${props =>
-        props.disabled &&
-        `
-        -webkit-filter: grayscale(100%);
-        -moz-filter: grayscale(100%);
-        -ms-filter: grayscale(100%);
-        -o-filter: grayscale(100%);
-        filter: grayscale(100%);
-        filter: gray;`}
-    table-layout: fixed;
-    width: 100%;
-    height: 100%;
-`;
 
 const Times = styled.div`
     font-size: 50%;
