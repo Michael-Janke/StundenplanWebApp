@@ -26,12 +26,7 @@ export default store => next => action => {
                 'PATCH',
                 JSON.stringify(action.payload)
             );
-        case 'COUNTER_RECEIVED': {
-            const dates = store.getState().dates;
-            if (dates.loading || dates.currentHash === action.payload.DATES_HASH) return;
-            store.dispatch({ type: 'GET_DATES' });
-            break;
-        }
+        
         case 'GET_DATES':
         case 'ADD_DATE_RECEIVED':
         case 'DELETE_DATE_RECEIVED':

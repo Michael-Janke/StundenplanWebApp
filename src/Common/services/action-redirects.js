@@ -2,11 +2,6 @@ import moment from 'moment';
 
 const actionRedirector = store => next => action => {
     next(action);
-
-    if (action.type === 'COUNTER_RECEIVED' && !store.getState().online.timetable) {
-        next({ type: 'RETRY_TIMETABLE' });
-    }
-
     switch (action.type) {
         case 'RETRY_TIMETABLE':
         case 'NETWORK_ONLINE':
@@ -14,6 +9,7 @@ const actionRedirector = store => next => action => {
         case 'SET_MY_TIMETABLE':
         case 'GET_ME_RECEIVED':
         case 'COUNTER_CHANGED':
+        case 'COUNTER_RECEIVED':
         case 'CHANGE_WEEK':
         case 'SET_DATE': {
             let { timetableDate, currentTimeTableId, currentTimeTableType } = store.getState().timetable;

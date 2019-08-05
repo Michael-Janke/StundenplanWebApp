@@ -1,36 +1,14 @@
 import moment from 'moment';
 import { getToken } from '../Authentication';
+import { fetchData } from '../utils';
 
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
-
-const timeout = (timeout, success) => new Promise((resolve, reject) => setTimeout(resolve, timeout));
-
-async function fetchData(url, options) {
-    if (window.AbortController) {
-        var controller = new AbortController();
-        var signal = controller.signal;
-        timeout(10 * 1000).then(() => controller.abort());
-    }
-    let response = await fetch(url, { ...options, signal }).catch(err => {
-        if (/abort/.test(err.message)) {
-            throw new Error('fetch timed out');
-        }
-        throw err;
-    });
-    if (response && response.ok) {
-        return await response.json();
-    }
-    throw await response.json();
-}
 
 export const requestApiGenerator = next => async (endpoint, route, action, METHOD = 'GET', body) => {
     let token;
     let data;
     try {
-        if (!navigator.onLine) {
-            throw new Error('navigator offline');
-        }
         token = await getToken(endpoint);
         data = await fetchData(endpoint + route, {
             method: METHOD,
@@ -58,7 +36,7 @@ export const requestApiGenerator = next => async (endpoint, route, action, METHO
 
 export const getImageGenerator = next => (endpoint, route, action) => {
     getToken(endpoint).then(token =>
-        fetch(endpoint + route, {
+        fetchData(endpoint + route, {
             headers: {
                 Authorization: 'Bearer ' + token,
             },

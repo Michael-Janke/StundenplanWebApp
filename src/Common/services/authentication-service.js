@@ -1,7 +1,8 @@
 import { getAuthContext } from '../Authentication/storage';
+import TokenAuthContext from '../Authentication/contexts/TokenAuthContext';
 
 export default store => next => action => {
-    if (!getAuthContext().isAllowed('authentication')) {
+    if (getAuthContext() instanceof TokenAuthContext) {
         switch (action.type) {
             case 'GET_ME':
             case 'ADD_DATE':
@@ -22,14 +23,14 @@ export default store => next => action => {
             default:
         }
     }
-    if (!getAuthContext().isAllowed('authentication', 'token')) {
-        switch (action.type) {
-            case 'GET_COUNTER':
-            case 'GET_DATES':
-            case 'GET_BATCH_AVATARS':
-                return;
-            default:
-        }
-    }
+    // if (getAuthContext() instanceof PublicAuthContext) {
+    //     switch (action.type) {
+    //         case 'GET_COUNTER':
+    //         case 'GET_DATES':
+    //         case 'GET_BATCH_AVATARS':
+    //             return;
+    //         default:
+    //     }
+    // }
     next(action);
 };
