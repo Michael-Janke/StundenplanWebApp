@@ -389,7 +389,7 @@ function translate(masterdata, period, teams, assignmentsMatching) {
     period.lessons = period.lessons.map(lesson => translateLesson(masterdata, lesson, teams, assignmentsMatching));
 }
 
-export function translateLesson(masterdata, lesson, teams = {}, assignmentsMatching = { toMatch: [] }) {
+export function translateLesson(masterdata, lesson, teams = [], assignmentsMatching = { toMatch: [] }) {
     if (lesson.absence) {
         return { absence: lesson.absence };
     }
