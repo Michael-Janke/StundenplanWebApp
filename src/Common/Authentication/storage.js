@@ -1,10 +1,15 @@
 import ls from 'local-storage';
-import { AuthenticationContext } from './authContext';
+import TokenAuthContext from './contexts/TokenAuthContext';
+import UserAuthContext from './contexts/UserAuthContext';
+const classMap = {
+    'user': UserAuthContext,
+    'token': TokenAuthContext,
+};
 
-const CONTEXT_KEY = 'authorization_v3';
+const CONTEXT_KEY = 'authorization_v4';
 
 // remove old keys
-['authorization', 'authorization_v2'].forEach(ls.remove);
+['authorization', 'authorization_v2', 'authorization_v3'].forEach(ls.remove);
 
 /**
  * @param {Window} win
@@ -13,8 +18,8 @@ const CONTEXT_KEY = 'authorization_v3';
 export const getAuthContext = (win = window) => {
     let authContext = win[CONTEXT_KEY] || ls(CONTEXT_KEY);
     if (authContext) {
-        if (!authContext.toObject) {
-            authContext = new AuthenticationContext(authContext);
+        if (authContext.type) {
+            authContext = new classMap[authContext.type](authContext);
             setAuthContext(authContext, win);
         }
         return authContext;
@@ -24,5 +29,10 @@ export const getAuthContext = (win = window) => {
 
 export const setAuthContext = (authContext, win = window) => {
     win[CONTEXT_KEY] = authContext;
-    ls(CONTEXT_KEY, authContext && authContext.toObject());
+    ls(CONTEXT_KEY, authContext && {
+        ...authContext.toObject(),
+        type: Object.entries(classMap).find(entry => {
+            return authContext instanceof entry[1]
+        })[0]
+    });
 };

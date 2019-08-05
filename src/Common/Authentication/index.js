@@ -1,19 +1,10 @@
-import { AuthenticationContext } from './authContext';
 import { getAuthContext, setAuthContext } from './storage';
-import { TokenAuthContext } from './tokenAuthContext';
+import UserAuthContext from './contexts/UserAuthContext';
+import TokenAuthContext from './contexts/TokenAuthContext';
 
 export function getToken(resource) {
     return new Promise((resolve, reject) => {
         const authContext = getAuthContext();
-        if (authContext.isAllowed('public')) {
-            return resolve(undefined);
-        }
-
-        if (!authContext.isLoggedIn() && !authContext.isLoggingIn()) {
-            console.log('not logged in');
-            // authContext.login();
-            return reject('not logged in');
-        }
         authContext
             .getToken(resource)
             .then(token => {
@@ -35,7 +26,7 @@ export const runApplication = app => {
     let authContext = getAuthContext();
 
     if (!authContext) {
-        authContext = new AuthenticationContext();
+        authContext = new UserAuthContext();
         setAuthContext(authContext);
     }
     if (code) {
@@ -43,8 +34,7 @@ export const runApplication = app => {
         window.history.replaceState('', '', window.location.pathname);
         authContext.handleCallback(code, session_state, state);
     }
-    if (authContext.isLoggingIn() && !authContext.isLoggedIn()) {
-        authContext.allow('authentication');
+    if (!authContext.isLoggedIn() && authContext.isLoggingIn()) {
         authContext.loadAuthCode();
     } else {
         app();
