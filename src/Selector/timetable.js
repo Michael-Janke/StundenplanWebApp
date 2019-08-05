@@ -235,9 +235,7 @@ export function skipDuplications(day, periods) {
         while (y + 1 < periods.length && comparePeriod(current.lessons, day.periods[y + 1].lessons)) {
             y++;
             let period = day.periods[y];
-            if (period.supervision) {
-                period.continueation = true;
-            } else {
+            if (!period.supervision) {
                 delete day.periods[y];
                 current.skip++;
             }

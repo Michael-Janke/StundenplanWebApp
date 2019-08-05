@@ -118,7 +118,6 @@ class TimeTableGrid extends React.Component {
                         <RoomList rooms={period.freeRooms} />
                     ) : (
                             <PeriodColumn
-                                continueation={period.continueation}
                                 lessons={period.lessons}
                                 date={periodDate}
                                 type={type}

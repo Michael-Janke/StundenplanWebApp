@@ -31,7 +31,6 @@ const AbstractLesson = props => {
         specificSubstitutionType,
         substitutionText,
         fields,
-        continueation,
         setTimeTable,
         reference,
         teams,
@@ -40,17 +39,6 @@ const AbstractLesson = props => {
         date,
     } = props;
     const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
-    if (continueation) {
-        return (
-            <Lesson
-                type={theme.palette.type}
-                color={styles.backgroundColor}
-                flex={!specificSubstitutionType || !multiple}
-            >
-                <ColorBar lineColor={styles.color} />
-            </Lesson>
-        );
-    }
     const isNew = fields.new;
     const BoundField = BindField({
         small,
