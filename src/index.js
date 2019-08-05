@@ -17,7 +17,7 @@ let deparam = function(querystring) {
 };
 window.params = deparam(window.location.href);
 
-if (window.location.hash === '#/public/tv') {
+if (window.params.token) {
     let client_secret = window.params.token;
     runApplicationToken(client_secret, () => {
         // eslint-disable-next-line
