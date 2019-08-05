@@ -105,7 +105,7 @@ function PublicDisplay({ open }) {
         return stopIntervalCheck;
     }, []);
 
-    if (!localStorage.getItem('public_tv_token')) {
+    if (!window.params.token) {
         return 'Leider bin ich noch nicht vollständig eingerichtet';
     }
 
