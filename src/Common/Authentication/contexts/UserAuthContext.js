@@ -1,5 +1,5 @@
 import { setAuthContext } from '../storage';
-import { timeout, fetchData } from '../../utils';
+import { fetchData } from '../../utils';
 import AuthContext from './AuthContext';
 
 export default class UserAuthContext extends AuthContext {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { getAuthContext } from '../Common/Authentication/storage';
-import { TokenAuthContext } from '../Common/Authentication/contexts/TokenAuthContext';
 
 /**
  *

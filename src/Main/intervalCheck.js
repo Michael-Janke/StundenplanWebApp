@@ -1,5 +1,4 @@
 import { dispatch } from '../store';
-import { getAuthContext } from '../Common/Authentication/storage';
 
 let intervalCount = 0;
 

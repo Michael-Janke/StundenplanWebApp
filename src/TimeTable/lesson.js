@@ -27,7 +27,6 @@ const AbstractLesson = props => {
         classes,
         theme,
         small,
-        multiple,
         specificSubstitutionType,
         substitutionText,
         fields,

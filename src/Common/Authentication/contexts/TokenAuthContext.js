@@ -1,4 +1,4 @@
-import { timeout, fetchData } from '../../utils';
+import { fetchData } from '../../utils';
 import AuthContext from './AuthContext';
 
 const client_id = 'ef085784-4829-427c-ab32-5e90502a1dde';
