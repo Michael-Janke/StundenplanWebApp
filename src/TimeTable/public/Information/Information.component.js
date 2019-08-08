@@ -34,7 +34,7 @@ function InformationComponent({ timetable, period, getAllTimetable, date }) {
             getAllTimetable(date);
         }
     }, [timetable, getAllTimetable, date])
-    if (!timetable) {
+    if (!timetable || !period) {
         return null;
     }
     let periods = timetable[moment(date).weekday()];
