@@ -80,8 +80,8 @@ export function getSubstitutions(id, type, week, year) {
     return { type: 'GET_SUBSTITUTIONS', payload: { id, type, week, year } };
 }
 
-export function getTimetable(id, type) {
-    return { type: 'GET_TIMETABLE', payload: { id, type } };
+export function getTimetable(id, type, date) {
+    return { type: 'GET_TIMETABLE', payload: { id, type, date } };
 }
 
 export function loadProfilePicture() {

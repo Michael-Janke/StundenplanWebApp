@@ -6,7 +6,6 @@ const initialState = {
     upn: null,
     loading: false,
     counter: 0,
-    counterChanged: 'detected',
     lastUpdate: null,
     lastCheck: null,
     warning: true,

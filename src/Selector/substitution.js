@@ -41,7 +41,7 @@ const getCurrentSubstitutions = createSelector(
     getSubstitutions,
     getWeekSelector,
     getYearSelector,
-    (substitutions, week, year) => substitutions[getSubstitutionsCacheKey({ id: '0', type: 'all', week, year })]
+    (substitutions, week, year) => substitutions[getSubstitutionsCacheKey({ id: '-1', type: 'all', week, year })]
 );
 
 function getAllSubstitutions(sortBy, substitutions, masterdata, addDays, periods, currentPeriod) {

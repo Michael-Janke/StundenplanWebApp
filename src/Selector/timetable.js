@@ -7,73 +7,6 @@ import {
 } from '../Common/const';
 import moment from 'moment';
 
-const getTimetableState = state => state.timetable;
-const getMasterdata = createSelector(
-    getTimetableState,
-    state => state.masterdata
-);
-const getTimetables = createSelector(
-    getTimetableState,
-    state => state.timetables
-);
-const getTeams = state => state.teams.joinedTeams;
-const getAssignments = state => state.teams.assignments;
-const getSubstitutions = createSelector(
-    getTimetableState,
-    state => state.substitutions
-);
-
-const getDate = createSelector(
-    getTimetableState,
-    state => state.timetableDate
-);
-const getWeekSelector = createSelector(
-    getDate,
-    date => moment(date).week()
-);
-const getYearSelector = createSelector(
-    getDate,
-    date => moment(date).weekYear()
-);
-const getAssignmentsSelector = createSelector(
-    getDate,
-    getAssignments,
-    (date, assignments) => assignments.filter(assignment => moment(date).isSame(moment(assignment.dueDateTime), 'week'))
-);
-
-const getType = createSelector(
-    getTimetableState,
-    state => state.currentTimeTableType
-);
-const getId = createSelector(
-    getTimetableState,
-    state => state.currentTimeTableId
-);
-const getPeriods = createSelector(
-    getTimetableState,
-    state => state.masterdata.Period_Time
-);
-
-const getIgnore = (state, props) => props && props.noSubstitutions;
-
-const getCurrentTimetableSelector = createSelector(
-    getTimetables,
-    getType,
-    getId,
-    (timetables, type, id) => timetables[getTimetableCacheKey({ type, id })]
-);
-
-const getCurrentSubstitutionsSelector = createSelector(
-    getIgnore,
-    getSubstitutions,
-    getType,
-    getId,
-    getWeekSelector,
-    getYearSelector,
-    (ignore, substitutions, type, id, week, year) =>
-        ignore ? { substitutions: [] } : substitutions[getSubstitutionsCacheKey({ type, id, week, year })]
-);
-
 function freeRooms(masterdata, day, periods) {
     if (day.holiday) {
         return;
@@ -84,13 +17,14 @@ function freeRooms(masterdata, day, periods) {
             continue;
         }
         const lessons = period.lessons.map(lesson => lesson.room);
-        delete period.lessons;
+        // delete period.lessons;
         let rooms = Object.values(masterdata.Room);
         const absencesFiltered = day.absences
             ? day.absences.filter(
                   absence => absence.PERIOD_FROM - 1 <= y && absence.PERIOD_TO - 1 >= y && absence.ROOM_ID
               )
             : [];
+        
         rooms = rooms.map(room => {
             return {
                 ...room,
@@ -174,7 +108,8 @@ function joinSubstitutions(day, subOnDay, type, id) {
             subOnDay.absences.forEach(absence => {
                 for (let i = absence.PERIOD_FROM - 1; i < absence.PERIOD_TO; i++) {
                     const period = day.periods[i];
-                    period.lessons = [{ absence }];
+                    if (!period) return;
+                    period.lessons = [...period.lessons, { absence }];
                 }
             });
         } else {
@@ -262,22 +197,22 @@ function skipTeacherDuplications(lessons) {
                 if (lesson.TEACHER_IDS)
                     last.TEACHER_IDS
                         ? lesson.TEACHER_IDS.forEach(item =>
-                              last.TEACHER_IDS.includes(item) ? null : last.TEACHER_IDS.push(item)
-                          )
+                            last.TEACHER_IDS.includes(item) ? null : last.TEACHER_IDS.push(item)
+                        )
                         : (last.TEACHER_IDS = lesson.TEACHER_IDS);
                 if (lesson.TEACHER_IDS_OLD)
                     last.TEACHER_IDS_OLD
                         ? lesson.TEACHER_IDS_OLD.forEach(item =>
-                              last.TEACHER_IDS_OLD.includes(item) ? null : last.TEACHER_IDS_OLD.push(item)
-                          )
+                            last.TEACHER_IDS_OLD.includes(item) ? null : last.TEACHER_IDS_OLD.push(item)
+                        )
                         : (last.TEACHER_IDS_OLD = lesson.TEACHER_IDS_OLD);
                 if (lesson.TEACHER_IDS_SUBSTITUTING)
                     last.TEACHER_IDS_SUBSTITUTING
                         ? lesson.TEACHER_IDS_SUBSTITUTING.forEach(item =>
-                              last.TEACHER_IDS_SUBSTITUTING.includes(item)
-                                  ? null
-                                  : last.TEACHER_IDS_SUBSTITUTING.push(item)
-                          )
+                            last.TEACHER_IDS_SUBSTITUTING.includes(item)
+                                ? null
+                                : last.TEACHER_IDS_SUBSTITUTING.push(item)
+                        )
                         : (last.TEACHER_IDS_SUBSTITUTING = lesson.TEACHER_IDS_SUBSTITUTING);
 
                 combineSubstitutions(last, lesson);
@@ -460,6 +395,65 @@ export function translateLesson(masterdata, lesson, teams = [], assignmentsMatch
 }
 
 const makeGetCurrentTimetable = () => {
+    const getTimetableState = state => state.timetable;
+    const getMasterdata = createSelector(
+        getTimetableState,
+        state => state.masterdata
+    );
+    const getTimetables = createSelector(
+        getTimetableState,
+        state => state.timetables
+    );
+    const getTeams = state => state.teams.joinedTeams;
+    const getAssignments = state => state.teams.assignments;
+    const getSubstitutions = createSelector(
+        getTimetableState,
+        state => state.substitutions
+    );
+
+    const getDate = (state, props) => props.date || state.timetable.timetableDate;
+    const getWeekSelector = createSelector(
+        getDate,
+        date => moment(date).week()
+    );
+    const getYearSelector = createSelector(
+        getDate,
+        date => moment(date).weekYear()
+    );
+    const getAssignmentsSelector = createSelector(
+        getDate,
+        getAssignments,
+        (date, assignments) => assignments.filter(assignment => moment(date).isSame(moment(assignment.dueDateTime), 'week'))
+    );
+
+    const getType = (state, props) => props.type || state.timetable.currentTimeTableType;
+    const getId = (state, props) => props.id || state.timetable.currentTimeTableId;
+
+    const getPeriods = createSelector(
+        getTimetableState,
+        state => state.masterdata.Period_Time
+    );
+
+    const getIgnore = (state, props) => props && props.noSubstitutions;
+
+    const getCurrentTimetableSelector = createSelector(
+        getTimetables,
+        getType,
+        getId,
+        (timetables, type, id) => timetables[getTimetableCacheKey({ type, id })]
+    );
+
+    const getCurrentSubstitutionsSelector = createSelector(
+        getIgnore,
+        getSubstitutions,
+        getType,
+        getId,
+        getWeekSelector,
+        getYearSelector,
+        (ignore, substitutions, type, id, week, year) =>
+            ignore ? { substitutions: [] } : substitutions[getSubstitutionsCacheKey({ type, id, week, year })]
+    );
+
     return createSelector(
         getMasterdata,
         getCurrentTimetableSelector,
