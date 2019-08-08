@@ -35,6 +35,20 @@ const store = createStore(
     )
 );
 
+(window.debug || (window.debug = {})).simulateCounterChange = () => {
+    store.dispatch({
+        type: 'COUNTER_RECEIVED', payload: {
+            COUNTER: 0,
+            LAST_CHANGE: {
+                date: '1970-01-01 00:00:00.000000',
+                timezone_type: 3,
+                timezone: 'UTC'
+            },
+            DATES_HASH: '0'
+        }
+    })
+};
+
 const persistor = persistStore(store);
 
 export default () => {
