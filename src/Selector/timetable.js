@@ -127,7 +127,7 @@ function comparePeriod(current, next) {
         for (let j = 0; j < next.length; j++) {
             if (compareLesson(current[i], next[j])) {
                 combineSubstitutions(current[i], next[j]);
-                next.splice(j);
+                next.splice(j, 1);
                 break;
             }
         }
@@ -156,7 +156,7 @@ function compareLesson(p1, p2) {
     }
     if (p1.substitutionType !== p2.substitutionType) {
         return false;
-    }
+    } 
     return true;
 }
 
