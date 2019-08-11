@@ -21,10 +21,10 @@ function freeRooms(masterdata, day, periods) {
         let rooms = Object.values(masterdata.Room);
         const absencesFiltered = day.absences
             ? day.absences.filter(
-                  absence => absence.PERIOD_FROM - 1 <= y && absence.PERIOD_TO - 1 >= y && absence.ROOM_ID
-              )
+                absence => absence.PERIOD_FROM - 1 <= y && absence.PERIOD_TO - 1 >= y && absence.ROOM_ID
+            )
             : [];
-        
+
         rooms = rooms.map(room => {
             return {
                 ...room,
@@ -154,9 +154,16 @@ function compareLesson(p1, p2) {
         )
             return false;
     }
+
+    if (!equalArrays(p1.TEACHER_IDS_SUBSTITUTING, p2.TEACHER_IDS_SUBSTITUTING) ||
+        p1.SUBJECT_ID_SUBSTITUTING !== p2.SUBJECT_ID_SUBSTITUTING ||
+        !equalArrays(p1.CLASS_IDS_SUBSTITUTING, p2.CLASS_IDS_SUBSTITUTING)) {
+        return false;
+    }
+
     if (p1.substitutionType !== p2.substitutionType) {
         return false;
-    } 
+    }
     return true;
 }
 
