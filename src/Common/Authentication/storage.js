@@ -1,38 +1,33 @@
-import ls from 'local-storage';
 import TokenAuthContext from './contexts/TokenAuthContext';
 import UserAuthContext from './contexts/UserAuthContext';
+import localforage from 'localforage';
+
+let LAST_TYPE = 'user';
+
 const classMap = {
     'user': UserAuthContext,
     'token': TokenAuthContext,
 };
 
-const CONTEXT_KEY = 'authorization_v4';
 
-// remove old keys
-['authorization', 'authorization_v2', 'authorization_v3'].forEach(ls.remove);
+const getKey = type => "authentication_" + type;
 
-/**
- * @param {Window} win
- * @returns {AuthenticationContext}
- */
-export const getAuthContext = (win = window) => {
-    let authContext = win[CONTEXT_KEY] || ls(CONTEXT_KEY);
-    if (authContext) {
-        if (authContext.type) {
-            authContext = new classMap[authContext.type](authContext);
-            setAuthContext(authContext, win);
-        }
-        return authContext;
+export const getAuthContext = async (type) => {
+    type = type ? (LAST_TYPE = type) : LAST_TYPE;
+    const key = getKey(type);
+
+    let authContext = window[key];
+    if (!authContext) {
+        authContext = await localforage.getItem(key);
+        authContext = new classMap[type](authContext);
+        window[key] = authContext;
     }
-    return null;
+    return authContext;
 };
 
-export const setAuthContext = (authContext, win = window) => {
-    win[CONTEXT_KEY] = authContext;
-    ls(CONTEXT_KEY, authContext && {
-        ...authContext.toObject(),
-        type: Object.entries(classMap).find(entry => {
-            return authContext instanceof entry[1]
-        })[0]
-    });
+export const setAuthContext = async (authContext, type) => {
+    type = type ? (LAST_TYPE = type) : LAST_TYPE;
+    const key = getKey(type);
+    window[key] = authContext;
+    return await localforage.setItem(key, authContext.toObject && authContext.toObject());
 };

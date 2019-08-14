@@ -3,10 +3,7 @@ import { Route as BrowserRoute, Switch, Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import NotFoundPage from './NotFoundPage';
 import { asynchronize } from './asynchronize';
-import withAuthentication from './withAuthentication';
 import withApp from './withApp';
-import UserAuthContext from '../Common/Authentication/contexts/UserAuthContext';
-import TokenAuthContext from '../Common/Authentication/contexts/TokenAuthContext';
 
 /**
  * asynchronize without postWrappers
@@ -16,16 +13,16 @@ const asynchronized = asynchronize();
  * withAuthentication('authentication', withApp())
  * is authenticated route with appbar
  */
-const withAuth = loader => withAuthentication(UserAuthContext, asynchronize(withApp)(loader));
+const withAuth = loader => asynchronize(withApp)(loader);
 
 const Posts = withAuth(() => import('../Posts'));
 const PostEditor = withAuth(() => import('../Posts/Stepper/editPage'));
 const Main = withAuth(() => import('../Main'));
 const MainAppBar = asynchronized(() => import('../Main/components/AppBar'));
 const Statistics = withAuth(() => import('../Statistics'));
-const Dates = withAuthentication('public', asynchronized(() => import('../Dates')));
-const PublicPosts = withAuthentication(TokenAuthContext, asynchronized(() => import('../Posts/public')));
-const PublicTimetable = withAuthentication(TokenAuthContext, asynchronized(() => import('../TimeTable/public')));
+const Dates = asynchronized(() => import('../Dates'));
+const PublicPosts = asynchronized(() => import('../Posts/public'));
+const PublicTimetable = asynchronized(() => import('../TimeTable/public'));
 
 const Route = props => {
     function renderComponent() {

@@ -3,8 +3,8 @@ import UserAuthContext from './contexts/UserAuthContext';
 import TokenAuthContext from './contexts/TokenAuthContext';
 
 export function getToken(resource) {
-    return new Promise((resolve, reject) => {
-        const authContext = getAuthContext();
+    return new Promise(async (resolve, reject) => {
+        const authContext = await getAuthContext();
         authContext
             .getToken(resource)
             .then(token => {
@@ -17,13 +17,13 @@ export function getToken(resource) {
 }
 
 export const runApplicationToken = (token, app) => {
-    setAuthContext(new TokenAuthContext(token));
+    setAuthContext(new TokenAuthContext(token), 'token');
     app();
 };
 
-export const runApplication = app => {
+export const runApplication = async app => {
     const { code, session_state, state } = window.params;
-    let authContext = getAuthContext();
+    let authContext = await getAuthContext('user');
 
     if (!authContext) {
         authContext = new UserAuthContext();
