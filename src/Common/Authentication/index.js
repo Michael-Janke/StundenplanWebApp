@@ -31,8 +31,9 @@ export const runApplication = async app => {
     }
     if (code) {
         // back to '/' without reloading page
-        window.history.replaceState('', '', window.location.pathname);
-        authContext.handleCallback(code, session_state, state);
+        var authState = state ? JSON.parse(state) : {};
+        window.params.replaceState('', '', authState.post_redirect);
+        authContext.handleCallback(code, session_state, authState);
     }
     if (!authContext.isLoggedIn() && authContext.isLoggingIn()) {
         authContext.loadAuthCode();
