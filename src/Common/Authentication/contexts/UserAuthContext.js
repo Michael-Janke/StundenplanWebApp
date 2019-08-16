@@ -61,13 +61,10 @@ export default class UserAuthContext extends AuthContext {
         return `https://login.microsoftonline.com/wgmail.de/oauth2/v2.0/authorize?                         
                 client_id=fb82e2a9-1efd-4a8e-9ac6-92413ab4b58b
                 &response_type=code
-                &redirect_uri=${encodeURIComponent(window.location.origin + "/")}
+                &redirect_uri=${encodeURIComponent(window.location.href.split('?')[0].split('#')[0])}
                 &response_mode=query
                 &scope=${encodeURIComponent(this.getScope().join(' '))}
-                &state=${encodeURIComponent(JSON.stringify({
-                    resource,
-                    post_redirect: window.location.href
-                }))}
+                &state=${JSON.stringify({ resource })}
                 &domain_hint=wgmail.de
         `.replace(/ /g, '');
     }
@@ -91,7 +88,7 @@ export default class UserAuthContext extends AuthContext {
         }
         // use first authCode as code is recycled from initial login
         let authCode = this.authCodes.findIndex(authCode => {
-            const { state } = authCode;
+            let state = JSON.parse(authCode.state);
             return !state.resource || state.resource === endpoint;
         });
         authCode = this.authCodes.splice(authCode, 1)[0];
@@ -106,7 +103,6 @@ export default class UserAuthContext extends AuthContext {
             refresh_token,
             state,
             scope: this.getScope(UserAuthContext.resources[endpoint]).join(' '),
-            redirect_uri: window.location.origin + "/"
         };
         const response = await fetchData(`https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/token`, {
             method: 'POST',

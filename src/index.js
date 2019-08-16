@@ -16,10 +16,6 @@ let deparam = function(querystring) {
     return params;
 };
 window.params = deparam(window.location.href);
-window.params.replaceState = (...args) => {
-    window.history.replaceState(...args);
-    window.params = deparam(window.location.href);
-}
 
 if (window.params.token) {
     let client_secret = window.params.token;
