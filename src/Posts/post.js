@@ -25,17 +25,19 @@ const styles = theme => ({
     card: {
         display: 'flex',
         flexDirection: 'column',
+        flexGrow: 1,
     },
     media: {
         paddingTop: '56.5%',
     },
     cardContent: {
-        flex: 1,
+        flex: '1 0 0',
         display: 'flex',
         flexDirection: 'column',
+        overflowY: 'auto',
+
     },
     contentOverflow: {
-        overflowY: 'auto',
     },
     author: {
         color: grey[500],
@@ -83,10 +85,10 @@ class Post extends React.Component {
                     {!isAdmin || approved ? (
                         <MoreVertIcon />
                     ) : (
-                        <Badge badgeContent={1} color="primary">
-                            <MoreVertIcon />
-                        </Badge>
-                    )}
+                            <Badge badgeContent={1} color="primary">
+                                <MoreVertIcon />
+                            </Badge>
+                        )}
                 </IconButton>
                 <Menu id="post-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                     {(post.USER_CREATED || isAdmin) && (

@@ -10,6 +10,8 @@ import ClockDigital from './ClockDigital';
 import ClockAnalog from './ClockAnalog';
 import CurrentDate from './CurrentDate';
 import DayInfo from './DayInfo';
+import TransportInfo from './TransportInfo/TransportInfo';
+import { fade } from '@material-ui/core/styles';
 /**
  *
  * @param {import('@material-ui/core').Theme} theme
@@ -24,6 +26,9 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         flexGrow: 1,
+    },
+    appBar: {
+        backgroundColor: fade(theme.palette.primary.main, .8),
     },
     postGridItem: {
         display: 'flex',
@@ -58,7 +63,7 @@ const styles = theme => ({
         flexGrow: 1,
     },
     transportInfo: {
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: fade(theme.palette.background.paper, 0.8),
         flex: '0 0 128px',
     },
     flexGrow: {
@@ -67,13 +72,14 @@ const styles = theme => ({
 
     main: {
         padding: theme.spacing(1),
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: fade(theme.palette.background.paper, 0.8),
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
     },
     toolbar: {
         minHeight: 130,
+        height: '100%',
     },
     dateTime: {
         display: 'flex',
@@ -95,7 +101,7 @@ class Posts extends React.Component {
         const { classes, posts } = this.props;
         return (
             <div className={classes.root}>
-                <AppBar position="static">
+                <AppBar position="static" className={classes.appBar}>
                     <Toolbar className={classes.toolbar}>
                         <img className={classes.image} src={require('../../Common/icons/wolkenberg.png')} alt="" />
                         <ClockAnalog />
@@ -137,7 +143,9 @@ class Posts extends React.Component {
                         </Grid>
                     </Grid>
                 </div>
-                <Grid xs={12} item className={classes.transportInfo} />
+                <Grid xs={12} item className={classes.transportInfo}>
+                    <TransportInfo></TransportInfo>
+                </Grid>
             </div>
         );
     }
@@ -156,4 +164,4 @@ export default withStyles(styles)(
         mapStateToProps,
         mapDispatchToProps
     )(Posts)
-);
+    , { name: 'PublicPosts' });
