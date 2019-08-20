@@ -1,7 +1,4 @@
 import React from 'react';
-import EditIcon from '@material-ui/icons/Create';
-import DeleteIcon from '@material-ui/icons/DeleteForever';
-import IconButton from '@material-ui/core/IconButton';
 
 import moment from 'moment';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -39,7 +36,7 @@ const styles = theme => ({
         fontSize: '60%',
     },
 });
-function Date({ date, onEdit, onDelete, classes }) {
+function Date({ date, buttons, classes }) {
     if (!date) return null;
     let dateFrom = date.DATE_FROM && moment(date.DATE_FROM.date).format('DD.MM.');
     let dateTo = date.DATE_TO && moment(date.DATE_TO.date).format('DD.MM.');
@@ -65,16 +62,7 @@ function Date({ date, onEdit, onDelete, classes }) {
                     {date.SUBTEXT}
                 </Typography>
             </div>
-            {onEdit && (
-                <IconButton onClick={onEdit}>
-                    <EditIcon />
-                </IconButton>
-            )}
-            {onDelete && (
-                <IconButton onClick={onDelete}>
-                    <DeleteIcon />
-                </IconButton>
-            )}
+            {buttons}
         </Paper>
     );
 }
