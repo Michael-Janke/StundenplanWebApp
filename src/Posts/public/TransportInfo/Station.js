@@ -38,7 +38,7 @@ export default function Station({ name, children, className }) {
     const moreArray = [];
     for (let i = 1; i < childrenArray.length; i += 2) {
         moreArray.push(
-            <div className={classes.column}>
+            <div className={classes.column} key={i}>
                 {childrenArray[i]}
                 {childrenArray[i + 1]}
             </div>

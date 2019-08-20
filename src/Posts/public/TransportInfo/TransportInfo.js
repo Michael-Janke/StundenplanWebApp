@@ -37,8 +37,9 @@ function TransportInfo({ transportInfo, getTransportInfo }) {
                     const stationName = entry[0];
                     const arrivals = entry[1];
                     return (
-                        <Station name={stationName} className={classes.station}>
-                            {arrivals.map(arrival => <Connection connection={arrival} />)}
+                        <Station name={stationName} className={classes.station} key={stationName}>
+                            {arrivals.map((arrival, i) =>
+                                <Connection connection={arrival} key={arrival.name + arrival.time + i} />)}
                         </Station>
                     )
                 })}
