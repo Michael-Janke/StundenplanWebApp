@@ -135,7 +135,7 @@ class Substitutions extends React.Component {
                             <div className={classes.substitutionsHeader}>
                                 {this.renderName(entry) || <div />}
                                 <IconButton
-                                    mini
+                                    variant="mini"
                                     className={classes.button}
                                     onClick={this.handleSelectTimetable.bind(this, entry)}
                                 >
@@ -147,7 +147,7 @@ class Substitutions extends React.Component {
                                     <SubstitutionEntry
                                         substitution={substitution}
                                         type={sortBy.type.singular}
-                                        key={substitution.SUBSTITUTION_ID}
+                                        key={substitution.SUBSTITUTION_ID + "" + i}
                                     />
                                 ))}
                             </div>

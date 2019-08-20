@@ -131,19 +131,19 @@ export default function StructureSnapshot({ lessons }) {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            {buildingStructure.map(etage => {
+            {buildingStructure.map((etage, i) => {
                 return (
-                    <div className={classes.etage}>
-                        {etage.rooms.map(room => {
+                    <div className={classes.etage} key={i}>
+                        {etage.rooms.map((room, i) => {
                             if (room === 'stairs') {
                                 return (
-                                    <StructureFragment>
+                                    <StructureFragment key={i}>
                                     </StructureFragment>
                                 );
                             }
                             if (!room) {
                                 return (
-                                    <StructureFragment />
+                                    <StructureFragment key={i} />
                                 )
                             }
                             let lesson = lessons.find(lesson => lesson.room ?
@@ -157,7 +157,8 @@ export default function StructureSnapshot({ lessons }) {
                             }
                             return (
                                 <StructureFragment
-                                    className={classNames(lesson ? classes.occupied : classes.free)}>
+                                    className={classNames(lesson ? classes.occupied : classes.free)}
+                                    key={i}>
                                     <Typography variant="h6" className={classes.title} component="p">
                                         {room}
                                     </Typography>

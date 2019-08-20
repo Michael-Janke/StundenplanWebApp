@@ -22,15 +22,7 @@ export default class TokenAuthContext extends AuthContext {
 
     toObject() { }
 
-    isLoggedIn() {
-        const tokens = Object.values(this.tokens).length + Object.values(this.tokenAcquisistions).length;
-        const resources = Object.values(TokenAuthContext.resources).length;
-        return tokens >= resources;
-    }
-
-    isLoggingIn() {
-        return true;
-    }
+   
 
     async aquireToken(token, endpoint) {
         const body = {
