@@ -385,7 +385,7 @@ export function translateLesson(masterdata, lesson, teams = [], assignmentsMatch
     assignmentsMatching.toMatch = stillToMatch;
     return {
         reference: lesson,
-        isOld: lesson.isOld,
+        lessonType: lesson.isOld ? 'old' : 'new',
         substitutionInfo: lesson.substitutionInfo,
         substitutionText: lesson.substitutionText,
         substitutionType: lesson.substitutionType,
