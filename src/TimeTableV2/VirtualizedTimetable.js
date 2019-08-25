@@ -26,8 +26,8 @@ export default function VirtualizedTimetable() {
         position.setValue(index);
     }, [position]);
 
-    const slideRenderer = React.useCallback(({ index: newIndex, key }) => {
-        const inputRange = [newIndex - 1, newIndex, newIndex + 1];
+    const slideRenderer = React.useCallback(({ index: newIndex, key, indexContainer }) => {
+        const inputRange = [indexContainer - 1, indexContainer, indexContainer + 1];
         const scale = position.interpolate({
             inputRange,
             outputRange: [0.7, 1, 0.7]
@@ -53,7 +53,7 @@ export default function VirtualizedTimetable() {
     return (
         <VirtualizeSwipeableViews
             enableMouseEvents
-            overscanSlideAfter={1}
+            overscanSlideAfter={2}
             overscanSlideBefore={1}
             index={index}
             onChangeIndex={handleChangeIndex}

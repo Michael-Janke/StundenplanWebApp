@@ -7,18 +7,18 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     room: {
-        fontSize: '70%',
+        fontSize: theme.typography.pxToRem(12),
     },
     'room-new': {
-        fontSize: '70%',
+        fontSize: theme.typography.pxToRem(12),
         color: theme.palette.type === 'dark' ? cyan[400] : blue[600],
         fontWeight: 600,
     },
     'room-old': {
         color: grey[600],
-        fontSize: '50%',
+        fontSize: theme.typography.pxToRem(10),
     },
-}));
+}), { name: 'Room' });
 
 const Room = ({ type, room }) => {
     const themeClasses = useStyles();

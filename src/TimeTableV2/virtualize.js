@@ -115,19 +115,19 @@ export default function virtualize(MyComponent) {
             }
         };
 
-        handleSwitching = (indexContainer, type) => {
-            const { slideCount, onSwitching } = this.props;
+        // handleSwitching = (indexContainer, type) => {
+        //     const { slideCount, onSwitching } = this.props;
 
-            let index = this.state.index + indexContainer - 1;
+        //     let index = this.state.index + indexContainer - 1;
 
-            if (slideCount) {
-                index = mod(index, slideCount);
-            }
+        //     if (slideCount) {
+        //         index = mod(index, slideCount);
+        //     }
 
-            if (onSwitching) {
-                onSwitching(index, type);
-            }
-        }
+        //     if (onSwitching) {
+        //         onSwitching(index, type);
+        //     }
+        // }
 
         handleTransitionEnd = () => {
             // Delay the update of the window to fix an issue with react-motion.
@@ -162,6 +162,7 @@ export default function virtualize(MyComponent) {
                 slides.push(
                     slideRenderer({
                         index: slideIndex,
+                        indexContainer: slides.length,
                         key: slideIndex,
                     }),
                 );
@@ -172,7 +173,7 @@ export default function virtualize(MyComponent) {
                     index={indexContainer}
                     onChangeIndex={this.handleChangeIndex}
                     onTransitionEnd={this.handleTransitionEnd}
-                    onSwitching={this.handleSwitching}
+                    // onSwitching={this.handleSwitching}
                     {...other}
                 >
                     {slides}

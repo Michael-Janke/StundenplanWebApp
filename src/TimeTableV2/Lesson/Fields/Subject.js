@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
         fontSize: '70%',
         fontWeight: 600,
     },
-}));
+}), {name: "Subject"});
 
 const Subject = props => {
     const { subject, type } = props;
