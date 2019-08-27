@@ -2,8 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import StructureSnapshot from './StructureSnapshot';
 import { Typography } from '@material-ui/core';
-import moment from 'moment';
-import InfoIcon from '@material-ui/icons/Info';
 
 
 const useStyles = makeStyles(theme => ({
@@ -18,7 +16,7 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.background.paper,
     },
     padding: {
-        padding: theme.spacing(1),
+        padding: `0 ${theme.spacing(1)}px`,
     },
     content: {
         padding: theme.spacing(1),
@@ -27,24 +25,17 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-function InformationComponent({ timetable, period, getAllTimetable, date }) {
+function InformationComponent({ lessons, absentClasses, studentsInSchool, teachersInSchool, period, getAllTimetable, date }) {
     const classes = useStyles();
     React.useEffect(() => {
-        if (!timetable) {
+        if (!lessons) {
             getAllTimetable(date);
         }
-    }, [timetable, getAllTimetable, date])
-    if (!timetable || !period) {
+    }, [lessons, getAllTimetable, date])
+    if (!lessons || !period) {
         return null;
     }
-    let periods = timetable[moment(date).weekday()];
-    let lessons = periods.periods[period.PERIOD_TIME_ID - 1].lessons;
-    const studentsInSchool = lessons.reduce((prev, current) => {
-        return prev + (current ? ((current.reference && current.reference.STUDENT_COUNT) || 0) : 0);
-    }, 0)
-    const teachersInSchool = lessons.reduce((prev, current) => {
-        return prev + (current ? ((current.teachers && current.teachers.new.length) || 0) : 0);
-    }, 0);
+
 
     return (
         <div className={classes.root}>
@@ -52,13 +43,15 @@ function InformationComponent({ timetable, period, getAllTimetable, date }) {
                 <Typography variant="h5">Raumübersicht</Typography>
                 <Typography variant="caption">{period.PERIOD_TIME_ID - 1}. Stunde</Typography>
             </div>
+            <div className={classes.padding}>
+                <Typography variant="body2" component="div">
+                    <b>{studentsInSchool}</b> Schüler werden von <b>{teachersInSchool}</b> Lehrern unterrichtet, absente Klassen: <b>{Array.from(new Set(absentClasses
+                        .map(absence => absence.class.NAME)))
+                        .join(", ")}</b>
+                </Typography>
+            </div>
             <div className={classes.content}>
                 <StructureSnapshot lessons={lessons}></StructureSnapshot>
-            </div>
-            <div className={classes.padding}>
-                <Typography variant="body2">
-                    <InfoIcon fontSize="inherit"/> Momentan werden <b>{studentsInSchool}</b> Schüler von <b>{teachersInSchool}</b> Lehrern unterrichtet.
-                </Typography>
             </div>
         </div>
     );

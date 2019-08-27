@@ -147,11 +147,9 @@ export default function StructureSnapshot({ lessons }) {
                                 )
                             }
                             let lesson = lessons.find(lesson => lesson.room ?
-                                lesson.room.new.NAME === room :
-                                lesson.absence.ROOM_ID === room
-                            );
-
-                            const fields = lesson && getRoomFields(lesson).fields;
+                                (lesson.room.new ? lesson.room.new.NAME === room
+                                    : lesson.room.NAME === room) : false);
+                            const fields = (!lesson || lesson.ABSENCE_ID) ? null : getRoomFields(lesson).fields;
                             if (fields) {
                                 var [Field1, Field2, Field3] = fields.new;
                             }
@@ -170,11 +168,13 @@ export default function StructureSnapshot({ lessons }) {
                                             </div>
                                             <Field3 themeClasses={classes} />
 
-                                            {/* <Typography variant="caption" className={classes.text} component="p">
-                                                {lesson && lesson.reference.STUDENT_COUNT}
-                                            </Typography> */}
+
                                         </>
                                     }
+                                    {lesson && lesson.ABSENCE_ID &&
+                                        <Typography variant="caption" className={classes.text} component="p">
+                                            {lesson.TEXT}
+                                        </Typography>}
                                 </StructureFragment>
                             );
                         })}

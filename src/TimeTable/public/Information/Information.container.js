@@ -1,16 +1,16 @@
 import InformationComponent from './Information.component';
-import makeGetCurrentTimetable from '../../../Selector/timetable';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { getTimetable } from '../../../Main/actions';
+import { makeGetInformation } from '../../../Selector/information';
 
 
 
 const date = moment();
 const mapStateToProps = () => {
-    const getCurrentTimetable = makeGetCurrentTimetable();
+    const getInformation = makeGetInformation();
     return state => ({
-        timetable: getCurrentTimetable(state, { id: -1, type: 'all', date }),
+       ...getInformation(state, { date }),
         period: state.period.currentPeriod,
         date: date,
     });

@@ -29,13 +29,12 @@ function freeRooms(masterdata, day, periods) {
             return {
                 ...room,
                 status:
-                    !lessons.find(current => (current.new || {}).ROOM_ID === room.ROOM_ID) &&
+                    !lessons.find(current => ((current && current.new) || {}).ROOM_ID === room.ROOM_ID) &&
                     !absencesFiltered.find(absence => Number(absence.ROOM_ID) === room.ROOM_ID),
             };
         });
         period.freeRooms = rooms;
     }
-    delete day.absences;
 }
 
 export function translateDay(masterdata, timetable, x, substitutions, periods, type, id, date, teams, assignments) {
@@ -89,7 +88,8 @@ function joinSubstitutions(day, subOnDay, type, id) {
             }
             const index = lessons.findIndex(lesson => lesson.TIMETABLE_ID === substitution.TIMETABLE_ID);
             if (index !== -1) {
-                lessons[index] = lesson ? { ...lesson, LESSON_ID: lessons[index].LESSON_ID } : null;
+
+                lessons[index] = lesson ? { ...lessons[index], ...lesson } : null;
                 period.lessons = lessons.filter(c => c);
             } else if (lesson) {
                 lessons.push(lesson);
@@ -103,19 +103,16 @@ function joinSubstitutions(day, subOnDay, type, id) {
         });
     }
     if (subOnDay.absences) {
-        if (type === 'room') {
-            // sort in table
-            subOnDay.absences.forEach(absence => {
-                for (let i = absence.PERIOD_FROM - 1; i < absence.PERIOD_TO; i++) {
-                    const period = day.periods[i];
-                    if (!period) return;
-                    period.lessons = [...period.lessons, { absence }];
-                }
-            });
-        } else {
-            // sort in header
-            day.absences = subOnDay.absences;
-        }
+        // sort in table
+        subOnDay.absences.forEach(absence => {
+            for (let i = absence.PERIOD_FROM - 1; i < absence.PERIOD_TO; i++) {
+                const period = day.periods[i];
+                if (!period) return;
+                period.lessons = [...period.lessons, { absence }];
+            }
+        });
+        // sort in header
+        day.absences = subOnDay.absences;
     }
 }
 function comparePeriod(current, next) {
@@ -279,6 +276,9 @@ export function translatePeriods(masterdata, day, periods, teams, assignmentsMat
             translate(masterdata, day.periods[y], teams, assignmentsMatching);
         }
     }
+    if (day.absences) {
+        day.absences = day.absences.map(translateAbsence.bind(null, masterdata));
+    }
 }
 
 function equalArrays(array1, array2) {
@@ -329,11 +329,27 @@ export function equalPeriods(p1, p2) {
 function translate(masterdata, period, teams, assignmentsMatching) {
     if (!period) return null;
     period.lessons = period.lessons.map(lesson => translateLesson(masterdata, lesson, teams, assignmentsMatching));
+
+}
+
+function translateAbsence(masterdata, absence) {
+    return {
+        ABSENCE_ID: absence.ABSENCE_ID,
+        class: masterdata.Class[absence.CLASS_ID],
+        room: masterdata.Room[absence.ROOM_ID],
+        teacher: masterdata.Teacher[absence.TEACHER_ID],
+        DATE: absence.DATE,
+        PERIOD_FROM: absence.PERIOD_FROM,
+        PERIOD_TO: absence.PERIOD_TO,
+        TEXT: absence.TEXT,
+        TEXT_TEACHER: absence.TEXT_TEACHER,
+        reference: absence,
+    }
 }
 
 export function translateLesson(masterdata, lesson, teams = [], assignmentsMatching = { toMatch: [] }) {
     if (lesson.absence) {
-        return { absence: lesson.absence };
+        return translateAbsence(masterdata, lesson.absence);
     }
     let matchedTeams = teams.filter(team => {
         if (!team.externalName) return false;
