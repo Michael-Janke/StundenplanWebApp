@@ -92,6 +92,7 @@ export default function virtualize(MyComponent) {
                 indexStart: index - beforeAhead,
                 indexStop: index + afterAhead,
             });
+            this.props.onSwitching(beforeAhead, 'end');
         }
 
         handleChangeIndex = (indexContainer, indexLatest) => {
@@ -111,7 +112,6 @@ export default function virtualize(MyComponent) {
 
             if (onChangeIndex) {
                 onChangeIndex(index, this.state.index);
-                onSwitching(index, 'end');
             }
         };
 
@@ -146,7 +146,6 @@ export default function virtualize(MyComponent) {
                 index: indexProp,
                 onChangeIndex,
                 onTransitionEnd,
-                onSwitching,
                 overscanSlideAfter,
                 overscanSlideBefore,
                 slideCount,

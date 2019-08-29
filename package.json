@@ -46,6 +46,8 @@
         "react-swipeable-views": "^0.13.1",
         "react-swipeable-views-utils": "^0.13.3",
         "react-useinterval": "^1.0.1",
+        "react-spring": "^8.0.27",
+        "react-use-gesture": "^5.2.4",
         "react-virtualized": "^9.21.0",
         "recharts": "^1.7.1",
         "redux": "^4.0.4",

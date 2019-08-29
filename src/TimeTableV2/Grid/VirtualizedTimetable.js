@@ -1,9 +1,10 @@
 import React from 'react';
-import GridContainer from './Grid/Grid.container';
+import GridContainer from './Grid.container';
 import SwipeableViews from 'react-swipeable-views';
 import bindKeyboard from 'react-swipeable-views-utils/lib/bindKeyboard';
 import Animated from 'animated/lib/targets/react-dom';
 import virtualize from './virtualize';
+import { Grid } from '@material-ui/core';
 
 const VirtualizeSwipeableViews = bindKeyboard(virtualize(SwipeableViews));
 
@@ -27,6 +28,7 @@ export default function VirtualizedTimetable() {
     }, [position]);
 
     const slideRenderer = React.useCallback(({ index: newIndex, key, indexContainer }) => {
+        console.log(indexContainer);
         const inputRange = [indexContainer - 1, indexContainer, indexContainer + 1];
         const scale = position.interpolate({
             inputRange,
@@ -51,14 +53,16 @@ export default function VirtualizedTimetable() {
     console.log(index);
 
     return (
-        <VirtualizeSwipeableViews
-            enableMouseEvents
-            overscanSlideAfter={2}
-            overscanSlideBefore={1}
-            index={index}
-            onChangeIndex={handleChangeIndex}
-            onSwitching={handleSwitch}
-            slideRenderer={slideRenderer}
-        />
+        <div>
+            <VirtualizeSwipeableViews
+                enableMouseEvents
+                overscanSlideAfter={2}
+                overscanSlideBefore={1}
+                index={index}
+                onChangeIndex={handleChangeIndex}
+                onSwitching={handleSwitch}
+                slideRenderer={slideRenderer}
+            />
+        </div>
     )
 }

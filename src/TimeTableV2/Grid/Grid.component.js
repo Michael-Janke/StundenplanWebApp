@@ -9,22 +9,28 @@ import Lesson from '../Lesson/Lesson';
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'grid',
-        gridTemplateColumns: '70px repeat(5,1fr)',
-        gridTemplateRows: 'repeat(10,auto)',
+        gridTemplateColumns: props => `70px repeat(${props.columns},1fr)`,
+        gridTemplateRows: props => `repeat(${props.rows},auto)`,
+        gridAutoFlow: 'column'
     }
 }));
 
 export default function GridComponent({ timetable, periods, type }) {
-    const classes = useStyles();
+    const weekDays = [0,1,2,3,4];
+    const periodArray = Object.values(periods);
+    const classes = useStyles({
+        rows: periodArray.length || 10,
+        columns: weekDays.length || 5
+    });
     return (
         <Paper elevation={0} className={classes.root}>
-            {Object.values(periods).map((period, i) => {
-                const periodNumber = period.PERIOD_TIME_ID - 1;
+            {periodArray.map((period, i) => <PeriodCell period={period} key={i}></PeriodCell>)}
+            {weekDays.map((day) => {
+                const dayObject = timetable[day];
                 return (
-                    <React.Fragment key={i}>
-                        <PeriodCell period={period}></PeriodCell>
-                        {WEEKDAY_NAMES.map((name, i) => {
-                            const day = i;
+                    <React.Fragment key={day}>
+                        {periodArray.map((period, i) => {
+                            const periodNumber = period.PERIOD_TIME_ID - 1;
                             if (!timetable) {
                                 return (
                                     <ThemedGridCell>
@@ -34,7 +40,6 @@ export default function GridComponent({ timetable, periods, type }) {
                                     </ThemedGridCell>
                                 )
                             }
-                            const dayObject = timetable[day];
                             const periodObject = dayObject.periods[periodNumber];
                             if (!periodObject) {
                                 // empty cell
@@ -54,6 +59,7 @@ export default function GridComponent({ timetable, periods, type }) {
                     </React.Fragment>
                 )
             })}
+
         </Paper>
     )
 }

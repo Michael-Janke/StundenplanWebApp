@@ -1,12 +1,13 @@
 import React from 'react';
-import VirtualizedTimetable from './VirtualizedTimetable';
+import VirtualizedTimetable from './Grid/VirtualizedTimetable';
 import Header from './Header/Header.container';
+import GridContainer from './Grid/Swiper/Grid.swiper';
 
 export default function TimeTable() {
     return (
         <>
             <Header></Header>
-            <VirtualizedTimetable> </VirtualizedTimetable>
+            <GridContainer></GridContainer>
         </>
     )
 }
