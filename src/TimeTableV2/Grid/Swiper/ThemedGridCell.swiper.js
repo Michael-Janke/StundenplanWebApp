@@ -1,11 +1,12 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
-import GridCell from './GridCell';
-import { classNames } from '../../Common/const';
+import GridCell from '../GridCell';
+import { classNames } from '../../../Common/const';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        borderBottom: '1px solid rgb(224,224,224)',
+        marginBottom: 1,
+        padding: theme.spacing(.5),
     }
 }), { name: "ThemedGridCell" });
 

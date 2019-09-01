@@ -6,7 +6,7 @@ import { darken } from '@material-ui/core/styles';
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
-        height: '100%',
+        flexGrow: 1,
         backgroundColor: darken(indigo[50], theme.palette.type === 'dark' ? 0.6 : 0),
     },
     colorBar: {

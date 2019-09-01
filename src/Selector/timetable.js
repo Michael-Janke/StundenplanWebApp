@@ -434,7 +434,7 @@ const makeGetCurrentTimetable = () => {
         state => state.substitutions
     );
 
-    const getDate = (state, props) => props.date || state.timetable.timetableDate;
+    const getDate = (state, props) => state.timetable.timetableDate;
     const getWeekSelector = createSelector(
         getDate,
         date => moment(date).week()

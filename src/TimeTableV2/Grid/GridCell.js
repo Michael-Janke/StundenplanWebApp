@@ -1,19 +1,23 @@
 import React from 'react';
 
-export default function GridCell({ children, colspan = 1, rowspan = 1, className }) {
-    var style = React.useMemo(() => {
+export default function GridCell({ children, colspan = 1, rowspan = 1, className, Component, style }) {
+    var customStyle = React.useMemo(() => {
         if (colspan === 1 && rowspan === 1) {
             // performance: no custom styles needed;
-            return undefined;
+            return style;
         }
         return {
             gridColumn: 'auto / span ' + colspan,
             gridRow: 'auto / span ' + rowspan,
+            ...style,
         }
-    }, [colspan, rowspan]);
+    }, [colspan, rowspan, style]);
     return (
-        <div style={style} className={className}>
+        <Component style={customStyle} className={className}>
             {children}
-        </div>
+        </Component>
     )
+}
+GridCell.defaultProps = {
+    Component: 'div',
 }
