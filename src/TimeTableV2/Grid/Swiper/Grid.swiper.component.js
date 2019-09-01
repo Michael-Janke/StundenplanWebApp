@@ -97,47 +97,49 @@ function GridSwiperComponent({ periods }) {
 
 
     return (
-        <div {...bindMeasure} style={{
-            overflow: 'hidden',
-            position: 'relative',
-        }}>
-            <GridPeriods
-                periods={periods}
-                periodsCellArray={periodsCellArray}>
-
-            </GridPeriods>
-            <div {...bind()} style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
+        <div style={{overflowY: 'scroll', maxHeight: 'calc(100vh - 180px)'}}>
+            <div {...bindMeasure} style={{
+                overflow: 'hidden',
+                position: 'relative',
             }}>
-                <animated.div style={{
-                    willChange: 'transform',
-                    transform: props.x.interpolate(x => `translate3d(${x - (pivot * width.current)}px,0,0)`),
-                    display: 'flex',
-                    userSelect: 'none',
+                <GridPeriods
+                    periods={periods}
+                    periodsCellArray={periodsCellArray}>
+
+                </GridPeriods>
+                <div {...bind()} style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
                 }}>
-                    {new Array(length).fill(0, 0, length).map((_, i) => {
-                        const vIndex = (i - pivot) + index;
-                        let periodsArray = slides[vIndex] || (slides[vIndex] = Object.values(periods).map(period => ({
-                            ...period,
-                            onPeriodHeight,
-                        })));
-                        return (
-                            <animated.div
-                                key={vIndex}
-                                style={{
-                                    width: '100%',
-                                    flexShrink: 0,
-                                }}>
-                                <Slide
-                                    index={vIndex}
-                                    periodsArray={periodsArray}></Slide>
-                            </animated.div>
-                        )
-                    })}
-                </animated.div>
+                    <animated.div style={{
+                        willChange: 'transform',
+                        transform: props.x.interpolate(x => `translate3d(${x - (pivot * width.current)}px,0,0)`),
+                        display: 'flex',
+                        userSelect: 'none',
+                    }}>
+                        {new Array(length).fill(0, 0, length).map((_, i) => {
+                            const vIndex = (i - pivot) + index;
+                            let periodsArray = slides[vIndex] || (slides[vIndex] = Object.values(periods).map(period => ({
+                                ...period,
+                                onPeriodHeight,
+                            })));
+                            return (
+                                <animated.div
+                                    key={vIndex}
+                                    style={{
+                                        width: '100%',
+                                        flexShrink: 0,
+                                    }}>
+                                    <Slide
+                                        index={vIndex}
+                                        periodsArray={periodsArray}></Slide>
+                                </animated.div>
+                            )
+                        })}
+                    </animated.div>
+                </div>
             </div>
         </div>
     );
