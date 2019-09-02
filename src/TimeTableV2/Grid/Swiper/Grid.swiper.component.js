@@ -1,14 +1,14 @@
 import React, { useRef, useState } from 'react'
 import { useSprings, animated, useSpring } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
-import { useMeasure, useMeasureCallback } from './helpers';
-import GridContainer from '../Grid.container';
+import { useMeasureCallback } from './helpers';
+
 import GridPeriods from './Grid.periods';
-import ThemedGridCellSwiper from './ThemedGridCell.swiper';
+import GridSlideComponent from './Grid.slide.component';
 
 function GridSwiperComponent({ periods }) {
 
-    const length = 10;
+    const length = 3;
     const pivot = Math.floor(length / 2);
     const slides = useRef([]).current;
 
@@ -25,7 +25,7 @@ function GridSwiperComponent({ periods }) {
 
     const [periodsCellArray, setPeriodsCell] = useSprings(Object.values(periods).length, (i) => {
         return ({
-            height: 53,
+            height: 0,
         });
     });
 
@@ -46,7 +46,7 @@ function GridSwiperComponent({ periods }) {
     const calcProps = React.useCallback((i, controller) => {
         const x = controller.getValues().x;
         if (x) {
-            x.setValue(0);
+            x.setValue(((tempIndex.current - index)) * width.current);
         }
 
         return {
@@ -56,21 +56,22 @@ function GridSwiperComponent({ periods }) {
                     setIndex(tempIndex.current);
                     onPeriodHeight();
                     // reset value to 0
-                    controller.getValues().x.setValue(0);
+                    x.setValue(0);
                 }
             }
         }
     }, [index, onPeriodHeight]);
     const [props, set] = useSpring(calcProps);
 
-    const bind = useGesture(({ down, delta: [xDelta, yDelta], direction: [xDir], distance, cancel }) => {
-        if (Math.abs(xDelta) < Math.abs(yDelta)) {
+    const bind = useGesture(({ down, delta: [xDelta, yDelta], vxvy: [vx, vy], direction: [xDir, yDir], distance, cancel }) => {
+        if (down && Math.abs(xDelta) < Math.abs(yDelta)) {
             cancel();
-        }
-        if (down && distance > width.current / 2) {
-            cancel();
-            tempIndex.current = tempIndex.current + (xDir > 0 ? -1 : 1);
-        }
+        } else
+            if (down ? (Math.abs(vx) > Math.abs(xDelta)) : distance > width.current / 2) {
+                cancel();
+                tempIndex.current = tempIndex.current + (xDelta > 0 ? -1 : 1);
+
+            }
         set(() => {
             const x = (down ? xDelta : 0) - ((tempIndex.current - index)) * width.current;
             return { x }
@@ -97,7 +98,7 @@ function GridSwiperComponent({ periods }) {
 
 
     return (
-        <div style={{overflowY: 'scroll', maxHeight: 'calc(100vh - 180px)'}}>
+        <div style={{ overflowY: 'overlay', maxHeight: 'calc(100vh - 180px)' }}>
             <div {...bindMeasure} style={{
                 overflow: 'hidden',
                 position: 'relative',
@@ -121,10 +122,12 @@ function GridSwiperComponent({ periods }) {
                     }}>
                         {new Array(length).fill(0, 0, length).map((_, i) => {
                             const vIndex = (i - pivot) + index;
-                            let periodsArray = slides[vIndex] || (slides[vIndex] = Object.values(periods).map(period => ({
-                                ...period,
-                                onPeriodHeight,
-                            })));
+                            let periodsArray = slides[vIndex] || (slides[vIndex] =
+                                Object.values(periods)
+                                    .map(period => ({
+                                        ...period,
+                                        onPeriodHeight,
+                                    })));
                             return (
                                 <animated.div
                                     key={vIndex}
@@ -132,9 +135,9 @@ function GridSwiperComponent({ periods }) {
                                         width: '100%',
                                         flexShrink: 0,
                                     }}>
-                                    <Slide
+                                    <GridSlideComponent
                                         index={vIndex}
-                                        periodsArray={periodsArray}></Slide>
+                                        periodsArray={periodsArray}></GridSlideComponent>
                                 </animated.div>
                             )
                         })}
@@ -142,24 +145,6 @@ function GridSwiperComponent({ periods }) {
                 </div>
             </div>
         </div>
-    );
-}
-
-function Slide({ index, periodsArray }) {
-    return (
-        <GridContainer GridCellComponent={ThemedGridCellSwiper}>
-            {periodsArray.map((period, i) => <Period period={period} key={i}></Period>)}
-        </GridContainer>
-    );
-}
-
-function Period({ period }) {
-    const [bind] = useMeasureCallback(({ height }) => {
-        period.height = height;
-        period.onPeriodHeight();
-    });
-    return (
-        <div style={{ minHeight: 53, marginBottom: 1, }} {...bind}></div>
     );
 }
 

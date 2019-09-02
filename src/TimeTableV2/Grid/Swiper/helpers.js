@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 export function useMeasure(callback, fields) {
     const [bounds, set] = useState({ left: 0, top: 0, width: 0, height: 0 })
@@ -21,10 +21,4 @@ export function useMeasureCallback(callback) {
         return () => ro.disconnect()
     }, [ro])
     return [{ ref }];
-}
-
-export function useTwins() {
-    const [bind1, bounds1] = useMeasure();
-    const [bind2, bounds2] = useMeasure();
-    return [bind1, bind2, bounds1, bounds2];
 }

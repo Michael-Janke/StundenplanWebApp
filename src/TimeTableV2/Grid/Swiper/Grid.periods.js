@@ -25,10 +25,11 @@ export default function GridPeriods({ periods, periodsCellArray }) {
         <Paper elevation={0} className={classes.root}>
             {periodArray.map((period, i) => <PeriodCell period={period} key={i}></PeriodCell>)}
             {periodArray.map((period, i) => <ThemedGridCell
-                key={-i}
+                key={-i} 
                 Component={animated.div}
                 style={{
-                    height: periodsCellArray[i].height
+                    minHeight: periodsCellArray[i].height,
+                    willChange: 'height',
                 }}></ThemedGridCell>)}
         </Paper>
     )
