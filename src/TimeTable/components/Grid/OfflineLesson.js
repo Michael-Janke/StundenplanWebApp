@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import grey from '@material-ui/core/colors/grey';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     '@keyframes glow': {
         from: { opacity: .4 },
         to: { opacity: 0.9 }
@@ -13,7 +13,7 @@ const useStyles = makeStyles({
         overflow: 'hidden',
         paddingRight: '1vmin',
         flexDirection: 'row',
-        backgroundColor: grey[200],
+        backgroundColor: grey[theme.palette.type === 'dark' ? 800 : 200],
         opacity: 0.4,
         minHeight: 48,
         animation: '$glow 750ms ease infinite alternate',
@@ -23,12 +23,12 @@ const useStyles = makeStyles({
         marginRight: 5,
         backgroundColor: grey[400],
     }
-});
+}));
 
 export default function OfflineLesson({ day, periodNumber }) {
     const classes = useStyles();
     return (
-        <div className={classes.root} style= {{animationDelay: ((periodNumber)+(day/2))*100 + "ms"}}>
+        <div className={classes.root} style={{ animationDelay: ((periodNumber) + (day / 2)) * 100 + "ms" }}>
             <div className={classes.colorBar} />
         </div>
     );
