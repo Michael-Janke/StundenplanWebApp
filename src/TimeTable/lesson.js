@@ -119,8 +119,9 @@ const AbstractLesson = props => {
     const allDoneAssignments = assignments.every(assignment =>
         assignment.submissions ? assignment.submissions.every(submission => submission.status === 'submitted') : false
     );
+    const hasDrafts = assignments.some(assignment => assignment.status === 'draft');
     const badgeContent = isTeacher ? (
-        <AssignmentIcon style={{ fontSize: '1rem', marginRight: '5px', marginTop: '5px' }} />
+        <AssignmentIcon style={{ fontSize: '1rem', marginRight: '5px', marginTop: '5px', color: hasDrafts ? grey[500] : undefined }} />
     ) : allDoneAssignments ? (
         <DoneIcon />
     ) : (

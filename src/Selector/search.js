@@ -41,6 +41,7 @@ const computeData = (masterdata, favorites, user) => {
             .map(entry => ({
                 searchString: entry.NAME === '07-12' ? '' : entry.NAME.toLowerCase(),
                 type: 'class',
+                upn: entry.UPN,
                 id: entry.CLASS_ID,
                 favorite: favorites.indexOf(entry.NAME) >= 0,
                 text: entry.NAME === '07-12' ? 'Nachschreiben' : entry.NAME,
