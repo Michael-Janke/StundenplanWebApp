@@ -44,7 +44,7 @@ class Period extends React.Component {
                     } else {
                         return (
                             <AbstractLesson
-                                {...lesson}
+                                lesson={lesson}
                                 date={date}
                                 key={lesson.reference.TIMETABLE_ID || -i}
                                 last={lessons.length - 1 === i}

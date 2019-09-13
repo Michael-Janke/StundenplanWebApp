@@ -45,6 +45,7 @@ export const layoutedDatesSelector = createSelector(
         const layout = [];
         var currentCol = 0;
         while (datesOfWeek.some(date => !date.placed)) {
+            // eslint-disable-next-line
             for (let date of datesOfWeek) {
                 if (date.placed) continue;
                 if (date.startWeekday >= currentCol) {

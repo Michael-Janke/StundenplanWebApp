@@ -36,7 +36,7 @@ export const requestApiGenerator = next => async (endpoint, route, action, METHO
 
 export const getImageGenerator = next => (endpoint, route, action) => {
     getToken(endpoint).then(token =>
-        fetchData(endpoint + route, {
+        fetch(endpoint + route, {
             headers: {
                 Authorization: 'Bearer ' + token,
             },

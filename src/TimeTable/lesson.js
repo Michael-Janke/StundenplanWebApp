@@ -24,19 +24,23 @@ const SubstitutionText = ({ left, children }) => <SubstitutionTextContainer>({ch
 
 const AbstractLesson = props => {
     let {
-        classes,
         theme,
         small,
-        specificSubstitutionType,
-        substitutionText,
         fields,
         setTimeTable,
+        isTeacher,
+        date,
+        lesson,
+        classes
+    } = props;
+    let {
+        specificSubstitutionType,
+        substitutionText,
         reference,
         teams,
         assignments,
-        isTeacher,
-        date,
-    } = props;
+    } = lesson;
+
     const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
     const isNew = fields.new;
     const BoundField = BindField({
