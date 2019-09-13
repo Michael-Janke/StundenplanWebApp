@@ -21,20 +21,16 @@ NodeGit.Repository.open(path.resolve(__dirname, ".git"))
       if (err) return console.log(err);
       console.log(JSON.stringify(file, null, 4));
       console.log('increment build number ' + fileName);
+
       repo.refreshIndex()
         .then(async (index) => {
-          await index.addByPath(path.posix.join(fileName));
-          await index.write();
-          const oid = await index.writeTree();
           const head = await NodeGit.Reference.nameToId(repo, "HEAD");
-          const parent = await repo.getCommit(head);
-          const commitId = await repo.createCommit(
-            "HEAD",
-            NodeGit.Signature.default(repo),
-            NodeGit.Signature.default(repo),
+          const sig = await NodeGit.Signature.default(repo);
+          const commitId = await repo.createCommitOnHead(
+            [path.posix.join(fileName)],
+            sig,
+            sig,
             "build " + file.build,
-            oid,
-            [parent]
           );
           console.log("committed " + commitId);
         }).catch(error => console.error(error))
