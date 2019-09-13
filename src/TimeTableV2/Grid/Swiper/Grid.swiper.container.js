@@ -3,7 +3,6 @@ import GridSwiperContainer from './Grid.swiper.component';
 
 const mapStateToProps = () => {
     return (state, props) => ({
-        periods: state.timetable.masterdata.Period_Time,
     })
 }
 

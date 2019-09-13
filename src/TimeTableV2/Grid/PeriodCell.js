@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography } from '@material-ui/core';
 import ThemedGridCell from './ThemedGridCell';
 import { makeStyles } from '@material-ui/styles';
+import GridCell from './GridCell';
 
 const useStyles = makeStyles(theme => ({
     times: {
@@ -32,7 +33,7 @@ function periodTime(timeAsNumber) {
 export default function PeriodCell({ period, ...other }) {
     const classes = useStyles();
     return (
-        <ThemedGridCell {...other} className={classes.root}>
+        <GridCell {...other} className={classes.root}>
             <div className={classes.times}>
                 <Typography variant="caption" className={classes.timeTypography}>
                     {periodTime(period.START_TIME)}
@@ -44,6 +45,6 @@ export default function PeriodCell({ period, ...other }) {
             <Typography variant="subtitle2" className={classes.periodNumber}>
                 {period.PERIOD_TIME_ID - 1}.
             </Typography>
-        </ThemedGridCell>
+        </GridCell>
     )
 }

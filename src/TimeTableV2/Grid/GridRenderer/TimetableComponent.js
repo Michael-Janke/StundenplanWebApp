@@ -1,10 +1,8 @@
 import React from 'react';
-import { makeStyles, Paper } from '@material-ui/core';
-import { WEEKDAY_NAMES } from '../../Common/const';
-import LessonCell from './LessonCell';
-import PeriodCell from './PeriodCell';
-import ThemedGridCell from './ThemedGridCell';
-import Lesson from '../Lesson/Lesson';
+import { makeStyles } from '@material-ui/core';
+import Lesson from '../../Lesson/Lesson';
+import LessonCell from '../LessonCell';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -15,27 +13,25 @@ const useStyles = makeStyles(theme => ({
     }
 }), { name: "GridComponent" });
 
-export default function GridComponent({ timetable, periods, type, children, GridCellComponent }) {
+export default function GridComponent({ children, rows, timetable, type, GridCellComponent, index }) {
 
     const weekDays = [0, 1, 2, 3, 4];
-    const periodArray = Object.values(periods);
     const classes = useStyles({
-        rows: periodArray.length || 10,
+        rows: rows.length || 10,
         columns: weekDays.length || 5
     });
-    if (!timetable) {
-        return null;
-    }
     return (
         <div className={classes.root}>
+            {index}
             {children}
             {weekDays.map((day) => {
                 const dayObject = timetable && timetable[day];
                 return (
                     <React.Fragment key={day}>
-                        {periodArray.map((period, i) => {
+                        {rows.map((row, i) => {
+                            const period = row.period;
                             const periodNumber = period.PERIOD_TIME_ID - 1;
-                            if (!dayObject) {
+                            if (!dayObject || !dayObject.periods) {
                                 return (
                                     <GridCellComponent>
                                         {periodNumber >= 1 && periodNumber < (9 - (day * 2) % 3) &&
@@ -64,7 +60,6 @@ export default function GridComponent({ timetable, periods, type, children, Grid
                     </React.Fragment>
                 )
             })}
-
         </div>
     )
 }

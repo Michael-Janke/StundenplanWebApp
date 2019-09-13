@@ -156,8 +156,9 @@ class Dates extends Component {
         return monthKeyed;
     };
 
-    componentDidMount() {
-        this.scrollToMonth(this.props);
+    componentWillReceiveProps(nextProps) {
+        this.scrollToMonth(nextProps);
+        
     }
 
     componentDidUpdate() {
@@ -173,6 +174,20 @@ class Dates extends Component {
         const target = this.monthRefs[selectedMonth];
         target.parentNode.scrollTop = target.offsetTop;
     };
+
+    shouldComponentUpdate(nextProps, nextState) {
+        
+        return (
+            nextProps.classes !== this.props.classes ||
+            nextProps.isAdmin !== this.props.isAdmin ||
+            nextProps.dates !== this.props.dates ||
+            nextProps.filterDate !== this.props.filterDate ||
+            nextState.editMode !== this.state.editMode ||
+            nextState.dialogDeleteOpen !== this.state.dialogDeleteOpen ||
+            nextState.dialogOpen !== this.state.dialogOpen ||
+            nextState.selectedDate !== this.state.selectedDate
+        )
+    }
 
     render() {
         const { classes, isAdmin, filterDate, dates, timetableDate } = this.props;

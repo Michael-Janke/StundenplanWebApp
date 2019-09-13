@@ -1,23 +1,46 @@
 import React from 'react';
 import { useMeasureCallback } from './helpers';
 import ThemedGridCellSwiper from './ThemedGridCell.swiper';
-import GridContainer from '../Grid.container';
+import TimetableContainer from '../GridRenderer/Timetable.container';
 
-function GridSlideComponent({ index, periodsArray }) {
+function GridSlideComponent({ index, rows, slide, onRowHeight }) {
     return (
-        <GridContainer GridCellComponent={ThemedGridCellSwiper}>
-            {periodsArray.map((period, i) => <Period period={period} key={i}></Period>)}
-        </GridContainer>
+        <TimetableContainer
+            index={index}
+            GridCellComponent={ThemedGridCellSwiper}
+            rows={rows}>
+            {rows.map((row, i) =>
+                <RowComponent
+                    row={row}
+                    slide={slide[i]}
+                    key={i}
+                    index={i}
+                    onRowHeight={onRowHeight}>
+
+                </RowComponent>)}
+        </TimetableContainer>
     );
 }
 
-function Period({ period }) {
-    const [bind] = useMeasureCallback(({ height }) => {
-        period.height = height;
-        period.onPeriodHeight();
+function RowComponent({ row, slide, onRowHeight, index }) {
+    const [{ ref }] = useMeasureCallback(({ height }) => {
+        slide.height = height;
+        onRowHeight(index);
+        handleMinHeight();
     });
+    const handleMinHeight = React.useCallback(() => {
+        if (ref.current && ref.current.style) {
+            ref.current.style.minHeight = `${row.backgroundHeight}px`;
+        }
+    }, [row.backgroundHeight, ref]);
+
+    if (!row.listeners) {
+        row.listeners = [];
+    }
+    row.listeners.push(handleMinHeight);
+
     return (
-        <div style={{ minHeight: 54, marginBottom: 1, }} {...bind}></div>
+        <div style={{ minHeight: row.backgroundHeight }} ref={ref}></div>
     );
 }
 
