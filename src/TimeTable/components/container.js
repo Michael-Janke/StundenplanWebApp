@@ -16,7 +16,7 @@ const TimeTableContainer = ({ classes, ...other }) => (
     <div className={classes.root}>
         <Header {...other} />
         <Grid {...other} />
-        <Dates {...other} />
+        {!other.noSubstitutions && <Dates {...other} />}
     </div>
 );
 
