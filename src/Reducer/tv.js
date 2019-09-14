@@ -11,6 +11,11 @@ export default function tvReducer(state = {}, action) {
                 ...state,
                 dayInfo: action.payload,
             };
+        case 'GET_TRANSPORT_INFO_RECEIVED':
+            return {
+                ...state,
+                transportInfo: action.payload,
+            };
         default:
     }
     return state;

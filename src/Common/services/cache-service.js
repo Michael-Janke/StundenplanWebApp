@@ -1,4 +1,4 @@
-import { getTimetableCacheKey, getSubstitutionsCacheKey } from './const';
+import { getTimetableCacheKey, getSubstitutionsCacheKey } from '../const';
 
 const cacheService = store => next => action => {
     let state = store.getState();

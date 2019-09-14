@@ -25,17 +25,19 @@ const styles = theme => ({
     card: {
         display: 'flex',
         flexDirection: 'column',
+        flexGrow: 1,
     },
     media: {
         paddingTop: '56.5%',
     },
     cardContent: {
-        flex: 1,
         display: 'flex',
         flexDirection: 'column',
-    },
-    contentOverflow: {
         overflowY: 'auto',
+
+    },
+    cardOverflow: {
+        flex: '1 0 0',
     },
     author: {
         color: grey[500],
@@ -83,10 +85,10 @@ class Post extends React.Component {
                     {!isAdmin || approved ? (
                         <MoreVertIcon />
                     ) : (
-                        <Badge badgeContent={1} color="primary">
-                            <MoreVertIcon />
-                        </Badge>
-                    )}
+                            <Badge badgeContent={1} color="primary">
+                                <MoreVertIcon />
+                            </Badge>
+                        )}
                 </IconButton>
                 <Menu id="post-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                     {(post.USER_CREATED || isAdmin) && (
@@ -139,11 +141,9 @@ class Post extends React.Component {
                     title={post.TITLE}
                     subheader={post.DATE_FROM && moment(post.DATE_FROM.date).format('DD. MMMM, YYYY')}
                 />
-                <CardContent className={classes.cardContent}>
-                    <div className={classNames(overflow && classes.contentOverflow)}>
-                        {post.IMAGES && <Diashow post={post} />}
-                        {editorState && <Editor editorState={editorState} readOnly />}
-                    </div>
+                <CardContent className={classNames(classes.cardContent, overflow && classes.cardOverflow)}>
+                    {post.IMAGES && <Diashow post={post} />}
+                    {editorState && <Editor editorState={editorState} readOnly />}
                 </CardContent>
                 <CardActions className={classes.actions} disableActionSpacing>
                     <Typography className={classes.author} variant="body2">

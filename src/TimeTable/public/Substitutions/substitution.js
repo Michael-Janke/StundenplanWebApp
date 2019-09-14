@@ -1,5 +1,5 @@
 import React from 'react';
-import { getFields, styles } from '../Fields';
+import { getFields, styles } from '../../Fields';
 import styled from 'styled-components';
 import indigo from '@material-ui/core/colors/indigo';
 import withStyles from '@material-ui/core/styles/withStyles';

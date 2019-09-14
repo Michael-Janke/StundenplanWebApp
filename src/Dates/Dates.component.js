@@ -16,6 +16,7 @@ import moment from 'moment';
 import { RootRef, Fab } from '@material-ui/core';
 import { classNames } from '../Common/const';
 import { asynchronize } from '../Router/asynchronize';
+import { EditButton, DeleteButton, HomepageButton, HomepageBoxButton } from './DateEditButtons';
 
 const DateDialog = asynchronize()(() => import('./DateDialog'));
 const DateDeletionDialog = asynchronize()(() => import('./DateDeletionDialog'));
@@ -61,6 +62,9 @@ const styles = theme => ({
         padding: 0,
         margin: 0,
     },
+    edit: {
+        width: '90vw',
+    },
 });
 
 class Dates extends Component {
@@ -99,6 +103,20 @@ class Dates extends Component {
         this.setState({
             dialogDeleteOpen: true,
             deleteDate: date,
+        });
+    };
+
+    toggleHomepage = date => {
+        this.props.editDate({
+            DATE_ID: date.DATE_ID,
+            HOMEPAGE: !date.HOMEPAGE + 0,
+        });
+    };
+
+    toggleHomepageBox = date => {
+        this.props.editDate({
+            DATE_ID: date.DATE_ID,
+            HOMEPAGE_BOX: !date.HOMEPAGE_BOX + 0,
         });
     };
 
@@ -161,7 +179,7 @@ class Dates extends Component {
         const monthKeyedDates = this.renderDates(dates, filterDate && timetableDate);
 
         return (
-            <div className={classes.root}>
+            <div className={classNames(classes.root, editMode && classes.edit)}>
                 <ListItem ContainerComponent="div" className={classes.header}>
                     <ListItemIcon>
                         <CalendarIcon />
@@ -188,15 +206,22 @@ class Dates extends Component {
                                         <Date
                                             date={date}
                                             key={date.DATE_ID}
-                                            onEdit={
-                                                isAdmin && editMode && date.DATE_ID > 0
-                                                    ? () => this.openDialog(date)
-                                                    : undefined
-                                            }
-                                            onDelete={
-                                                isAdmin && editMode && date.DATE_ID > 0
-                                                    ? () => this.openDeleteDialog(date)
-                                                    : undefined
+                                            buttons={
+                                                editMode &&
+                                                date.DATE_ID > 0 && (
+                                                    <>
+                                                        <HomepageButton
+                                                            toggled={date.HOMEPAGE}
+                                                            onClick={() => this.toggleHomepage(date)}
+                                                        />
+                                                        <HomepageBoxButton
+                                                            toggled={date.HOMEPAGE_BOX}
+                                                            onClick={() => this.toggleHomepageBox(date)}
+                                                        />
+                                                        <EditButton onClick={() => this.openDialog(date)} />
+                                                        <DeleteButton onClick={() => this.openDeleteDialog(date)} />
+                                                    </>
+                                                )
                                             }
                                         />
                                     ))}

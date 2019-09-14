@@ -3,7 +3,6 @@ import { Route as BrowserRoute, Switch, Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import NotFoundPage from './NotFoundPage';
 import { asynchronize } from './asynchronize';
-import withAuthentication from './withAuthentication';
 import withApp from './withApp';
 
 /**
@@ -14,16 +13,16 @@ const asynchronized = asynchronize();
  * withAuthentication('authentication', withApp())
  * is authenticated route with appbar
  */
-const withAuth = loader => withAuthentication('authentication', asynchronize(withApp)(loader));
+const withAuth = loader => asynchronize(withApp)(loader);
 
 const Posts = withAuth(() => import('../Posts'));
 const PostEditor = withAuth(() => import('../Posts/PostCreation'));
 const Main = withAuth(() => import('../Main'));
 const MainAppBar = asynchronized(() => import('../Main/components/AppBar'));
 const Statistics = withAuth(() => import('../Statistics'));
-const Dates = withAuthentication('public', asynchronized(() => import('../Dates')));
-const PublicPosts = withAuthentication('token', asynchronized(() => import('../Posts/public')));
-const PublicTimetable = withAuthentication('token', asynchronized(() => import('../TimeTable/public')));
+const Dates = asynchronized(() => import('../Dates'));
+const PublicPosts = asynchronized(() => import('../Posts/public'));
+const PublicTimetable = asynchronized(() => import('../TimeTable/public'));
 
 const Route = props => {
     function renderComponent() {
@@ -50,25 +49,23 @@ class Routes extends React.Component {
     render() {
         const { location } = this.props;
         return (
-            <>
-                <Switch>
-                    <Route exact path="/" component={Main} noBoxShadow appBarComponent={MainAppBar} />
-                    <Route exact path="/posts" component={Posts} title="InfoTafel" />
-                    <Route exact path="/public/dates" component={Dates} />
-                    <Route exact path="/public/posts" component={PublicPosts} />
-                    <Route exact path="/public/tv" component={PublicTimetable} />
-                    <Route exact path="/posts/:id" component={PostEditor} title="Beitrag editieren" back />
-                    <Route exact path="/admin" component={Statistics} />
-                    <Route exact path="/error" component={NotFoundPage} />
-                    <Redirect
-                        to={{
-                            pathname: '/error',
-                            state: { referrer: location, error: 404 },
-                        }}
-                        push
-                    />
-                </Switch>
-            </>
+            <Switch>
+                <Route exact path="/" component={Main} noBoxShadow appBarComponent={MainAppBar} />
+                <Route exact path="/posts" component={Posts} title="InfoTafel" />
+                <Route exact path="/public/dates" component={Dates} />
+                <Route exact path="/public/posts" component={PublicPosts} />
+                <Route exact path="/public/tv" component={PublicTimetable} />
+                <Route exact path="/posts/:id" component={PostEditor} title="Beitrag editieren" back />
+                <Route exact path="/admin" component={Statistics} />
+                <Route exact path="/error" component={NotFoundPage} />
+                <Redirect
+                    to={{
+                        pathname: '/error',
+                        state: { referrer: location, error: 404 },
+                    }}
+                    push
+                />
+            </Switch>
         );
     }
 }

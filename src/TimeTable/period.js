@@ -27,7 +27,7 @@ class Period extends React.Component {
         return false;
     }
     render() {
-        const { lessons, type, small, continueation, setTimeTable, date } = this.props;
+        const { lessons, type, small, setTimeTable, date } = this.props;
         if (!lessons || !type) {
             return null;
         }
@@ -35,14 +35,16 @@ class Period extends React.Component {
             <PeriodsContainer>
                 {this.props.children}
                 {lessons.map((lesson, i) => {
-                    let { classes, subject, teachers, room, ...other } = lesson;
-                    if (other.absence) {
-                        return <Absence {...other} key={other.absence.ABSENCE_ID} table />;
+                    if (lesson.ABSENCE_ID) {
+                        if (!lesson.room) {
+                            // dont show absences when no room
+                            return null;
+                        }
+                        return <Absence absence={lesson} key={lesson.ABSENCE_ID} table />;
                     } else {
                         return (
                             <AbstractLesson
-                                {...other}
-                                continueation={continueation}
+                                lesson={lesson}
                                 date={date}
                                 key={lesson.reference.TIMETABLE_ID || -i}
                                 last={lessons.length - 1 === i}

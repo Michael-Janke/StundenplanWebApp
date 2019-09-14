@@ -1,13 +1,8 @@
 import { dispatch } from '../store';
-import { getAuthContext } from '../Common/Authentication/storage';
 
 let intervalCount = 0;
 
 const dispatchReduxAction = () => {
-    const isAllowed = getAuthContext().isAllowed('authentication', 'token');
-    if (!isAllowed && isAllowed !== undefined) {
-        return;
-    }
     dispatch({
         type: 'CHECK_CURRENT_PERIOD',
     });

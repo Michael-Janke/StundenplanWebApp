@@ -1,5 +1,5 @@
 import { runApplication, runApplicationToken } from './Common/Authentication';
-import 'babel-polyfill';
+import 'react-app-polyfill/stable';
 
 let deparam = function(querystring) {
     // remove any preceding url and split
@@ -17,8 +17,8 @@ let deparam = function(querystring) {
 };
 window.params = deparam(window.location.href);
 
-if ((window.location.hash = '/public/tv')) {
-    let client_secret = localStorage.getItem('public_tv_token');
+if (window.params.token) {
+    let client_secret = window.params.token;
     runApplicationToken(client_secret, () => {
         // eslint-disable-next-line
         require('./indexReact.js');

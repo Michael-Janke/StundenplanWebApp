@@ -1,17 +1,19 @@
 const counterMiddleware = store => next => action => {
     switch (action.type) {
         case 'COUNTER_RECEIVED':
-            next(action);
-            if (store.getState().user.counterChanged === 'detected') {
+            const state = store.getState();
+            const user = state.user;
+
+            if (user.counter !== action.payload.COUNTER) {
                 store.dispatch({ type: 'GET_ME' });
                 store.dispatch({ type: 'GET_MASTERDATA' });
                 store.dispatch({ type: 'COUNTER_CHANGED' });
             }
-            break;
-        case 'GET_ME_RECEIVED':
-            next({ type: 'REFERSH_LOADING' });
+            const dates = state.dates;
+            if (!dates.loading && dates.currentHash !== action.payload.DATES_HASH) {
+                store.dispatch({ type: 'GET_DATES' });
+            }
             next(action);
-            next({ type: 'REFRESH_COMPLETE' });
             break;
         default:
             next(action);

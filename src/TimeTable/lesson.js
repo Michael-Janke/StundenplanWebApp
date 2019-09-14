@@ -24,33 +24,24 @@ const SubstitutionText = ({ left, children }) => <SubstitutionTextContainer>({ch
 
 const AbstractLesson = props => {
     let {
-        classes,
         theme,
         small,
-        multiple,
+        fields,
+        setTimeTable,
+        isTeacher,
+        date,
+        lesson,
+        classes
+    } = props;
+    let {
         specificSubstitutionType,
         substitutionText,
-        fields,
-        continueation,
-        setTimeTable,
         reference,
         teams,
         assignments,
-        isTeacher,
-        date,
-    } = props;
+    } = lesson;
+
     const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
-    if (continueation) {
-        return (
-            <Lesson
-                type={theme.palette.type}
-                color={styles.backgroundColor}
-                flex={!specificSubstitutionType || !multiple}
-            >
-                <ColorBar lineColor={styles.color} />
-            </Lesson>
-        );
-    }
     const isNew = fields.new;
     const BoundField = BindField({
         small,
@@ -132,8 +123,9 @@ const AbstractLesson = props => {
     const allDoneAssignments = assignments.every(assignment =>
         assignment.submissions ? assignment.submissions.every(submission => submission.status === 'submitted') : false
     );
+    const hasDrafts = assignments.some(assignment => assignment.status === 'draft');
     const badgeContent = isTeacher ? (
-        <AssignmentIcon style={{ fontSize: '1rem', marginRight: '5px', marginTop: '5px' }} />
+        <AssignmentIcon style={{ fontSize: '1rem', marginRight: '5px', marginTop: '5px', color: hasDrafts ? grey[500] : undefined }} />
     ) : allDoneAssignments ? (
         <DoneIcon />
     ) : (

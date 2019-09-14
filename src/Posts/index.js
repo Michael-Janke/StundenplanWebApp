@@ -74,9 +74,10 @@ const styles = theme => ({
 class Posts extends React.Component {
     state = { dialogOpen: false };
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.getPosts();
     }
+
     handleDialogClose = post => {
         this.setState({ dialogOpen: false });
         if (!post) {

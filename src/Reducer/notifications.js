@@ -39,7 +39,7 @@ export default (state = defaultState, action) => {
         }
         const { text } = action.payload;
         if (text) {
-            if (text.indexOf('offline') !== -1) {
+            if (text.indexOf('offline') !== -1 || text.indexOf('timeout') !== -1) {
                 // ignore offline errors
                 return state;
             }

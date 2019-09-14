@@ -1,20 +1,12 @@
-import { setAuthContext } from './storage';
+import { setAuthContext } from '../storage';
 import { EventEmitter } from 'events';
-import { timeout } from '../utils';
-import trackError from '../trackError';
+import trackError from '../../trackError';
 
-const client_id = 'ef085784-4829-427c-ab32-5e90502a1dde';
+export default class AuthContext extends EventEmitter {
 
-export class TokenAuthContext extends EventEmitter {
-    static resources = {
-        'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/':
-            'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/.default',
-        'https://graph.microsoft.com/': 'https://graph.microsoft.com/.default',
-    };
-
-    constructor(client_secret) {
+    constructor() {
         super();
-        this.client_secret = client_secret;
+        this.setMaxListeners(0);
     }
 
     tokens = {};
@@ -25,40 +17,17 @@ export class TokenAuthContext extends EventEmitter {
         this.tokenAcquisistions = [];
     }
 
+    expireTokens() {
+        Object.values(this.tokens).forEach(token => token.acquired = 0);
+    }
+
     toObject() {}
 
-    isLoggedIn() {
-        const tokens = Object.values(this.tokens).length + Object.values(this.tokenAcquisistions).length;
-        const resources = Object.values(TokenAuthContext.resources).length;
-        return tokens >= resources;
-    }
+    isLoggedIn() {}
 
-    isLoggingIn() {
-        return true;
-    }
+    isLoggingIn() {}
 
-    allow(variant) {
-        return (this.allowed = variant);
-    }
-
-    /**
-     *
-     * @param  {...('authentication' | 'public' | 'token')} variant
-     */
-    isAllowed(...variant) {
-        if (!this.client_secret) {
-            return false;
-        }
-        if (this.allowed === undefined) {
-            return undefined;
-        }
-        if (variant && variant.length) {
-            return variant.indexOf(this.allowed) !== -1;
-        }
-        return !!this.allowed;
-    }
-
-    login() {}
+    async aquireToken(token, endpoint) {}
 
     getToken(endpoint) {
         return new Promise(async (resolve, reject) => {
@@ -95,22 +64,8 @@ export class TokenAuthContext extends EventEmitter {
             }
 
             try {
-                const body = {
-                    client_secret: this.client_secret,
-                    client_id,
-                    scope: TokenAuthContext.resources[endpoint],
-                };
-                const response = await timeout(
-                    6000,
-                    fetch(`https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/token`, {
-                        method: 'POST',
-                        body: JSON.stringify(body),
-                        headers: {
-                            'Content-Type': 'Application/Json',
-                        },
-                    })
-                );
-                const newToken = await response.json();
+                console.debug('new token for endpoint ', endpoint, token);
+                const newToken = await this.aquireToken(token, endpoint);
                 console.debug('got token for endpoint ', endpoint, newToken);
                 newToken.acquired = Date.now();
                 this.tokens[endpoint] = newToken;

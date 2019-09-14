@@ -5,9 +5,9 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import rootReducer from './Reducer';
 import thunk from 'redux-thunk';
 import services from './Common/services';
-import actionRedirector from './Common/action-redirects';
-import cacheService from './Common/cache-service';
-import counterChanged from './Common/counter';
+import actionRedirector from './Common/services/action-redirects';
+import cacheService from './Common/services/cache-service';
+import counterChanged from './Common/services/counter-service';
 import { responsiveStoreEnhancer } from 'redux-responsive';
 import networkStatusEnhancer from './networkStatusEnhancer';
 import version from './version.json';
@@ -34,6 +34,20 @@ const store = createStore(
         responsiveStoreEnhancer
     )
 );
+
+(window.debug || (window.debug = {})).simulateCounterChange = () => {
+    store.dispatch({
+        type: 'COUNTER_RECEIVED', payload: {
+            COUNTER: 0,
+            LAST_CHANGE: {
+                date: '1970-01-01 00:00:00.000000',
+                timezone_type: 3,
+                timezone: 'UTC'
+            },
+            DATES_HASH: '0'
+        }
+    })
+};
 
 const persistor = persistStore(store);
 

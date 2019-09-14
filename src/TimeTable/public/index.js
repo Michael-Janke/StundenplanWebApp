@@ -5,13 +5,14 @@ import indigo from '@material-ui/core/colors/indigo';
 import { Paper, AppBar, Grid, Toolbar } from '@material-ui/core';
 import Dates from '../../Dates';
 import ErrorBoundary from '../../Common/ErrorBoundary';
-import Substitutions from '../Substitutions';
+import Substitutions from './Substitutions';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import Search from '../../Main/components/Search';
 import Keyboard from '../../Main/components/Keyboard';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { classNames } from '../../Common/const';
 import ClearTimetable from './ClearTimetable';
+import InformationView from './Information';
 import { startIntervalCheck, stopIntervalCheck } from './intervalCheck';
 
 const smallBreakpoint = 800;
@@ -62,7 +63,6 @@ const useStyles = makeStyles(
             [theme.breakpoints.down(smallBreakpoint)]: {
                 maxWidth: 'initial',
             },
-            display: 'flex',
             paddingTop: 0,
         },
         grid: {
@@ -78,6 +78,8 @@ const useStyles = makeStyles(
             [theme.breakpoints.down(smallBreakpoint)]: {
                 flexGrow: 1,
             },
+            margin: theme.spacing(.5),
+
         },
         timetable: {
             maxWidth: 800,
@@ -88,6 +90,7 @@ const useStyles = makeStyles(
             [theme.breakpoints.down(smallBreakpoint)]: {
                 maxWidth: 'initial',
             },
+
         },
         substitutions: {
             flexGrow: 1,
@@ -105,7 +108,7 @@ function PublicDisplay({ open }) {
         return stopIntervalCheck;
     }, []);
 
-    if (!localStorage.getItem('public_tv_token')) {
+    if (!window.params.token) {
         return 'Leider bin ich noch nicht vollständig eingerichtet';
     }
 
@@ -128,27 +131,40 @@ function PublicDisplay({ open }) {
             </AppBar>
             <div className={classes.extendedAppBar} />
             <div className={classes.panel}>
-                <Grid container spacing={1} className={classes.grid}>
-                    <Grid item xs className={classes.gridItem} direction="column">
+                <Grid container className={classes.grid}>
+                    <Grid item xs={6} className={classes.gridItem}>
                         <Paper className={classNames(classes.timetable, classes.paper)} square>
                             <ErrorBoundary>
                                 <TimeTableContainer />
                             </ErrorBoundary>
                         </Paper>
                     </Grid>
-                    <Grid item xs={3} className={classes.gridItem}>
-                        <Paper className={classNames(classes.substitutions, classes.paper)} square>
-                            <ErrorBoundary>
-                                <Substitutions addDays={0} />
-                            </ErrorBoundary>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={3} className={classes.gridItem}>
-                        <Paper className={classNames(classes.dates, classes.paper)} square>
-                            <ErrorBoundary>
-                                <Dates filterDate={small} />
-                            </ErrorBoundary>
-                        </Paper>
+                    <Grid item xs={6} container direction="column">
+                        <Grid item xs container>
+                            <Paper className={classNames(classes.substitutions, classes.paper)} square>
+                                <ErrorBoundary>
+                                    <InformationView />
+                                </ErrorBoundary>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs container>
+                            <Grid item container xs={8}>
+                                <Paper className={classNames(classes.substitutions, classes.paper)} square>
+                                    <ErrorBoundary>
+                                        <Substitutions addDays={0} />
+
+                                    </ErrorBoundary>
+                                </Paper>
+                            </Grid>
+                            <Grid item container xs={4}>
+                                <Paper className={classNames(classes.dates, classes.paper)} square>
+                                    <ErrorBoundary>
+                                        <Dates filterDate={small} />
+                                    </ErrorBoundary>
+                                </Paper>
+                            </Grid>
+                        </Grid>
+                        
                     </Grid>
                 </Grid>
             </div>

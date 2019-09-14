@@ -6,7 +6,6 @@ const initialState = {
     upn: null,
     loading: false,
     counter: 0,
-    counterChanged: 'detected',
     lastUpdate: null,
     lastCheck: null,
     warning: true,
@@ -23,20 +22,9 @@ export default function userReducer(state = initialState, action = {}) {
         case 'COUNTER_RECEIVED':
             return {
                 ...state,
-                counterChanged: state.counter !== action.payload.COUNTER ? 'detected' : 'none',
                 counter: action.payload.COUNTER,
                 lastUpdate: +moment(action.payload.LAST_CHANGE.date),
                 lastCheck: +moment(),
-            };
-        case 'REFRESH_COMPLETE':
-            return {
-                ...state,
-                counterChanged: 'none',
-            };
-        case 'REFRESH_LOADING':
-            return {
-                ...state,
-                counterChanged: 'loading',
             };
         case 'CHANGE_THEME':
             return {

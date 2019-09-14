@@ -67,7 +67,7 @@ class UserSettingsMenu extends React.Component {
 
     logout = () => {
         this.props.logOut();
-        getAuthContext().logOut();
+        getAuthContext().then(authContext => authContext.logOut());
     };
 
     openFeedback = () => {

@@ -2,18 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { getDayInfo } from '../actions';
-import { Typography } from '@material-ui/core';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { Typography, Portal, Fade } from '@material-ui/core';
+import { TransitionGroup } from 'react-transition-group';
+import ReadProgress from './ReadProgress';
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        flexBasis: 0,
+    },
+    content: {
+        display: 'flex',
+        flexDirection: 'column',
         color: 'white',
         padding: theme.spacing(2),
-        height: '100%',
+        flex: 1,
     },
     headerContainer: {
         flexGrow: 1,
@@ -21,105 +26,87 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'flex-end',
         position: 'relative',
     },
-    textContainer: {
-        position: 'relative',
-        flexGrow: 2,
-    },
-    text: {
-        position: 'absolute',
-        top: 0,
-    },
-    textEnter: {
-        opacity: 0,
-    },
-    textEnterActive: {
-        transition: theme.transitions.create(['opacity']),
-        opacity: 1,
-    },
-    textExit: {
-        opacity: 1,
-    },
-    textExitActive: {
-        transition: theme.transitions.create(['opacity']),
-        opacity: 0,
-    },
     header: {
         position: 'absolute',
         bottom: 0,
     },
-    headerEnter: {
-        opacity: 0,
+    backgroundContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: -1,
+        overflow: 'hidden',
+        backgroundColor: theme.palette.background.default,
     },
-    headerEnterActive: {
-        transition: theme.transitions.create(['opacity']),
-        opacity: 1,
-    },
-    headerExit: {
-        opacity: 1,
-    },
-    headerExitActive: {
-        transition: theme.transitions.create(['opacity']),
-        opacity: 0,
-    },
-}));
+    backgroundImage: {
+        position: 'absolute',
+        width: '100%',
+        filter: 'blur(2px)',
+        opacity: theme.palette.type === 'dark' ? .2 : .7,
+    }
+}), { name: 'DayInfo' });
 
 function DayInfo({ dayInfo = [], getDayInfo }) {
     const classes = useStyles();
     const infos = dayInfo.length;
     const [currentId, setCurrentId] = useState(0);
-    useEffect(getDayInfo, []);
-    useEffect(() => {
-        const id = setInterval(() => {
-            let newId = currentId + 1;
-            if (newId >= infos) {
-                newId = 0;
-            }
-            setCurrentId(newId);
-        }, 20 * 1000);
-        return () => clearInterval(id);
-    });
     const info = dayInfo[currentId] || {};
+
+    const onFinished = React.useCallback(() => {
+        let newId = currentId + 1;
+        if (newId >= infos) {
+            newId = 0;
+        }
+        setCurrentId(newId);
+    }, [currentId, infos]);
+
+    React.useLayoutEffect(() => {
+        const root = document.getElementById('root').firstChild.style;
+        root.backgroundColor = 'transparent';
+    }, []);
+
+    // fetch dayInfo once component was mounted
+    useEffect(getDayInfo, []);
+
     return (
         <div className={classes.root}>
-            <TransitionGroup className={classes.headerContainer}>
-                <CSSTransition
-                    className={classes.header}
-                    classNames={{
-                        enter: classes.headerEnter,
-                        enterActive: classes.headerEnterActive,
-                        exit: classes.headerExit,
-                        exitActive: classes.headerExitActive,
-                    }}
-                    key={info.header}
-                    timeout={300}
-                >
-                    <Typography variant="h4" color="inherit">
-                        {info.header}
-                    </Typography>
-                </CSSTransition>
-            </TransitionGroup>
-            <TransitionGroup className={classes.textContainer}>
-                <CSSTransition
-                    className={classes.text}
-                    classNames={{
-                        enter: classes.textEnter,
-                        enterActive: classes.textEnterActive,
-                        exit: classes.textExit,
-                        exitActive: classes.textExitActive,
-                    }}
-                    key={info.text}
-                    timeout={300}
-                >
-                    <div>
-                        <Typography variant="body2" color="inherit">
-                            {info.text}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="a" href={info.href}>
-                            {info.href}
-                        </Typography>
-                    </div>
-                </CSSTransition>
-            </TransitionGroup>
+            <Portal>
+                <TransitionGroup className={classes.backgroundContainer}>
+                    <Fade key={info.image ? info.image.url : ""} appear timeout={1000}>
+                        <div>
+                            {(info.image && info.image.url) ?
+                                <img src={info.image.url} className={classes.backgroundImage} alt=""></img>
+                                : <div className={classes.backgroundImage}></div>}
+                        </div>
+                    </Fade>
+                </TransitionGroup>
+            </Portal>
+            <div className={classes.content}>
+                <TransitionGroup className={classes.headerContainer}>
+                    <Fade
+                        className={classes.header}
+                        key={info.header}
+                        timeout={1000}
+                    >
+                        <div>
+                            <Typography variant="h4" color="inherit">
+                                {info.header}
+                            </Typography>
+                            <Typography variant="body2" color="inherit">
+                                {info.text}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary" component="a" href={info.href}>
+                                {info.href}
+                            </Typography>
+
+                        </div>
+                    </Fade>
+                </TransitionGroup>
+            </div>
+            <ReadProgress onFinished={onFinished} time={1000 * 20} />
+
         </div>
     );
 }

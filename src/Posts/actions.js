@@ -9,6 +9,9 @@ export function editPost(post) {
 export function getDayInfo() {
     return { type: 'GET_DAY_INFO' };
 }
+export function getTransportInfo() {
+    return { type: 'GET_TRANSPORT_INFO' };
+}
 
 export function getPosts() {
     return { type: 'GET_POSTS' };

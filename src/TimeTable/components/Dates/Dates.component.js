@@ -12,6 +12,7 @@ import CalendarIcon from '@material-ui/icons/Event';
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 import indigo from '@material-ui/core/colors/indigo';
+import { darken } from '@material-ui/core/styles';
 
 const moment = extendMoment(Moment);
 
@@ -38,7 +39,7 @@ const styles = theme => ({
         height: 28,
     },
     today: {
-        backgroundColor: grey[400],
+        backgroundColor: grey[theme.palette.type === 'dark' ? 900 : 400],
     },
     offline: {
         width: 'unset',
@@ -75,7 +76,7 @@ const styles = theme => ({
     },
     date: {
         overflow: 'hidden',
-        backgroundColor: indigo[50],
+        backgroundColor: darken(indigo[50], theme.palette.type === 'dark' ? 0.6 : 0),
         display: 'flex',
         height: '100%',
     },

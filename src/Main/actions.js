@@ -76,22 +76,12 @@ export function setSortBy(sortBy) {
     return { type: 'SET_SORT_BY', payload: sortBy };
 }
 
-export function counterChanged(counterChanged) {
-    return dispatch => {
-        dispatch({ type: 'COUNTER_CHANGED', payload: counterChanged });
-        if (counterChanged) {
-            dispatch(loadMe());
-            dispatch(loadMasterData());
-        }
-    };
-}
-
 export function getSubstitutions(id, type, week, year) {
     return { type: 'GET_SUBSTITUTIONS', payload: { id, type, week, year } };
 }
 
-export function getTimetable(id, type) {
-    return { type: 'GET_TIMETABLE', payload: { id, type } };
+export function getTimetable(id, type, date) {
+    return { type: 'GET_TIMETABLE', payload: { id, type, date } };
 }
 
 export function loadProfilePicture() {

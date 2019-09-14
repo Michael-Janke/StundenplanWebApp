@@ -23,7 +23,7 @@ class Statistics extends React.Component {
         year: 0,
     };
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.loadLogIns(this.state.week, this.state.year);
     }
 

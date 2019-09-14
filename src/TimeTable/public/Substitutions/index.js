@@ -1,7 +1,7 @@
 import React from 'react';
-import makeGetSubstitutions from '../../Selector/substitution';
+import makeGetSubstitutions from '../../../Selector/substitution';
 import { connect } from 'react-redux';
-import { getSubstitutions, getTimetable, setTimeTable } from '../../Main/actions';
+import { getTimetable, setTimeTable } from '../../../Main/actions';
 import moment from 'moment';
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,6 +19,7 @@ const styles = theme => ({
         fontSize: '100%',
         display: 'flex',
         flexDirection: 'column',
+        flexGrow: 1,
     },
     rootHeader: {
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
@@ -31,7 +32,7 @@ const styles = theme => ({
         padding: theme.spacing(1),
         overflowY: 'auto',
         backgroundColor: theme.palette.background.default,
-        flex: '1 0',
+        flex: '1 0 0',
     },
     substitutionsHeader: {
         fontSize: '90%',
@@ -92,18 +93,13 @@ const getAddDays = props => {
 
 class Substitutions extends React.Component {
     state = {};
-    shouldComponentUpdate(nextProps) {
-        // controlled nonupdate
-        return !!nextProps.substitutions || nextProps.classes !== this.props.classes;
-    }
 
     static getDerivedStateFromProps(props, state) {
-        if (!props.substitutions || (props.loading === 'detected') !== (state.loading === 'detected')) {
+        if (!props.substitutions || props.counter !== state.counter) {
             let date = moment().add(getAddDays(props), 'day');
-            props.getSubstitutions(date.week(), date.weekYear());
-            props.getTimetableAll();
+            props.getTimetableAll(date);
         }
-        return { loading: props.loading };
+        return { counter: props.counter };
     }
 
     renderName(entry) {
@@ -139,7 +135,7 @@ class Substitutions extends React.Component {
                             <div className={classes.substitutionsHeader}>
                                 {this.renderName(entry) || <div />}
                                 <IconButton
-                                    mini
+                                    variant="mini"
                                     className={classes.button}
                                     onClick={this.handleSelectTimetable.bind(this, entry)}
                                 >
@@ -151,7 +147,7 @@ class Substitutions extends React.Component {
                                     <SubstitutionEntry
                                         substitution={substitution}
                                         type={sortBy.type.singular}
-                                        key={substitution.SUBSTITUTION_ID}
+                                        key={substitution.SUBSTITUTION_ID + "" + i}
                                     />
                                 ))}
                             </div>
@@ -178,16 +174,13 @@ const makeStateToProps = () => {
         substitutions: getSubstitutions(state, props),
         sortBy: state.substitutions.sortBy,
         masterdata: state.masterdata,
-        loading: state.user.counterChanged,
+        counter: state.user.counter,
         lastUpdate: state.user.lastUpdate,
     });
 };
 const mapDispatchToProps = dispatch => ({
-    getSubstitutions: (week, year) => {
-        dispatch(getSubstitutions(0, 'all', week, year));
-    },
-    getTimetableAll: () => {
-        dispatch(getTimetable(0, 'all'));
+    getTimetableAll: (date) => {
+        dispatch(getTimetable(-1, 'all', date));
     },
     setTimetable: (type, id) => dispatch(setTimeTable(type, id)),
 });
