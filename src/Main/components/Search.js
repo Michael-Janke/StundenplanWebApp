@@ -11,7 +11,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
+import StarIcon from '@material-ui/icons/Star';
 import FilterIcon from '@material-ui/icons/FilterList';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 import grey from '@material-ui/core/colors/grey';
 import indigo from '@material-ui/core/colors/indigo';
@@ -111,17 +113,26 @@ class Search extends React.PureComponent {
                     <FilterIcon />
                 </ListItemIcon>
                 <ListItemText className={classes.buttonGroup}>
-                    {filter.map(type => (
+                    <ButtonGroup>
                         <Button
-                            key={type}
+                            key={''}
                             size={small ? 'small' : 'medium'}
-                            className={classes.button}
-                            onClick={() => this.setFilter(type)}
-                            variant={selectedFilter === type ? 'contained' : 'outlined'}
+                            onClick={() => this.setFilter('')}
+                            color={!selectedFilter ? 'primary' : 'none'}
                         >
-                            {type}
+                            <StarIcon></StarIcon>
                         </Button>
-                    ))}
+                        {filter.map(type => (
+                            <Button
+                                key={type}
+                                size={small ? 'small' : 'medium'}
+                                onClick={() => this.setFilter(type)}
+                                color={selectedFilter === type ? 'primary' : 'none'}
+                            >
+                                {type}
+                            </Button>
+                        ))}
+                    </ButtonGroup>
                 </ListItemText>
             </ListItem>
         );
