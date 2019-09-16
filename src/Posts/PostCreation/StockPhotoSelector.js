@@ -4,7 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import AddIcon from '@material-ui/icons/CheckCircleOutline';
 import debounce from 'debounce';
+import Image from './Image';
 
 const UNSPLASH_KEY = '89cf4875441cd2ff854a44fce573499a7e8ec2977ebcb2026623d0290e6f47a4';
 
@@ -14,10 +16,18 @@ const styles = theme => ({
     root: {},
     pictures: {
         overflowY: 'auto',
+        display: 'flex',
+        flexWrap: 'wrap',
     },
     picture: {
-        flex: 0.5,
-        maxWidth: 400,
+        flex: 1,
+        maxWidth: 600,
+        minWidth: 300,
+        margin: theme.spacing(0.5),
+        '&:after': {
+            content: "",
+            flex: 'auto',
+          }
     },
 });
 
@@ -39,7 +49,7 @@ class TopicSelection extends React.Component {
     };
 
     queryPictures = query => {
-        fetch(`https://api.unsplash.com/search/photos?query=${query}&orientation=landscape&client_id=${UNSPLASH_KEY}`)
+        fetch(`https://api.unsplash.com/search/photos?query=${query}&per_page=24&orientation=landscape&client_id=${UNSPLASH_KEY}`)
             .then(data => data.json())
             .then(data => this.setState({ results: data.results, error: false }))
             .catch(() => this.setState({ error: true }));
@@ -60,14 +70,18 @@ class TopicSelection extends React.Component {
         this.setState({ topic: query });
     };
 
+    handleClick = imageUrl => () => {
+        this.props.onUpload(imageUrl)
+    }
+
     render() {
         const { classes } = this.props;
         const { results, topic } = this.state;
         return (
             <div className={classes.root}>
                 <Typography>
-                    Wähle ein Thema für dein Beitrag, indem die entweder ein vordefiniertes Thema wählst, ein Stichwort
-                    (englisch) eingibst oder ein eigenes Foto hochlädst.
+                    Wähle ein Thema für deinen Beitrag, indem du entweder ein vordefiniertes Thema wählst oder ein Stichwort
+                    in Englisch eingibst.
                 </Typography>
 
                 <TextField
@@ -88,12 +102,15 @@ class TopicSelection extends React.Component {
 
                 <div className={classes.pictures}>
                     {results.map(picture => (
-                        <img
+                        <Image
                             src={picture.urls.small}
                             className={classes.picture}
                             alt={picture.description}
                             key={picture.id}
-                        />
+                            onClick={this.handleClick(picture.urls.regular)}
+                        >
+                            <AddIcon fontSize={"50"} />
+                        </Image>
                     ))}
                 </div>
             </div>

@@ -7,41 +7,22 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import TopicSelection from './topicSelection';
+import StockPhotoSelector from './StockPhotoSelector';
+import PhotoModeSelector from './PhotoModeSelector';
 
 const styles = theme => ({
-    center: {
-        display: 'flex',
-        justifyContent: 'center',
-        height: '100%',
-        padding: theme.spacing.unit * 2,
-        backgroundColor: '#EEEEEE',
-    },
     root: {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        justifyContent: 'center',
     },
     fullHeight: {
         flex: 1,
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
         height: '100%',
         overflow: 'auto',
-    },
-    header: {
-        display: 'flex',
-        alignItems: 'center',
-        height: 50,
-        paddingLeft: theme.spacing.unit * 4,
-        backgroundColor: theme.palette.background.default,
-    },
-    img: {
-        height: 255,
-        maxWidth: 400,
-        overflow: 'hidden',
-        display: 'block',
-        width: '100%',
     },
 });
 
@@ -62,37 +43,50 @@ class TextMobileStepper extends React.Component {
         }));
     };
 
+    onUpload = url => {
+        this.setState(prevState => ({
+            image: url,
+            activeStep: prevState.activeStep + 1,
+        }));
+    };
+
+    onPhotoModeSelect = mode => {
+        this.setState(prevState => ({
+            activeStep: prevState.activeStep + 1,
+            photoMode: mode,
+        }));
+    };
+
     render() {
         const { classes, theme } = this.props;
         const { activeStep } = this.state;
-        const maxSteps = 1;
+        const maxSteps = 2;
 
         return (
-            <div className={classes.center}>
-                <Paper className={classes.root}>
-                    <Paper square elevation={0} className={classes.header}>
-                        <Typography>Thema wählen</Typography>
-                    </Paper>
-                    <div className={classes.fullHeight}>{activeStep === 0 && <TopicSelection />}</div>
-                    <MobileStepper
-                        steps={maxSteps}
-                        position="static"
-                        activeStep={activeStep}
-                        className={classes.mobileStepper}
-                        nextButton={
-                            <Button size="small" onClick={this.handleNext} disabled={activeStep === maxSteps - 1}>
-                                Weiter
-                                {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-                            </Button>
-                        }
-                        backButton={
-                            <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
-                                {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                                Zurück
-                            </Button>
-                        }
-                    />
-                </Paper>
+            <div className={classes.root}>
+                <div className={classes.fullHeight}>
+                    {activeStep === 0 && <PhotoModeSelector onPhotoModeSelect={this.onPhotoModeSelect} />}
+                    {activeStep === 1 && <StockPhotoSelector onUpload={this.onUpload} />}
+                </div>
+
+                <MobileStepper
+                    steps={maxSteps}
+                    position="static"
+                    activeStep={activeStep}
+                    className={classes.mobileStepper}
+                    nextButton={
+                        <Button size="small" onClick={this.handleNext} disabled={activeStep === maxSteps - 1}>
+                            Weiter
+                            <KeyboardArrowRight />
+                        </Button>
+                    }
+                    backButton={
+                        <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
+                            <KeyboardArrowLeft />
+                            Zurück
+                        </Button>
+                    }
+                />
             </div>
         );
     }
