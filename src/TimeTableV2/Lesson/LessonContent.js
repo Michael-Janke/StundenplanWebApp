@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
 export default function LessonContent({ type, specificSubstitutionType, substitutionText, subject, room, lessonType }) {
     const theme = useTheme();
     const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
+    
     const classes = useStyles();
     const substitutionTextStyles = React.useMemo(() => ({ color: styles.color }), [styles.color]);
 

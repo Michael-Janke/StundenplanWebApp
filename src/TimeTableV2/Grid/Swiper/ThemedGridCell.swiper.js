@@ -5,7 +5,6 @@ import { classNames } from '../../../Common/const';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        marginBottom: 1,
         padding: theme.spacing(.5),
         display: 'flex',
     }

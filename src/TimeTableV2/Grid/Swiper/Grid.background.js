@@ -7,7 +7,7 @@ import { useMeasureCallback } from './helpers';
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'grid',
-        gridTemplateColumns: props => `70px 1fr`,
+        gridTemplateColumns: props => `1fr`,
         gridTemplateRows: props => `repeat(${props.rows},auto)`,
         gridAutoFlow: 'column',
     }
@@ -19,31 +19,37 @@ export default function GridPeriods({ rows, periodsCellArray }) {
     });
     return (
         <Paper elevation={0} className={classes.root}>
-            {rows.map((row, i) => <RowComponent row={row}></RowComponent>)}
             {rows.map((row, i) => <ThemedGridCell
                 key={-i}
                 Component={animated.div}
                 style={{
-                    minHeight: periodsCellArray[i].height,
+                    height: periodsCellArray[i].height,
                     willChange: 'height',
                     boxSizing: 'border-box',
-                }}></ThemedGridCell>)}
+                }}>
+                <row.component
+                    row={row}
+                    GetHeightComponent={RowComponent}
+                    width={periodsCellArray[i].width}
+                ></row.component>
+            </ThemedGridCell>)}
         </Paper>
     )
 }
 
-function RowComponent({ row }) {
+
+function RowComponent({ row, children }) {
     const [bind] = useMeasureCallback(({ height }) => {
         if (row.backgroundHeight !== height) {
             row.backgroundHeight = height + 1;
-            row.listeners.forEach(c => c())
+            if (row.listeners) {
+                row.listeners.forEach(c => c())
+            }
         }
     });
     return (
-        <ThemedGridCell>
-            <div {...bind}>
-                <row.component {...row}></row.component>
-            </div>
-        </ThemedGridCell>
+        <div {...bind} style={{display: 'flex'}}>
+            {children}
+        </div>
     )
 }

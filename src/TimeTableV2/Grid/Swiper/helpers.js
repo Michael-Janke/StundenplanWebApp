@@ -1,4 +1,6 @@
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { useGesture } from 'react-use-gesture';
+import { useSpring, useSprings } from 'react-spring';
 
 export function useMeasure(callback, fields) {
     const [bounds, set] = useState({ left: 0, top: 0, width: 0, height: 0 })
@@ -21,4 +23,35 @@ export function useMeasureCallback(callback) {
         return () => ro.disconnect()
     }, [ro])
     return [{ ref }];
+}
+
+
+export function Gesture({ onGesture, children, ...other }) {
+    const bind = useGesture(onGesture);
+    return (
+        <div {...bind()} {...other}>
+            {children}
+        </div>
+    )
+}
+
+export function Width({ onWidth, children, ...other }) {
+    const [bindMeasure] = useMeasureCallback(onWidth);
+    return (
+        <div {...bindMeasure} {...other}>
+            {children}
+        </div>
+    )
+}
+
+export function Springs({ length, getProps, children, onSet }) {
+    const [props, set] = useSprings(length, getProps);
+    onSet(set);
+    return children(props);
+}
+
+export function Spring({ children, onSet, getProps }) {
+    const [props, set] = useSpring(getProps);
+    onSet(set);
+    return children(props);
 }

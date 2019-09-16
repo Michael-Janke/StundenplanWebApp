@@ -5,10 +5,12 @@ import TimetableComponent from './TimetableComponent';
 const mapStateToProps = () => {
     const getCurrentTimetable = makeGetCurrentTimetable();
 
-    return (state, props) => ({
-        timetable: getCurrentTimetable(state, props),
-        type: state.timetable.currentTimeTableType,
-    })
+    return (state, props) => {
+        return {
+            timetable: getCurrentTimetable(state, props),
+            type: state.timetable.currentTimeTableType,
+        }
+    }
 }
 
 

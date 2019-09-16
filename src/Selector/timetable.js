@@ -434,12 +434,9 @@ const makeGetCurrentTimetable = () => {
         state => state.substitutions
     );
 
-    const getDate = (state, props) => props.index ? +(moment.max(
-        moment()
-            .weekYear(state.timetable.masterdata.minMaxDates.min.year)
-            .week(state.timetable.masterdata.minMaxDates.min.week),
-        moment().add(-1, 'week')
-    ).add(props.index, 'week')) : state.timetable.timetableDate;
+    const getDate = (state, props) => props.index ?
+        +moment(state.timetable.min).clone().add(props.index, 'week')
+        : state.timetable.timetableDate;
 
     const getWeekSelector = createSelector(
         getDate,

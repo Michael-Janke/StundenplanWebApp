@@ -13,7 +13,8 @@ const useStyles = makeStyles(theme => ({
     }
 }), { name: "GridComponent" });
 
-export default function GridComponent({ children, rows, timetable, type, GridCellComponent, index }) {
+export default function GridComponent({ children, rows, timetable, type, GridCellComponent, index, renderRow }) {
+
 
     const weekDays = [0, 1, 2, 3, 4];
     const classes = useStyles({
@@ -22,7 +23,6 @@ export default function GridComponent({ children, rows, timetable, type, GridCel
     });
     return (
         <div className={classes.root}>
-            {index}
             {children}
             {weekDays.map((day) => {
                 const dayObject = timetable && timetable[day];
@@ -33,7 +33,7 @@ export default function GridComponent({ children, rows, timetable, type, GridCel
                             const periodNumber = period.PERIOD_TIME_ID - 1;
                             if (!dayObject || !dayObject.periods) {
                                 return (
-                                    <GridCellComponent>
+                                    <GridCellComponent key={i}>
                                         {periodNumber >= 1 && periodNumber < (9 - (day * 2) % 3) &&
                                             <Lesson></Lesson>
                                         }
@@ -60,6 +60,7 @@ export default function GridComponent({ children, rows, timetable, type, GridCel
                     </React.Fragment>
                 )
             })}
+
         </div>
     )
 }
