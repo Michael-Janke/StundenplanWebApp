@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/CheckCircleOutline';
 import debounce from 'debounce';
-import Image from './Image';
+import Image from './SelectableImage';
 
 const UNSPLASH_KEY = '89cf4875441cd2ff854a44fce573499a7e8ec2977ebcb2026623d0290e6f47a4';
 
@@ -25,9 +25,9 @@ const styles = theme => ({
         minWidth: 300,
         margin: theme.spacing(0.5),
         '&:after': {
-            content: "",
+            content: '',
             flex: 'auto',
-          }
+        },
     },
 });
 
@@ -49,7 +49,9 @@ class TopicSelection extends React.Component {
     };
 
     queryPictures = query => {
-        fetch(`https://api.unsplash.com/search/photos?query=${query}&per_page=24&orientation=landscape&client_id=${UNSPLASH_KEY}`)
+        fetch(
+            `https://api.unsplash.com/search/photos?query=${query}&per_page=24&orientation=landscape&client_id=${UNSPLASH_KEY}`
+        )
             .then(data => data.json())
             .then(data => this.setState({ results: data.results, error: false }))
             .catch(() => this.setState({ error: true }));
@@ -71,8 +73,8 @@ class TopicSelection extends React.Component {
     };
 
     handleClick = imageUrl => () => {
-        this.props.onUpload(imageUrl)
-    }
+        this.props.onUpload(imageUrl);
+    };
 
     render() {
         const { classes } = this.props;
@@ -80,8 +82,8 @@ class TopicSelection extends React.Component {
         return (
             <div className={classes.root}>
                 <Typography>
-                    Wähle ein Thema für deinen Beitrag, indem du entweder ein vordefiniertes Thema wählst oder ein Stichwort
-                    in Englisch eingibst.
+                    Wähle ein Thema für deinen Beitrag, indem du entweder ein vordefiniertes Thema wählst oder ein
+                    Stichwort in Englisch eingibst.
                 </Typography>
 
                 <TextField
@@ -109,7 +111,7 @@ class TopicSelection extends React.Component {
                             key={picture.id}
                             onClick={this.handleClick(picture.urls.regular)}
                         >
-                            <AddIcon fontSize={"50"} />
+                            <AddIcon fontSize={'50'} />
                         </Image>
                     ))}
                 </div>

@@ -2,17 +2,21 @@ import React from 'react';
 import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
 import { getToken } from '../../Common/Authentication';
 import { API_URL } from '../../Common/services/generator';
-registerPlugin(FilePondPluginImagePreview);
+registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType);
 
 export default function Upload(props) {
     return (
         <FilePond
             name="files"
-            allowMultiple={props.allowMultiple || true}
+            allowMultiple={props.allowMultiple}
+            acceptedFileTypes={props.acceptedFileTypes}
             onupdatefiles={props.onUpdate}
+            onprocessfiles={props.onFinished}
+            labelIdle={'Bild hier reinziehen oder hier klicken für Dateidialog'}
             server={{
                 url: API_URL + 'upload',
                 revert: (filename, load, error) => {
@@ -49,7 +53,7 @@ export default function Upload(props) {
                     request.onload = function() {
                         if (request.status >= 200 && request.status < 300) {
                             // the load method accepts either a string (id) or an object
-                            load(JSON.parse(request.responseText).FILENAME);
+                            load(API_URL + 'upload/' + JSON.parse(request.responseText).FILENAME);
                         } else {
                             // Can call the error method if something is wrong, should exit after
                             error('oh no');

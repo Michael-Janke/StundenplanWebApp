@@ -15,6 +15,7 @@
         "detect-browser": "^4.7.0",
         "draft-js": "^0.11.0",
         "filepond": "^4.7.1",
+        "filepond-plugin-file-validate-type": "^1.2.4",
         "filepond-plugin-image-preview": "^4.0.5",
         "local-storage": "^2.0.0",
         "localforage": "^1.7.3",
