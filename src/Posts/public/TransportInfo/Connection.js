@@ -10,43 +10,49 @@ const ICON_MAP = {
     '(RB)\\w*(.*)': DirectionsTransit,
     '(RE)\\w*(.*)': DirectionsRailway,
     '(.*)': DirectionsBus,
-}
+};
 
 const ICON_ARRAY = Object.entries(ICON_MAP);
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        margin: theme.spacing(1),
-        minWidth: 0,
-        flex: '1 0 0',
-        display: 'flex',
-    },
-    headerContent: {
-        display: 'flex',
-        alignItems: 'center',
-        flexGrow: 1,
-    },
-    icon: {
-        marginRight: theme.spacing(1),
-        color: theme.palette.text.secondary,
-    },
-    header: {
-        borderRight: `2px solid ${theme.palette.divider}`,
-        padding: `0 ${theme.spacing(1)}px`,
-        margin: `${theme.spacing(1)}px 0`,
-        display: 'flex',
-    },
-    content: {
-        padding: `0 ${theme.spacing(1)}px`,
-        margin: `${theme.spacing(1)}px 0`,
-        overflow: 'hidden',
-    }
-}), { name: "Connection" })
+const useStyles = makeStyles(
+    theme => ({
+        root: {
+            margin: theme.spacing(1),
+            minWidth: 0,
+            flex: '1 0 0',
+            display: 'flex',
+        },
+        headerContent: {
+            display: 'flex',
+            alignItems: 'center',
+            flexGrow: 1,
+            oveflow:'hidden',
+        },
+        icon: {
+            marginRight: theme.spacing(1),
+            color: theme.palette.text.secondary,
+        },
+        header: {
+            borderRight: `2px solid ${theme.palette.divider}`,
+            padding: `0 ${theme.spacing(1)}px`,
+            margin: `${theme.spacing(1)}px 0`,
+            display: 'flex',
+            overflow:'hidden',
+        },
+        content: {
+            padding: `0 ${theme.spacing(1)}px`,
+            margin: `${theme.spacing(1)}px 0`,
+            overflow: 'hidden',
+            flexGrow: 1,
+        },
+    }),
+    { name: 'Connection' }
+);
 
 export default function Connection({ connection }) {
     const classes = useStyles();
     let name = connection.name;
-    name = name.replace(/\([0-9]+\)/g, "");
+    name = name.replace(/\([0-9]+\)/g, '');
     let Icon;
     let type;
     for (let i = 0; i < ICON_ARRAY.length; i++) {
@@ -60,22 +66,22 @@ export default function Connection({ connection }) {
             break;
         }
     }
-    const time = connection.rt_info || connection.time;
-    const isRealTime = connection.rt_info;
+    const rt_info = connection.rt_info;
+    const time = rt_info.time || connection.time;
     const nextStation = connection.route && connection.route[1];
     return (
         <Paper className={classes.root}>
             <div className={classes.header}>
                 <div className={classes.headerContent}>
-                    <Icon className={classes.icon} fontSize="small"></Icon>
+                    <Icon className={classes.icon} fontSize="small" />
                     <div>
-                        <Typography variant="subtitle2" noWrap>
-                            <Typography variant="caption" noWrap>
+                        <Typography variant="subtitle2">
+                            <Typography variant="caption">
                                 {type}
                             </Typography>
                             {name}
                         </Typography>
-                        <Typography variant="body2" color={isRealTime ? 'secondary' : 'textSecondary'}>
+                        <Typography variant="body2" color={rt_info.time ? 'secondary' : 'textSecondary'} >
                             {time}
                         </Typography>
                     </div>
@@ -85,13 +91,11 @@ export default function Connection({ connection }) {
                 <Typography variant="caption" component="p" gutterBottom>
                     {nextStation && nextStation.name}
                 </Typography>
-                <Typography variant="body2">
-                    {connection.direction}
-                </Typography>
+                <Typography variant="body2">{connection.direction}</Typography>
                 <Typography variant="overline" component="p">
-                    {connection.platform ? ("Gl. " + connection.platform) : ""}
+                    {connection.platform ? 'Gl. ' + connection.platform : ''}
                 </Typography>
             </div>
         </Paper>
-    )
+    );
 }
