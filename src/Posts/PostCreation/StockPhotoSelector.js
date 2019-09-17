@@ -11,7 +11,7 @@ import Image from './SelectableImage';
 const UNSPLASH_KEY = '89cf4875441cd2ff854a44fce573499a7e8ec2977ebcb2026623d0290e6f47a4';
 
 const styles = theme => ({
-    suggestions: { flex: 1, maxHeight: 100, overflow: 'hidden' },
+    suggestions: { flex: 1, whiteSpace: 'nowrap', overflow: 'auto' },
     searchInput: { width: '100%' },
     root: {},
     pictures: {
@@ -40,6 +40,9 @@ const suggestions = [
     { german: 'Weihnachten', english: 'Christmas' },
     { german: 'Treffen', english: 'Meeting' },
     { german: 'Spaß', english: 'Fun' },
+    { german: 'Ski', english: 'Ski' },
+    { german: 'Surf', english: 'Surf' },
+    { german: 'Band', english: 'Band' },
 ];
 
 class TopicSelection extends React.Component {

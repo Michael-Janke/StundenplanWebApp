@@ -13,7 +13,7 @@ import Text from './Text';
 const useStyles = makeStyles(theme => ({
     root: { display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' },
     card: {
-        width: 400,
+        width: 500,
         height: 500,
         display: 'flex',
         flexDirection: 'column',
@@ -74,7 +74,7 @@ const Post = ({ image }) => {
                         </IconButton>
                     }
                     title="Michael Janke"
-                    subheader="September 14, 2019"
+                    subheader="Schüler, 09b"
                 />
                 <CardContent>
                     <Text />

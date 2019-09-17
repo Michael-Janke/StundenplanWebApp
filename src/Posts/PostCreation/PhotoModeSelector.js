@@ -19,7 +19,7 @@ const styles = theme => ({
     },
     modeButton: {
         borderColor: grey[400],
-        backgroundColor: grey[100],
+        backgroundColor: 'white',
         borderRadius: 0,
         borderWidth: 1,
         borderStyle: 'solid',

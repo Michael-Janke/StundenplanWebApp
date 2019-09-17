@@ -10,6 +10,7 @@ import PhotoModeSelector from './PhotoModeSelector';
 import PhotoUpload from './PhotoUpload';
 import Post from './Post';
 import PostMeta from './PostMeta';
+import { grey } from '@material-ui/core/colors';
 
 const styles = theme => ({
     root: {
@@ -18,6 +19,7 @@ const styles = theme => ({
         flexDirection: 'column',
         overflow: 'hidden',
         justifyContent: 'center',
+        backgroundColor: grey[100],
     },
     fullHeight: {
         flex: 1,
@@ -61,7 +63,7 @@ class TextMobileStepper extends React.Component {
     render() {
         const { classes, theme } = this.props;
         const { activeStep, photoMode, image } = this.state;
-        const maxSteps = 2;
+        const maxSteps = 4;
 
         return (
             <div className={classes.root}>
@@ -81,7 +83,7 @@ class TextMobileStepper extends React.Component {
                     activeStep={activeStep}
                     className={classes.mobileStepper}
                     nextButton={
-                        <Button size="small" onClick={this.handleNext} disabled={activeStep === maxSteps - 1}>
+                        <Button size="small" onClick={this.handleNext} disabled={activeStep >= maxSteps - 1}>
                             Weiter
                             <KeyboardArrowRight />
                         </Button>
