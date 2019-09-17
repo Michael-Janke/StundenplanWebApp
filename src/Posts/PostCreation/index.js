@@ -8,6 +8,8 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import StockPhotoSelector from './StockPhotoSelector';
 import PhotoModeSelector from './PhotoModeSelector';
 import PhotoUpload from './PhotoUpload';
+import Post from './Post';
+import PostMeta from './PostMeta';
 
 const styles = theme => ({
     root: {
@@ -58,7 +60,7 @@ class TextMobileStepper extends React.Component {
 
     render() {
         const { classes, theme } = this.props;
-        const { activeStep, photoMode } = this.state;
+        const { activeStep, photoMode, image } = this.state;
         const maxSteps = 2;
 
         return (
@@ -66,7 +68,11 @@ class TextMobileStepper extends React.Component {
                 <div className={classes.fullHeight}>
                     {activeStep === 0 && <PhotoModeSelector onPhotoModeSelect={this.onPhotoModeSelect} />}
                     {activeStep === 1 && photoMode === 'stock' && <StockPhotoSelector onUpload={this.onUpload} />}
-                    {activeStep === 1 && photoMode === 'upload' && <PhotoUpload onUpload={this.onUpload} />}
+                    {activeStep === 1 && photoMode === 'upload' && (
+                        <PhotoUpload onUpload={this.onUpload} image={image} />
+                    )}
+                    {activeStep === 2 && <Post image={image} />}
+                    {activeStep === 3 && <PostMeta />}
                 </div>
 
                 <MobileStepper
