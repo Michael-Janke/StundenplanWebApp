@@ -30,7 +30,7 @@ const { Toolbar } = toolbarPlugin;
 const emojiPlugin = createEmojiPlugin();
 const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
 const plugins = [toolbarPlugin, emojiPlugin, linkifyPlugin];
-const text = 'Hier den Text eingeben. Auch Smileys sind möglich 🙈';
+const text = 'Hier den Text eingeben. Auch Smileys sind möglich 🙈.';
 
 export default class CustomToolbarEditor extends Component {
     state = {

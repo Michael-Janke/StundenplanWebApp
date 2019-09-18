@@ -9,6 +9,7 @@ const styles = {
     preview: {
         width: '100%',
         maxWidth: 500,
+        borderRadius: 10,
     },
     root: {
         flex: 1,
@@ -16,7 +17,7 @@ const styles = {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        height: '100%',
+        minHeight: '100%',
     },
     uploader: {
         width: '100%',
@@ -41,7 +42,6 @@ const PhotoUpload = ({ onUpload, image: initalImage, classes }) => {
             )}
             {image && (
                 <>
-                    <Typography>Dein hochgeladenes Bild:</Typography>
                     <APIImage src={image} className={classes.preview} />
                     <Button onClick={() => onUpload(image)} size={'large'} variant={'contained'}>
                         Verwenden

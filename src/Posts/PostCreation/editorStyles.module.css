@@ -26,4 +26,7 @@
 
 :global(.draftJsToolbar__toolbar__dNtBH) {
     position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
 }

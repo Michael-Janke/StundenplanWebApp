@@ -11,7 +11,7 @@ import APIImage from './APIImage';
 import Text from './Text';
 
 const useStyles = makeStyles(theme => ({
-    root: { display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' },
+    root: { display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100%' },
     card: {
         width: 500,
         height: 500,
@@ -63,11 +63,7 @@ const Post = ({ image }) => {
                 </div>
 
                 <CardHeader
-                    avatar={
-                        <Avatar aria-label="recipe" className={classes.avatar}>
-                            R
-                        </Avatar>
-                    }
+                    avatar={<Avatar className={classes.avatar}>R</Avatar>}
                     action={
                         <IconButton aria-label="settings">
                             <MailIcon />
