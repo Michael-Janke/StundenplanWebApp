@@ -1,11 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 import React, { Component } from 'react';
-
 import Editor, { createEditorStateWithText } from 'draft-js-plugins-editor';
 import createEmojiPlugin from 'draft-js-emoji-plugin';
 import createLinkifyPlugin from 'draft-js-linkify-plugin';
-import 'draft-js-emoji-plugin/lib/plugin.css';
-
 import createToolbarPlugin, { Separator } from 'draft-js-static-toolbar-plugin';
 import {
     ItalicButton,
@@ -20,21 +17,22 @@ import {
     BlockquoteButton,
     CodeBlockButton,
 } from 'draft-js-buttons';
-import editorStyles from './editorStyles.module.css';
-import 'draft-js-static-toolbar-plugin/lib/plugin.css';
 import 'draft-js/dist/Draft.css';
+import 'draft-js-static-toolbar-plugin/lib/plugin.css';
+import 'draft-js-emoji-plugin/lib/plugin.css';
+import editorStyles from './editorStyles.module.css';
 
 const toolbarPlugin = createToolbarPlugin();
 const linkifyPlugin = createLinkifyPlugin();
-const { Toolbar } = toolbarPlugin;
 const emojiPlugin = createEmojiPlugin();
+const { Toolbar } = toolbarPlugin;
 const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
 const plugins = [toolbarPlugin, emojiPlugin, linkifyPlugin];
-const text = 'Hier den Text eingeben. Auch Smileys sind möglich 🙈.';
+const text = 'Hier den Text eingeben. Oben findest du die Toolbar. Auch Smileys sind möglich 🙈. Gib dazu ein : ein.';
 
-export default class CustomToolbarEditor extends Component {
+export default class CustomEditor extends Component {
     state = {
-        editorState: createEditorStateWithText(text),
+        editorState: this.props.content || createEditorStateWithText(text),
     };
 
     componentDidMount() {
@@ -45,6 +43,7 @@ export default class CustomToolbarEditor extends Component {
         this.setState({
             editorState,
         });
+        this.props.onChange && this.props.onChange(this.state.editorState);
     };
 
     focus = () => {
@@ -62,6 +61,7 @@ export default class CustomToolbarEditor extends Component {
                         ref={element => {
                             this.editor = element;
                         }}
+                        readOnly={this.props.readOnly}
                     />
                     <EmojiSuggestions />
                     <Toolbar>

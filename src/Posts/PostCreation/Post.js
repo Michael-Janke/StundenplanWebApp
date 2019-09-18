@@ -1,83 +1,34 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import makeStyles from '@material-ui/styles/makeStyles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import InputBase from '@material-ui/core/InputBase';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import MailIcon from '@material-ui/icons/Mail';
-import APIImage from './APIImage';
-import Text from './Text';
+import Post from '../Common/Post';
 
 const useStyles = makeStyles(theme => ({
-    root: { display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100%' },
-    card: {
-        width: 500,
-        height: 500,
+    root: {
         display: 'flex',
-        flexDirection: 'column',
-    },
-    mediaWrapper: {
-        height: 0,
-        flex: 1,
-        position: 'relative',
-    },
-    media: {
-        objectFit: 'cover',
-        height: '100%',
-        width: '100%',
-    },
-    title: {
-        position: 'absolute',
-        maxHeight: 64,
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100%',
+        paddingTop: 70,
         boxSizing: 'border-box',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        background: 'rgba(0,0,0,0.6)',
-        padding: theme.spacing(2),
-    },
-    input: {
-        color: 'white',
-        fontSize: '1em',
-        fontWeight: 'bolder',
-        padding: 0,
-        margin: 0,
-        '& input': {
-            padding: 0,
-        },
     },
 }));
 
-const Post = ({ image }) => {
+const PostWrapper = ({ image, title, content, onUpdateContent, onUpdateTitle, upn }) => {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <Card className={classes.card}>
-                <div className={classes.mediaWrapper}>
-                    <APIImage src={image} className={classes.media} />
-                    <div className={classes.title}>
-                        <InputBase className={classes.input} value="Titel hier eingeben" />
-                    </div>
-                </div>
-
-                <CardHeader
-                    avatar={<Avatar className={classes.avatar}>R</Avatar>}
-                    action={
-                        <IconButton aria-label="settings">
-                            <MailIcon />
-                        </IconButton>
-                    }
-                    title="Michael Janke"
-                    subheader="Schüler, 09b"
-                />
-                <CardContent>
-                    <Text />
-                </CardContent>
-            </Card>
+            <Post
+                image={image}
+                upn={upn}
+                edit={true}
+                title={title}
+                content={content}
+                onUpdateTitle={onUpdateTitle}
+                onUpdateContent={onUpdateContent}
+            />
         </div>
     );
 };
 
-export default Post;
+export default connect(({ user }) => ({ upn: user.upn }))(PostWrapper);

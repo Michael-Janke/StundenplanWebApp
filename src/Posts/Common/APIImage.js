@@ -24,7 +24,7 @@ const APIImage = ({ src, ...other }) => {
                 setImage(outside);
             });
     }, [src]);
-    return <img src={image} {...other} />;
+    return <img src={image} alt={other.alt} {...other} />;
 };
 
 export default APIImage;

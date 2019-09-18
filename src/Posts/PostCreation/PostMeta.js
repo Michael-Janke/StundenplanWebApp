@@ -1,18 +1,11 @@
 import React from 'react';
 import makeStyles from '@material-ui/styles/makeStyles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import InputBase from '@material-ui/core/InputBase';
-import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import classNames from 'classnames/bind';
 import TimeIcon from '@material-ui/icons/AccessTime';
 import TvIcon from '@material-ui/icons/Tv';
-import APIImage from './APIImage';
-import Text from './Text';
 import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({

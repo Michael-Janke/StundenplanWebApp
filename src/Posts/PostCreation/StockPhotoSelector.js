@@ -114,7 +114,7 @@ class TopicSelection extends React.Component {
                             key={picture.id}
                             onClick={this.handleClick(picture.urls.regular)}
                         >
-                            <AddIcon fontSize={'50'} />
+                            <AddIcon fontSize="large" />
                         </Image>
                     ))}
                 </div>

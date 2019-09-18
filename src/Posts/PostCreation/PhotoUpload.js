@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import withStyles from '@material-ui/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import Upload from './Upload';
-import APIImage from './APIImage';
-import { Typography } from '@material-ui/core';
+import APIImage from '../Common/APIImage';
 
 const styles = {
     preview: {

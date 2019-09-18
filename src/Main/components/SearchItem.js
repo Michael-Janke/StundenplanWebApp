@@ -4,6 +4,7 @@ import { ObjectIcon } from './Avatars';
 import StarIcon from '@material-ui/icons/Star';
 import MailIcon from '@material-ui/icons/Mail';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
+import { sendMail } from '../../Common/utils';
 
 class SearchItem extends React.PureComponent {
     handleClick = () => {
@@ -15,8 +16,8 @@ class SearchItem extends React.PureComponent {
     };
 
     handleMail = () => {
-        window.open(`https://outlook.office.com/?path=/mail/action/compose&to=${this.props.upn}`, '_blank');
-    }
+        sendMail(this.props.upn);
+    };
 
     render() {
         const { type, upn, text, secondary, favorite, selected } = this.props;
@@ -39,7 +40,7 @@ class SearchItem extends React.PureComponent {
                                 <MailIcon></MailIcon>
                             </IconButton>
                         )}
-                                                {secondary && (
+                        {secondary && (
                             <IconButton onClick={this.handleToggleFavorite}>
                                 {favorite ? <StarIcon /> : <StarBorderIcon />}
                             </IconButton>
