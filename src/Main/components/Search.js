@@ -109,9 +109,11 @@ class Search extends React.PureComponent {
         const filterOptions = ['Lehrer', 'Schüler', 'Raum', 'Klasse'];
         return (
             <ListItem key={'Filter'} className={classes.filter}>
-                <ListItemIcon>
-                    <FilterIcon />
-                </ListItemIcon>
+                {!small && (
+                    <ListItemIcon>
+                        <FilterIcon />
+                    </ListItemIcon>
+                )}
                 <ListItemText className={classes.buttonGroup}>
                     <ToggleButtonGroup
                         exclusive
