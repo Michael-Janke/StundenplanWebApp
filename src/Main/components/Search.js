@@ -2,7 +2,6 @@ import React from 'react';
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import Zoom from '@material-ui/core/Zoom';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -11,7 +10,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
+import StarIcon from '@material-ui/icons/Star';
 import FilterIcon from '@material-ui/icons/FilterList';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import grey from '@material-ui/core/colors/grey';
 import indigo from '@material-ui/core/colors/indigo';
@@ -22,7 +24,7 @@ import { connect } from 'react-redux';
 import { setTimeTable, addFavorite, removeFavorite, loadMe } from '../actions';
 
 class Search extends React.PureComponent {
-    state = { open: false, nonEmpty: false, value: '', select: 0 };
+    state = { open: false, nonEmpty: false, value: '', select: 0, filter: '' };
 
     handleOpen = () => {
         if (!this.state.open) {
@@ -85,9 +87,9 @@ class Search extends React.PureComponent {
         this.handleInput({ target: { value: transform(this.state.value) } });
     };
 
-    setFilter(selectedFilter) {
+    setFilter(filter) {
         this.setState({
-            selectedFilter: this.state.selectedFilter === selectedFilter ? '' : selectedFilter,
+            filter,
         });
     }
 
@@ -103,25 +105,31 @@ class Search extends React.PureComponent {
 
     renderFilterBar = () => {
         const { classes, small } = this.props;
-        const { selectedFilter } = this.state;
-        const filter = ['Lehrer', 'Schüler', 'Raum', 'Klasse'];
+        const { filter } = this.state;
+        const filterOptions = ['Lehrer', 'Schüler', 'Raum', 'Klasse'];
         return (
             <ListItem key={'Filter'} className={classes.filter}>
-                <ListItemIcon>
-                    <FilterIcon />
-                </ListItemIcon>
+                {!small && (
+                    <ListItemIcon>
+                        <FilterIcon />
+                    </ListItemIcon>
+                )}
                 <ListItemText className={classes.buttonGroup}>
-                    {filter.map(type => (
-                        <Button
-                            key={type}
-                            size={small ? 'small' : 'medium'}
-                            className={classes.button}
-                            onClick={() => this.setFilter(type)}
-                            variant={selectedFilter === type ? 'contained' : 'outlined'}
-                        >
-                            {type}
-                        </Button>
-                    ))}
+                    <ToggleButtonGroup
+                        exclusive
+                        size={small ? 'small' : 'medium'}
+                        value={filter || ''}
+                        onChange={(e, value) => this.setFilter(value)}
+                    >
+                        <ToggleButton key={''} value={''}>
+                            <StarIcon></StarIcon>
+                        </ToggleButton>
+                        {filterOptions.map(type => (
+                            <ToggleButton key={type} value={type}>
+                                {type}
+                            </ToggleButton>
+                        ))}
+                    </ToggleButtonGroup>
                 </ListItemText>
             </ListItem>
         );
@@ -188,7 +196,7 @@ class Search extends React.PureComponent {
                             <SearchResult
                                 open={this.state.open}
                                 value={this.state.value}
-                                selectedFilter={this.state.selectedFilter}
+                                selectedFilter={this.state.filter}
                                 className={classNames(classes.dropDown, classes.list, !open && classes.dropDownClosed)}
                                 onClick={this.handleClick}
                                 toggleFavorite={this.props.tv ? null : this.toggleFavorite}

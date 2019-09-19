@@ -22,13 +22,7 @@ class SearchItem extends React.PureComponent {
     render() {
         const { type, upn, text, secondary, favorite, selected } = this.props;
         return (
-            <ListItem
-                dense
-                button
-                selected={selected}
-                onClick={this.handleClick}
-                // {...(i === 0 && { className: classes.listItemSelected })}
-            >
+            <ListItem dense button selected={selected} onClick={this.handleClick}>
                 <ListItemIcon>
                     <ObjectIcon type={type} upn={upn} outline={true} size={40} />
                 </ListItemIcon>
