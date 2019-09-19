@@ -16,18 +16,12 @@ class SearchItem extends React.PureComponent {
 
     handleMail = () => {
         window.open(`https://outlook.office.com/?path=/mail/action/compose&to=${this.props.upn}`, '_blank');
-    }
+    };
 
     render() {
         const { type, upn, text, secondary, favorite, selected } = this.props;
         return (
-            <ListItem
-                dense
-                button
-                selected={selected}
-                onClick={this.handleClick}
-                // {...(i === 0 && { className: classes.listItemSelected })}
-            >
+            <ListItem dense button selected={selected} onClick={this.handleClick}>
                 <ListItemIcon>
                     <ObjectIcon type={type} upn={upn} outline={true} size={40} />
                 </ListItemIcon>
@@ -39,7 +33,7 @@ class SearchItem extends React.PureComponent {
                                 <MailIcon></MailIcon>
                             </IconButton>
                         )}
-                                                {secondary && (
+                        {secondary && (
                             <IconButton onClick={this.handleToggleFavorite}>
                                 {favorite ? <StarIcon /> : <StarBorderIcon />}
                             </IconButton>
