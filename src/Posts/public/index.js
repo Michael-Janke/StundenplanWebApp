@@ -12,6 +12,7 @@ import CurrentDate from './CurrentDate';
 import DayInfo from './DayInfo';
 import TransportInfo from './TransportInfo/TransportInfo';
 import { fade } from '@material-ui/core/styles';
+import { indigo } from '@material-ui/core/colors';
 /**
  *
  * @param {import('@material-ui/core').Theme} theme
@@ -28,7 +29,8 @@ const styles = theme => ({
         flexGrow: 1,
     },
     appBar: {
-        backgroundColor: fade(theme.palette.primary.main, .8),
+        backgroundColor: indigo[600],
+        height: 100,
     },
     postGridItem: {
         display: 'flex',
@@ -78,17 +80,20 @@ const styles = theme => ({
         flexDirection: 'column',
     },
     toolbar: {
-        minHeight: 130,
         height: '100%',
+        '& > *  ': {
+            padding: theme.spacing(0, 4, 0, 0),
+        },
     },
     dateTime: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
         alignItems: 'center',
         padding: theme.spacing(1),
     },
-    image: {
+    icon: {
         filter: `invert(100%) drop-shadow(1px 1px 0px rgba(0,0,0,0.2))`,
+        height: 68,
     },
 });
 
@@ -103,13 +108,9 @@ class Posts extends React.Component {
             <div className={classes.root}>
                 <AppBar position="static" className={classes.appBar}>
                     <Toolbar className={classes.toolbar}>
-                        <img className={classes.image} src={require('../../Common/icons/wolkenberg.png')} alt="" />
-                        <ClockAnalog />
-                        <div className={classes.dateTime}>
-                            <CurrentDate />
-                            <ClockDigital />
-                        </div>
-                        <DayInfo />
+                        <img className={classes.icon} src={require('../../Common/icons/wolkenberg.png')} alt="" />
+                        <CurrentDate />
+                        <ClockDigital />
                     </Toolbar>
                 </AppBar>
                 <div className={classes.layout}>
@@ -118,9 +119,6 @@ class Posts extends React.Component {
                             <div className={classes.sidebar} />
                         </Grid>
                         <Grid item xs={9} className={classes.main}>
-                            <Typography variant="h2" color="textSecondary" gutterBottom>
-                                Neuigkeiten
-                            </Typography>
                             <Grid container component={TransitionGroup} className={classes.post}>
                                 {posts &&
                                     posts.map(post => (
@@ -163,5 +161,6 @@ export default withStyles(styles)(
     connect(
         mapStateToProps,
         mapDispatchToProps
-    )(Posts)
-    , { name: 'PublicPosts' });
+    )(Posts),
+    { name: 'PublicPosts' }
+);

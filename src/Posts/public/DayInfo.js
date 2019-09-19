@@ -6,47 +6,50 @@ import { Typography, Portal, Fade } from '@material-ui/core';
 import { TransitionGroup } from 'react-transition-group';
 import ReadProgress from './ReadProgress';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    content: {
-        display: 'flex',
-        flexDirection: 'column',
-        color: 'white',
-        padding: theme.spacing(2),
-        flex: 1,
-    },
-    headerContainer: {
-        flexGrow: 1,
-        display: 'flex',
-        alignItems: 'flex-end',
-        position: 'relative',
-    },
-    header: {
-        position: 'absolute',
-        bottom: 0,
-    },
-    backgroundContainer: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: -1,
-        overflow: 'hidden',
-        backgroundColor: theme.palette.background.default,
-    },
-    backgroundImage: {
-        position: 'absolute',
-        width: '100%',
-        filter: 'blur(2px)',
-        opacity: theme.palette.type === 'dark' ? .2 : .7,
-    }
-}), { name: 'DayInfo' });
+const useStyles = makeStyles(
+    theme => ({
+        root: {
+            flexGrow: 1,
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+        },
+        content: {
+            display: 'flex',
+            flexDirection: 'column',
+            color: 'white',
+            padding: theme.spacing(2),
+            flex: 1,
+        },
+        headerContainer: {
+            flexGrow: 1,
+            display: 'flex',
+            alignItems: 'flex-end',
+            position: 'relative',
+        },
+        header: {
+            position: 'absolute',
+            bottom: 0,
+        },
+        backgroundContainer: {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: -1,
+            overflow: 'hidden',
+            backgroundColor: theme.palette.background.default,
+        },
+        backgroundImage: {
+            position: 'absolute',
+            width: '100%',
+            filter: 'blur(2px)',
+            opacity: theme.palette.type === 'dark' ? 0.2 : 0.7,
+        },
+    }),
+    { name: 'DayInfo' }
+);
 
 function DayInfo({ dayInfo = [], getDayInfo }) {
     const classes = useStyles();
@@ -74,22 +77,20 @@ function DayInfo({ dayInfo = [], getDayInfo }) {
         <div className={classes.root}>
             <Portal>
                 <TransitionGroup className={classes.backgroundContainer}>
-                    <Fade key={info.image ? info.image.url : ""} appear timeout={1000}>
+                    <Fade key={info.image ? info.image.url : ''} appear timeout={1000}>
                         <div>
-                            {(info.image && info.image.url) ?
+                            {info.image && info.image.url ? (
                                 <img src={info.image.url} className={classes.backgroundImage} alt=""></img>
-                                : <div className={classes.backgroundImage}></div>}
+                            ) : (
+                                <div className={classes.backgroundImage}></div>
+                            )}
                         </div>
                     </Fade>
                 </TransitionGroup>
             </Portal>
             <div className={classes.content}>
                 <TransitionGroup className={classes.headerContainer}>
-                    <Fade
-                        className={classes.header}
-                        key={info.header}
-                        timeout={1000}
-                    >
+                    <Fade className={classes.header} key={info.header} timeout={1000}>
                         <div>
                             <Typography variant="h4" color="inherit">
                                 {info.header}
@@ -100,13 +101,10 @@ function DayInfo({ dayInfo = [], getDayInfo }) {
                             <Typography variant="body2" color="textSecondary" component="a" href={info.href}>
                                 {info.href}
                             </Typography>
-
                         </div>
                     </Fade>
                 </TransitionGroup>
             </div>
-            <ReadProgress onFinished={onFinished} time={1000 * 20} />
-
         </div>
     );
 }

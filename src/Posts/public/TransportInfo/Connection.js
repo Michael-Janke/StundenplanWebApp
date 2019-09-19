@@ -26,7 +26,7 @@ const useStyles = makeStyles(
             display: 'flex',
             alignItems: 'center',
             flexGrow: 1,
-            oveflow:'hidden',
+            oveflow: 'hidden',
         },
         icon: {
             marginRight: theme.spacing(1),
@@ -37,7 +37,7 @@ const useStyles = makeStyles(
             padding: `0 ${theme.spacing(1)}px`,
             margin: `${theme.spacing(1)}px 0`,
             display: 'flex',
-            overflow:'hidden',
+            overflow: 'hidden',
         },
         content: {
             padding: `0 ${theme.spacing(1)}px`,
@@ -76,12 +76,10 @@ export default function Connection({ connection }) {
                     <Icon className={classes.icon} fontSize="small" />
                     <div>
                         <Typography variant="subtitle2">
-                            <Typography variant="caption">
-                                {type}
-                            </Typography>
+                            <Typography variant="caption">{type}</Typography>
                             {name}
                         </Typography>
-                        <Typography variant="body2" color={rt_info.time ? 'secondary' : 'textSecondary'} >
+                        <Typography variant="body2" color={rt_info.time ? 'secondary' : 'textSecondary'}>
                             {time}
                         </Typography>
                     </div>
@@ -89,7 +87,7 @@ export default function Connection({ connection }) {
             </div>
             <div className={classes.content}>
                 <Typography variant="caption" component="p" gutterBottom>
-                    {nextStation && nextStation.name}
+                    via {nextStation && nextStation.name}
                 </Typography>
                 <Typography variant="body2">{connection.direction}</Typography>
                 <Typography variant="overline" component="p">

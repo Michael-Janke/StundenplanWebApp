@@ -8,7 +8,7 @@ const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-end',
         padding: theme.spacing(1),
     },
     time: {
@@ -16,7 +16,6 @@ const useStyles = makeStyles(theme => ({
         fontWeight: 200,
     },
     seconds: {
-        padding: theme.spacing(2),
         color: 'rgba(255,255,255,0.7)',
     },
 }));
@@ -40,7 +39,7 @@ function Clock({ className }) {
                 {hours}:{minute}
             </Typography>
             <Typography component="span" variant="h5" className={classes.seconds}>
-                {seconds}
+                :{seconds}
             </Typography>
         </div>
     );
