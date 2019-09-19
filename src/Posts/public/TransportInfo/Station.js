@@ -32,18 +32,11 @@ const useStyles = makeStyles(theme => ({
 export default function Station({ name, children, className }) {
     const classes = useStyles();
     const childrenArray = React.Children.toArray(children);
+    childrenArray.splice(6);
     if (childrenArray.length % 2 === 0) {
         childrenArray.splice(childrenArray.length - 1, 1);
     }
-    const moreArray = [];
-    for (let i = 1; i < childrenArray.length; i += 2) {
-        moreArray.push(
-            <div className={classes.column} key={i}>
-                {childrenArray[i]}
-                {childrenArray[i + 1]}
-            </div>
-        );
-    }
+
 
     return (
         <Paper elevation={0} className={classNames(classes.root, className)} square>
@@ -57,7 +50,7 @@ export default function Station({ name, children, className }) {
                 </div>
             </div>
             <div className={classes.content}>
-                {moreArray}
+                {childrenArray.slice(1)}
             </div>
         </Paper>
     )
