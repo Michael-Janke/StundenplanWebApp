@@ -69,7 +69,7 @@ export default function Connection({ connection }) {
     let Icon = ICON_MAP[type.toLowerCase()] || ICON_MAP.bus;
     const rt_info = connection.rt_info;
     const time = moment(connection.time, 'HH:mm');
-    const nextStation = connection.route && connection.route[1];
+    const fromNow = Math.max(0, Math.floor(time.diff(moment()) / 1000 / 60)); //minutes
     return (
         <Box className={classes.root}>
             <div className={classNames(classes.type, classes[type.toLowerCase()])}>
@@ -84,7 +84,9 @@ export default function Connection({ connection }) {
             </div>
 
             <div className={classes.time}>
-                <Typography variant="body1">{time.fromNow()}</Typography>
+                <Typography variant="body1">
+                    {['jetzt', 'in einer Minute'][fromNow] || `in ${fromNow} Minuten`}
+                </Typography>
                 <Typography variant="body2">
                     {time.format('HH:mm')}
                     {rt_info.time && rt_info.time !== connection.time && (

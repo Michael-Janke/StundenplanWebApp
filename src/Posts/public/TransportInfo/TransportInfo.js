@@ -29,7 +29,7 @@ function TransportInfo({ transportInfo, getTransportInfo }) {
     let wolkenberg = transportInfo.CONNECTIONS['Am Wolkenberg'];
     const michendorf = transportInfo.CONNECTIONS['Michendorf']
         .filter(m => !wolkenberg.some(w => m.name + m.direction === w.name + w.direction))
-        .slice(0, 6);
+        .slice(0, 7);
     wolkenberg = wolkenberg.slice(0, 4);
 
     return (
@@ -40,7 +40,7 @@ function TransportInfo({ transportInfo, getTransportInfo }) {
                     <Connection connection={arrival} key={i} />
                 ))}
             </CardContent>
-            <CardHeader avatar={<DepartureBoard />} title={'Michendorf'} />
+            <CardHeader avatar={<DepartureBoard />} title={'Michendorf ~10 Minuten 🚶'} />
             <CardContent>
                 {michendorf.map((arrival, i) => (
                     <Connection connection={arrival} key={i} />

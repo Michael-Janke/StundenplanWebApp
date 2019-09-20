@@ -136,6 +136,7 @@ class Posts extends React.Component {
                                             )}
                                             upn={post.CREATOR}
                                             title={post.TITLE}
+                                            image={post.IMAGE}
                                         />
                                     </CSSTransition>
                                 </GridListTile>
