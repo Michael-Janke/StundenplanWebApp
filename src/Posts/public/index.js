@@ -2,8 +2,8 @@ import React from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { connect } from 'react-redux';
 
-import { Grid, AppBar, Toolbar, Typography } from '@material-ui/core';
-import Post from '../post';
+import { GridList, GridListTile, AppBar, Toolbar, Typography } from '@material-ui/core';
+import Post from '../Common/Post';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { getPosts } from '../actions';
 import ClockDigital from './ClockDigital';
@@ -13,6 +13,7 @@ import DayInfo from './DayInfo';
 import TransportInfo from './TransportInfo/TransportInfo';
 import { fade } from '@material-ui/core/styles';
 import { indigo } from '@material-ui/core/colors';
+import { EditorState, convertFromRaw } from 'draft-js';
 /**
  *
  * @param {import('@material-ui/core').Theme} theme
@@ -21,16 +22,21 @@ const styles = theme => ({
     root: {
         width: '100%',
         boxSizing: 'border-box',
-        overflowY: 'auto',
+        overflow: 'hidden',
         height: '100%',
         backgroundColor: theme.palette.background.default,
         display: 'flex',
         flexDirection: 'column',
-        flexGrow: 1,
     },
     appBar: {
         backgroundColor: indigo[600],
         height: 100,
+    },
+    content: {
+        width: '100%',
+        height: '100%',
+        padding: 12,
+        boxSizing: 'border-box',
     },
     postGridItem: {
         display: 'flex',
@@ -64,14 +70,6 @@ const styles = theme => ({
         flexDirection: 'column',
         flexGrow: 1,
     },
-    transportInfo: {
-        backgroundColor: fade(theme.palette.background.paper, 0.8),
-        flex: '0 0 128px',
-    },
-    flexGrow: {
-        flexGrow: 1,
-    },
-
     main: {
         padding: theme.spacing(1),
         backgroundColor: fade(theme.palette.background.paper, 0.8),
@@ -105,7 +103,7 @@ class Posts extends React.Component {
     render() {
         const { classes, posts } = this.props;
         return (
-            <div className={classes.root}>
+            <TransitionGroup className={classes.root}>
                 <AppBar position="static" className={classes.appBar}>
                     <Toolbar className={classes.toolbar}>
                         <img className={classes.icon} src={require('../../Common/icons/wolkenberg.png')} alt="" />
@@ -113,38 +111,38 @@ class Posts extends React.Component {
                         <ClockDigital />
                     </Toolbar>
                 </AppBar>
-                <div className={classes.layout}>
-                    <Grid container item className={classes.flexGrow}>
-                        <Grid item xs={3}>
-                            <div className={classes.sidebar} />
-                        </Grid>
-                        <Grid item xs={9} className={classes.main}>
-                            <Grid container component={TransitionGroup} className={classes.post}>
-                                {posts &&
-                                    posts.map(post => (
-                                        <CSSTransition
-                                            classNames={{
-                                                enter: classes.postEnter,
-                                                enterActive: classes.postEnterActive,
-                                                exit: classes.postExit,
-                                                exitActive: classes.postExitActive,
-                                            }}
-                                            key={post.POST_ID}
-                                            timeout={500}
-                                        >
-                                            <Grid item xs className={classes.postGridItem}>
-                                                <Post overflow post={post} />
-                                            </Grid>
-                                        </CSSTransition>
-                                    ))}
-                            </Grid>
-                        </Grid>
-                    </Grid>
+                <div className={classes.content}>
+                    <GridList cellHeight={240} cols={8} spacing={12}>
+                        <GridListTile rows={4} cols={2}>
+                            <TransportInfo></TransportInfo>
+                        </GridListTile>
+
+                        {posts &&
+                            posts.map(post => (
+                                <GridListTile rows={2} cols={2}>
+                                    <CSSTransition
+                                        classNames={{
+                                            enter: classes.postEnter,
+                                            enterActive: classes.postEnterActive,
+                                            exit: classes.postExit,
+                                            exitActive: classes.postExitActive,
+                                        }}
+                                        key={post.POST_ID}
+                                        timeout={500}
+                                    >
+                                        <Post
+                                            content={EditorState.createWithContent(
+                                                convertFromRaw(JSON.parse(post.TEXT))
+                                            )}
+                                            upn={post.CREATOR}
+                                            title={post.TITLE}
+                                        />
+                                    </CSSTransition>
+                                </GridListTile>
+                            ))}
+                    </GridList>
                 </div>
-                <Grid xs={12} item className={classes.transportInfo}>
-                    <TransportInfo></TransportInfo>
-                </Grid>
-            </div>
+            </TransitionGroup>
         );
     }
 }
