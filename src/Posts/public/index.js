@@ -117,6 +117,9 @@ const Posts = ({ getPosts, posts }) => {
                     <GridListTile rows={4} cols={2} classes={{ tile: classes.tile }}>
                         <TransportInfo></TransportInfo>
                     </GridListTile>
+                    <GridListTile rows={2} cols={2} classes={{ tile: classes.tile }}>
+                        <DayInfo></DayInfo>
+                    </GridListTile>
 
                     {posts &&
                         posts.map(post => (
