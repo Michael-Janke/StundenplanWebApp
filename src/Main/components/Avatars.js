@@ -8,6 +8,7 @@ import moment from 'moment';
 import createStore from '../../store';
 import { makeGetEffectiveAvatar } from '../../Selector/avatars';
 import { connect } from 'react-redux';
+import { loadAvatars } from '../actions';
 const { store } = createStore();
 
 export const checkAvatars = (upns, loadAvatars) => {
@@ -35,21 +36,30 @@ export const ObjectIcon = ({ type, upn, size, profilePicSize, outline, ...other 
     return <ProfilePicture {...{ upn, size, profilePicSize, outline, ...other }} />;
 };
 
-const ProfilePictureComponent = ({ avatar, size = 24, profilePicSize, outline = false, dispatch, ...other }) =>
-    avatar && avatar.img ? (
+const ProfilePictureComponent = ({
+    upn,
+    avatar,
+    size = 24,
+    profilePicSize,
+    outline = false,
+    loadAvatars,
+    ...other
+}) => {
+    checkAvatars([upn], loadAvatars);
+    return avatar && avatar.img ? (
         <Avatar
             src={'data:image/jpg;base64,' + avatar.img}
-            {...size && { style: { height: profilePicSize || size, width: profilePicSize || size } }}
+            {...(size && { style: { height: profilePicSize || size, width: profilePicSize || size } })}
             {...other}
         />
     ) : outline ? (
-        <Avatar {...size && { style: { height: size, width: size } }} {...other}>
+        <Avatar {...(size && { style: { height: size, width: size } })} {...other}>
             <PersonIcon />
         </Avatar>
     ) : (
-        <PersonIcon {...size && { style: { height: size, width: size } }} {...other} />
+        <PersonIcon {...(size && { style: { height: size, width: size } })} {...other} />
     );
-
+};
 const makeMapStateToProps = () => {
     const getEffectiveAvatar = makeGetEffectiveAvatar();
     return (state, props) => ({
@@ -59,5 +69,5 @@ const makeMapStateToProps = () => {
 
 export const ProfilePicture = connect(
     makeMapStateToProps,
-    null
+    { loadAvatars: upns => loadAvatars(upns) }
 )(ProfilePictureComponent);

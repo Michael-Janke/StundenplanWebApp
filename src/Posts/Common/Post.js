@@ -20,9 +20,9 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        fontSize: 15, //fix for all screensizes
+        fontSize: 17.5, //fix for all screensizes
         [theme.breakpoints.up('sm')]: {
-            height: 500,
+            height: 480,
         },
     },
     mediaWrapper: {
@@ -58,9 +58,13 @@ const useStyles = makeStyles(theme => ({
             padding: 0,
         },
     },
+    content: {
+        paddingTop: 0,
+        paddingBottom: theme.spacing(2),
+    },
 }));
 
-const Post = ({ image, title, upn, content, edit, onUpdateTitle, onUpdateContent }) => {
+const Post = ({ image, title, upn, content, edit, onUpdateTitle, onUpdateContent, noButtons }) => {
     const classes = useStyles();
     return (
         <Card className={classes.card}>
@@ -80,14 +84,16 @@ const Post = ({ image, title, upn, content, edit, onUpdateTitle, onUpdateContent
             <CardHeader
                 avatar={<ObjectIcon upn={upn} profilePicSize={40} />}
                 action={
-                    <IconButton onClick={() => sendMail(upn)}>
-                        <MailIcon />
-                    </IconButton>
+                    !noButtons && (
+                        <IconButton onClick={() => sendMail(upn)}>
+                            <MailIcon />
+                        </IconButton>
+                    )
                 }
                 title={<Name upn={upn} />}
                 subheader={<Title upn={upn} />}
             />
-            <CardContent>
+            <CardContent className={classes.content}>
                 {!edit ? <ReadOnlyEditor content={content} /> : <Editor onChange={onUpdateContent} content={content} />}
             </CardContent>
         </Card>

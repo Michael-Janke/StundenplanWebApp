@@ -1,4 +1,5 @@
-import { dispatch } from '../../store';
+import { dispatch } from '../store';
+import { useEffect } from 'react';
 
 const dispatchReduxAction = () => {
     dispatch({
@@ -21,4 +22,10 @@ export const stopIntervalCheck = () => {
         clearInterval(intervalId);
         intervalId = undefined;
     }
+};
+export const useIntervalCheck = () => {
+    return useEffect(() => {
+        startIntervalCheck();
+        return stopIntervalCheck;
+    }, []);
 };

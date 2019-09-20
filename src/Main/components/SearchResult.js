@@ -12,9 +12,7 @@ const growthFactor = 18;
 class SearchResult extends React.PureComponent {
     state = { elements: [] };
     static getResults(props, start, end) {
-        const results = props.results.slice(start, end);
-        checkAvatars(results.map(e => e.upn), props.loadAvatars);
-        return results;
+        return props.results.slice(start, end);
     }
 
     static getDerivedStateFromProps(props, state) {
