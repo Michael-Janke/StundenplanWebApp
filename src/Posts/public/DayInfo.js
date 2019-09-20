@@ -16,6 +16,7 @@ const useStyles = makeStyles(
             display: 'flex',
             flexDirection: 'column',
             position: 'relative',
+            fontSize: 17.5,
         },
         media: {
             height: 200,
@@ -45,10 +46,13 @@ function DayInfo({ dayInfo = [], getDayInfo }) {
                 <Card>
                     <CardMedia className={classes.media} image={info.image && info.image.url} title={info.header} />
                     <CardContent>
+                        <Typography variant="subtitle2">
+                            Heute ist ({currentId + 1}/{dayInfo.length})
+                        </Typography>
                         <Typography gutterBottom variant="h5" component="h2">
                             {info.header}
                         </Typography>
-                        <Typography variant="body1" color="textSecondary" component="p">
+                        <Typography component="p" color="textSecondary">
                             {info.text}
                         </Typography>
                     </CardContent>

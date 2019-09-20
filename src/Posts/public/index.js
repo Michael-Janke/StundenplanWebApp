@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { connect } from 'react-redux';
 
@@ -14,10 +14,7 @@ import { fade } from '@material-ui/core/styles';
 import { indigo } from '@material-ui/core/colors';
 import { EditorState, convertFromRaw } from 'draft-js';
 import { useIntervalCheck } from '../../Common/intervalCheck';
-/**
- *
- * @param {import('@material-ui/core').Theme} theme
- */
+
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -102,9 +99,13 @@ const Posts = ({ getPosts, posts }) => {
     const classes = useStyles();
     useEffect(getPosts, []);
     useIntervalCheck();
+    const [zoom, setZoom] = useState(document.body.offsetWidth / 1920);
+    useEffect(() => {
+        window.addEventListener('resize', () => setZoom(document.body.offsetWidth / 1920));
+    }, []);
 
     return (
-        <TransitionGroup className={classes.root}>
+        <TransitionGroup className={classes.root} style={{ zoom }}>
             <AppBar position="static" className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
                     <img className={classes.icon} src={require('../../Common/icons/wolkenberg.png')} alt="" />
