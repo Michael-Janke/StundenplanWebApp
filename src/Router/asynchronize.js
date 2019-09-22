@@ -28,6 +28,16 @@ export const asynchronize = (...postWrappers) => importFunc =>
         render(loaded, props) {
             const Component = loaded.default;
             hideSplash();
-            return React.createElement(postWrappers.reduce((fn, current) => current(fn), Component), props);
+            return <AsynchronizedComponent
+                Component={Component}
+                postWrappers={postWrappers}
+                {...props} />
         },
     });
+
+function AsynchronizedComponent({ Component, postWrappers, ...other }) {
+    const Comp = React.useMemo(() =>
+        postWrappers.reduce((fn, current) => current(fn), Component),
+        [Component, postWrappers]);
+    return <Comp key={0} {...other}></Comp>
+}
