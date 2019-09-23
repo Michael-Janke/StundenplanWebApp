@@ -1,36 +1,57 @@
 import React from 'react';
 import { Route as BrowserRoute, Switch, Redirect } from 'react-router-dom';
-import { withRouter } from 'react-router';
+import { withRouter, matchPath } from 'react-router';
 import NotFoundPage from './NotFoundPage';
 import { asynchronize } from './asynchronize';
-import withApp from './withApp';
 
 /**
  * asynchronize without postWrappers
  */
 const asynchronized = asynchronize();
-/*
- * withAuthentication('authentication', withApp())
- * is authenticated route with appbar
- */
-const withAuth = loader => asynchronize(withApp)(loader);
 
-const Posts = withAuth(() => import('../Posts'));
-const PostEditor = withAuth(() => import('../Posts/PostCreation'));
-const DiashowCreation = withAuth(() => import('../Posts/DiashowCreation'));
-const Main = withAuth(() => import('../Main'));
+const AppBar = asynchronized(() => import('./AppBar'));
+const AppDrawer = asynchronized(() => import('./AppDrawer'));
+
+const Posts = asynchronized(() => import('../Posts'));
+const PostEditor = asynchronized(() => import('../Posts/PostCreation'));
+const DiashowCreator = asynchronized(() => import('../Posts/DiashowCreation'));
+const Main = asynchronized(() => import('../Main'));
 const MainAppBar = asynchronized(() => import('../Main/components/AppBar'));
-const Statistics = withAuth(() => import('../Statistics'));
+const Statistics = asynchronized(() => import('../Statistics'));
 const Dates = asynchronized(() => import('../Dates'));
 const PublicPosts = asynchronized(() => import('../Posts/public'));
 const PublicTimetable = asynchronized(() => import('../TimeTable/public'));
 
 const Route = props => {
-    function renderComponent() {
-        return <props.component {...props} />;
-    }
+    const renderComponent = React.useCallback(
+        routerProps => {
+            return <props.component {...props} {...routerProps} />;
+        },
+        [props]
+    );
     return <BrowserRoute {...props} render={renderComponent} component={undefined} />;
 };
+
+const routeConfig = location => (
+    <>
+        <Route exact path="/" component={Main} noBoxShadow appBarComponent={MainAppBar} withApp />
+        <Route exact path="/public/dates" component={Dates} />
+        <Route exact path="/public/posts" component={PublicPosts} />
+        <Route exact path="/public/tv" component={PublicTimetable} />
+        <Route exact path="/posts" component={Posts} title="InfoTafel" withApp />
+        <Route path="/posts/:id" component={PostEditor} title="Beitrag editieren" back withApp />
+        <Route path="/diashow/:id" component={DiashowCreator} title="Diashow editieren" back withApp />
+        <Route exact path="/admin" component={Statistics} withApp />
+        <Route exact path="/error" component={NotFoundPage} />
+        <Redirect
+            to={{
+                pathname: '/error',
+                state: { referrer: location, error: 404 },
+            }}
+            push
+        />
+    </>
+);
 
 class Routes extends React.Component {
     state = {};
@@ -49,26 +70,34 @@ class Routes extends React.Component {
 
     render() {
         const { location } = this.props;
-        return (
-            <Switch>
-                <Route exact path="/" component={Main} noBoxShadow appBarComponent={MainAppBar} />
-                <Route exact path="/posts" component={Posts} title="InfoTafel" />
-                <Route exact path="/public/dates" component={Dates} />
-                <Route exact path="/public/posts" component={PublicPosts} />
-                <Route exact path="/public/tv" component={PublicTimetable} />
-                <Route exact path="/posts/:id" component={PostEditor} title="Beitrag editieren" back />
-                <Route exact path="/diashow/:id" component={DiashowCreation} title="Diashow editieren" back />
-                <Route exact path="/admin" component={Statistics} />
-                <Route exact path="/error" component={NotFoundPage} />
-                <Redirect
-                    to={{
-                        pathname: '/error',
-                        state: { referrer: location, error: 404 },
-                    }}
-                    push
-                />
-            </Switch>
-        );
+
+        let currentRoute, element, computedMatch;
+
+        React.Children.forEach(routeConfig(location).props.children, (child, index) => {
+            if (computedMatch || !React.isValidElement(child)) {
+                return;
+            }
+            const route = child.props;
+            const path = route.path || route.from;
+
+            computedMatch = matchPath(location.pathname, { ...route, path });
+            currentRoute = route;
+            element = child;
+        });
+
+        let routeComponent = React.cloneElement(element, { location, computedMatch });
+
+        // render AppBar and AppDrawer
+        if (currentRoute.withApp) {
+            return (
+                <>
+                    <AppDrawer></AppDrawer>
+                    <AppBar {...currentRoute}>{routeComponent}</AppBar>
+                </>
+            );
+        } else {
+            return routeComponent;
+        }
     }
 }
 

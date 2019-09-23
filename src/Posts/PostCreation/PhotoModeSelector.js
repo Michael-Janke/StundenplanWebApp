@@ -6,6 +6,7 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import grey from '@material-ui/core/colors/grey';
 import { ReactComponent as PhotoIcon } from './Icons/photo.svg';
 import { ReactComponent as StockPhotoIcon } from './Icons/stockphoto.svg';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
     root: {
@@ -51,40 +52,48 @@ const styles = theme => ({
     },
 });
 
-const PhotoModeSelector = ({ classes, onPhotoModeSelect }) => (
-    <div className={classes.root}>
-        <Typography className={classes.captionText}>
-            Mache deinen Beitrag mit einem Bild schön! Lade entweder ein selbstfotografiertes Bild hoch oder wähle eins
-            aus tausenden Stockfotos aus!
-        </Typography>
-        <div className={classes.buttons}>
-            <ButtonBase
-                focusRipple
-                className={classes.modeButton}
-                focusVisibleClassName={classes.focusVisible}
-                onClick={() => onPhotoModeSelect('upload')}
-            >
-                <Typography>
-                    <PhotoIcon className={classes.icon} />
-                    <br />
-                    Eigenes Foto hochladen
+const PhotoModeSelector = ({ classes, onPhotoModeSelect }) => {
+    return (
+        <div className={classes.root}>
+            <Typography className={classes.captionText}>
+                Mache deinen Beitrag mit einem Bild schön! Lade entweder ein selbstfotografiertes Bild hoch oder wähle eins
+                aus tausenden Stockfotos aus!
+            </Typography>
+            <div className={classes.buttons}>
+                <ButtonBase
+                    focusRipple
+                    className={classes.modeButton}
+                    focusVisibleClassName={classes.focusVisible}
+                    onClick={() => onPhotoModeSelect('upload')}
+                >
+                    <Typography>
+                        <PhotoIcon className={classes.icon} />
+                        <br />
+                        Eigenes Foto hochladen
                 </Typography>
-            </ButtonBase>
-            <ButtonBase
-                focusRipple
-                className={classes.modeButton}
-                focusVisibleClassName={classes.focusVisible}
-                onClick={() => onPhotoModeSelect('stock')}
-            >
-                <Typography>
-                    <StockPhotoIcon className={classes.icon} />
-                    <br />
-                    Stockfoto auswählen
+                </ButtonBase>
+                <ButtonBase
+                    focusRipple
+                    className={classes.modeButton}
+                    focusVisibleClassName={classes.focusVisible}
+                    onClick={() => onPhotoModeSelect('stock')}
+                >
+                    <Typography>
+                        <StockPhotoIcon className={classes.icon} />
+                        <br />
+                        Stockfoto auswählen
                 </Typography>
-            </ButtonBase>
+                </ButtonBase>
+            </div>
+            <Button onClick={() => onPhotoModeSelect('no')}>Kein Foto</Button>
         </div>
-        <Button onClick={() => onPhotoModeSelect('no')}>Kein Foto</Button>
-    </div>
-);
+    )
+};
 
-export default withStyles(styles, { withTheme: true })(PhotoModeSelector);
+const mapDispatchToProps = dispatch => ({
+    onPhotoModeSelect: mode => {
+        dispatch({ type: "SET_PHOTO_MODE", payload: mode })
+    }
+})
+
+export default connect(undefined, mapDispatchToProps)(withStyles(styles, { withTheme: true })(PhotoModeSelector));

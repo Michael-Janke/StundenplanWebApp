@@ -10,6 +10,7 @@ import Routes from './routes';
 import Notifier from './Notifier';
 import { SnackbarProvider } from 'notistack';
 
+
 class AppRouter extends Component {
     constructor(props) {
         super(props);
