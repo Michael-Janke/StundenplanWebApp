@@ -14,8 +14,9 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const PostWrapper = ({ image, title, content, onUpdateContent, onUpdateTitle, upn }) => {
+const PostWrapper = ({ upn, image, title, content, onUpdateContent, onUpdateTitle }) => {
     const classes = useStyles();
+
     return (
         <div className={classes.root}>
             <Post
@@ -31,4 +32,16 @@ const PostWrapper = ({ image, title, content, onUpdateContent, onUpdateTitle, up
     );
 };
 
-export default connect(({ user }) => ({ upn: user.upn }))(PostWrapper);
+const mapStateToProps = state => ({
+    image: state.postcreation.image,
+    title: state.postcreation.title,
+    content: state.postcreation.content,
+    user: state.user.upn,
+})
+
+const mapDispatchToProps = dispatch => ({
+    onUpdateTitle: (title) => dispatch({ type: 'SET_TITLE', payload: title }),
+    onUpdateContent: (content) => dispatch({ type: 'SET_CONTENT', payload: content }),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostWrapper);

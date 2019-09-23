@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import Upload from './Upload';
 import APIImage from '../Common/APIImage';
 
+import { connect } from 'react-redux';
+
 const styles = {
     preview: {
         width: '100%',
@@ -22,7 +24,8 @@ const styles = {
         width: '100%',
     },
 };
-const PhotoUpload = ({ onUpload, image: initalImage, classes }) => {
+const PhotoUpload = ({ classes, image: initalImage, onUpload }) => {
+
     const [file, setFile] = useState(null);
     const [finished, setFinished] = useState(!!initalImage);
     const image = finished && (file ? file.serverId : initalImage);
@@ -52,4 +55,12 @@ const PhotoUpload = ({ onUpload, image: initalImage, classes }) => {
     );
 };
 
-export default withStyles(styles)(PhotoUpload);
+const mapStateToProps = state => ({
+    image: state.postcreation.image,
+})
+
+const mapDispatchToProps = dispatch => ({
+    onUpload: imgSrc => dispatch({ type: 'SET_IMAGE', payload: imgSrc })
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(PhotoUpload));

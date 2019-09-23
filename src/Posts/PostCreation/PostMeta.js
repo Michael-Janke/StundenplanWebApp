@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const PostMeta = ({ image }) => {
+const PostMeta = () => {
     const classes = useStyles();
     return (
         <div className={classes.root}>

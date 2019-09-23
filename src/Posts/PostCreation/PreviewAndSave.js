@@ -14,8 +14,9 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const PreviewAndSave = ({ image, title, content, upn, onSave }) => {
+const PreviewAndSave = ({ upn, image, title, content, onSave }) => {
     const classes = useStyles();
+
     return (
         <div className={classes.root}>
             <Post image={image} upn={upn} title={title} content={content} edit={false} />
@@ -26,4 +27,12 @@ const PreviewAndSave = ({ image, title, content, upn, onSave }) => {
     );
 };
 
-export default connect(({ user }) => ({ upn: user.upn }))(PreviewAndSave);
+
+const mapStateToProps = state => ({
+    image: state.postcreation.image,
+    title: state.postcreation.title,
+    content: state.postcreation.content,
+    user: state.user.upn,
+})
+
+export default connect(mapStateToProps)(PreviewAndSave);

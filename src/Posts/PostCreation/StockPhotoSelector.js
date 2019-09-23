@@ -8,6 +8,8 @@ import AddIcon from '@material-ui/icons/CheckCircleOutline';
 import debounce from 'debounce';
 import Image from './SelectableImage';
 
+import { connect } from 'react-redux';
+
 const UNSPLASH_KEY = '89cf4875441cd2ff854a44fce573499a7e8ec2977ebcb2026623d0290e6f47a4';
 
 const styles = theme => ({
@@ -128,4 +130,8 @@ TopicSelection.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(TopicSelection);
+const mapDispatchToProps = dispatch => ({
+    onUpload: (imageUrl) => dispatch({ type: 'SET_IMAGE', payload: imageUrl })
+})
+
+export default connect(undefined, mapDispatchToProps)(withStyles(styles, { withTheme: true })(TopicSelection));

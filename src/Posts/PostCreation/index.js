@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import Button from '@material-ui/core/Button';
@@ -8,10 +7,12 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import StockPhotoSelector from './StockPhotoSelector';
 import PhotoModeSelector from './PhotoModeSelector';
 import PhotoUpload from './PhotoUpload';
-import Post from './Post';
 import PostMeta from './PostMeta';
 import PreviewAndSave from './PreviewAndSave';
 import { grey } from '@material-ui/core/colors';
+import { Route, Switch, withRouter } from 'react-router';
+import PostWrapper from './PostWrapper';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
     root: {
@@ -30,74 +31,103 @@ const styles = theme => ({
     },
 });
 
-const TextMobileStepper = ({ classes }) => {
-    const [activeStep, setActiveStep] = useState(0);
-    const maxSteps = 5;
-    const [title, setTitle] = useState('Titel hier eingeben');
-    const [content, setContent] = useState();
-    const [photoMode, setPhotoMode] = useState('no');
-    const [image, setImage] = useState();
 
-    const handleNext = () => setActiveStep(activeStep + 1);
+class PostCreation extends React.Component {
 
-    const handleBack = () => setActiveStep(activeStep - 1);
+    state = {
+        step: -1,
 
-    const onUpload = url => {
-        setImage(url);
-        handleNext();
-    };
+    }
 
-    const onPhotoModeSelect = mode => {
-        setPhotoMode(mode);
-        setActiveStep(activeStep + 1 + (mode === 'no'));
-    };
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { step, match, photoMode, history, location } = nextProps;
+        const stepDifference = step - prevState.step
+        if (stepDifference) {
+            const newRoute = [
+                `${match.url}/mode-selection`,
+                `${match.url}/${photoMode === 'no' ? 'mode-selection' : `${photoMode}-photo`}`,
+                `${match.url}/post-editor`,
+                `${match.url}/post-meta`,
+                `${match.url}/preview-and-save`,
+            ][step];
+            if (location.pathname !== newRoute) {
+                history.replace(newRoute);
+            }
 
-    const onSave = () => {};
+            return {
+                step: step,
+                location
+            }
+        }
+        if (location !== prevState.location) {
+            const newStep = [
+                `${match.url}/mode-selection`,
+                `${match.url}/${photoMode}-photo`,
+                `${match.url}/post-editor`,
+                `${match.url}/post-meta`,
+                `${match.url}/preview-and-save`,
+            ].indexOf(location.pathname);
+            
+            nextProps.setStep(newStep);
 
-    return (
-        <div className={classes.root}>
-            <div className={classes.fullHeight}>
-                {activeStep === 0 && <PhotoModeSelector onPhotoModeSelect={onPhotoModeSelect} />}
-                {activeStep === 1 && photoMode === 'stock' && <StockPhotoSelector onUpload={onUpload} />}
-                {activeStep === 1 && photoMode === 'upload' && <PhotoUpload onUpload={onUpload} image={image} />}
-                {activeStep === 2 && (
-                    <Post
-                        image={image}
-                        title={title}
-                        onUpdateTitle={setTitle}
-                        onUpdateContent={setContent}
-                        content={content}
-                    />
-                )}
-                {activeStep === 3 && <PostMeta />}
-                {activeStep === 4 && <PreviewAndSave image={image} title={title} content={content} onSave={onSave} />}
+            return {
+                step: newStep,
+                location
+            }
+        }
+        return null;
+    }
+
+    render() {
+        const { classes, step, match, handleNext, handleBack } = this.props;
+
+        return (
+            <div className={classes.root}>
+                <div className={classes.fullHeight}>
+                    <Switch>
+                        <Route exact path={`${match.url}/mode-selection`} component={PhotoModeSelector}></Route>
+                        <Route exact path={`${match.url}/stock-photo`} component={StockPhotoSelector}></Route>
+                        <Route exact path={`${match.url}/upload-photo`} component={PhotoUpload}></Route>
+                        <Route exact path={`${match.url}/post-editor`} component={PostWrapper}></Route>
+                        <Route exact path={`${match.url}/post-meta`} component={PostMeta}></Route>
+                        <Route exact path={`${match.url}/preview-and-save`} component={PreviewAndSave}></Route>
+                    </Switch>
+
+                </div>
+
+                <MobileStepper
+                    steps={5}
+                    position="static"
+                    activeStep={step}
+                    className={classes.mobileStepper}
+                    nextButton={
+                        <Button size="small" onClick={handleNext} disabled={step >= 5 - 1}>
+                            Weiter
+                            <KeyboardArrowRight />
+                        </Button>
+                    }
+                    backButton={
+                        <Button size="small" onClick={handleBack} disabled={step === 0}>
+                            <KeyboardArrowLeft />
+                            Zurück
+                        </Button>
+                    }
+                />
             </div>
+        );
+    };
+}
 
-            <MobileStepper
-                steps={maxSteps}
-                position="static"
-                activeStep={activeStep}
-                className={classes.mobileStepper}
-                nextButton={
-                    <Button size="small" onClick={handleNext} disabled={activeStep >= maxSteps - 1}>
-                        Weiter
-                        <KeyboardArrowRight />
-                    </Button>
-                }
-                backButton={
-                    <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-                        <KeyboardArrowLeft />
-                        Zurück
-                    </Button>
-                }
-            />
-        </div>
-    );
-};
+const mapStateToProps = (state) => ({
+    step: state.postcreation.step,
+    photoMode: state.postcreation.photoMode,
+})
 
-TextMobileStepper.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
-};
+const mapDispatchToProps = (dispatch) => ({
+    handleNext: () => dispatch({ type: 'NEXT' }),
+    handleBack: () => dispatch({ type: 'PREV' }),
+    setStep: (step) => dispatch({ type: 'SET_STEP', payload: step }),
+})
 
-export default withStyles(styles, { withTheme: true })(TextMobileStepper);
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { withTheme: true })(withRouter(PostCreation)));
