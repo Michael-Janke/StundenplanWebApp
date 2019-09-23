@@ -11,12 +11,14 @@ import counterChanged from './Common/services/counter-service';
 import { responsiveStoreEnhancer } from 'redux-responsive';
 import networkStatusEnhancer from './networkStatusEnhancer';
 import version from './version.json';
+import EditorStateTransform from './EditorStateTransform';
 
 const persistConfig = {
     key: 'root',
     storage: localForage,
     blacklist: ['browser', 'error', 'favorites', 'assignments', 'notifications'],
     version: version.build,
+    transforms: [EditorStateTransform],
     migrate: state => {
         if (!state || !state._persist || state._persist.version === version.build) return Promise.resolve(state);
         console.log('purge state, new build');
@@ -34,20 +36,6 @@ const store = createStore(
         responsiveStoreEnhancer
     )
 );
-
-(window.debug || (window.debug = {})).simulateCounterChange = () => {
-    store.dispatch({
-        type: 'COUNTER_RECEIVED', payload: {
-            COUNTER: 0,
-            LAST_CHANGE: {
-                date: '1970-01-01 00:00:00.000000',
-                timezone_type: 3,
-                timezone: 'UTC'
-            },
-            DATES_HASH: '0'
-        }
-    })
-};
 
 const persistor = persistStore(store);
 
