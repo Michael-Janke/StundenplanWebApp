@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import withStyles from '@material-ui/styles/withStyles';
 import Button from '@material-ui/core/Button';
-import Upload from './Upload';
+import Upload from '../Common/Upload';
 import APIImage from '../Common/APIImage';
 
 const styles = {

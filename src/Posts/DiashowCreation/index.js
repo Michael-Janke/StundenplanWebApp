@@ -5,13 +5,10 @@ import MobileStepper from '@material-ui/core/MobileStepper';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import StockPhotoSelector from './StockPhotoSelector';
-import PhotoModeSelector from './PhotoModeSelector';
 import PhotoUpload from './PhotoUpload';
-import Post from './Post';
-import PostMeta from '../Common/Meta';
-import PreviewAndSave from './PreviewAndSave';
+import Meta from '../Common/Meta';
 import { grey } from '@material-ui/core/colors';
+import PreviewAndSave from './PreviewAndSave';
 
 const styles = theme => ({
     root: {
@@ -32,24 +29,20 @@ const styles = theme => ({
 
 const TextMobileStepper = ({ classes }) => {
     const [activeStep, setActiveStep] = useState(0);
-    const maxSteps = 5;
-    const [title, setTitle] = useState('Titel hier eingeben');
-    const [content, setContent] = useState();
-    const [photoMode, setPhotoMode] = useState('no');
-    const [image, setImage] = useState();
+    const maxSteps = 3;
+    const [images, setImages] = useState([]);
+    const [title, setTitle] = useState(['Titel hier eingeben']);
 
     const handleNext = () => setActiveStep(activeStep + 1);
 
     const handleBack = () => setActiveStep(activeStep - 1);
 
-    const onUpload = url => {
-        setImage(url);
-        handleNext();
+    const onUpload = newImages => {
+        setImages([...images, ...newImages]);
     };
 
-    const onPhotoModeSelect = mode => {
-        setPhotoMode(mode);
-        setActiveStep(activeStep + 1 + (mode === 'no'));
+    const onDeleteImage = image => {
+        setImages(images.filter(i => i !== image));
     };
 
     const onSave = () => {};
@@ -57,20 +50,9 @@ const TextMobileStepper = ({ classes }) => {
     return (
         <div className={classes.root}>
             <div className={classes.fullHeight}>
-                {activeStep === 0 && <PhotoUpload onPhotoModeSelect={onPhotoModeSelect} />}
-                {activeStep === 1 && photoMode === 'stock' && <StockPhotoSelector onUpload={onUpload} />}
-                {activeStep === 1 && photoMode === 'upload' && <PhotoUpload onUpload={onUpload} image={image} />}
-                {activeStep === 2 && (
-                    <Post
-                        image={image}
-                        title={title}
-                        onUpdateTitle={setTitle}
-                        onUpdateContent={setContent}
-                        content={content}
-                    />
-                )}
-                {activeStep === 3 && <PostMeta />}
-                {activeStep === 4 && <PreviewAndSave image={image} title={title} content={content} onSave={onSave} />}
+                {activeStep === 0 && <Meta diashow={true} title={title} onUpdateTitle={setTitle} />}
+                {activeStep === 1 && <PhotoUpload onUpload={onUpload} onDeleteImage={onDeleteImage} images={images} />}
+                {activeStep === 2 && <PreviewAndSave images={images} title={title} />}
             </div>
 
             <MobileStepper
@@ -79,7 +61,11 @@ const TextMobileStepper = ({ classes }) => {
                 activeStep={activeStep}
                 className={classes.mobileStepper}
                 nextButton={
-                    <Button size="small" onClick={handleNext} disabled={activeStep >= maxSteps - 1}>
+                    <Button
+                        size="small"
+                        onClick={handleNext}
+                        disabled={activeStep >= maxSteps - 1 || (activeStep == 1 && !images.length)}
+                    >
                         Weiter
                         <KeyboardArrowRight />
                     </Button>

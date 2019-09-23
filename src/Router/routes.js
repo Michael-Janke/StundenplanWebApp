@@ -17,6 +17,7 @@ const withAuth = loader => asynchronize(withApp)(loader);
 
 const Posts = withAuth(() => import('../Posts'));
 const PostEditor = withAuth(() => import('../Posts/PostCreation'));
+const DiashowCreation = withAuth(() => import('../Posts/DiashowCreation'));
 const Main = withAuth(() => import('../Main'));
 const MainAppBar = asynchronized(() => import('../Main/components/AppBar'));
 const Statistics = withAuth(() => import('../Statistics'));
@@ -56,6 +57,7 @@ class Routes extends React.Component {
                 <Route exact path="/public/posts" component={PublicPosts} />
                 <Route exact path="/public/tv" component={PublicTimetable} />
                 <Route exact path="/posts/:id" component={PostEditor} title="Beitrag editieren" back />
+                <Route exact path="/diashow/:id" component={DiashowCreation} title="Diashow editieren" back />
                 <Route exact path="/admin" component={Statistics} />
                 <Route exact path="/error" component={NotFoundPage} />
                 <Redirect

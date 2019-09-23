@@ -94,6 +94,10 @@ class Posts extends React.Component {
         this.props.history.push('/posts/new');
     };
 
+    handleCreateDiaShow = () => {
+        this.props.history.push('/posts/newDiaShow');
+    };
+
     handleOnEdit = post => {
         this.props.history.push('/posts/' + post.POST_ID);
     };
@@ -119,7 +123,7 @@ class Posts extends React.Component {
                             <Button variant="contained" color="primary" onClick={this.handleCreate}>
                                 Beitrag erstellen
                             </Button>
-                            <Button variant="contained" color="primary" onClick={this.handleCreate}>
+                            <Button variant="contained" color="primary" onClick={this.handleCreateDiaShow}>
                                 Diashow erstellen
                             </Button>
                         </div>

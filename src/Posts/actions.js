@@ -20,3 +20,8 @@ export function getPosts() {
 export function deletePost(post) {
     return { type: 'DELETE_POST', payload: post };
 }
+
+export function deleteImage(image) {
+    const filename = image.substring(image.lastIndexOf('/') + 1);
+    return { type: 'DELETE_IMAGE', payload: filename };
+}

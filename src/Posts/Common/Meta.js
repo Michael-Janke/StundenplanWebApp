@@ -6,7 +6,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import classNames from 'classnames/bind';
 import TimeIcon from '@material-ui/icons/AccessTime';
 import TvIcon from '@material-ui/icons/Tv';
-import { Typography } from '@material-ui/core';
+import TitleIcon from '@material-ui/icons/Title';
+import { Typography, Input } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -33,11 +34,25 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const PostMeta = ({ image }) => {
+const Meta = ({ diashow, title, onUpdateTitle }) => {
     const classes = useStyles();
     return (
         <div className={classes.root}>
             <div className={classes.settings}>
+                {diashow && (
+                    <>
+                        <Typography className={classes.header}>Erstelle deine Diashow!</Typography>
+                        <div className={classes.settings}>
+                            <Typography variant="h6" gutterBottom className={classes.header}>
+                                <TitleIcon />
+                                &nbsp;Title
+                            </Typography>
+                            <Paper className={classNames(classes.paper, classes.list)}>
+                                <Input value={title} onChange={e => onUpdateTitle(e.target.value)} />
+                            </Paper>
+                        </div>
+                    </>
+                )}
                 <Typography variant="h6" gutterBottom className={classes.header}>
                     <TvIcon />
                     &nbsp; Anzeigebereiche
@@ -59,4 +74,4 @@ const PostMeta = ({ image }) => {
     );
 };
 
-export default PostMeta;
+export default Meta;

@@ -6,17 +6,26 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
 import { getToken } from '../../Common/Authentication';
 import { API_URL } from '../../Common/services/generator';
+import './upload.css';
 registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType);
 
+var workaround = () => {};
 export default function Upload(props) {
+    workaround = props.onFinished;
     return (
         <FilePond
             name="files"
+            files={props.files}
             allowMultiple={props.allowMultiple}
             acceptedFileTypes={props.acceptedFileTypes}
-            onupdatefiles={props.onUpdate}
-            onprocessfiles={props.onFinished}
+            onupdatefiles={files => props.onUpdate(files)}
+            onprocessfiles={() => workaround()}
             labelIdle={'Bild hier reinziehen oder hier klicken für Dateidialog'}
+            labelFileProcessing="Upload läuft"
+            labelFileProcessingComplete="Upload abgeschlossen"
+            labelTapToCancel="abbrechen"
+            labelTapToRetry="wiederholen"
+            labelTapToUndo="Löschen"
             server={{
                 url: API_URL + 'upload',
                 revert: (filename, load, error) => {
@@ -32,6 +41,7 @@ export default function Upload(props) {
                         .then(load)
                         .catch(error);
                 },
+
                 process: (fieldName, file, metadata, load, error, progress, abort) => {
                     // fieldName is the name of the input field
                     // file is the actual file object to send
