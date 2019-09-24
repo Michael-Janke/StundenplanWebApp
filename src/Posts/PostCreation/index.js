@@ -10,7 +10,7 @@ import PhotoUpload from './PhotoUpload';
 import PostMeta from '../Common/Meta';
 import PreviewAndSave from './PreviewAndSave';
 import { grey } from '@material-ui/core/colors';
-import { Route, Switch, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import PostWrapper from './PostWrapper';
 import { connect } from 'react-redux';
 
@@ -31,88 +31,56 @@ const styles = theme => ({
     },
 });
 
-class PostCreation extends React.Component {
-    state = {
-        step: -1,
-    };
+function PostCreation({ photoMode, step, classes, handleNext, handleBack }) {
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { step, match, photoMode, history, location } = nextProps;
-        const stepDifference = step - prevState.step;
-        if (stepDifference) {
-            const newRoute = [
-                `${match.url}/mode-selection`,
-                `${match.url}/${photoMode === 'no' ? 'mode-selection' : `${photoMode}-photo`}`,
-                `${match.url}/post-editor`,
-                `${match.url}/post-meta`,
-                `${match.url}/preview-and-save`,
-            ][step];
-            if (location.pathname !== newRoute) {
-                history.replace(newRoute);
-            }
+    const steps = [
+        PhotoModeSelector,
+        photoMode === 'stock' && StockPhotoSelector,
+        photoMode === 'upload' && PhotoUpload,
+        PostWrapper,
+        PostMeta,
+        PreviewAndSave,
+    ].filter(step => step);
+    // filter non existing steps
 
-            return {
-                step: step,
-                location,
-            };
+
+    function renderStep() {
+        const Component = steps[step];
+        if (!Component) {
+            return null;
         }
-        if (location !== prevState.location) {
-            const newStep = [
-                `${match.url}/mode-selection`,
-                `${match.url}/${photoMode}-photo`,
-                `${match.url}/post-editor`,
-                `${match.url}/post-meta`,
-                `${match.url}/preview-and-save`,
-            ].indexOf(location.pathname);
-
-            nextProps.setStep(newStep);
-
-            return {
-                step: newStep,
-                location,
-            };
-        }
-        return null;
-    }
-
-    render() {
-        const { classes, step, match, handleNext, handleBack } = this.props;
-
         return (
-            <div className={classes.root}>
-                <div className={classes.fullHeight}>
-                    <Switch>
-                        <Route exact path={`${match.url}/mode-selection`} component={PhotoModeSelector}></Route>
-                        <Route exact path={`${match.url}/stock-photo`} component={StockPhotoSelector}></Route>
-                        <Route exact path={`${match.url}/upload-photo`} component={PhotoUpload}></Route>
-                        <Route exact path={`${match.url}/post-editor`} component={PostWrapper}></Route>
-                        <Route exact path={`${match.url}/post-meta`} component={PostMeta}></Route>
-                        <Route exact path={`${match.url}/preview-and-save`} component={PreviewAndSave}></Route>
-                    </Switch>
-                </div>
-
-                <MobileStepper
-                    steps={5}
-                    position="static"
-                    activeStep={step}
-                    className={classes.mobileStepper}
-                    nextButton={
-                        <Button size="small" onClick={handleNext} disabled={step >= 5 - 1}>
-                            Weiter
-                            <KeyboardArrowRight />
-                        </Button>
-                    }
-                    backButton={
-                        <Button size="small" onClick={handleBack} disabled={step === 0}>
-                            <KeyboardArrowLeft />
-                            Zurück
-                        </Button>
-                    }
-                />
-            </div>
-        );
+            <Component></Component>
+        )
     }
+    return (
+        <div className={classes.root}>
+            <div className={classes.fullHeight}>
+                {renderStep()}
+            </div>
+
+            <MobileStepper
+                steps={steps.length}
+                position="static"
+                activeStep={step}
+                className={classes.mobileStepper}
+                nextButton={
+                    <Button size="small" onClick={handleNext} disabled={step >= steps.length - 1}>
+                        Weiter
+                        <KeyboardArrowRight />
+                    </Button>
+                }
+                backButton={
+                    <Button size="small" onClick={handleBack} disabled={step === steps.length}>
+                        <KeyboardArrowLeft />
+                        Zurück
+                    </Button>
+                }
+            />
+        </div>
+    );
 }
+
 
 const mapStateToProps = state => ({
     step: state.postcreation.step,

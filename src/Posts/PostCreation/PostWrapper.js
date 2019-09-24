@@ -14,13 +14,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const PostWrapper = ({ upn, image, title, content, onUpdateContent, onUpdateTitle }) => {
+const PostWrapper = ({ upn, images, title, content, onUpdateContent, onUpdateTitle }) => {
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
             <Post
-                image={image}
+                images={images}
                 upn={upn}
                 edit={true}
                 title={title}
@@ -33,7 +33,7 @@ const PostWrapper = ({ upn, image, title, content, onUpdateContent, onUpdateTitl
 };
 
 const mapStateToProps = state => ({
-    image: state.postcreation.image,
+    images: state.postcreation.images,
     title: state.postcreation.title,
     content: state.postcreation.content,
     user: state.user.upn,

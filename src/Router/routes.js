@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route as BrowserRoute, Switch, Redirect } from 'react-router-dom';
+import { Route as BrowserRoute, Redirect } from 'react-router-dom';
 import { withRouter, matchPath } from 'react-router';
 import NotFoundPage from './NotFoundPage';
 import { asynchronize } from './asynchronize';
@@ -13,7 +13,7 @@ const AppBar = asynchronized(() => import('./AppBar'));
 const AppDrawer = asynchronized(() => import('./AppDrawer'));
 
 const Posts = asynchronized(() => import('../Posts'));
-const PostEditor = asynchronized(() => import('../Posts/PostCreation'));
+const PostEditor = asynchronized(() => import('../Posts/editIndex'));
 const DiashowCreator = asynchronized(() => import('../Posts/DiashowCreation'));
 const Main = asynchronized(() => import('../Main'));
 const MainAppBar = asynchronized(() => import('../Main/components/AppBar'));
@@ -39,8 +39,8 @@ const routeConfig = location => (
         <Route exact path="/public/posts" component={PublicPosts} />
         <Route exact path="/public/tv" component={PublicTimetable} />
         <Route exact path="/posts" component={Posts} title="InfoTafel" withApp />
-        <Route path="/posts/:id" component={PostEditor} title="Beitrag editieren" back withApp />
-        <Route path="/diashow/:id" component={DiashowCreator} title="Diashow editieren" back withApp />
+        <Route path="/posts/edit/:id" component={PostEditor} title="Beitrag editieren" back withApp />
+        <Route path="/posts/new/:type" component={PostEditor} title="Beitrag erstellen" back withApp />
         <Route exact path="/admin" component={Statistics} withApp />
         <Route exact path="/error" component={NotFoundPage} />
         <Redirect

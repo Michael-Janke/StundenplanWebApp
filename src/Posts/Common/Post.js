@@ -64,12 +64,12 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Post = ({ image, title, upn, content, edit, onUpdateTitle, onUpdateContent, noButtons }) => {
+const Post = ({ images, title, upn, content, edit, onUpdateTitle, onUpdateContent, noButtons }) => {
     const classes = useStyles();
     return (
         <Card className={classes.card}>
             <div className={classes.mediaWrapper}>
-                {image && <APIImage src={image} className={classes.media} />}
+                {images && <APIImage src={images && images[0]} className={classes.media} />}
                 <div className={classes.title}>
                     <InputBase
                         className={classes.input}

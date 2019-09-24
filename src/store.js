@@ -11,7 +11,7 @@ import counterChanged from './Common/services/counter-service';
 import { responsiveStoreEnhancer } from 'redux-responsive';
 import networkStatusEnhancer from './networkStatusEnhancer';
 import version from './version.json';
-import EditorStateTransform from './EditorStateTransform';
+import EditorStateTransform from './Posts/Common/EditorStateTransform';
 
 const persistConfig = {
     key: 'root',
