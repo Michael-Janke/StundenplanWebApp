@@ -3,6 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Typography, Paper } from '@material-ui/core';
+import Linkify from 'react-linkify';
 import { classNames, DATE_COLORS } from '../Common/const';
 
 const styles = theme => ({
@@ -59,7 +60,7 @@ function Date({ date, buttons, classes }) {
                     {date.TEXT}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" className={classes.secondary}>
-                    {date.SUBTEXT}
+                    <Linkify>{date.SUBTEXT}</Linkify>
                 </Typography>
             </div>
             {buttons}
