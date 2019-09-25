@@ -64,7 +64,7 @@ const TextMobileStepper = ({ classes }) => {
                     <Button
                         size="small"
                         onClick={handleNext}
-                        disabled={activeStep >= maxSteps - 1 || (activeStep == 1 && !images.length)}
+                        disabled={activeStep >= maxSteps - 1 || (activeStep === 1 && !images.length)}
                     >
                         Weiter
                         <KeyboardArrowRight />

@@ -4,7 +4,7 @@ import { Box, Typography } from '@material-ui/core';
 import DirectionsBus from '@material-ui/icons/DirectionsBus';
 import DirectionsTransit from '@material-ui/icons/DirectionsTransit';
 import DirectionsRailway from '@material-ui/icons/DirectionsRailway';
-import { green, red, lightBlue, deepOrange, grey } from '@material-ui/core/colors';
+import { red, lightBlue, deepOrange, grey } from '@material-ui/core/colors';
 import classNames from 'classnames';
 import moment from 'moment';
 
@@ -65,7 +65,7 @@ const useStyles = makeStyles(
 
 export default function Connection({ connection }) {
     const classes = useStyles();
-    let [match, type, line] = connection.name.match(/(\w+)\s+(\w+)/);
+    let [, type, line] = connection.name.match(/(\w+)\s+(\w+)/);
     let Icon = ICON_MAP[type.toLowerCase()] || ICON_MAP.bus;
     const rt_info = connection.rt_info;
     const time = moment(connection.time, 'HH:mm');
@@ -73,7 +73,7 @@ export default function Connection({ connection }) {
     const fromNow = Math.max(0, Math.floor(time.diff(moment()) / 1000 / 60)); //minutes
     const rtFromNow = Math.max(0, Math.floor(rtTime.diff(moment()) / 1000 / 60)); //minutes
     const rtDiff = rtFromNow - fromNow;
-    const rtDiffText = rtDiffText > 3 ? `(+${rtDiff})` : '';
+    const rtDiffText = rtDiff > 3 ? `(+${rtDiff})` : '';
     return (
         <Box className={classes.root}>
             <div className={classNames(classes.type, classes[type.toLowerCase()])}>

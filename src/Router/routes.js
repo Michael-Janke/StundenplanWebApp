@@ -41,6 +41,8 @@ const routeConfig = location => (
         <Route exact path="/posts" component={Posts} title="InfoTafel" withApp />
         <Route path="/posts/edit/:id" component={PostEditor} title="Beitrag editieren" back withApp />
         <Route path="/posts/new/:type" component={PostEditor} title="Beitrag erstellen" back withApp />
+        <Route path="/diashows/edit/:id" component={DiashowCreator} title="Diashow editieren" back withApp />
+        <Route path="/diashows/new/:type" component={DiashowCreator} title="Diashow erstellen" back withApp />
         <Route exact path="/admin" component={Statistics} withApp />
         <Route exact path="/error" component={NotFoundPage} />
         <Redirect
@@ -54,8 +56,6 @@ const routeConfig = location => (
 );
 
 class Routes extends React.Component {
-    state = {};
-
     componentDidCatch(error, info) {
         if (process.env.NODE_ENV === 'development') {
             throw error;

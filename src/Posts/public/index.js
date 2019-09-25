@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { connect } from 'react-redux';
 
-import { GridList, GridListTile, AppBar, Toolbar, Typography } from '@material-ui/core';
+import { GridList, GridListTile, AppBar, Toolbar } from '@material-ui/core';
 import Post from '../Common/Post';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { getPosts } from '../actions';

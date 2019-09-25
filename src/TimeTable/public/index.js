@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import TimeTableContainer from '../components/container';
 import indigo from '@material-ui/core/colors/indigo';

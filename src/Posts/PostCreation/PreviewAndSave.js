@@ -5,7 +5,6 @@ import Post from '../Common/Post';
 import { Button } from '@material-ui/core';
 import Rocket from './Rocket';
 
-
 const useStyles = makeStyles(() => ({
     root: {
         display: 'flex',
@@ -36,12 +35,11 @@ const PreviewAndSave = ({ upn, images, title, content, onSave }) => {
     );
 };
 
-
 const mapStateToProps = state => ({
     images: state.postcreation.images,
     title: state.postcreation.title,
     content: state.postcreation.content,
     user: state.user.upn,
-})
+});
 
 export default connect(mapStateToProps)(PreviewAndSave);

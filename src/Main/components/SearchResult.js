@@ -1,5 +1,4 @@
 import React from 'react';
-import { checkAvatars } from './Avatars';
 import { connect } from 'react-redux';
 import { loadAvatars } from '../actions';
 import List from '@material-ui/core/List';

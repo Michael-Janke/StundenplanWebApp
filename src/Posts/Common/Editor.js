@@ -1,6 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 import React, { Component } from 'react';
-import Editor, { createEditorStateWithText } from 'draft-js-plugins-editor';
+import Editor from 'draft-js-plugins-editor';
+import MultiDecorator from 'draft-js-plugins-editor/lib/Editor/MultiDecorator';
+import { CompositeDecorator, EditorState, ContentState, convertToRaw, convertFromRaw } from 'draft-js';
 import createEmojiPlugin from 'draft-js-emoji-plugin';
 import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import createToolbarPlugin, { Separator } from 'draft-js-static-toolbar-plugin';
@@ -28,11 +30,21 @@ const emojiPlugin = createEmojiPlugin();
 const { Toolbar } = toolbarPlugin;
 const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
 const plugins = [toolbarPlugin, emojiPlugin, linkifyPlugin];
+const Workaround = emojiPlugin.decorators[1].component;
+emojiPlugin.decorators[1].component = props => (
+    <Workaround getEditorState={() => {}} setEditorState={() => {}} {...props} />
+);
+const decorators = [...emojiPlugin.decorators, ...linkifyPlugin.decorators];
+export const decorator = new MultiDecorator([new CompositeDecorator(decorators)]);
 const text = 'Hier den Text eingeben. Oben findest du die Toolbar. Auch Smileys sind möglich 🙈. Gib dazu ein : ein.';
+const initialState = ContentState.createFromText(text);
 
 export default class CustomEditor extends Component {
     state = {
-        editorState: this.props.content || createEditorStateWithText(text),
+        editorState: EditorState.createWithContent(
+            this.props.content ? convertFromRaw(this.props.content) : initialState,
+            decorator
+        ),
     };
 
     componentDidMount() {
@@ -43,7 +55,7 @@ export default class CustomEditor extends Component {
         this.setState({
             editorState,
         });
-        this.props.onChange && this.props.onChange(this.state.editorState);
+        this.props.onChange && this.props.onChange(convertToRaw(this.state.editorState.getCurrentContent()));
     };
 
     focus = () => {
