@@ -20,6 +20,8 @@ function postCreationReducer(state = initialState, action) {
                         type: post.TYPE,
                         POST_ID: post.POST_ID,
                         content: JSON.parse(post.TEXT),
+                        dateTo: post.DATE_TO.date,
+                        dateFrom: post.DATE_FROM.date,
                         title: post.TITLE,
                         images: post.IMAGES,
                     };
@@ -34,6 +36,21 @@ function postCreationReducer(state = initialState, action) {
             }
             return state;
         }
+        case "END_POST_CREATION":
+            return { ...initialState, step: state.step };
+        case "ADD_POST":
+        case "EDIT_POST":
+            return { ...state, saved: undefined };
+        case 'ADD_POST_RECEIVED':
+        case 'EDIT_POST_RECEIVED':
+            return { ...state, saved: action.payload.POST_ID };
+        case 'ADD_POST_ERROR':
+        case 'EDIT_POST_ERROR':
+            return { ...state, saved: false };
+        case 'SET_FROM_DATE':
+            return { ...state, dateFrom: action.payload };
+        case 'SET_TO_DATE':
+            return { ...state, dateTo: action.payload };
         case 'SET_TITLE':
             return { ...state, title: action.payload };
         case 'SET_CONTENT':

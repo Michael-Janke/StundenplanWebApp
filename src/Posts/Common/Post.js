@@ -64,12 +64,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Post = ({ images, title, upn, content, edit, onUpdateTitle, onUpdateContent, noButtons }) => {
+const Post = ({ images, title, upn, content, edit, onUpdateTitle, onUpdateContent, noButtons, buttons }) => {
     const classes = useStyles();
+    const image = images && images[0]
     return (
         <Card className={classes.card}>
             <div className={classes.mediaWrapper}>
-                {images && <APIImage src={images && images[0]} className={classes.media} />}
+                {image && <APIImage src={image} className={classes.media} />}
                 <div className={classes.title}>
                     <InputBase
                         className={classes.input}
@@ -85,9 +86,12 @@ const Post = ({ images, title, upn, content, edit, onUpdateTitle, onUpdateConten
                 avatar={<ObjectIcon upn={upn} profilePicSize={40} />}
                 action={
                     !noButtons && (
-                        <IconButton onClick={() => sendMail(upn)}>
-                            <MailIcon />
-                        </IconButton>
+                        <>
+                            <IconButton onClick={() => sendMail(upn)}>
+                                <MailIcon />
+                            </IconButton>
+                            {buttons}
+                        </>
                     )
                 }
                 title={<Name upn={upn} />}

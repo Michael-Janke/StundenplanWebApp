@@ -24,9 +24,6 @@ export default store => next => action => {
         case 'DELETE_IMAGE':
             return requestApiGenerator(next)(API_URL, 'upload/' + action.payload, { type: 'DELETE_IMAGE' }, 'DELETE');
         case 'EDIT_POST': {
-            let data = action.payload;
-            data.DATE_TO = data.DATE_TO.date;
-            data.DATE_FROM = data.DATE_FROM.date;
             return requestApiGenerator(next)(
                 API_URL,
                 'posts/' + action.payload.POST_ID,

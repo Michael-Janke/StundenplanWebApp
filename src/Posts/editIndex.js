@@ -5,28 +5,27 @@ import PostCreation from './PostCreation';
 import DiashowCreation from './DiashowCreation';
 
 function EditPage({ post, match, startPostCreation }) {
-
     let { type, id } = match.params;
     type = type || (post && post.TYPE);
 
     // start post creation depending on post or type
     React.useEffect(() => {
         startPostCreation(post || type);
-    }, [post, startPostCreation, type])
+    }, [post, startPostCreation, type]);
+
 
     const Component = {
-        "post": PostCreation,
-        "diashow": DiashowCreation,
-    }[type]
+        post: PostCreation,
+        diashow: DiashowCreation,
+    }[type];
     if (!Component) {
         if (id) {
-            throw new Error("post with id " + id + " doesnt exist");
+            throw new Error('post with id ' + id + ' doesnt exist');
         } else {
-            throw new Error("type " + type + " not found");
+            throw new Error('type ' + type + ' not found');
         }
     }
     return <Component post={post} />;
-
 }
 
 const findPost = (posts, match) => {
@@ -41,7 +40,7 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    startPostCreation: (post) => dispatch({ type: 'START_POST_CREATION', payload: post })
+    startPostCreation: post => dispatch({ type: 'START_POST_CREATION', payload: post }),
 });
 
 export default withRouter(

@@ -1,11 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 import React, { Component } from 'react';
 import Editor from 'draft-js-plugins-editor';
-import MultiDecorator from 'draft-js-plugins-editor/lib/Editor/MultiDecorator';
-import { CompositeDecorator, EditorState, ContentState, convertToRaw, convertFromRaw } from 'draft-js';
-import createEmojiPlugin from 'draft-js-emoji-plugin';
-import createLinkifyPlugin from 'draft-js-linkify-plugin';
-import createToolbarPlugin, { Separator } from 'draft-js-static-toolbar-plugin';
+import { ContentState, convertToRaw, convertFromRaw } from 'draft-js';
+import { Separator } from 'draft-js-static-toolbar-plugin';
 import {
     ItalicButton,
     BoldButton,
@@ -23,27 +20,21 @@ import 'draft-js/dist/Draft.css';
 import 'draft-js-static-toolbar-plugin/lib/plugin.css';
 import 'draft-js-emoji-plugin/lib/plugin.css';
 import editorStyles from './editorStyles.module.css';
+import { toolbarPlugin, emojiPlugin, linkifyPlugin, createWithContent } from './EditorPlugins';
 
-const toolbarPlugin = createToolbarPlugin();
-const linkifyPlugin = createLinkifyPlugin();
-const emojiPlugin = createEmojiPlugin();
-const { Toolbar } = toolbarPlugin;
-const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
-const plugins = [toolbarPlugin, emojiPlugin, linkifyPlugin];
-const Workaround = emojiPlugin.decorators[1].component;
-emojiPlugin.decorators[1].component = props => (
-    <Workaround getEditorState={() => {}} setEditorState={() => {}} {...props} />
-);
-const decorators = [...emojiPlugin.decorators, ...linkifyPlugin.decorators];
-export const decorator = new MultiDecorator([new CompositeDecorator(decorators)]);
+export const { Toolbar } = toolbarPlugin;
+export const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
+export const plugins = [toolbarPlugin, emojiPlugin, linkifyPlugin];
+
+
 const text = 'Hier den Text eingeben. Oben findest du die Toolbar. Auch Smileys sind möglich 🙈. Gib dazu ein : ein.';
+
 const initialState = ContentState.createFromText(text);
 
 export default class CustomEditor extends Component {
     state = {
-        editorState: EditorState.createWithContent(
+        editorState: createWithContent(
             this.props.content ? convertFromRaw(this.props.content) : initialState,
-            decorator
         ),
     };
 

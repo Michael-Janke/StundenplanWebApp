@@ -8,7 +8,7 @@ import { TransitionGroup } from 'react-transition-group';
 import { addPost, editPost, getPosts } from './actions';
 import { withRouter } from 'react-router';
 import PostWrapper from './PostWrapper';
-
+import useDialogPopper from '../Common/useDialog';
 
 const styles = theme => ({
     root: {
@@ -38,7 +38,6 @@ const styles = theme => ({
         margin: theme.spacing(1),
         display: 'flex',
         justifyContent: 'center',
-        
     },
     layout: {
         padding: `${theme.spacing(1)}px`,
@@ -58,28 +57,17 @@ class Posts extends React.Component {
         this.props.getPosts();
     }
 
-    handleDialogClose = post => {
-        this.setState({ dialogOpen: false });
-        if (!post) {
-            return;
-        }
-        if (post.POST_ID) {
-            this.props.editPost(post);
-        } else {
-            this.props.addPost(post);
-        }
-    };
-
     handleCreate = type => () => {
         this.props.history.push('/posts/new/' + type);
     };
 
-    handleOnEdit = post => {
-        this.props.history.push('/posts/edit/' + post.POST_ID);
+    handleOnEdit = postId => {
+        this.props.history.push('/posts/edit/' + postId);
     };
 
     render() {
         const { classes, posts, isAdmin } = this.props;
+
         return (
             <div className={classes.root}>
                 <div className={classes.heroUnit}>
@@ -96,10 +84,10 @@ class Posts extends React.Component {
                             </Typography>
                         )}
                         <div className={classes.topCreateButton}>
-                            <Button variant="contained" color="primary" onClick={this.handleCreate("post")}>
+                            <Button variant="contained" color="primary" onClick={this.handleCreate('post')}>
                                 Beitrag erstellen
                             </Button>
-                            <Button variant="contained" color="primary" onClick={this.handleCreate("diashow")}>
+                            <Button variant="contained" color="primary" onClick={this.handleCreate('diashow')}>
                                 Diashow erstellen
                             </Button>
                         </div>
@@ -115,9 +103,9 @@ class Posts extends React.Component {
                     >
                         {posts &&
                             posts.map(post => (
-                                <Fade post={post.POST_ID}>
+                                <Fade key={post.POST_ID}>
                                     <Grid item xs={12} md={6} xl={4} className={classes.postContainer}>
-                                        <PostWrapper {...post}></PostWrapper>
+                                        <PostWrapper {...post} onEdit={this.handleOnEdit}></PostWrapper>
                                     </Grid>
                                 </Fade>
                             ))}

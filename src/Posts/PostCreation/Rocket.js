@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { ReactComponent as RocketIcon } from './Icons/rocket.svg';
 
@@ -61,9 +61,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-function Rocket({ launched, crash }) {
+function Rocket({ launched, crash, onEnd }) {
 
     const classes = useStyles();
+    useEffect(() => {
+        if (launched) {
+            setTimeout(onEnd, 2000);
+        }
+    }, [launched, onEnd])
 
     return (
         <div className={classes.root}>
