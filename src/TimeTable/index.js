@@ -42,9 +42,13 @@ const useStyles = makeStyles(
                 flexGrow: 1,
                 display: 'flex',
             },
-            paddingLeft: 8,
-            paddingRight: 8,
-            paddingBottom: 8,
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+            paddingBottom: theme.spacing(1),
+            [theme.breakpoints.down(smallBreakpoint)]: {
+                paddingRight: 0,
+                paddingLeft: 0,
+            },
             zIndex: 1,
         },
         gridItem: {
