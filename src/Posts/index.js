@@ -8,7 +8,6 @@ import { TransitionGroup } from 'react-transition-group';
 import { addPost, editPost, getPosts } from './actions';
 import { withRouter } from 'react-router';
 import PostWrapper from './PostWrapper';
-import useDialogPopper from '../Common/useDialog';
 
 const styles = theme => ({
     root: {
