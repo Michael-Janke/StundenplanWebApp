@@ -11,6 +11,7 @@ import { sendMail } from '../../Common/utils';
 import { ObjectIcon } from '../../Main/components/Avatars';
 import Name from './Name';
 import Title from './Title';
+import { Tooltip } from '@material-ui/core';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -85,9 +86,11 @@ const Diashow = ({ images, title, upn, noButtons, interval = 5000, buttons }) =>
                 action={
                     !noButtons && (
                         <>
-                            <IconButton onClick={() => sendMail(upn)}>
-                                <MailIcon />
-                            </IconButton>
+                            <Tooltip title={`Mail an ${upn} senden`}>
+                                <IconButton onClick={() => sendMail(upn)}>
+                                    <MailIcon />
+                                </IconButton>
+                            </Tooltip>
                             {buttons}
                         </>
                     )

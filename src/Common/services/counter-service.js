@@ -13,6 +13,12 @@ const counterMiddleware = store => next => action => {
             if (!dates.loading && dates.currentHash !== action.payload.DATES_HASH) {
                 store.dispatch({ type: 'GET_DATES' });
             }
+            
+            const posts = state.posts;
+            if (!posts.loading && posts.currentHash !== action.payload.POSTS_HASH) {
+                store.dispatch({ type: 'GET_POSTS' });
+            }
+
             next(action);
             break;
         default:

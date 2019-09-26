@@ -1,11 +1,5 @@
 export default function postsReducer(state = {}, action) {
     switch (action.type) {
-        case 'persist/REHYDRATE':
-            if (!action.payload || !action.payload.posts) return { ...state };
-            return {
-                ...state,
-                ...action.payload.posts,
-            };
         case 'ADD_POST_RECEIVED':
             return {
                 ...state,
@@ -25,6 +19,23 @@ export default function postsReducer(state = {}, action) {
             return {
                 ...state,
                 posts: action.payload,
+                currentHash: state.availableHash,
+                loading: false,
+            };
+        case 'GET_POSTS':
+            return {
+                ...state,
+                loading: true,
+            }
+        case 'GET_POSTS_ERROR':
+            return {
+                ...state,
+                loading: false,
+            }
+        case 'COUNTER_RECEIVED':
+            return {
+                ...state,
+                availableHash: action.payload.POSTS_HASH,
             };
         default:
     }
