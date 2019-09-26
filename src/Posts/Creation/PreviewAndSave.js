@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import makeStyles from '@material-ui/styles/makeStyles';
 import Post from '../Common/Post';
+import Diashow from '../Common/Diashow';
 import { Button } from '@material-ui/core';
 import Rocket from './Rocket';
 import { withRouter } from 'react-router';
@@ -44,6 +45,7 @@ const PreviewAndSave = ({
             TYPE: type,
             DATE_FROM: dateFrom,
             DATE_TO: dateTo,
+            APPROVED: true,
         });
     }, [POST_ID, content, dateFrom, dateTo, images, savePost, title, type]);
 
@@ -54,9 +56,16 @@ const PreviewAndSave = ({
         }
     }, [endPostCreation, history, saved]);
 
+    const Component = {
+        'diashow': Diashow,
+        'post': Post,
+    }[type]
+
     return (
         <div className={classes.root}>
-            <Post images={images} upn={upn} title={title} content={content} edit={false} />
+            {Component &&
+                <Component images={images} upn={upn} title={title} content={content} edit={false} />
+            }
             <Button onClick={onClick} variant="contained" size="large" color="primary">
                 <Rocket launched={launched} onEnd={onEnd}></Rocket>
                 Speichern

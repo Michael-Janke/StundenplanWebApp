@@ -21,8 +21,10 @@ export default store => next => action => {
                 { type: 'DELETE_POST', request: action.payload },
                 'DELETE'
             );
-        case 'DELETE_IMAGE':
-            return requestApiGenerator(next)(API_URL, 'upload/' + action.payload, { type: 'DELETE_IMAGE' }, 'DELETE');
+        case 'DELETE_IMAGE': {
+            const filename = action.payload.substring(action.payload.lastIndexOf('/') + 1);
+            return requestApiGenerator(next)(API_URL, 'upload/' + filename, { type: 'DELETE_IMAGE' }, 'DELETE');
+        }
         case 'EDIT_POST': {
             return requestApiGenerator(next)(
                 API_URL,

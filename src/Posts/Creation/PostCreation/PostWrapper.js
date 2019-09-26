@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import makeStyles from '@material-ui/styles/makeStyles';
-import Post from '../Common/Post';
+import Post from '../../Common/Post';
 
 const useStyles = makeStyles(theme => ({
     root: {

@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Diashow = ({ images, title, upn, noButtons, interval = 5000 }) => {
+const Diashow = ({ images, title, upn, noButtons, interval = 5000, buttons }) => {
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
     return (
@@ -67,7 +67,7 @@ const Diashow = ({ images, title, upn, noButtons, interval = 5000 }) => {
             <AutoPlaySwipeableViews
                 axis={'x'}
                 index={activeStep}
-                onChangeIndex={setActiveStep}
+                onChangeIndex={(step) => setActiveStep(step)}
                 enableMouseEvents
                 interval={interval}
                 className={classes.mediaWrapper}
@@ -84,9 +84,12 @@ const Diashow = ({ images, title, upn, noButtons, interval = 5000 }) => {
                 avatar={<ObjectIcon upn={upn} profilePicSize={40} />}
                 action={
                     !noButtons && (
-                        <IconButton onClick={() => sendMail(upn)}>
-                            <MailIcon />
-                        </IconButton>
+                        <>
+                            <IconButton onClick={() => sendMail(upn)}>
+                                <MailIcon />
+                            </IconButton>
+                            {buttons}
+                        </>
                     )
                 }
                 title={<Name upn={upn} />}

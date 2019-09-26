@@ -4,8 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import grey from '@material-ui/core/colors/grey';
-import { ReactComponent as PhotoIcon } from './Icons/photo.svg';
-import { ReactComponent as StockPhotoIcon } from './Icons/stockphoto.svg';
+import { ReactComponent as PhotoIcon } from '../Icons/photo.svg';
+import { ReactComponent as StockPhotoIcon } from '../Icons/stockphoto.svg';
 import { connect } from 'react-redux';
 
 const styles = theme => ({

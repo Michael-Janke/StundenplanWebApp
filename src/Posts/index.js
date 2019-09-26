@@ -7,7 +7,7 @@ import { Button, Grid, Fab, Fade } from '@material-ui/core';
 import { TransitionGroup } from 'react-transition-group';
 import { addPost, editPost, getPosts } from './actions';
 import { withRouter } from 'react-router';
-import PostWrapper from './PostWrapper';
+import ComponentWrapper from './ComponentWrapper';
 
 const styles = theme => ({
     root: {
@@ -18,17 +18,16 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.default,
     },
     postContainer: {
-        maxWidth: 400,
     },
     createButton: {
         position: 'absolute',
         right: theme.spacing(2),
         bottom: theme.spacing(2),
     },
-    heroUnit: {
+    headerContainer: {
         backgroundColor: theme.palette.background.paper,
     },
-    heroContent: {
+    header: {
         maxWidth: 600,
         margin: '0 auto',
         padding: `${theme.spacing(2)}px`,
@@ -37,6 +36,9 @@ const styles = theme => ({
         margin: theme.spacing(1),
         display: 'flex',
         justifyContent: 'center',
+        '& > *': {
+            margin: theme.spacing(0, 1),
+        }
     },
     layout: {
         padding: `${theme.spacing(1)}px`,
@@ -69,8 +71,8 @@ class Posts extends React.Component {
 
         return (
             <div className={classes.root}>
-                <div className={classes.heroUnit}>
-                    <div className={classes.heroContent}>
+                <div className={classes.headerContainer}>
+                    <div className={classes.header}>
                         <Typography variant="h6" align="center" color="textSecondary">
                             Kuchenbasar? Kartenverkauf? Neuigkeiten?
                         </Typography>
@@ -83,10 +85,10 @@ class Posts extends React.Component {
                             </Typography>
                         )}
                         <div className={classes.topCreateButton}>
-                            <Button variant="contained" color="primary" onClick={this.handleCreate('post')}>
+                            <Button variant="outlined" color="primary" onClick={this.handleCreate('post')}>
                                 Beitrag erstellen
                             </Button>
-                            <Button variant="contained" color="primary" onClick={this.handleCreate('diashow')}>
+                            <Button variant="outlined" color="primary" onClick={this.handleCreate('diashow')}>
                                 Diashow erstellen
                             </Button>
                         </div>
@@ -104,7 +106,7 @@ class Posts extends React.Component {
                             posts.map(post => (
                                 <Fade key={post.POST_ID}>
                                     <Grid item xs={12} md={6} xl={4} className={classes.postContainer}>
-                                        <PostWrapper {...post} onEdit={this.handleOnEdit}></PostWrapper>
+                                        <ComponentWrapper {...post} onEdit={this.handleOnEdit}></ComponentWrapper>
                                     </Grid>
                                 </Fade>
                             ))}

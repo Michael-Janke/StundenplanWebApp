@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import PostCreation from './PostCreation';
-import DiashowCreation from './DiashowCreation';
+import PostCreation from './Creation/PostCreation';
+import DiashowCreation from './Creation/DiashowCreation';
 
 function EditPage({ post, match, startPostCreation }) {
     let { type, id } = match.params;

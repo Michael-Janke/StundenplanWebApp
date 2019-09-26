@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import Fab from '@material-ui/core/Fab';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Upload from '../Common/Upload';
-import APIImage from '../Common/APIImage';
+import Upload from '../../Common/Upload';
+import APIImage from '../../Common/APIImage';
 import makeStyles from '@material-ui/styles/makeStyles';
-import { deleteImage } from '../actions';
 
 const useStyles = makeStyles({
     preview: {
@@ -48,14 +47,17 @@ const useStyles = makeStyles({
     },
 });
 
-const PhotoUpload = ({ onUpload, images: uploadedImages, onDeleteImage }) => {
-    const [images, setImages] = useState([]);
+const PhotoUpload = ({ images: uploadedImages, setImagesDispatch, deleteImage }) => {
+    const [images, setImages] = useState(() => uploadedImages);
     const classes = useStyles();
-    const dispatch = useDispatch();
-    const deleteImage2 = image => {
-        dispatch(deleteImage(image));
-        onDeleteImage(image);
+    
+    const handleDeleteImage = image => {
+        deleteImage(image);
     };
+    const handleOnFinished = (images)=> {
+        setImagesDispatch(images);
+    }
+
     return (
         <div className={classes.root}>
             <div className={classes.uploader}>
@@ -63,7 +65,7 @@ const PhotoUpload = ({ onUpload, images: uploadedImages, onDeleteImage }) => {
                     allowMultiple={true}
                     onUpdate={setImages}
                     files={[]}
-                    onFinished={() => onUpload(images.map(file => file.serverId))}
+                    onFinished={() => handleOnFinished(images.map(file => file.serverId))}
                     acceptedFileTypes={['image/*']}
                 />
             </div>
@@ -71,7 +73,7 @@ const PhotoUpload = ({ onUpload, images: uploadedImages, onDeleteImage }) => {
                 {uploadedImages.map(image => (
                     <div className={classes.imageWrapper} key={image}>
                         <APIImage src={image} className={classes.image} />
-                        <Fab className={classes.button} size="small" onClick={() => deleteImage2(image)}>
+                        <Fab className={classes.button} size="small" onClick={() => handleDeleteImage(image)}>
                             <DeleteIcon />
                         </Fab>
                     </div>
@@ -81,4 +83,13 @@ const PhotoUpload = ({ onUpload, images: uploadedImages, onDeleteImage }) => {
     );
 };
 
-export default PhotoUpload;
+const mapStateToProps = state => ({
+    images: state.postcreation.images,
+})
+
+const mapDispatchToProps = dispatch => ({
+    setImagesDispatch: images => dispatch({ type: 'SET_IMAGES', payload: images }),
+    deleteImage: image => dispatch({type: 'DELETE_IMAGE', payload: image}),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(PhotoUpload);

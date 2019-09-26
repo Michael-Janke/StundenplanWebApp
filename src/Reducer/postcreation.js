@@ -59,9 +59,11 @@ function postCreationReducer(state = initialState, action) {
             return { ...state, photoMode: action.payload, step: nextStep(state.step, 1) };
         case 'SET_IMAGE':
             return { ...state, images: [action.payload], step: nextStep(state.step, 1) };
+        case 'SET_IMAGES':
+            return { ...state, images: action.payload };
         case 'ADD_IMAGE':
             return { ...state, images: [...state.images, action.payload] };
-        case 'REMOVE_IMAGE':
+        case 'DELETE_IMAGE':
             return { ...state, images: state.images.filter(image => image !== action.payload) };
         case 'SET_STEP':
             return { ...state, step: nextStep(action.payload, 0) };

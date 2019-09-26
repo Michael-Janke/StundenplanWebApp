@@ -4,15 +4,12 @@ import MobileStepper from '@material-ui/core/MobileStepper';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import StockPhotoSelector from './StockPhotoSelector';
-import PhotoModeSelector from './PhotoModeSelector';
-import PhotoUpload from './PhotoUpload';
-import PostMeta from '../Common/Meta';
-import PreviewAndSave from './PreviewAndSave';
+import PostMeta from '../../Common/Meta';
+import PreviewAndSave from '../PreviewAndSave';
 import { grey } from '@material-ui/core/colors';
 import { withRouter } from 'react-router';
-import PostWrapper from './PostWrapper';
 import { connect } from 'react-redux';
+import PhotoUpload from './PhotoUpload';
 
 const styles = theme => ({
     root: {
@@ -31,14 +28,11 @@ const styles = theme => ({
     },
 });
 
-function PostCreation({ photoMode, step, classes, handleNext, handleBack }) {
+function PostCreation({ step, classes, handleNext, handleBack }) {
 
     const steps = [
-        PhotoModeSelector,
-        photoMode === 'stock' && StockPhotoSelector,
-        photoMode === 'upload' && PhotoUpload,
-        PostWrapper,
         PostMeta,
+        PhotoUpload,
         PreviewAndSave,
     ].filter(step => step);
     // filter non existing steps
@@ -84,7 +78,6 @@ function PostCreation({ photoMode, step, classes, handleNext, handleBack }) {
 
 const mapStateToProps = state => ({
     step: state.postcreation.step,
-    photoMode: state.postcreation.photoMode,
 });
 
 const mapDispatchToProps = dispatch => ({

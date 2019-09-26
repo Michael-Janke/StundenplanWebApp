@@ -48,7 +48,7 @@ const useStyles = makeStyles(
     { name: 'Meta' }
 );
 
-const Meta = ({ diashow, dateFrom, setDateFrom, dateTo, setDateTo, title, onUpdateTitle }) => {
+const Meta = ({ type, dateFrom, setDateFrom, dateTo, setDateTo, title, onUpdateTitle }) => {
     const classes = useStyles();
     // you can past mostly all available props, like minDate, maxDate, autoOk and so on
     const { pickerProps: dateFromProps } = useStaticState({
@@ -63,7 +63,7 @@ const Meta = ({ diashow, dateFrom, setDateFrom, dateTo, setDateTo, title, onUpda
     return (
         <div className={classes.root}>
             <div className={classes.settings}>
-                {diashow && (
+                {type === 'diashow' && (
                     <>
                         <Typography className={classes.header}>Erstelle deine Diashow!</Typography>
                         <div className={classes.settings}>
@@ -116,6 +116,7 @@ const mapStateToProps = state => ({
     dateFrom: state.postcreation.dateFrom,
     dateTo: state.postcreation.dateTo,
     title: state.postcreation.title,
+    type: state.postcreation.type,
 });
 
 const mapDispatchToProps = dispatch => ({

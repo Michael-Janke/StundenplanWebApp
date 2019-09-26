@@ -14,7 +14,6 @@ const AppDrawer = asynchronized(() => import('./AppDrawer'));
 
 const Posts = asynchronized(() => import('../Posts'));
 const PostEditor = asynchronized(() => import('../Posts/editIndex'));
-const DiashowCreator = asynchronized(() => import('../Posts/DiashowCreation'));
 const Main = asynchronized(() => import('../Main'));
 const MainAppBar = asynchronized(() => import('../Main/components/AppBar'));
 const Statistics = asynchronized(() => import('../Statistics'));
@@ -41,8 +40,6 @@ const routeConfig = location => (
         <Route exact path="/posts" component={Posts} title="InfoTafel" withApp />
         <Route path="/posts/edit/:id" component={PostEditor} title="Beitrag editieren" back withApp />
         <Route path="/posts/new/:type" component={PostEditor} title="Beitrag erstellen" back withApp />
-        <Route path="/diashows/edit/:id" component={DiashowCreator} title="Diashow editieren" back withApp />
-        <Route path="/diashows/new/:type" component={DiashowCreator} title="Diashow erstellen" back withApp />
         <Route exact path="/admin" component={Statistics} withApp />
         <Route exact path="/error" component={NotFoundPage} />
         <Redirect

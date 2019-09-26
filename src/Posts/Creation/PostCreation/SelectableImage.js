@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { classNames } from '../../Common/const';
+import { classNames } from '../../../Common/const';
 
 const styles = {
     img: {

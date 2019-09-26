@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import withStyles from '@material-ui/styles/withStyles';
 import Button from '@material-ui/core/Button';
-import Upload from '../Common/Upload';
-import APIImage from '../Common/APIImage';
+import Upload from '../../Common/Upload';
+import APIImage from '../../Common/APIImage';
 
 import { connect } from 'react-redux';
 
@@ -24,11 +24,11 @@ const styles = {
         width: '100%',
     },
 };
-const PhotoUpload = ({ classes, image: initalImage, onUpload }) => {
+const PhotoUpload = ({ classes, images: initalImage, onUpload }) => {
 
     const [file, setFile] = useState(null);
-    const [finished, setFinished] = useState(!!initalImage);
-    const image = finished && (file ? file.serverId : initalImage);
+    const [finished, setFinished] = useState(!!initalImage[0]);
+    const image = finished && (file ? file.serverId : initalImage[0]);
 
     return (
         <div className={classes.root}>
@@ -56,7 +56,7 @@ const PhotoUpload = ({ classes, image: initalImage, onUpload }) => {
 };
 
 const mapStateToProps = state => ({
-    image: state.postcreation.image,
+    images: state.postcreation.images,
 })
 
 const mapDispatchToProps = dispatch => ({
