@@ -16,6 +16,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import DoneIcon from '@material-ui/icons/Done';
 import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
 import AddAssignment from './components/addAssignment';
+import SendHint from './components/SendHint';
 
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
 const BindField = props => field => Field.bind(null, field, props);
@@ -72,52 +73,52 @@ const AbstractLesson = props => {
                 <Field3 left />
             </LessonContainer>
         ) : (
-            // large
-            <LessonContainer>
+                // large
+                <LessonContainer>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            overflow: 'hidden',
+                        }}
+                    >
+                        {substitutionType}
+                        <Field1 left />
+                    </div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'flex-end',
+                            textAlign: 'right',
+                            overflow: 'hidden',
+                            paddingLeft: 5,
+                        }}
+                    >
+                        <Field2 />
+                        <Field3 />
+                    </div>
+                </LessonContainer>
+            )
+    ) : (
+            // old
+            <LessonContainer small={small}>
+                {substitutionType}
                 <div
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'flex-start',
+                        alignItems: small ? 'flex-start' : 'flex-end',
+                        textAlign: small ? 'left' : 'right',
                         overflow: 'hidden',
                     }}
                 >
-                    {substitutionType}
-                    <Field1 left />
-                </div>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'flex-end',
-                        textAlign: 'right',
-                        overflow: 'hidden',
-                        paddingLeft: 5,
-                    }}
-                >
-                    <Field2 />
-                    <Field3 />
+                    <Field1 />
+                    {Field2 && <Field2 />}
                 </div>
             </LessonContainer>
-        )
-    ) : (
-        // old
-        <LessonContainer small={small}>
-            {substitutionType}
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: small ? 'flex-start' : 'flex-end',
-                    textAlign: small ? 'left' : 'right',
-                    overflow: 'hidden',
-                }}
-            >
-                <Field1 />
-                {Field2 && <Field2 />}
-            </div>
-        </LessonContainer>
-    );
+        );
 
     const popoverActive = true;
     const allDoneAssignments = assignments.every(assignment =>
@@ -129,8 +130,8 @@ const AbstractLesson = props => {
     ) : allDoneAssignments ? (
         <DoneIcon />
     ) : (
-        assignments.length
-    );
+                assignments.length
+            );
     return (
         <Popover active={popoverActive} key={reference.TIMETABLE_ID}>
             {(props, handleOpen) => (
@@ -181,6 +182,17 @@ const AbstractLesson = props => {
                             <Assignments assignments={assignments} />
                         </React.Fragment>
                     )}
+                    <SendHint collectData={() => {
+
+                        return {
+                            assignments: [],
+                            teams: [],
+                            reference,
+                            popoverActive: false,
+                            lesson: lesson,
+                            fields: fields,
+                        };
+                    }} />
                 </List>
             )}
         </Popover>

@@ -44,3 +44,17 @@ export function createAssignment({ teamId, title, instructions, date }) {
         },
     };
 }
+
+
+export function openSendHint(data) {
+    return {
+        type: 'OPEN_SEND_HINT',
+        payload: data,
+    };
+}
+
+export function closeSendHint() {
+    return {
+        type: 'CLOSE_SEND_HINT',
+    };
+}

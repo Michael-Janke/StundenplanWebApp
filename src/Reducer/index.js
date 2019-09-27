@@ -15,6 +15,7 @@ import teams from './teams';
 import substitutions from './substitutions';
 import tv from './tv';
 import assignments from './assignments';
+import hint from './hint';
 
 export default combineReducers({
     browser: createResponsiveStateReducer({
@@ -38,4 +39,5 @@ export default combineReducers({
     teams,
     tv,
     assignments,
+    hint,
 });

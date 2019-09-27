@@ -8,6 +8,7 @@ import ErrorBoundary from '../Common/ErrorBoundary';
 import { makeStyles } from '@material-ui/styles';
 import { classNames } from '../Common/const';
 import AssignmentCreation from './components/AssignmentCreation';
+import SendHintDialog from './components/SendHintDialog';
 
 const smallBreakpoint = 800;
 
@@ -111,6 +112,7 @@ function TimeTableView({ small, smallTimetable }) {
                 </Grid>
             </div>
             <AssignmentCreation />
+            <SendHintDialog />
         </div>
     );
 }
