@@ -5,7 +5,7 @@ import SettingsIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Diashow from './Common/Diashow';
 
-function PostWrapper({ onEdit, onDelete, post }) {
+function PostWrapper({ onEdit, onDelete, post, noButtons }) {
     const { IMAGES, CREATOR, TITLE, TEXT, TYPE } = post;
     const content = React.useMemo(() => JSON.parse(TEXT), [TEXT]);
 
@@ -18,7 +18,7 @@ function PostWrapper({ onEdit, onDelete, post }) {
                     </IconButton>
                 </Tooltip>
                 <Tooltip title="Beitrag löschen">
-                    <IconButton onClick={(event) => onDelete(post, event.target)}>
+                    <IconButton onClick={event => onDelete(post, event.target)}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
@@ -27,11 +27,21 @@ function PostWrapper({ onEdit, onDelete, post }) {
     }
 
     const Component = {
-        'diashow': Diashow,
-        'post': Post,
+        diashow: Diashow,
+        post: Post,
     }[TYPE];
 
-    return <Component images={IMAGES} upn={CREATOR} title={TITLE} content={content} buttons={buttons} edit={false} />;
+    return (
+        <Component
+            images={IMAGES}
+            upn={CREATOR}
+            title={TITLE}
+            content={content}
+            buttons={buttons}
+            edit={false}
+            noButtons={noButtons}
+        />
+    );
 }
 
 export default PostWrapper;

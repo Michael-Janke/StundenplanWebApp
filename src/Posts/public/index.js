@@ -3,7 +3,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { connect } from 'react-redux';
 
 import { GridList, GridListTile, AppBar, Toolbar } from '@material-ui/core';
-import Post from '../Common/Post';
+import ComponentWrapper from '../ComponentWrapper';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { getPosts } from '../actions';
 import ClockDigital from './ClockDigital';
@@ -12,7 +12,6 @@ import DayInfo from './DayInfo';
 import TransportInfo from './TransportInfo/TransportInfo';
 import { fade } from '@material-ui/core/styles';
 import { indigo } from '@material-ui/core/colors';
-import { EditorState, convertFromRaw } from 'draft-js';
 import { useIntervalCheck } from '../../Common/intervalCheck';
 
 const useStyles = makeStyles(theme => ({
@@ -114,37 +113,35 @@ const Posts = ({ getPosts, posts }) => {
                 </Toolbar>
             </AppBar>
             <div className={classes.content}>
-                <GridList cellHeight={240} cols={8} spacing={12}>
-                    <GridListTile rows={4} cols={2} classes={{ tile: classes.tile }}>
+                <GridList cellHeight={480} cols={4} rows={2} spacing={12}>
+                    <GridListTile rows={2} cols={1} classes={{ tile: classes.tile }}>
                         <TransportInfo></TransportInfo>
                     </GridListTile>
-                    <GridListTile rows={2} cols={2} classes={{ tile: classes.tile }}>
-                        <DayInfo></DayInfo>
-                    </GridListTile>
-
-                    {posts &&
-                        posts.map(post => (
-                            <GridListTile rows={2} cols={2} classes={{ tile: classes.tile }}>
-                                <CSSTransition
-                                    classNames={{
-                                        enter: classes.postEnter,
-                                        enterActive: classes.postEnterActive,
-                                        exit: classes.postExit,
-                                        exitActive: classes.postExitActive,
-                                    }}
-                                    key={post.POST_ID}
-                                    timeout={500}
-                                >
-                                    <Post
-                                        content={EditorState.createWithContent(convertFromRaw(JSON.parse(post.TEXT)))}
-                                        upn={post.CREATOR}
-                                        title={post.TITLE}
-                                        image={post.IMAGE}
-                                        noButtons={true}
-                                    />
-                                </CSSTransition>
+                    <GridListTile rows={2} cols={3} classes={{ tile: classes.tile }}>
+                        <GridList cellHeight={468} cols={3} rows={2} spacing={12} classes={{ root: classes.tile }}>
+                            <GridListTile rows={1} cols={1} classes={{ tile: classes.tile }}>
+                                <DayInfo></DayInfo>
                             </GridListTile>
-                        ))}
+
+                            {posts &&
+                                posts.map(post => (
+                                    <GridListTile rows={1} cols={1} classes={{ tile: classes.tile }}>
+                                        <CSSTransition
+                                            classNames={{
+                                                enter: classes.postEnter,
+                                                enterActive: classes.postEnterActive,
+                                                exit: classes.postExit,
+                                                exitActive: classes.postExitActive,
+                                            }}
+                                            key={post.POST_ID}
+                                            timeout={500}
+                                        >
+                                            <ComponentWrapper post={post} noButtons={true}></ComponentWrapper>
+                                        </CSSTransition>
+                                    </GridListTile>
+                                ))}
+                        </GridList>
+                    </GridListTile>
                 </GridList>
             </div>
         </TransitionGroup>
