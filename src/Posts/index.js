@@ -15,12 +15,24 @@ import { useIntervalCheck } from '../Common/intervalCheck';
 const styles = theme => ({
     root: {
         width: '100%',
+        maxWidth: 1000,
         boxSizing: 'border-box',
         overflowY: 'auto',
         height: '100%',
         backgroundColor: theme.palette.background.default,
     },
-    postContainer: {
+    postGrid: {
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    post: {
+        margin: theme.spacing(1, 0),
+        [theme.breakpoints.up('sm')]: {
+            margin: theme.spacing(1),
+        },
     },
     createButton: {
         position: 'absolute',
@@ -41,21 +53,14 @@ const styles = theme => ({
         justifyContent: 'center',
         '& > *': {
             margin: theme.spacing(0, 1),
-        }
+        },
     },
     layout: {
-        padding: `${theme.spacing(1)}px`,
         width: 'auto',
-        [theme.breakpoints.up(1100 + theme.spacing(3) * 2)]: {
-            width: 1100,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-        },
     },
 });
 
 function Posts({ getPosts, classes, isAdmin, posts, hasPosts, history, deletePost }) {
-    
     useIntervalCheck();
 
     const handleCreate = type => () => {
@@ -67,17 +72,17 @@ function Posts({ getPosts, classes, isAdmin, posts, hasPosts, history, deletePos
     };
 
     const handleOnDelete = (post, target) => {
-        setDialog(target, (status) => {
+        setDialog(target, status => {
             if (status) {
                 deletePost(post);
             }
         });
-    }
+    };
     const [dialog, setDialog] = useDialog({
         title: 'Beitrag löschen',
         text: 'Möchtest du diesen Beitrag wirklich löschen?',
         textAccept: 'Löschen',
-        textDecline: 'Abbrechen'
+        textDecline: 'Abbrechen',
     });
 
     return (
@@ -87,68 +92,59 @@ function Posts({ getPosts, classes, isAdmin, posts, hasPosts, history, deletePos
                 <div className={classes.header}>
                     <Typography variant="h6" align="center" color="textSecondary">
                         Kuchenbasar? Kartenverkauf? Neuigkeiten?
-                        </Typography>
+                    </Typography>
                     <Typography variant="h6" align="center" color="textSecondary" gutterBottom>
                         Informiere das Wolkenberg und poste etwas auf die Infotafel!
-                        </Typography>
+                    </Typography>
                     <div className={classes.topCreateButton}>
                         <Button variant="outlined" color="primary" onClick={handleCreate('post')}>
                             Beitrag erstellen
-                            </Button>
+                        </Button>
                         <Button variant="outlined" color="primary" onClick={handleCreate('diashow')}>
                             Diashow erstellen
-                            </Button>
+                        </Button>
                     </div>
                 </div>
             </div>
             <div className={classes.layout}>
-                {(!hasPosts) && (
+                {!hasPosts && (
                     <Typography variant="h6" align="center" color="textSecondary">
-                        Es sind keine Beiträge vorhanden. Sei der erste und erstelle jetzt einen Beitrag oder eine Diashow.
-                        </Typography>
+                        Es sind keine Beiträge vorhanden. Sei der erste und erstelle jetzt einen Beitrag oder eine
+                        Diashow.
+                    </Typography>
                 )}
-                <Grid
-                    container
-                    component={TransitionGroup}
-                    spacing={1}
-                    className={classes.postsGrid}
-                    justify="center"
-                >
+                <div className={classes.postGrid}>
                     {posts &&
                         posts.map(post => {
                             const canEdit = isAdmin || post.USER_CREATED;
 
                             return (
                                 <Fade key={post.POST_ID}>
-                                    <Grid item xs={12} md={6} xl={4} className={classes.postContainer}>
-                                        <ComponentWrapper
-                                            post={post}
-                                            onEdit={canEdit && handleOnEdit}
-                                            onDelete={canEdit && handleOnDelete}
-                                        >
-                                        </ComponentWrapper>
-                                    </Grid>
+                                    <ComponentWrapper
+                                        post={post}
+                                        onEdit={canEdit && handleOnEdit}
+                                        onDelete={canEdit && handleOnDelete}
+                                        className={classes.post}
+                                    ></ComponentWrapper>
                                 </Fade>
-                            )
+                            );
                         })}
-                </Grid>
+                </div>
             </div>
-            <Fab color="primary" className={classes.createButton} onClick={handleCreate("post")}>
+            <Fab color="primary" className={classes.createButton} onClick={handleCreate('post')}>
                 <AddIcon />
             </Fab>
         </div>
     );
-
 }
 const makeMapStateToProps = () => {
     const getPosts = makeGetPosts();
 
-    return (state) => ({
+    return state => ({
         ...getPosts(state),
         isAdmin: state.user.scope === 'admin',
-    })
-}
-
+    });
+};
 
 const mapDispatchToProps = dispatch => ({
     getPosts: () => dispatch(getPosts()),

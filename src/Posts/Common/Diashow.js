@@ -32,6 +32,7 @@ const useStyles = makeStyles(theme => ({
         objectFit: 'cover',
         height: '100%',
         width: '100%',
+        display: 'block',
     },
     title: {
         position: 'absolute',
@@ -68,7 +69,7 @@ const Diashow = ({ images, title, upn, noButtons, interval = 5000, buttons }) =>
             <AutoPlaySwipeableViews
                 axis={'x'}
                 index={activeStep}
-                onChangeIndex={(step) => setActiveStep(step)}
+                onChangeIndex={step => setActiveStep(step)}
                 enableMouseEvents
                 interval={interval}
                 className={classes.mediaWrapper}

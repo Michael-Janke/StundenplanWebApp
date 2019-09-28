@@ -23,6 +23,8 @@
         "filepond": "^4.7.1",
         "filepond-plugin-file-validate-type": "^1.2.4",
         "filepond-plugin-image-preview": "^4.0.5",
+        "filepond-plugin-image-resize": "^2.0.4",
+        "filepond-plugin-image-transform": "^3.4.3",
         "local-storage": "^2.0.0",
         "localforage": "^1.7.3",
         "moment": "^2.24.0",

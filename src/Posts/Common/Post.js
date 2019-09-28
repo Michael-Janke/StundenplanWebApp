@@ -13,7 +13,8 @@ import { sendMail } from '../../Common/utils';
 import { ObjectIcon } from '../../Main/components/Avatars';
 import Name from './Name';
 import Title from './Title';
-import { Tooltip } from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
+import classNames from 'classnames';
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -37,6 +38,7 @@ const useStyles = makeStyles(theme => ({
     media: {
         objectFit: 'cover',
         height: '100%',
+        display: 'block',
         width: '100%',
     },
     title: {
@@ -65,11 +67,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Post = ({ images, title, upn, content, edit, onUpdateTitle, onUpdateContent, noButtons, buttons }) => {
+const Post = ({ className, images, title, upn, content, edit, onUpdateTitle, onUpdateContent, noButtons, buttons }) => {
     const classes = useStyles();
-    const image = images && images[0]
+    const image = images && images[0];
     return (
-        <Card className={classes.card}>
+        <Card className={classNames(className, classes.card)}>
             <div className={classes.mediaWrapper}>
                 {image && <APIImage src={image} className={classes.media} />}
                 <div className={classes.title}>

@@ -3,17 +3,27 @@ import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import FilePondPluginImageResize from 'filepond-plugin-image-resize';
+import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
 import { getToken } from '../../Common/Authentication';
 import { API_URL } from '../../Common/services/generator';
 import './upload.css';
-registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType);
+registerPlugin(
+    FilePondPluginImagePreview,
+    FilePondPluginFileValidateType,
+    FilePondPluginImageResize,
+    FilePondPluginImageTransform
+);
 
 var workaround = () => {};
 export default function Upload(props) {
     workaround = props.onFinished;
     return (
         <FilePond
+            imageResizeUpscale={false}
+            imageResizeTargetWidth={1920}
+            imageTransformOutputQuality={90}
             name="files"
             files={props.files}
             allowMultiple={props.allowMultiple}
