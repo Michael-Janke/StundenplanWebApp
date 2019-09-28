@@ -2,25 +2,21 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { getTransportInfo } from '../../actions';
-import Station from './Station';
 import Connection from './Connection';
+import DepartureBoard from '@material-ui/icons/DepartureBoard';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        padding: theme.spacing(.5),
+        flex: 1,
+        height: '100%',
     },
-    content: {
-        display: 'flex',
-    },
-    station: {
-        flexGrow: 1,
-    }
-}), { name: 'TransportInfo' })
+}));
 
 function TransportInfo({ transportInfo, getTransportInfo }) {
     const classes = useStyles();
-
-    // const lastUpdate = transportInfo && moment(transportInfo.TIME.date).format("HH:mm:ss");
 
     // fetch transportInfo
     React.useEffect(() => {
@@ -29,23 +25,28 @@ function TransportInfo({ transportInfo, getTransportInfo }) {
         return () => clearInterval(id);
     }, [getTransportInfo]);
 
+    if (!transportInfo) return null;
+    let wolkenberg = transportInfo.CONNECTIONS['Am Wolkenberg'];
+    const michendorf = transportInfo.CONNECTIONS['Michendorf']
+        .filter(m => !wolkenberg.some(w => m.name + m.direction === w.name + w.direction))
+        .slice(0, 7);
+    wolkenberg = wolkenberg.slice(0, 4);
+
     return (
-        <div className={classes.root}>
-            <div className={classes.content}>
-
-                {transportInfo && Object.entries(transportInfo.CONNECTIONS).map(entry => {
-                    const stationName = entry[0];
-                    const arrivals = entry[1];
-                    return (
-                        <Station name={stationName} className={classes.station} key={stationName}>
-                            {arrivals.map((arrival, i) =>
-                                <Connection connection={arrival} key={arrival.name + arrival.time + i} />)}
-                        </Station>
-                    )
-                })}
-
-            </div>
-        </div>
+        <Card className={classes.root}>
+            <CardHeader avatar={<DepartureBoard />} title={'Am Wolkenberg'} />
+            <CardContent>
+                {wolkenberg.map((arrival, i) => (
+                    <Connection connection={arrival} key={i} />
+                ))}
+            </CardContent>
+            <CardHeader avatar={<DepartureBoard />} title={'Michendorf ~10 Minuten 🚶'} />
+            <CardContent>
+                {michendorf.map((arrival, i) => (
+                    <Connection connection={arrival} key={i} />
+                ))}
+            </CardContent>
+        </Card>
     );
 }
 

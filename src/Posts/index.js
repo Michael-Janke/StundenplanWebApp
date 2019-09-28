@@ -3,16 +3,15 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-import { Button, Grid, Fab } from '@material-ui/core';
-import Post from './post';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { addPost, editPost, getPosts } from './actions';
+import { Button, Grid, Fab, Fade } from '@material-ui/core';
+import { TransitionGroup } from 'react-transition-group';
+import { addPost, editPost, getPosts, deletePost } from './actions';
 import { withRouter } from 'react-router';
+import ComponentWrapper from './ComponentWrapper';
+import makeGetPosts from './index.selector';
+import useDialog from '../Common/useDialog';
+import { useIntervalCheck } from '../Common/intervalCheck';
 
-/**
- *
- * @param {import('@material-ui/core').Theme} theme
- */
 const styles = theme => ({
     root: {
         width: '100%',
@@ -21,36 +20,17 @@ const styles = theme => ({
         height: '100%',
         backgroundColor: theme.palette.background.default,
     },
-    postsGrid: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    postEnter: {
-        opacity: 0,
-    },
-    postEnterActive: {
-        transition: theme.transitions.create(['opacity']),
-        opacity: 1,
-    },
-    postExit: {
-        opacity: 1,
-    },
-    postExitActive: {
-        transition: theme.transitions.create(['opacity']),
-        opacity: 0,
-    },
     postContainer: {
-        maxWidth: 400,
     },
     createButton: {
         position: 'absolute',
         right: theme.spacing(2),
         bottom: theme.spacing(2),
     },
-    heroUnit: {
+    headerContainer: {
         backgroundColor: theme.palette.background.paper,
     },
-    heroContent: {
+    header: {
         maxWidth: 600,
         margin: '0 auto',
         padding: `${theme.spacing(2)}px`,
@@ -59,6 +39,9 @@ const styles = theme => ({
         margin: theme.spacing(1),
         display: 'flex',
         justifyContent: 'center',
+        '& > *': {
+            margin: theme.spacing(0, 1),
+        }
     },
     layout: {
         padding: `${theme.spacing(1)}px`,
@@ -71,107 +54,113 @@ const styles = theme => ({
     },
 });
 
-class Posts extends React.Component {
-    state = { dialogOpen: false };
+function Posts({ getPosts, classes, isAdmin, posts, hasPosts, history, deletePost }) {
+    
+    useIntervalCheck();
 
-    componentDidMount() {
-        this.props.getPosts();
+    const handleCreate = type => () => {
+        history.push('/posts/new/' + type);
+    };
+
+    const handleOnEdit = post => {
+        history.push('/posts/edit/' + post.POST_ID);
+    };
+
+    const handleOnDelete = (post, target) => {
+        setDialog(target, (status) => {
+            if (status) {
+                deletePost(post);
+            }
+        });
     }
+    const [dialog, setDialog] = useDialog({
+        title: 'Beitrag löschen',
+        text: 'Möchtest du diesen Beitrag wirklich löschen?',
+        textAccept: 'Löschen',
+        textDecline: 'Abbrechen'
+    });
 
-    handleDialogClose = post => {
-        this.setState({ dialogOpen: false });
-        if (!post) {
-            return;
-        }
-        if (post.POST_ID) {
-            this.props.editPost(post);
-        } else {
-            this.props.addPost(post);
-        }
-    };
-
-    handleCreate = () => {
-        this.props.history.push('/posts/new');
-    };
-
-    handleOnEdit = post => {
-        this.props.history.push('/posts/' + post.POST_ID);
-    };
-
-    render() {
-        const { classes, posts, isAdmin } = this.props;
-        return (
-            <div className={classes.root}>
-                <div className={classes.heroUnit}>
-                    <div className={classes.heroContent}>
-                        <Typography variant="h6" align="center" color="textSecondary">
-                            Kuchenbasar? Kartenverkauf? Neuigkeiten?
+    return (
+        <div className={classes.root}>
+            {dialog}
+            <div className={classes.headerContainer}>
+                <div className={classes.header}>
+                    <Typography variant="h6" align="center" color="textSecondary">
+                        Kuchenbasar? Kartenverkauf? Neuigkeiten?
                         </Typography>
-                        <Typography variant="h6" align="center" color="textSecondary" gutterBottom>
-                            Informiere das Wolkenberg und poste etwas auf die Infotafel!
+                    <Typography variant="h6" align="center" color="textSecondary" gutterBottom>
+                        Informiere das Wolkenberg und poste etwas auf die Infotafel!
                         </Typography>
-                        {posts && !posts.length && (
-                            <Typography variant="h6" align="center" color="error" paragraph>
-                                Es sind keine Neuigkeiten vorhanden!
-                            </Typography>
-                        )}
-                        <div className={classes.topCreateButton}>
-                            <Button variant="contained" color="primary" onClick={this.handleCreate}>
-                                Jetzt erstellen
+                    <div className={classes.topCreateButton}>
+                        <Button variant="outlined" color="primary" onClick={handleCreate('post')}>
+                            Beitrag erstellen
                             </Button>
-                        </div>
+                        <Button variant="outlined" color="primary" onClick={handleCreate('diashow')}>
+                            Diashow erstellen
+                            </Button>
                     </div>
                 </div>
-                <div className={classes.layout}>
-                    <Grid
-                        container
-                        component={TransitionGroup}
-                        spacing={1}
-                        className={classes.postsGrid}
-                        justify="center"
-                    >
-                        {posts &&
-                            posts.map(post => (
-                                <CSSTransition
-                                    classNames={{
-                                        enter: classes.postEnter,
-                                        enterActive: classes.postEnterActive,
-                                        exit: classes.postExit,
-                                        exitActive: classes.postExitActive,
-                                    }}
-                                    key={post.POST_ID}
-                                    timeout={500}
-                                >
-                                    <Grid item xs={12} md={6} className={classes.postContainer}>
-                                        <Post post={post} isAdmin={isAdmin} onEdit={this.handleOnEdit} />
-                                    </Grid>
-                                </CSSTransition>
-                            ))}
-                    </Grid>
-                </div>
-                <Fab color="primary" className={classes.createButton} onClick={this.handleCreate}>
-                    <AddIcon />
-                </Fab>
             </div>
-        );
-    }
+            <div className={classes.layout}>
+                {(!hasPosts) && (
+                    <Typography variant="h6" align="center" color="textSecondary">
+                        Es sind keine Beiträge vorhanden. Sei der erste und erstelle jetzt einen Beitrag oder eine Diashow.
+                        </Typography>
+                )}
+                <Grid
+                    container
+                    component={TransitionGroup}
+                    spacing={1}
+                    className={classes.postsGrid}
+                    justify="center"
+                >
+                    {posts &&
+                        posts.map(post => {
+                            const canEdit = isAdmin || post.USER_CREATED;
+
+                            return (
+                                <Fade key={post.POST_ID}>
+                                    <Grid item xs={12} md={6} xl={4} className={classes.postContainer}>
+                                        <ComponentWrapper
+                                            post={post}
+                                            onEdit={canEdit && handleOnEdit}
+                                            onDelete={canEdit && handleOnDelete}
+                                        >
+                                        </ComponentWrapper>
+                                    </Grid>
+                                </Fade>
+                            )
+                        })}
+                </Grid>
+            </div>
+            <Fab color="primary" className={classes.createButton} onClick={handleCreate("post")}>
+                <AddIcon />
+            </Fab>
+        </div>
+    );
+
+}
+const makeMapStateToProps = () => {
+    const getPosts = makeGetPosts();
+
+    return (state) => ({
+        ...getPosts(state),
+        isAdmin: state.user.scope === 'admin',
+    })
 }
 
-const mapStateToProps = state => ({
-    posts: state.posts.posts,
-    isAdmin: state.user.scope === 'admin',
-});
 
 const mapDispatchToProps = dispatch => ({
     getPosts: () => dispatch(getPosts()),
     addPost: post => dispatch(addPost(post)),
     editPost: post => dispatch(editPost(post)),
+    deletePost: post => dispatch(deletePost(post)),
 });
 
 export default withStyles(styles)(
     withRouter(
         connect(
-            mapStateToProps,
+            makeMapStateToProps,
             mapDispatchToProps
         )(Posts)
     )

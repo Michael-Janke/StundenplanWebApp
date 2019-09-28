@@ -1,34 +1,39 @@
-import React from 'react';
-import withStyles from '@material-ui/core/styles/withStyles';
+import React, { useEffect, useState } from 'react';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { connect } from 'react-redux';
 
-import { Grid, AppBar, Toolbar, Typography } from '@material-ui/core';
-import Post from '../post';
+import { GridList, GridListTile, AppBar, Toolbar } from '@material-ui/core';
+import Post from '../Common/Post';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { getPosts } from '../actions';
 import ClockDigital from './ClockDigital';
-import ClockAnalog from './ClockAnalog';
 import CurrentDate from './CurrentDate';
 import DayInfo from './DayInfo';
 import TransportInfo from './TransportInfo/TransportInfo';
 import { fade } from '@material-ui/core/styles';
-/**
- *
- * @param {import('@material-ui/core').Theme} theme
- */
-const styles = theme => ({
+import { indigo } from '@material-ui/core/colors';
+import { EditorState, convertFromRaw } from 'draft-js';
+import { useIntervalCheck } from '../../Common/intervalCheck';
+
+const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
         boxSizing: 'border-box',
-        overflowY: 'auto',
+        overflow: 'hidden',
         height: '100%',
         backgroundColor: theme.palette.background.default,
         display: 'flex',
         flexDirection: 'column',
-        flexGrow: 1,
     },
     appBar: {
-        backgroundColor: fade(theme.palette.primary.main, .8),
+        backgroundColor: indigo[600],
+        height: 100,
+    },
+    content: {
+        width: '100%',
+        height: '100%',
+        padding: 12,
+        boxSizing: 'border-box',
     },
     postGridItem: {
         display: 'flex',
@@ -62,14 +67,6 @@ const styles = theme => ({
         flexDirection: 'column',
         flexGrow: 1,
     },
-    transportInfo: {
-        backgroundColor: fade(theme.palette.background.paper, 0.8),
-        flex: '0 0 128px',
-    },
-    flexGrow: {
-        flexGrow: 1,
-    },
-
     main: {
         padding: theme.spacing(1),
         backgroundColor: fade(theme.palette.background.paper, 0.8),
@@ -78,78 +75,81 @@ const styles = theme => ({
         flexDirection: 'column',
     },
     toolbar: {
-        minHeight: 130,
         height: '100%',
+        '& > *  ': {
+            padding: theme.spacing(0, 4, 0, 0),
+        },
     },
     dateTime: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
         alignItems: 'center',
         padding: theme.spacing(1),
     },
-    image: {
+    icon: {
         filter: `invert(100%) drop-shadow(1px 1px 0px rgba(0,0,0,0.2))`,
+        height: 68,
     },
-});
+    tile: {
+        overflow: 'unset',
+    },
+}));
 
-class Posts extends React.Component {
-    componentDidMount() {
-        this.props.getPosts();
-    }
+const Posts = ({ getPosts, posts }) => {
+    const classes = useStyles();
+    useEffect(getPosts, []);
+    useIntervalCheck();
+    const [zoom, setZoom] = useState(document.body.offsetWidth / 1920);
+    useEffect(() => {
+        window.addEventListener('resize', () => setZoom(document.body.offsetWidth / 1920));
+    }, []);
 
-    render() {
-        const { classes, posts } = this.props;
-        return (
-            <div className={classes.root}>
-                <AppBar position="static" className={classes.appBar}>
-                    <Toolbar className={classes.toolbar}>
-                        <img className={classes.image} src={require('../../Common/icons/wolkenberg.png')} alt="" />
-                        <ClockAnalog />
-                        <div className={classes.dateTime}>
-                            <CurrentDate />
-                            <ClockDigital />
-                        </div>
-                        <DayInfo />
-                    </Toolbar>
-                </AppBar>
-                <div className={classes.layout}>
-                    <Grid container item className={classes.flexGrow}>
-                        <Grid item xs={3}>
-                            <div className={classes.sidebar} />
-                        </Grid>
-                        <Grid item xs={9} className={classes.main}>
-                            <Typography variant="h2" color="textSecondary" gutterBottom>
-                                Neuigkeiten
-                            </Typography>
-                            <Grid container component={TransitionGroup} className={classes.post}>
-                                {posts &&
-                                    posts.map(post => (
-                                        <CSSTransition
-                                            classNames={{
-                                                enter: classes.postEnter,
-                                                enterActive: classes.postEnterActive,
-                                                exit: classes.postExit,
-                                                exitActive: classes.postExitActive,
-                                            }}
-                                            key={post.POST_ID}
-                                            timeout={500}
-                                        >
-                                            <Grid item xs className={classes.postGridItem}>
-                                                <Post overflow post={post} />
-                                            </Grid>
-                                        </CSSTransition>
-                                    ))}
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </div>
-                <Grid xs={12} item className={classes.transportInfo}>
-                    <TransportInfo></TransportInfo>
-                </Grid>
+    return (
+        <TransitionGroup className={classes.root} style={{ zoom }}>
+            <AppBar position="static" className={classes.appBar}>
+                <Toolbar className={classes.toolbar}>
+                    <img className={classes.icon} src={require('../../Common/icons/wolkenberg.png')} alt="" />
+                    <CurrentDate />
+                    <ClockDigital />
+                </Toolbar>
+            </AppBar>
+            <div className={classes.content}>
+                <GridList cellHeight={240} cols={8} spacing={12}>
+                    <GridListTile rows={4} cols={2} classes={{ tile: classes.tile }}>
+                        <TransportInfo></TransportInfo>
+                    </GridListTile>
+                    <GridListTile rows={2} cols={2} classes={{ tile: classes.tile }}>
+                        <DayInfo></DayInfo>
+                    </GridListTile>
+
+                    {posts &&
+                        posts.map(post => (
+                            <GridListTile rows={2} cols={2} classes={{ tile: classes.tile }}>
+                                <CSSTransition
+                                    classNames={{
+                                        enter: classes.postEnter,
+                                        enterActive: classes.postEnterActive,
+                                        exit: classes.postExit,
+                                        exitActive: classes.postExitActive,
+                                    }}
+                                    key={post.POST_ID}
+                                    timeout={500}
+                                >
+                                    <Post
+                                        content={EditorState.createWithContent(convertFromRaw(JSON.parse(post.TEXT)))}
+                                        upn={post.CREATOR}
+                                        title={post.TITLE}
+                                        image={post.IMAGE}
+                                        noButtons={true}
+                                    />
+                                </CSSTransition>
+                            </GridListTile>
+                        ))}
+                </GridList>
             </div>
-        );
-    }
-}
+        </TransitionGroup>
+    );
+};
 
 const mapStateToProps = state => ({
     posts: state.posts.posts,
@@ -159,9 +159,7 @@ const mapDispatchToProps = dispatch => ({
     getPosts: () => dispatch(getPosts()),
 });
 
-export default withStyles(styles)(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(Posts)
-    , { name: 'PublicPosts' });
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Posts);

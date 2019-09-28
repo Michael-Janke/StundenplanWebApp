@@ -1,49 +1,63 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { Paper, Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import DirectionsBus from '@material-ui/icons/DirectionsBus';
 import DirectionsTransit from '@material-ui/icons/DirectionsTransit';
 import DirectionsRailway from '@material-ui/icons/DirectionsRailway';
+import { red, lightBlue, deepOrange, grey } from '@material-ui/core/colors';
+import classNames from 'classnames';
+import moment from 'moment';
 
 const ICON_MAP = {
-    '(Bus)\\w*(.*)': DirectionsBus,
-    '(RB)\\w*(.*)': DirectionsTransit,
-    '(RE)\\w*(.*)': DirectionsRailway,
-    '(.*)': DirectionsBus,
+    bus: DirectionsBus,
+    rb: DirectionsTransit,
+    re: DirectionsRailway,
 };
-
-const ICON_ARRAY = Object.entries(ICON_MAP);
 
 const useStyles = makeStyles(
     theme => ({
         root: {
-            margin: theme.spacing(1),
-            minWidth: 0,
-            flex: '1 0 0',
             display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderColor: grey[200],
+            borderWidth: 1,
+            borderStyle: 'solid',
         },
-        headerContent: {
+        type: {
             display: 'flex',
             alignItems: 'center',
-            flexGrow: 1,
-            oveflow:'hidden',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            oveflow: 'hidden',
+            color: 'white',
+            width: 40,
+            padding: theme.spacing(1),
         },
-        icon: {
-            marginRight: theme.spacing(1),
-            color: theme.palette.text.secondary,
-        },
-        header: {
-            borderRight: `2px solid ${theme.palette.divider}`,
-            padding: `0 ${theme.spacing(1)}px`,
-            margin: `${theme.spacing(1)}px 0`,
-            display: 'flex',
-            overflow:'hidden',
-        },
-        content: {
-            padding: `0 ${theme.spacing(1)}px`,
-            margin: `${theme.spacing(1)}px 0`,
+        direction: {
+            textAlign: 'left',
+            padding: theme.spacing(1),
+            flex: 1,
+            width: 200,
             overflow: 'hidden',
-            flexGrow: 1,
+            textOverflow: 'ellipsis',
+        },
+        time: {
+            textAlign: 'right',
+            padding: theme.spacing(1),
+        },
+        re: {
+            backgroundColor: red[900],
+        },
+        rb: {
+            backgroundColor: deepOrange[900],
+        },
+        bus: {
+            backgroundColor: lightBlue[900],
+        },
+        realtime: {
+            color: red[700],
         },
     }),
     { name: 'Connection' }
@@ -51,51 +65,40 @@ const useStyles = makeStyles(
 
 export default function Connection({ connection }) {
     const classes = useStyles();
-    let name = connection.name;
-    name = name.replace(/\([0-9]+\)/g, '');
-    let Icon;
-    let type;
-    for (let i = 0; i < ICON_ARRAY.length; i++) {
-        let entry = ICON_ARRAY[i];
-        const reg = entry[0];
-        const match = new RegExp(reg, 'i').exec(name);
-        if (match) {
-            name = match[2];
-            type = match[1];
-            Icon = entry[1];
-            break;
-        }
-    }
+    let [, type, line] = connection.name.match(/(\w+)\s+(\w+)/);
+    let Icon = ICON_MAP[type.toLowerCase()] || ICON_MAP.bus;
     const rt_info = connection.rt_info;
-    const time = rt_info.time || connection.time;
-    const nextStation = connection.route && connection.route[1];
+    const time = moment(connection.time, 'HH:mm');
+    const rtTime = moment(rt_info.time || connection.time, 'HH:mm');
+    const fromNow = Math.max(0, Math.floor(time.diff(moment()) / 1000 / 60)); //minutes
+    const rtFromNow = Math.max(0, Math.floor(rtTime.diff(moment()) / 1000 / 60)); //minutes
+    const rtDiff = rtFromNow - fromNow;
+    const rtDiffText = rtDiff > 3 ? `(+${rtDiff})` : '';
     return (
-        <Paper className={classes.root}>
-            <div className={classes.header}>
-                <div className={classes.headerContent}>
-                    <Icon className={classes.icon} fontSize="small" />
-                    <div>
-                        <Typography variant="subtitle2">
-                            <Typography variant="caption">
-                                {type}
-                            </Typography>
-                            {name}
-                        </Typography>
-                        <Typography variant="body2" color={rt_info.time ? 'secondary' : 'textSecondary'} >
-                            {time}
-                        </Typography>
-                    </div>
-                </div>
+        <Box className={classes.root}>
+            <div className={classNames(classes.type, classes[type.toLowerCase()])}>
+                <Icon />
+                <Typography variant="caption">{line}</Typography>
             </div>
-            <div className={classes.content}>
-                <Typography variant="caption" component="p" gutterBottom>
-                    {nextStation && nextStation.name}
+
+            <div className={classes.direction}>
+                {connection.direction.split(',').map(line => (
+                    <div>{line}</div>
+                ))}
+            </div>
+
+            <div className={classes.time}>
+                <Typography variant="body1">
+                    {['jetzt ' + rtDiffText, 'in einer Minute ' + rtDiffText][fromNow] ||
+                        `in ${fromNow} ${rtDiffText} Minuten`}
                 </Typography>
-                <Typography variant="body2">{connection.direction}</Typography>
-                <Typography variant="overline" component="p">
-                    {connection.platform ? 'Gl. ' + connection.platform : ''}
+                <Typography variant="body2" color="textSecondary">
+                    {time.format('HH:mm')}
+                    {rt_info.time && rt_info.time !== connection.time && (
+                        <span className={classes.realtime}> > {rt_info.time}</span>
+                    )}
                 </Typography>
             </div>
-        </Paper>
+        </Box>
     );
 }

@@ -7,16 +7,18 @@ import { classNames } from '../../Common/const';
 const useStyles = makeStyles(theme => ({
     root: {
         color: 'white',
+        fontWeight: 200,
     },
 }));
 
 function CurrentDate({ className }) {
     const classes = useStyles();
-    const date = moment().format('DD.MM.YYYY');
+    const date = moment().format('DD.MM.');
+    const weekday = moment().format('dddd');
 
     return (
-        <Typography variant="h4" className={classNames(classes.root, className)}>
-            {date}
+        <Typography variant="h3" className={classNames(classes.root, className)}>
+            {date} {weekday}
         </Typography>
     );
 }

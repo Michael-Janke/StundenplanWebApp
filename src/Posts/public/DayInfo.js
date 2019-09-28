@@ -2,112 +2,63 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { getDayInfo } from '../actions';
-import { Typography, Portal, Fade } from '@material-ui/core';
+import { Typography, Fade, Card } from '@material-ui/core';
 import { TransitionGroup } from 'react-transition-group';
-import ReadProgress from './ReadProgress';
+import useInterval from 'react-useinterval';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    content: {
-        display: 'flex',
-        flexDirection: 'column',
-        color: 'white',
-        padding: theme.spacing(2),
-        flex: 1,
-    },
-    headerContainer: {
-        flexGrow: 1,
-        display: 'flex',
-        alignItems: 'flex-end',
-        position: 'relative',
-    },
-    header: {
-        position: 'absolute',
-        bottom: 0,
-    },
-    backgroundContainer: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: -1,
-        overflow: 'hidden',
-        backgroundColor: theme.palette.background.default,
-    },
-    backgroundImage: {
-        position: 'absolute',
-        width: '100%',
-        filter: 'blur(2px)',
-        opacity: theme.palette.type === 'dark' ? .2 : .7,
-    }
-}), { name: 'DayInfo' });
+const useStyles = makeStyles(
+    theme => ({
+        root: {
+            flexGrow: 1,
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+            fontSize: 17.5,
+        },
+        media: {
+            height: 200,
+        },
+        card: {
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+        },
+    }),
+    { name: 'DayInfo' }
+);
 
 function DayInfo({ dayInfo = [], getDayInfo }) {
     const classes = useStyles();
-    const infos = dayInfo.length;
     const [currentId, setCurrentId] = useState(0);
     const info = dayInfo[currentId] || {};
 
-    const onFinished = React.useCallback(() => {
-        let newId = currentId + 1;
-        if (newId >= infos) {
-            newId = 0;
-        }
-        setCurrentId(newId);
-    }, [currentId, infos]);
-
-    React.useLayoutEffect(() => {
-        const root = document.getElementById('root').firstChild.style;
-        root.backgroundColor = 'transparent';
-    }, []);
+    useInterval(() => setCurrentId((currentId + 1) % dayInfo.length), 20000);
 
     // fetch dayInfo once component was mounted
     useEffect(getDayInfo, []);
 
     return (
-        <div className={classes.root}>
-            <Portal>
-                <TransitionGroup className={classes.backgroundContainer}>
-                    <Fade key={info.image ? info.image.url : ""} appear timeout={1000}>
-                        <div>
-                            {(info.image && info.image.url) ?
-                                <img src={info.image.url} className={classes.backgroundImage} alt=""></img>
-                                : <div className={classes.backgroundImage}></div>}
-                        </div>
-                    </Fade>
-                </TransitionGroup>
-            </Portal>
-            <div className={classes.content}>
-                <TransitionGroup className={classes.headerContainer}>
-                    <Fade
-                        className={classes.header}
-                        key={info.header}
-                        timeout={1000}
-                    >
-                        <div>
-                            <Typography variant="h4" color="inherit">
-                                {info.header}
-                            </Typography>
-                            <Typography variant="body2" color="inherit">
-                                {info.text}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" component="a" href={info.href}>
-                                {info.href}
-                            </Typography>
-
-                        </div>
-                    </Fade>
-                </TransitionGroup>
-            </div>
-            <ReadProgress onFinished={onFinished} time={1000 * 20} />
-
-        </div>
+        <TransitionGroup className={classes.root}>
+            <Fade className={classes.card} key={info.header} timeout={1000}>
+                <Card>
+                    <CardMedia className={classes.media} image={info.image && info.image.url} title={info.header} />
+                    <CardContent>
+                        <Typography variant="subtitle2">
+                            Heute ist ({currentId + 1}/{dayInfo.length})
+                        </Typography>
+                        <Typography gutterBottom variant="h5" component="h2">
+                            {info.header}
+                        </Typography>
+                        <Typography component="p" color="textSecondary">
+                            {info.text}
+                        </Typography>
+                    </CardContent>
+                </Card>
+            </Fade>
+        </TransitionGroup>
     );
 }
 

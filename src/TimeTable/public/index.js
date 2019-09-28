@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import TimeTableContainer from '../components/container';
 import indigo from '@material-ui/core/colors/indigo';
@@ -13,7 +13,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { classNames } from '../../Common/const';
 import ClearTimetable from './ClearTimetable';
 import InformationView from './Information';
-import { startIntervalCheck, stopIntervalCheck } from './intervalCheck';
+import { useIntervalCheck } from '../../Common/intervalCheck';
 
 const smallBreakpoint = 800;
 
@@ -78,8 +78,7 @@ const useStyles = makeStyles(
             [theme.breakpoints.down(smallBreakpoint)]: {
                 flexGrow: 1,
             },
-            margin: theme.spacing(.5),
-
+            margin: theme.spacing(0.5),
         },
         timetable: {
             maxWidth: 800,
@@ -90,7 +89,6 @@ const useStyles = makeStyles(
             [theme.breakpoints.down(smallBreakpoint)]: {
                 maxWidth: 'initial',
             },
-
         },
         substitutions: {
             flexGrow: 1,
@@ -103,10 +101,7 @@ function PublicDisplay({ open }) {
     const classes = useStyles();
     const theme = useTheme();
     const small = useMediaQuery(theme.breakpoints.down(smallBreakpoint));
-    useEffect(() => {
-        startIntervalCheck();
-        return stopIntervalCheck;
-    }, []);
+    useIntervalCheck();
 
     if (!window.params.token) {
         return 'Leider bin ich noch nicht vollständig eingerichtet';
@@ -152,7 +147,6 @@ function PublicDisplay({ open }) {
                                 <Paper className={classNames(classes.substitutions, classes.paper)} square>
                                     <ErrorBoundary>
                                         <Substitutions addDays={0} />
-
                                     </ErrorBoundary>
                                 </Paper>
                             </Grid>
@@ -164,7 +158,6 @@ function PublicDisplay({ open }) {
                                 </Paper>
                             </Grid>
                         </Grid>
-                        
                     </Grid>
                 </Grid>
             </div>

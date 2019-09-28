@@ -68,6 +68,7 @@ const Wrapper = styled.div`
 const ProfileImg = styled.img`
     width: 100%;
     height: 300px;
+    display: block;
 `;
 
 const Type = styled.div`

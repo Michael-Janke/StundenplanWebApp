@@ -1,0 +1,32 @@
+.editor :global(.DraftEditor-root) {
+    box-sizing: border-box;
+    cursor: text;
+    padding: 0;
+    border-radius: 0;
+    background: #fefefe;
+}
+
+.editor :global(.public-DraftEditor-content) {
+    min-height: 140px;
+}
+
+:global(.draftJsEmojiPlugin__emojiSelectButton__3sPol),
+:global(.draftJsEmojiPlugin__emojiSelectButtonPressed__2Tezu) {
+    background: #fbfbfb;
+    color: #888;
+    font-size: 1.5em;
+    line-height: normal;
+    border: 0;
+    padding-top: 0px;
+    vertical-align: bottom;
+    height: 34px;
+    width: 36px;
+    border-radius: 0;
+}
+
+:global(.draftJsToolbar__toolbar__dNtBH) {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+}

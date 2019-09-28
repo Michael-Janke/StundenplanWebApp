@@ -1,19 +1,29 @@
-import React, { Component } from 'react';
+import React from 'react';
 import TimeTable from '../TimeTable';
-import { intervalCheckStart, intervalCheckStop } from './intervalCheck';
+import { useIntervalCheck } from '../Common/intervalCheck';
 
-class Main extends Component {
-    componentDidMount() {
-        intervalCheckStart();
-    }
+function Main() {
+    const dispatchActions = React.useCallback((dispatch, intervalCount) => {
+        dispatch({
+            type: 'GET_UNREAD_MESSAGES',
+        });
+        if (intervalCount % 6 === 0) {
+            dispatch({
+                type: 'GET_ASSIGNMENTS',
+            });
+        }
+        if (intervalCount === 1) {
+            //not immedantly
+            dispatch({
+                type: 'GET_JOINED_TEAMS',
+            });
+        }
+        return (intervalCount + 1) % (6 * 60 * 24); // at least once a day;
+    }, []);
+    useIntervalCheck(dispatchActions);
 
-    componentWillUnmount() {
-        intervalCheckStop();
-    }
-
-    render() {
-        return <TimeTable />;
-    }
+    return <TimeTable />;
 }
+
 
 export default Main;

@@ -15,6 +15,7 @@ import teams from './teams';
 import substitutions from './substitutions';
 import tv from './tv';
 import assignments from './assignments';
+import postcreation from './postcreation';
 
 export default combineReducers({
     browser: createResponsiveStateReducer({
@@ -29,6 +30,7 @@ export default combineReducers({
     period,
     online,
     posts,
+    postcreation,
     drawer,
     user,
     notifications,
