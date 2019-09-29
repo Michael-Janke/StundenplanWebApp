@@ -8,6 +8,7 @@ import ErrorBoundary from '../Common/ErrorBoundary';
 import { makeStyles } from '@material-ui/styles';
 import { classNames } from '../Common/const';
 import AssignmentCreation from './components/AssignmentCreation';
+import { grey } from '@material-ui/core/colors';
 
 const smallBreakpoint = 800;
 
@@ -19,7 +20,7 @@ const useStyles = makeStyles(
             flexDirection: 'column',
             position: 'relative',
             overflowY: 'auto',
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: grey[100],
         },
         appBar: {
             backgroundColor: indigo[600],
