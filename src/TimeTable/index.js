@@ -11,6 +11,7 @@ import AssignmentCreation from './components/AssignmentCreation';
 import ComponentWrapper from '../Posts/ComponentWrapper';
 import Dates from '../Dates';
 import ErrorBoundary from '../Common/ErrorBoundary';
+import makeGetPosts from '../Posts/index.selector';
 
 const smallBreakpoint = 800;
 
@@ -112,10 +113,11 @@ function TimeTableView({ small, smallTimetable, posts }) {
 }
 
 const mapStateToProps = state => {
+    const getPosts = makeGetPosts();
     return {
         small: state.browser.lessThan.medium,
         smallTimetable: state.browser.lessThan.large && !state.browser.is.small,
-        posts: state.posts.posts,
+        ...getPosts(state),
     };
 };
 
