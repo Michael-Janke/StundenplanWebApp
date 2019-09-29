@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        fontSize: 17.5, //fix for all screensizes
+        //fontSize: 17.5, //fix for all screensizes
         [theme.breakpoints.up('sm')]: {
             height: 480,
         },

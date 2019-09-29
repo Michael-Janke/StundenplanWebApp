@@ -73,7 +73,7 @@ class AppBar extends React.Component {
         const { printOpen, mailOpen } = this.state;
         return (
             <React.Fragment>
-                <Icons style={{ marginLeft: large ? 268 : undefined }}>
+                <Icons style={{ marginLeft: large ? 'calc(50% - 494px)' : undefined }}>
                     <Search shrinkChildren={small} alwaysOpen={!small}>
                         {!small && (
                             <Tooltip

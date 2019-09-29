@@ -265,7 +265,7 @@ const styles = theme => ({
     searchbarWrapper: {
         width: '100%',
         position: 'relative',
-        maxWidth: 800 - 8,
+        maxWidth: 840,
     },
     searchbar: {
         width: '100%',
