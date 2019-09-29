@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('sm')]: {
             height: 480,
         },
+        borderRadius: 0,
     },
     mediaWrapper: {
         minHeight: 52,
