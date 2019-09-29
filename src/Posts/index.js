@@ -15,11 +15,10 @@ import { useIntervalCheck } from '../Common/intervalCheck';
 const styles = theme => ({
     root: {
         width: '100%',
-        maxWidth: 1000,
         boxSizing: 'border-box',
         overflowY: 'auto',
         height: '100%',
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.paper,
     },
     postGrid: {
         display: 'flex',
@@ -27,6 +26,7 @@ const styles = theme => ({
         flexWrap: 'wrap',
         justifyContent: 'center',
         alignItems: 'center',
+        maxWidth: 1200,
     },
     post: {
         margin: theme.spacing(1, 0),
@@ -39,9 +39,7 @@ const styles = theme => ({
         right: theme.spacing(2),
         bottom: theme.spacing(2),
     },
-    headerContainer: {
-        backgroundColor: theme.palette.background.paper,
-    },
+    headerContainer: {},
     header: {
         maxWidth: 600,
         margin: '0 auto',
@@ -57,6 +55,8 @@ const styles = theme => ({
     },
     layout: {
         width: 'auto',
+        display: 'flex',
+        justifyContent: 'center',
     },
 });
 
