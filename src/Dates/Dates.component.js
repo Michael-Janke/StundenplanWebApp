@@ -169,8 +169,9 @@ class Dates extends Component {
     scrollToMonth = props => {
         if (props.filterDate) return;
         const selectedMonth = props.timetableDate.format('YYYY MM');
-        this.monthRefs[selectedMonth] &&
-            this.monthRefs[selectedMonth].scrollIntoView({ block: 'start', behavior: 'smooth', inline: 'start' });
+        if (!this.monthRefs[selectedMonth]) return;
+        const target = this.monthRefs[selectedMonth];
+        target.parentNode.scrollTop = target.offsetTop;
     };
 
     render() {
