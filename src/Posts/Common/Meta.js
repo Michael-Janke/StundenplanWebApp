@@ -69,10 +69,10 @@ const Meta = ({ type, dateFrom, setDateFrom, dateTo, setDateTo, title, onUpdateT
                         <div className={classes.settings}>
                             <Typography variant="h6" gutterBottom className={classes.header}>
                                 <TitleIcon />
-                                &nbsp;Title
+                                &nbsp;Titel
                             </Typography>
                             <Paper className={classNames(classes.paper, classes.list)}>
-                                <Input value={title} onChange={e => onUpdateTitle(e.target.value)} />
+                                <Input value={title} onChange={e => onUpdateTitle(e.target.value)} autoFocus />
                             </Paper>
                         </div>
                     </>
@@ -120,9 +120,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setDateFrom: (date) => dispatch({type: 'SET_FROM_DATE', payload: date}),
-    setDateTo: (date) => dispatch({ type: 'SET_TO_DATE', payload: date }),
-    onUpdateTitle: title => dispatch({type: 'SET_TITLE', payload: title}),
-})
+    setDateFrom: date => dispatch({ type: 'SET_FROM_DATE', payload: date }),
+    setDateTo: date => dispatch({ type: 'SET_TO_DATE', payload: date }),
+    onUpdateTitle: title => dispatch({ type: 'SET_TITLE', payload: title }),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Meta);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Meta);
