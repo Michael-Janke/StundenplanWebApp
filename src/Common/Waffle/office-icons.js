@@ -64,14 +64,6 @@ export default {
         }),
         link: 'https://www.wolkenberg-gymnasium.de/',
     },
-    'InfoTafel alt': {
-        color: 'black',
-        icon: Icon(require('../icons/logoicon.png'), {
-            filter: 'invert(100%)',
-            WebkitFilter: 'invert(100%)',
-        }),
-        link: 'https://www.wolkenberg-gymnasium.de/InfoTafel/',
-    },
 };
 
 function Icon(source, style) {
