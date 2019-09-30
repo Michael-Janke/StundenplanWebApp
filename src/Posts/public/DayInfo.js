@@ -7,6 +7,7 @@ import { TransitionGroup } from 'react-transition-group';
 import useInterval from 'react-useinterval';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
+import { green } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(
     theme => ({
@@ -25,6 +26,14 @@ const useStyles = makeStyles(
             position: 'absolute',
             top: 0,
             bottom: 0,
+            borderRadius: 0,
+        },
+        readAnimation: {
+            width: '100%',
+            height: 2,
+            position: 'absolute',
+            bottom: 0,
+            backgroundColor: green[500],
         },
     }),
     { name: 'DayInfo' }
@@ -35,7 +44,7 @@ function DayInfo({ dayInfo = [], getDayInfo }) {
     const [currentId, setCurrentId] = useState(0);
     const info = dayInfo[currentId] || {};
 
-    useInterval(() => setCurrentId((currentId + 1) % dayInfo.length), 20000);
+    useInterval(() => setCurrentId((currentId + 1) % dayInfo.length), 15000);
 
     // fetch dayInfo once component was mounted
     useEffect(getDayInfo, []);
@@ -57,6 +66,9 @@ function DayInfo({ dayInfo = [], getDayInfo }) {
                         </Typography>
                     </CardContent>
                 </Card>
+            </Fade>
+            <Fade timeout={{ enter: 13000, exit: 1000 }} key={info.header + '1'}>
+                <div className={classes.readAnimation} />
             </Fade>
         </TransitionGroup>
     );

@@ -64,6 +64,9 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         paddingTop: 0,
+        '&:last-child': {
+            paddingBottom: theme.spacing(2),
+        },
         paddingBottom: theme.spacing(2),
     },
 }));

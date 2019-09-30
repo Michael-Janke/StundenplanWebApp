@@ -16,10 +16,10 @@ import { useIntervalCheck } from '../../Common/intervalCheck';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: '100%',
+        width: 1920,
         boxSizing: 'border-box',
         overflow: 'hidden',
-        height: '100%',
+        height: 1080,
         backgroundColor: theme.palette.background.default,
         display: 'flex',
         flexDirection: 'column',
@@ -31,18 +31,12 @@ const useStyles = makeStyles(theme => ({
     content: {
         width: '100%',
         height: '100%',
-        padding: 12,
+        padding: 8,
         boxSizing: 'border-box',
     },
     postGridItem: {
         display: 'flex',
         flexDirection: 'column',
-        height: '100%',
-    },
-    post: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        padding: 20,
         height: '100%',
     },
     postEnter: {
@@ -58,13 +52,6 @@ const useStyles = makeStyles(theme => ({
     postExitActive: {
         transition: theme.transitions.create(['opacity']),
         opacity: 0,
-    },
-    layout: {
-        padding: 20,
-        width: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        flexGrow: 1,
     },
     main: {
         padding: theme.spacing(1),
@@ -92,6 +79,9 @@ const useStyles = makeStyles(theme => ({
     tile: {
         overflow: 'unset',
     },
+    post: {
+        height: '100%',
+    },
 }));
 
 const Posts = ({ getPosts, posts }) => {
@@ -113,19 +103,19 @@ const Posts = ({ getPosts, posts }) => {
                 </Toolbar>
             </AppBar>
             <div className={classes.content}>
-                <GridList cellHeight={480} cols={4} rows={2} spacing={12}>
+                <GridList cellHeight={482} cols={4} rows={2} spacing={8}>
                     <GridListTile rows={2} cols={1} classes={{ tile: classes.tile }}>
                         <TransportInfo></TransportInfo>
                     </GridListTile>
                     <GridListTile rows={2} cols={3} classes={{ tile: classes.tile }}>
-                        <GridList cellHeight={468} cols={3} rows={2} spacing={12} classes={{ root: classes.tile }}>
+                        <GridList cellHeight={478} cols={3} rows={2} spacing={8} classes={{ root: classes.tile }}>
                             <GridListTile rows={1} cols={1} classes={{ tile: classes.tile }}>
                                 <DayInfo></DayInfo>
                             </GridListTile>
 
                             {posts &&
                                 posts.map(post => (
-                                    <GridListTile rows={1} cols={1} classes={{ tile: classes.tile }}>
+                                    <GridListTile key={post.POST_ID} rows={1} cols={1} classes={{ tile: classes.tile }}>
                                         <CSSTransition
                                             classNames={{
                                                 enter: classes.postEnter,
@@ -136,7 +126,11 @@ const Posts = ({ getPosts, posts }) => {
                                             key={post.POST_ID}
                                             timeout={500}
                                         >
-                                            <ComponentWrapper post={post} noButtons={true}></ComponentWrapper>
+                                            <ComponentWrapper
+                                                post={post}
+                                                noButtons={true}
+                                                className={classes.post}
+                                            ></ComponentWrapper>
                                         </CSSTransition>
                                     </GridListTile>
                                 ))}
