@@ -18,10 +18,6 @@ const smallBreakpoint = 800;
 const useStyles = makeStyles(
     theme => ({
         root: {
-            flexGrow: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
             position: 'relative',
             overflowY: 'auto',
             backgroundColor: grey[100],
@@ -38,12 +34,14 @@ const useStyles = makeStyles(
 
         content: {
             zIndex: 1,
+            margin: '0 auto',
             display: 'flex',
             flexDirection: 'column',
             width: '100%',
             maxWidth: 840,
         },
         paper: {
+            zIndex: 1,
             display: 'flex',
             flexDirection: 'column',
             [theme.breakpoints.down(smallBreakpoint)]: {
@@ -102,7 +100,11 @@ function TimeTableView({ small, smallTimetable, posts }) {
                     <div className={classes.posts}>
                         {posts &&
                             posts.map(post => (
-                                <ComponentWrapper post={post} className={classes.post}></ComponentWrapper>
+                                <ComponentWrapper
+                                    key={post.POST_ID}
+                                    post={post}
+                                    className={classes.post}
+                                ></ComponentWrapper>
                             ))}
                     </div>
                 </div>
