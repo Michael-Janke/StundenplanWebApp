@@ -48,7 +48,19 @@ const useStyles = makeStyles(
     { name: 'Meta' }
 );
 
-const Meta = ({ type, dateFrom, setDateFrom, dateTo, setDateTo, title, onUpdateTitle }) => {
+const Meta = ({
+    type,
+    dateFrom,
+    setDateFrom,
+    dateTo,
+    setDateTo,
+    title,
+    onUpdateTitle,
+    viewPublic,
+    viewStudent,
+    viewTeacher,
+    handleCheckBox,
+}) => {
     const classes = useStyles();
     // you can past mostly all available props, like minDate, maxDate, autoOk and so on
     const { pickerProps: dateFromProps } = useStaticState({
@@ -82,9 +94,18 @@ const Meta = ({ type, dateFrom, setDateFrom, dateTo, setDateTo, title, onUpdateT
                     &nbsp; Anzeigebereiche
                 </Typography>
                 <Paper className={classNames(classes.paper, classes.list)}>
-                    <FormControlLabel control={<Checkbox checked={true} />} label="Infotafeln" />
-                    <FormControlLabel control={<Checkbox checked={true} />} label="Stundenplan Lehrer" />
-                    <FormControlLabel control={<Checkbox checked={true} />} label="Stundenplan Schüler" />
+                    <FormControlLabel
+                        control={<Checkbox checked={viewPublic} onChange={handleCheckBox('viewPublic')} />}
+                        label="Infotafeln"
+                    />
+                    <FormControlLabel
+                        control={<Checkbox checked={viewTeacher} onChange={handleCheckBox('viewTeacher')} />}
+                        label="Stundenplan Lehrer"
+                    />
+                    <FormControlLabel
+                        control={<Checkbox checked={viewStudent} onChange={handleCheckBox('viewStudent')} />}
+                        label="Stundenplan Schüler"
+                    />
                 </Paper>
             </div>
             <div className={classes.settings}>
@@ -117,12 +138,18 @@ const mapStateToProps = state => ({
     dateTo: state.postcreation.dateTo,
     title: state.postcreation.title,
     type: state.postcreation.type,
+    viewPublic: state.postcreation.viewPublic,
+    viewStudent: state.postcreation.viewStudent,
+    viewTeacher: state.postcreation.viewTeacher,
 });
 
 const mapDispatchToProps = dispatch => ({
     setDateFrom: date => dispatch({ type: 'SET_FROM_DATE', payload: date }),
     setDateTo: date => dispatch({ type: 'SET_TO_DATE', payload: date }),
     onUpdateTitle: title => dispatch({ type: 'SET_TITLE', payload: title }),
+    handleCheckBox: name => event => {
+        dispatch({ type: 'TOGGLE_VIEW_FIELD', payload: { key: name, value: event.target.checked } });
+    },
 });
 
 export default connect(

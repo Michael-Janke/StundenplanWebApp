@@ -27,6 +27,9 @@ const PreviewAndSave = ({
     title,
     content,
     POST_ID,
+    viewPublic,
+    viewTeacher,
+    viewStudent,
     savePost,
     endPostCreation,
     history,
@@ -46,8 +49,11 @@ const PreviewAndSave = ({
             DATE_FROM: dateFrom,
             DATE_TO: dateTo,
             APPROVED: true,
+            VIEW_PUBLIC: viewPublic,
+            VIEW_STUDENT: viewStudent,
+            VIEW_TEACHER: viewTeacher,
         });
-    }, [POST_ID, content, dateFrom, dateTo, images, savePost, title, type]);
+    }, [POST_ID, content, dateFrom, dateTo, images, savePost, title, type, viewPublic, viewStudent, viewTeacher]);
 
     const onEnd = React.useCallback(() => {
         if (saved) {
@@ -84,6 +90,9 @@ const mapStateToProps = state => ({
     saved: state.postcreation.saved,
     dateFrom: state.postcreation.dateFrom,
     dateTo: state.postcreation.dateTo,
+    viewPublic: state.postcreation.viewPublic,
+    viewStudent: state.postcreation.viewStudent,
+    viewTeacher: state.postcreation.viewTeacher,
 });
 
 const mapDispatchToProps = dispatch => ({

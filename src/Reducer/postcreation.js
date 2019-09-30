@@ -7,6 +7,9 @@ const initialState = {
     images: [],
     step: 0,
     type: null,
+    viewPublic: true,
+    viewStudent: true,
+    viewTeacher: true,
 };
 
 function postCreationReducer(state = initialState, action) {
@@ -24,6 +27,9 @@ function postCreationReducer(state = initialState, action) {
                         dateFrom: post.DATE_FROM.date,
                         title: post.TITLE,
                         images: post.IMAGES,
+                        viewPublic: post.VIEW_PUBLIC,
+                        viewStudent: post.VIEW_STUDENT,
+                        viewTeacher: post.VIEW_TEACHER,
                     };
                 }
             } else {
@@ -36,10 +42,10 @@ function postCreationReducer(state = initialState, action) {
             }
             return state;
         }
-        case "END_POST_CREATION":
+        case 'END_POST_CREATION':
             return { ...initialState, step: state.step };
-        case "ADD_POST":
-        case "EDIT_POST":
+        case 'ADD_POST':
+        case 'EDIT_POST':
             return { ...state, saved: undefined };
         case 'ADD_POST_RECEIVED':
         case 'EDIT_POST_RECEIVED':
@@ -65,6 +71,9 @@ function postCreationReducer(state = initialState, action) {
             return { ...state, images: [...state.images, action.payload] };
         case 'DELETE_IMAGE':
             return { ...state, images: state.images.filter(image => image !== action.payload) };
+        case 'TOGGLE_VIEW_FIELD': {
+            return { ...state, [action.payload.key]: action.payload.value };
+        }
         case 'SET_STEP':
             return { ...state, step: nextStep(action.payload, 0) };
         case 'NEXT':
