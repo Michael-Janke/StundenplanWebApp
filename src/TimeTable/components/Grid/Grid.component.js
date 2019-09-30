@@ -17,9 +17,9 @@ import Absence from '../../absence';
 import PeriodCell from '../periodCell';
 import Offline from './offline';
 import OfflineLesson from './OfflineLesson';
+import { grey } from '@material-ui/core/colors';
 
 class TimeTableGrid extends React.Component {
-
     periodTime(timeAsNumber) {
         const lpad2 = number => (number < 10 ? '0' : '') + number;
         return Math.floor(timeAsNumber / 100) + ':' + lpad2(timeAsNumber % 100);
@@ -51,7 +51,6 @@ class TimeTableGrid extends React.Component {
         const { currentTimetable, periods, type, small, date, setTimeTable } = this.props;
 
         if (!currentTimetable) {
-
             return (
                 <TableCell
                     key={day}
@@ -62,11 +61,14 @@ class TimeTableGrid extends React.Component {
                         paddingRight: 2,
                         overflow: 'visible',
                         fontSize: '100%',
-                    }}>
+                        color: grey[500],
+                    }}
+                >
                     <div style={{ height: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        {periodNumber > 1 && periodNumber < (10 - (day*2) % 3) && <OfflineLesson day={day} periodNumber={periodNumber} />}
+                        {periodNumber > 1 && periodNumber < 10 - ((day * 2) % 3) && (
+                            <OfflineLesson day={day} periodNumber={periodNumber} />
+                        )}
                     </div>
-
                 </TableCell>
             );
         }
@@ -78,10 +80,10 @@ class TimeTableGrid extends React.Component {
             let colSpan = currentTimetable.slice(day).filter(dayX => dayX.holiday === dayObject.holiday).length;
             let mDate = date
                 ? date
-                    .clone()
-                    .weekday(0)
-                    .add(day, 'days')
-                    .format('DD.MM')
+                      .clone()
+                      .weekday(0)
+                      .add(day, 'days')
+                      .format('DD.MM')
                 : null;
             return (
                 <TableCell key={day} rowSpan={Object.values(periods).length} style={{ padding: 0 }} colSpan={colSpan}>
@@ -117,16 +119,16 @@ class TimeTableGrid extends React.Component {
                     {period.freeRooms ? (
                         <RoomList rooms={period.freeRooms} />
                     ) : (
-                            <PeriodColumn
-                                lessons={period.lessons}
-                                date={periodDate}
-                                type={type}
-                                small={small}
-                                setTimeTable={setTimeTable}
-                            >
-                                {period.supervision && <Supervision supervision={period.supervision} />}
-                            </PeriodColumn>
-                        )}
+                        <PeriodColumn
+                            lessons={period.lessons}
+                            date={periodDate}
+                            type={type}
+                            small={small}
+                            setTimeTable={setTimeTable}
+                        >
+                            {period.supervision && <Supervision supervision={period.supervision} />}
+                        </PeriodColumn>
+                    )}
                 </TableCell>
             );
         }
@@ -137,7 +139,7 @@ class TimeTableGrid extends React.Component {
         return [
             this.renderAbsences(),
             this.renderUnmatchedAssignments(),
-            ...(Object.values(periods).map(period => (
+            ...Object.values(periods).map(period => (
                 <TableRow style={{ height: '100%' }} key={period.PERIOD_TIME_ID}>
                     <PeriodCell small={small}>
                         <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
@@ -147,7 +149,7 @@ class TimeTableGrid extends React.Component {
                     </PeriodCell>
                     {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
                 </TableRow>
-            ))),
+            )),
         ];
     }
 
@@ -210,8 +212,11 @@ class TimeTableGrid extends React.Component {
     render() {
         const { classes, small, print, offline, currentTimetable: timetable, retry } = this.props;
         return (
-            <Offline retry={retry} in={offline && !timetable}
-                className={classNames(classes.root, !small && !print && classes.rootLarge)}>
+            <Offline
+                retry={retry}
+                in={offline && !timetable}
+                className={classNames(classes.root, !small && !print && classes.rootLarge)}
+            >
                 <Table className={classes.table}>
                     <TableBody>{this.renderRows()}</TableBody>
                 </Table>
@@ -238,7 +243,6 @@ const styles = theme => ({
     },
 });
 
-
 const Times = styled.div`
     font-size: 50%;
     flex: 1;
@@ -256,7 +260,9 @@ const Periods = styled.div`
     padding-left: 3px;
     flex: 1;
 `;
-const Period = 'div';
+const Period = styled.div`
+    color: ${grey[600]};
+`;
 
 const mapDispatchToProps = dispatch => {
     return {
