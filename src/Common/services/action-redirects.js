@@ -1,4 +1,3 @@
-import moment from 'moment';
 
 const actionRedirector = store => next => action => {
     next(action);
@@ -13,21 +12,15 @@ const actionRedirector = store => next => action => {
         case 'COUNTER_RECEIVED':
         case 'CHANGE_WEEK':
         case 'SET_DATE': {
-            let { timetableDate, currentTimeTableId, currentTimeTableType } = store.getState().timetable;
-            let { id, type, date } = action.payload || {};
-            id =  id || currentTimeTableId;
+            let { currentTimeTableId, currentTimeTableType } = store.getState().timetable;
+            let { id, type } = action.payload || {};
+            id = id || currentTimeTableId;
             type = type || currentTimeTableType;
-            timetableDate = date || timetableDate;
             if (id && type) {
                 next({ type: 'GET_TIMETABLE', payload: { id, type } });
                 next({
                     type: 'GET_SUBSTITUTIONS',
-                    payload: {
-                        id,
-                        type,
-                        year: moment(timetableDate).weekYear(),
-                        week: moment(timetableDate).week(),
-                    },
+                    payload: { id, type, },
                 });
             }
             break;

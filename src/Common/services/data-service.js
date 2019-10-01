@@ -17,8 +17,8 @@ const dataService = store => next => action => {
             });
         }
         case 'GET_SUBSTITUTIONS': {
-            let { id, type, week, year } = action.payload;
-            return requestApiGenerator(next)(API_URL, `substitution/${type}/${id}/${year}-${week}`, {
+            let { id, type } = action.payload;
+            return requestApiGenerator(next)(API_URL, `substitution/${type}/${id}`, {
                 type: 'GET_SUBSTITUTIONS',
                 request: action.payload,
             });

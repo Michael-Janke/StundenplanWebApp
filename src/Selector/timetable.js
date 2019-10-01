@@ -40,7 +40,7 @@ function freeRooms(masterdata, day, periods) {
 export function translateDay(masterdata, timetable, x, substitutions, periods, type, id, date, teams, assignments) {
     let day = readTimetable(timetable, x, periods, date);
     if (substitutions) {
-        joinSubstitutions(day, substitutions.substitutions[x], type, id);
+        joinSubstitutions(day, substitutions[x], type, id);
     }
     if (type !== 'all') {
         skipDuplications(day, periods);
@@ -473,8 +473,16 @@ const makeGetCurrentTimetable = () => {
         getId,
         getWeekSelector,
         getYearSelector,
-        (ignore, substitutions, type, id, week, year) =>
-            ignore ? { substitutions: [] } : substitutions[getSubstitutionsCacheKey({ type, id, week, year })]
+        (ignore, substitutions, type, id, week, year) => {
+            if (ignore) {
+                return []
+            }
+            const sub = substitutions[getSubstitutionsCacheKey({ type, id })];
+            if (!sub) {
+                return null;
+            }
+            return sub.substitutions[`${year}-${week}`];
+        }
     );
 
     return createSelector(

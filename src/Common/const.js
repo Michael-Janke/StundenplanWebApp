@@ -241,7 +241,7 @@ export const SUBSTITUTION_MAP = {
     },
 };
 
-export const getSubstitutionsCacheKey = ({ id, type, week, year }) => `substitutions-${id}-${type}@${week}-${year}`;
+export const getSubstitutionsCacheKey = ({ id, type }) => `substitutions-${id}-${type}`;
 export const getTimetableCacheKey = ({ id, type }) => `timetable-${id}-${type}`;
 
 export const DATE_COLORS = theme => ({
