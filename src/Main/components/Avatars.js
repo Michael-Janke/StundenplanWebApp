@@ -4,24 +4,9 @@ import PersonIcon from '@material-ui/icons/Person';
 import ClassIcon from '@material-ui/icons/Group';
 import RoomIcon from '@material-ui/icons/Room';
 import SubjectIcon from '@material-ui/icons/Book';
-import moment from 'moment';
-import createStore from '../../store';
 import { makeGetEffectiveAvatar } from '../../Selector/avatars';
 import { connect } from 'react-redux';
 import { loadAvatars } from '../actions';
-const { store } = createStore();
-
-export const checkAvatars = (upns, loadAvatars) => {
-    const { avatars } = store.getState();
-    const r = upns.filter(upn => {
-        if (!upn || !avatars) return false;
-        const avatar = avatars[upn];
-        return !avatar || moment(avatar.expires).isBefore(moment());
-    });
-    for (let i = 0; i < r.length; i += 10) {
-        loadAvatars(r.slice(i, i + 10));
-    }
-};
 
 export const ObjectIcon = ({ type, upn, size, profilePicSize, outline, ...other }) => {
     if (type === 'class') {
@@ -45,10 +30,10 @@ const ProfilePictureComponent = ({
     loadAvatars,
     ...other
 }) => {
-    checkAvatars([upn], loadAvatars);
+    upn && loadAvatars([upn]);
     return avatar && avatar.img ? (
         <Avatar
-            src={'data:image/jpg;base64,' + avatar.img}
+            src={avatar.img}
             {...(size && { style: { height: profilePicSize || size, width: profilePicSize || size } })}
             {...other}
         />
@@ -60,6 +45,7 @@ const ProfilePictureComponent = ({
         <PersonIcon {...(size && { style: { height: size, width: size } })} {...other} />
     );
 };
+
 const makeMapStateToProps = () => {
     const getEffectiveAvatar = makeGetEffectiveAvatar();
     return (state, props) => ({
@@ -69,5 +55,5 @@ const makeMapStateToProps = () => {
 
 export const ProfilePicture = connect(
     makeMapStateToProps,
-    { loadAvatars: upns => loadAvatars(upns) }
+    { loadAvatars: upn => loadAvatars(upn) }
 )(ProfilePictureComponent);

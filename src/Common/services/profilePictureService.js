@@ -1,3 +1,5 @@
+import moment from 'moment';
+import debounce from 'debounce';
 import { getBatchGenerator } from './generator';
 
 const getProfilePictures = upns => {
@@ -10,11 +12,24 @@ const getProfilePictures = upns => {
     };
 };
 
+var upnLoads = [];
+const load = debounce(next => {
+    getBatchGenerator(next)(getProfilePictures(upnLoads), 'BATCH_AVATARS');
+    upnLoads = [];
+}, 200);
+
 const profilePictureService = store => next => action => {
     next(action);
     switch (action.type) {
         case 'GET_BATCH_AVATARS':
-            return getBatchGenerator(next)(getProfilePictures(action.payload), 'BATCH_AVATARS');
+            const upns = action.payload.filter(upn => {
+                const avatar = store.getState().avatars[upn];
+                return !avatar || moment(avatar.expires).isBefore(moment());
+            });
+            if (upns.length === 0) return;
+            upnLoads = [...new Set([...upnLoads, ...upns])];
+            load(next);
+            break;
         default:
             break;
     }

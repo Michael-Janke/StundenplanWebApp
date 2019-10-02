@@ -76,7 +76,7 @@ export const getBatchGenerator = next => (payload, name) => {
                         (acc, response) => ({
                             ...acc,
                             [response.id]: {
-                                img: response.body.error ? null : response.body,
+                                img: response.body.error ? null : 'data:image/jpg;base64,' + response.body,
                                 expires: +moment().add('7', 'days'),
                             },
                         }),

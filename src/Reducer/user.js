@@ -66,11 +66,6 @@ export default function userReducer(state = initialState, action = {}) {
                 ...state,
                 profilePicture: URL.createObjectURL(action.payload.blob),
             };
-        case 'PROFILE_PICTURE_SMALL_RECEIVED':
-            return {
-                ...state,
-                profilePictureSmall: URL.createObjectURL(action.payload.blob),
-            };
         case 'SET_NOTIFICATION_RECEIVED':
             return {
                 ...state,
