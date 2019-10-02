@@ -21,8 +21,8 @@ function freeRooms(masterdata, day, periods) {
         let rooms = Object.values(masterdata.Room);
         const absencesFiltered = day.absences
             ? day.absences.filter(
-                absence => absence.PERIOD_FROM - 1 <= y && absence.PERIOD_TO - 1 >= y && absence.ROOM_ID
-            )
+                  absence => absence.PERIOD_FROM - 1 <= y && absence.PERIOD_TO - 1 >= y && absence.ROOM_ID
+              )
             : [];
 
         rooms = rooms.map(room => {
@@ -88,7 +88,6 @@ function joinSubstitutions(day, subOnDay, type, id) {
             }
             const index = lessons.findIndex(lesson => lesson.TIMETABLE_ID === substitution.TIMETABLE_ID);
             if (index !== -1) {
-
                 lessons[index] = lesson ? { ...lessons[index], ...lesson } : null;
                 period.lessons = lessons.filter(c => c);
             } else if (lesson) {
@@ -152,9 +151,11 @@ function compareLesson(p1, p2) {
             return false;
     }
 
-    if (!equalArrays(p1.TEACHER_IDS_SUBSTITUTING, p2.TEACHER_IDS_SUBSTITUTING) ||
+    if (
+        !equalArrays(p1.TEACHER_IDS_SUBSTITUTING, p2.TEACHER_IDS_SUBSTITUTING) ||
         p1.SUBJECT_ID_SUBSTITUTING !== p2.SUBJECT_ID_SUBSTITUTING ||
-        !equalArrays(p1.CLASS_IDS_SUBSTITUTING, p2.CLASS_IDS_SUBSTITUTING)) {
+        !equalArrays(p1.CLASS_IDS_SUBSTITUTING, p2.CLASS_IDS_SUBSTITUTING)
+    ) {
         return false;
     }
 
@@ -201,22 +202,22 @@ function skipTeacherDuplications(lessons) {
                 if (lesson.TEACHER_IDS)
                     last.TEACHER_IDS
                         ? lesson.TEACHER_IDS.forEach(item =>
-                            last.TEACHER_IDS.includes(item) ? null : last.TEACHER_IDS.push(item)
-                        )
+                              last.TEACHER_IDS.includes(item) ? null : last.TEACHER_IDS.push(item)
+                          )
                         : (last.TEACHER_IDS = lesson.TEACHER_IDS);
                 if (lesson.TEACHER_IDS_OLD)
                     last.TEACHER_IDS_OLD
                         ? lesson.TEACHER_IDS_OLD.forEach(item =>
-                            last.TEACHER_IDS_OLD.includes(item) ? null : last.TEACHER_IDS_OLD.push(item)
-                        )
+                              last.TEACHER_IDS_OLD.includes(item) ? null : last.TEACHER_IDS_OLD.push(item)
+                          )
                         : (last.TEACHER_IDS_OLD = lesson.TEACHER_IDS_OLD);
                 if (lesson.TEACHER_IDS_SUBSTITUTING)
                     last.TEACHER_IDS_SUBSTITUTING
                         ? lesson.TEACHER_IDS_SUBSTITUTING.forEach(item =>
-                            last.TEACHER_IDS_SUBSTITUTING.includes(item)
-                                ? null
-                                : last.TEACHER_IDS_SUBSTITUTING.push(item)
-                        )
+                              last.TEACHER_IDS_SUBSTITUTING.includes(item)
+                                  ? null
+                                  : last.TEACHER_IDS_SUBSTITUTING.push(item)
+                          )
                         : (last.TEACHER_IDS_SUBSTITUTING = lesson.TEACHER_IDS_SUBSTITUTING);
 
                 combineSubstitutions(last, lesson);
@@ -329,7 +330,6 @@ export function equalPeriods(p1, p2) {
 function translate(masterdata, period, teams, assignmentsMatching) {
     if (!period) return null;
     period.lessons = period.lessons.map(lesson => translateLesson(masterdata, lesson, teams, assignmentsMatching));
-
 }
 
 function translateAbsence(masterdata, absence) {
@@ -344,7 +344,7 @@ function translateAbsence(masterdata, absence) {
         TEXT: absence.TEXT,
         TEXT_TEACHER: absence.TEXT_TEACHER,
         reference: absence,
-    }
+    };
 }
 
 export function translateLesson(masterdata, lesson, teams = [], assignmentsMatching = { toMatch: [] }) {
@@ -446,7 +446,8 @@ const makeGetCurrentTimetable = () => {
     const getAssignmentsSelector = createSelector(
         getDate,
         getAssignments,
-        (date, assignments) => assignments.filter(assignment => moment(date).isSame(moment(assignment.dueDateTime), 'week'))
+        (date, assignments) =>
+            assignments.filter(assignment => moment(date).isSame(moment(assignment.dueDateTime), 'week'))
     );
 
     const getType = (state, props) => props.type || state.timetable.currentTimeTableType;
@@ -475,13 +476,13 @@ const makeGetCurrentTimetable = () => {
         getYearSelector,
         (ignore, substitutions, type, id, week, year) => {
             if (ignore) {
-                return []
+                return [];
             }
             const sub = substitutions[getSubstitutionsCacheKey({ type, id })];
             if (!sub) {
                 return null;
             }
-            return sub.substitutions[`${year}-${week}`];
+            return sub.substitutions[`${year}-${week.toString().padStart(2, '0')}`];
         }
     );
 
