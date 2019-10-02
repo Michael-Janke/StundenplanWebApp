@@ -5,15 +5,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import Zoom from '@material-ui/core/Zoom';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
-import StarIcon from '@material-ui/icons/Star';
-import FilterIcon from '@material-ui/icons/FilterList';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import grey from '@material-ui/core/colors/grey';
 import indigo from '@material-ui/core/colors/indigo';
@@ -21,7 +15,8 @@ import SearchResult from './SearchResult';
 
 import { classNames } from '../../Common/const';
 import { connect } from 'react-redux';
-import { setTimeTable, addFavorite, removeFavorite, loadMe } from '../actions';
+import { setTimeTable, loadMe } from '../actions';
+import FilterBar from './FilterBar';
 
 class Search extends React.PureComponent {
     state = { open: false, nonEmpty: false, value: '', select: 0, filter: '' };
@@ -93,46 +88,8 @@ class Search extends React.PureComponent {
         });
     }
 
-    toggleFavorite = object => {
-        object.favorite
-            ? this.props.removeFavorite(object.upn || object.text)
-            : this.props.addFavorite(object.upn || object.text);
-    };
-
     setCurrentItem = object => {
         this.setState({ currentItem: object });
-    };
-
-    renderFilterBar = () => {
-        const { classes, small } = this.props;
-        const { filter } = this.state;
-        const filterOptions = ['Lehrer', 'Schüler', 'Raum', 'Klasse'];
-        return (
-            <ListItem key={'Filter'} className={classes.filter}>
-                {!small && (
-                    <ListItemIcon>
-                        <FilterIcon />
-                    </ListItemIcon>
-                )}
-                <ListItemText className={classes.buttonGroup}>
-                    <ToggleButtonGroup
-                        exclusive
-                        size={small ? 'small' : 'medium'}
-                        value={filter || ''}
-                        onChange={(e, value) => this.setFilter(value)}
-                    >
-                        <ToggleButton key={''} value={''}>
-                            <StarIcon></StarIcon>
-                        </ToggleButton>
-                        {filterOptions.map(type => (
-                            <ToggleButton key={type} value={type}>
-                                {type}
-                            </ToggleButton>
-                        ))}
-                    </ToggleButtonGroup>
-                </ListItemText>
-            </ListItem>
-        );
     };
 
     render() {
@@ -199,8 +156,14 @@ class Search extends React.PureComponent {
                                 selectedFilter={this.state.filter}
                                 className={classNames(classes.dropDown, classes.list, !open && classes.dropDownClosed)}
                                 onClick={this.handleClick}
-                                toggleFavorite={this.props.tv ? null : this.toggleFavorite}
-                                filterBar={this.renderFilterBar()}
+                                tv={this.props.tv}
+                                filterBar={
+                                    <FilterBar
+                                        onChange={filter => this.setFilter(filter)}
+                                        small={this.props.small}
+                                        filter={this.state.filter}
+                                    />
+                                }
                                 selected={small ? -1 : this.state.select}
                                 setCurrentItem={this.setCurrentItem}
                             />
@@ -318,12 +281,7 @@ const styles = theme => ({
         overflowY: 'auto',
         paddingTop: 0,
     },
-    filter: {
-        top: 0,
-        position: 'sticky',
-        backgroundColor: theme.palette.background.paper,
-        zIndex: 1,
-    },
+
     keyboard: {
         backgroundColor: theme.palette.background.paper,
         height: '100%',
@@ -383,8 +341,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setTimetable: object => dispatch(setTimeTable(object.type, object.id)),
-    addFavorite: key => dispatch(addFavorite(key)),
-    removeFavorite: key => dispatch(removeFavorite(key)),
     loadMe: () => dispatch(loadMe()),
 });
 

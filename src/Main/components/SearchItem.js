@@ -1,48 +1,39 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, IconButton } from '@material-ui/core';
-import { ObjectIcon } from './Avatars';
 import StarIcon from '@material-ui/icons/Star';
 import MailIcon from '@material-ui/icons/Mail';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { sendMail } from '../../Common/utils';
+import { addFavorite, removeFavorite } from '../actions';
+import { ObjectIcon } from './Avatars';
 
-class SearchItem extends React.PureComponent {
-    handleClick = () => {
-        this.props.onClick(this.props);
-    };
+const SearchItem = ({ onClick, selected, style, tv, object }) => {
+    const { upn, type, text, secondary, favorite } = object;
+    const dispatch = useDispatch();
 
-    handleToggleFavorite = () => {
-        this.props.toggleFavorite(this.props);
-    };
+    const toggleFavorite = () =>
+        dispatch(object.favorite ? removeFavorite(object.upn || object.text) : addFavorite(object.upn || object.text));
 
-    handleMail = () => {
-        sendMail(this.props.upn);
-    };
-
-    render() {
-        const { type, upn, text, secondary, favorite, selected } = this.props;
-        return (
-            <ListItem dense button selected={selected} onClick={this.handleClick}>
+    return (
+        <div style={style}>
+            <ListItem dense button selected={selected} onClick={() => onClick(object)}>
                 <ListItemIcon>
                     <ObjectIcon type={type} upn={upn} outline={true} size={40} />
                 </ListItemIcon>
                 <ListItemText primary={text} secondary={secondary} />
-                {this.props.toggleFavorite && (
+                {!tv && secondary && (
                     <ListItemSecondaryAction>
-                        {secondary && upn && (
-                            <IconButton onClick={this.handleMail}>
+                        {upn && (
+                            <IconButton onClick={() => sendMail(upn)}>
                                 <MailIcon></MailIcon>
                             </IconButton>
                         )}
-                        {secondary && (
-                            <IconButton onClick={this.handleToggleFavorite}>
-                                {favorite ? <StarIcon /> : <StarBorderIcon />}
-                            </IconButton>
-                        )}
+                        <IconButton onClick={toggleFavorite}>{favorite ? <StarIcon /> : <StarBorderIcon />}</IconButton>
                     </ListItemSecondaryAction>
                 )}
             </ListItem>
-        );
-    }
-}
+        </div>
+    );
+};
 export default SearchItem;

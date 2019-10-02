@@ -14,8 +14,10 @@ const getProfilePictures = upns => {
 
 var upnLoads = [];
 const load = debounce(next => {
-    getBatchGenerator(next)(getProfilePictures(upnLoads), 'BATCH_AVATARS');
-    upnLoads = [];
+    while (upnLoads.length) {
+        const upns = upnLoads.splice(0, 20);
+        getBatchGenerator(next)(getProfilePictures(upns), 'BATCH_AVATARS');
+    }
 }, 200);
 
 const profilePictureService = store => next => action => {
