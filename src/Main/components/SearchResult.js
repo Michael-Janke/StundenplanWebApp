@@ -1,12 +1,10 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { loadAvatars } from '../actions';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import List from '@material-ui/core/List';
 import classNames from 'classnames';
-import makeGetSearchResult from '../../Selector/search';
-import SearchItem from './SearchItem';
-import ReactProgressiveList from 'react-progressive-list';
 import makeStyles from '@material-ui/styles/makeStyles';
+import FilterBar from './FilterBar';
+import SearchList from './SearchResultList';
 
 const useStyles = makeStyles(theme => ({
     dropDown: {
@@ -26,65 +24,24 @@ const useStyles = makeStyles(theme => ({
     list: {
         backgroundColor: theme.palette.background.paper,
         paddingTop: 0,
+        paddingBottom: 0,
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
-    },
-    overflow: {
-        overflowY: 'auto',
-        flex: 1,
-        marginBottom: -1, //fix bug
     },
 }));
 
 const SearchResult = props => {
     const classes = useStyles();
-
-    const { selected, open, filterBar, results, onClick } = props;
+    const [filter, setFilter] = useState(filter);
+    const small = useSelector(state => state.browser.lessThan.medium);
+    const { open, onClick, value } = props;
     return (
         <List className={classNames(classes.dropDown, classes.list, !open && classes.dropDownClosed)}>
-            {results ? (
-                <React.Fragment>
-                    {filterBar}
-                    <div className={classes.overflow}>
-                        <ReactProgressiveList
-                            rowCount={results.length}
-                            style={{ overflowY: 'auto' }}
-                            initialAmount={20}
-                            renderItem={index => {
-                                const object = results[index];
-                                if (!object) return null;
-                                return (
-                                    <SearchItem
-                                        key={object.upn}
-                                        object={object}
-                                        onClick={onClick}
-                                        selected={selected === index}
-                                    />
-                                );
-                            }}
-                        />
-                    </div>
-                </React.Fragment>
-            ) : null}
+            {open && <FilterBar onChange={filter => setFilter(filter)} small={small} filter={filter} />}
+            {open && <SearchList onClick={onClick} filter={filter} value={value} />}
         </List>
     );
 };
 
-const makeMapStateToProps = () => {
-    const getSearchResult = makeGetSearchResult();
-    return (state, props) => ({
-        results: getSearchResult(state, props),
-    });
-};
-
-const mapDispatchToProps = dispatch => ({
-    loadAvatars: upns => {
-        dispatch(loadAvatars(upns));
-    },
-});
-
-export default connect(
-    makeMapStateToProps,
-    mapDispatchToProps
-)(SearchResult);
+export default SearchResult;

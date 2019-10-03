@@ -4,9 +4,11 @@ import PersonIcon from '@material-ui/icons/Person';
 import ClassIcon from '@material-ui/icons/Group';
 import RoomIcon from '@material-ui/icons/Room';
 import SubjectIcon from '@material-ui/icons/Book';
+import debounce from 'debounce';
 import { makeGetEffectiveAvatar } from '../../Selector/avatars';
 import { connect } from 'react-redux';
 import { loadAvatars } from '../actions';
+import { dispatch } from '../../store';
 
 export const ObjectIcon = ({ type, upn, size, profilePicSize, outline, ...other }) => {
     if (type === 'class') {
@@ -21,6 +23,16 @@ export const ObjectIcon = ({ type, upn, size, profilePicSize, outline, ...other 
     return <ProfilePicture {...{ upn, size, profilePicSize, outline, ...other }} />;
 };
 
+var loadUpns = [];
+const dispatchLoad = debounce(() => {
+    dispatch(loadAvatars(loadUpns));
+    loadUpns = [];
+}, 200);
+const load = upn => {
+    loadUpns.push(upn);
+    dispatchLoad();
+};
+
 const ProfilePictureComponent = ({
     upn,
     avatar,
@@ -30,7 +42,7 @@ const ProfilePictureComponent = ({
     loadAvatars,
     ...other
 }) => {
-    upn && loadAvatars([upn]);
+    upn && load(upn);
     return avatar && avatar.img ? (
         <Avatar
             src={avatar.img}

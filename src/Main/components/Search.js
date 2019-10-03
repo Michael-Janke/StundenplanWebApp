@@ -101,13 +101,6 @@ class Search extends React.PureComponent {
                                 selectedFilter={this.state.filter}
                                 onClick={this.handleClick}
                                 tv={this.props.tv}
-                                filterBar={
-                                    <FilterBar
-                                        onChange={filter => this.setFilter(filter)}
-                                        small={this.props.small}
-                                        filter={this.state.filter}
-                                    />
-                                }
                                 selected={small ? -1 : this.state.select}
                                 setCurrentItem={this.setCurrentItem}
                             />

@@ -5,7 +5,7 @@ import computeUser from './user';
 const getMasterdata = state => state.timetable.masterdata;
 const getFavorites = state => state.user.favorites;
 const getCurrentValue = (state, props) => props.value;
-const getSelectedFilter = (state, props) => props.selectedFilter;
+const getSelectedFilter = (state, props) => props.filter;
 
 const sortName = (o1, o2) => (o1.LASTNAME || o1.NAME).localeCompare(o2.LASTNAME || o2.NAME);
 
@@ -97,11 +97,10 @@ const getData = createSelector(
 );
 
 const getSearchResult = (data, value, selectedFilter) => {
-    let filtered = data
+    return data
         .filter(obj => selectedFilter || value !== '' || obj.favorite)
         .filter(obj => !selectedFilter || obj.filterType === selectedFilter)
         .filter(obj => value === '' || searchFilter(value, obj.searchString));
-    return filtered;
 };
 
 const makeGetSearchResult = () => {
