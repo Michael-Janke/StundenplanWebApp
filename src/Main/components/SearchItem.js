@@ -8,7 +8,7 @@ import { sendMail } from '../../Common/utils';
 import { addFavorite, removeFavorite } from '../actions';
 import { ObjectIcon } from './Avatars';
 
-const SearchItem = ({ onClick, selected, style, tv, object }) => {
+const SearchItem = ({ onClick, selected, tv, object }) => {
     const { upn, type, text, secondary, favorite } = object;
     const dispatch = useDispatch();
 
@@ -16,24 +16,22 @@ const SearchItem = ({ onClick, selected, style, tv, object }) => {
         dispatch(object.favorite ? removeFavorite(object.upn || object.text) : addFavorite(object.upn || object.text));
 
     return (
-        <div style={style}>
-            <ListItem dense button selected={selected} onClick={() => onClick(object)}>
-                <ListItemIcon>
-                    <ObjectIcon type={type} upn={upn} outline={true} size={40} />
-                </ListItemIcon>
-                <ListItemText primary={text} secondary={secondary} />
-                {!tv && secondary && (
-                    <ListItemSecondaryAction>
-                        {upn && (
-                            <IconButton onClick={() => sendMail(upn)}>
-                                <MailIcon></MailIcon>
-                            </IconButton>
-                        )}
-                        <IconButton onClick={toggleFavorite}>{favorite ? <StarIcon /> : <StarBorderIcon />}</IconButton>
-                    </ListItemSecondaryAction>
-                )}
-            </ListItem>
-        </div>
+        <ListItem dense button selected={selected} onClick={() => onClick(object)}>
+            <ListItemIcon>
+                <ObjectIcon type={type} upn={upn} outline={true} size={40} />
+            </ListItemIcon>
+            <ListItemText primary={text} secondary={secondary} />
+            {!tv && secondary && (
+                <ListItemSecondaryAction>
+                    {upn && (
+                        <IconButton onClick={() => sendMail(upn)}>
+                            <MailIcon></MailIcon>
+                        </IconButton>
+                    )}
+                    <IconButton onClick={toggleFavorite}>{favorite ? <StarIcon /> : <StarBorderIcon />}</IconButton>
+                </ListItemSecondaryAction>
+            )}
+        </ListItem>
     );
 };
 export default SearchItem;

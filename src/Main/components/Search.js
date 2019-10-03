@@ -1,22 +1,18 @@
 import React from 'react';
 
 import withStyles from '@material-ui/core/styles/withStyles';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
 import Zoom from '@material-ui/core/Zoom';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
-import SearchIcon from '@material-ui/icons/Search';
-import ClearIcon from '@material-ui/icons/Clear';
-
 import grey from '@material-ui/core/colors/grey';
-import indigo from '@material-ui/core/colors/indigo';
+
 import SearchResult from './SearchResult';
 
 import { classNames } from '../../Common/const';
 import { connect } from 'react-redux';
 import { setTimeTable, loadMe } from '../actions';
 import FilterBar from './FilterBar';
+import SearchBar from './SearchBar';
 
 class Search extends React.PureComponent {
     state = { open: false, nonEmpty: false, value: '', select: 0, filter: '' };
@@ -41,17 +37,6 @@ class Search extends React.PureComponent {
         this.setState({ nonEmpty: false, value: '', select: 0 });
     };
 
-    handleInput = e => {
-        let selectedFilter = this.state.selectedFilter;
-        let value = e.target.value;
-        let nonEmpty = value.length > 0;
-        if (selectedFilter && !this.state.nonEmpty && nonEmpty) {
-            // disable filter when typing in
-            selectedFilter = '';
-        }
-        this.setState({ nonEmpty, value, selectedFilter, open: true, select: 0 });
-    };
-
     handleClickAway = () => {
         if (this.state.open && !this.props.open) {
             this.setState({ open: false, nonEmpty: false, value: '' });
@@ -63,21 +48,6 @@ class Search extends React.PureComponent {
         this.props.setTimetable(obj);
     };
 
-    handleKeyUp = e => {
-        if (e.charCode === 13 || e.key === 'Enter') {
-            this.state.currentItem && this.handleClick(this.state.currentItem);
-            this.setState({ open: false, value: '', nonEmpty: false, currentItem: null });
-        }
-        if (e.keyCode === 38 || e.key === 'ArrowUp') {
-            this.setState({ select: Math.max(this.state.select - 1, -1) });
-        }
-        if (e.keyCode === 40 || e.key === 'ArrowDown') {
-            this.setState({ select: this.state.select + 1 });
-        }
-        if (e.keyCode === 27 || e.key === 'ESC') {
-            this.setState({ open: false, value: '', nonEmpty: false });
-        }
-    };
     handleKeyboardInput = transform => {
         this.handleInput({ target: { value: transform(this.state.value) } });
     };
@@ -94,45 +64,20 @@ class Search extends React.PureComponent {
 
     render() {
         const { classes, shrinkChildren, alwaysOpen, Keyboard, small, style } = this.props;
-        const { open, nonEmpty, value } = this.state;
+        const { open, value } = this.state;
         const isOpen = alwaysOpen || open || this.props.open;
         return (
             <div className={classes.root} style={style}>
                 <ClickAwayListener mouseEvent="onClick" onClickAway={this.handleClickAway}>
                     <div className={classes.searchbarWrapper}>
-                        <div className={classNames(classes.searchbar, !isOpen && classes.searchbarClosed)}>
-                            <div className={classNames(classes.inputField, isOpen && classes.inputFieldOpen)}>
-                                <Input
-                                    inputRef={this.handleInputRef}
-                                    placeholder="Suchen"
-                                    fullWidth
-                                    disableUnderline
-                                    onFocus={this.handleFocus}
-                                    onClick={this.handleFocus}
-                                    onChange={this.handleInput}
-                                    value={value}
-                                    inputProps={{ className: classes.nativeInput }}
-                                    onKeyUp={this.handleKeyUp}
-                                />
-                            </div>
-                            <IconButton
-                                onClick={this.handleOpen}
-                                className={classNames(
-                                    classes.icon,
-                                    classes.searchIcon,
-                                    nonEmpty && classes.iconHidden,
-                                    !isOpen && classes.searchIconActive
-                                )}
-                            >
-                                <SearchIcon />
-                            </IconButton>
-                            <IconButton
-                                onClick={this.handleClear}
-                                className={classNames(classes.icon, classes.closeIcon, !nonEmpty && classes.iconHidden)}
-                            >
-                                <ClearIcon />
-                            </IconButton>
-                        </div>
+                        <SearchBar
+                            handleInputRef={this.handleInputRef}
+                            value={value}
+                            open={isOpen}
+                            onOpen={() => this.setState({ open: true })}
+                            onClose={() => this.setState({ open: false, value: '' })}
+                            onChange={value => this.setState({ value })}
+                        ></SearchBar>
                         <div
                             className={classNames(
                                 classes.dropDownContainer,
@@ -154,7 +99,6 @@ class Search extends React.PureComponent {
                                 open={this.state.open}
                                 value={this.state.value}
                                 selectedFilter={this.state.filter}
-                                className={classNames(classes.dropDown, classes.list, !open && classes.dropDownClosed)}
                                 onClick={this.handleClick}
                                 tv={this.props.tv}
                                 filterBar={
@@ -205,20 +149,6 @@ const styles = theme => ({
     listItemSelected: {
         backgroundColor: 'rgba(0, 0, 0, 0.08)',
     },
-
-    iconHidden: {
-        transform: 'scale(0,0)',
-    },
-    searchIcon: {
-        transitionProperty: 'transform, color',
-        WebkitTransitionProperty: 'transform, color',
-    },
-    searchIconActive: {
-        color: 'white',
-    },
-    closeIcon: {
-        marginLeft: -48,
-    },
     root: {
         flex: 1,
         display: 'flex',
@@ -230,18 +160,7 @@ const styles = theme => ({
         position: 'relative',
         maxWidth: 840,
     },
-    searchbar: {
-        width: '100%',
-        transform: 'translate3d(0,0,0)',
-        transition: theme.transitions.create(['background', 'box-shadow']),
-        WebkitTransition: theme.transitions.create(['background', 'box-shadow']),
-        willChange: 'background, box-shadow',
-        boxShadow: theme.shadows[4],
-        borderRadius: 2,
-        background: `rgb(197, 202, 233) radial-gradient(circle, transparent 1%, ${indigo[600]} 1%) center/15000%;`,
-        display: 'flex',
-        justifyContent: 'flex-end',
-    },
+
     dropDownContainer: {
         position: 'absolute',
         width: '100%',
@@ -262,56 +181,12 @@ const styles = theme => ({
         opacity: 0,
         pointerEvents: 'none',
     },
-    dropDown: {
-        marginTop: theme.spacing(1),
-        boxShadow: theme.shadows[4],
-        borderRadius: 2,
-        transition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
-        WebkitTransition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
-        willChange: 'opacity, transform',
-        transform: 'translate(0,0)',
-        maxHeight: 'inherit',
-    },
-    dropDownClosed: {
-        boxShadow: 'none',
-        transform: 'translate(0,-8px)',
-    },
-    list: {
-        backgroundColor: theme.palette.background.paper,
-        overflowY: 'auto',
-        paddingTop: 0,
-    },
 
     keyboard: {
         backgroundColor: theme.palette.background.paper,
         height: '100%',
     },
-    searchbarClosed: {
-        backgroundSize: '100%',
-        backgroundColor: indigo[600],
-        boxShadow: 'none',
-    },
-    nativeInput: {
-        width: '100%',
-        color: 'rgba(0, 0, 0, 0.87)',
-        // remove clear icon on edge
-        '&::-ms-clear': {
-            display: 'none',
-        },
-    },
-    inputField: {
-        width: '0%',
-        opacity: 0,
-        transition: theme.transitions.create(['width', 'opacity']),
-        WebkitTransition: theme.transitions.create(['width', 'opacity']),
-        willChange: 'width, opacity',
-        height: '100%',
-        padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-    },
-    inputFieldOpen: {
-        width: '100%',
-        opacity: 1,
-    },
+
     children: {
         transform: 'translate3d(0,0,0)',
         display: 'flex',
