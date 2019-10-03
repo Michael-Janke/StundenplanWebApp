@@ -7,6 +7,7 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import useKeyPress from '../../Common/hooks/useKeyDown';
 
 const useStyles = makeStyles(theme => ({
     filter: {
@@ -20,6 +21,16 @@ const useStyles = makeStyles(theme => ({
 const FilterBar = ({ small, filter, onChange }) => {
     const classes = useStyles();
     const filterOptions = ['Lehrer', 'Schüler', 'Raum', 'Klasse'];
+    useKeyPress(e => {
+        if (e.keyCode === 37 || e.key === 'ArrowLeft') {
+            const i = Math.max(filterOptions.indexOf(filter) - 1, -1);
+            onChange(filterOptions[i] || '');
+        }
+        if (e.keyCode === 39 || e.key === 'ArrowRight') {
+            const i = Math.min(filterOptions.indexOf(filter) + 1, filterOptions.length - 1);
+            onChange(filterOptions[i] || '');
+        }
+    });
     return (
         <ListItem className={classes.filter}>
             {!small && (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import IconButton from '@material-ui/core/IconButton';
@@ -69,22 +69,18 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const SearchBar = ({ open, onOpen, value, onChange, onSelectChange, onClose, inputRef }) => {
+const SearchBar = ({ open, onOpen, value, onChange, onClose }) => {
     const classes = useStyles();
+    const inputRef = useRef(null);
     const handleKeyUp = e => {
-        if (e.charCode === 13 || e.key === 'Enter') {
-            onClose(true);
-        }
-        if (e.keyCode === 38 || e.key === 'ArrowUp') {
-            onSelectChange(1);
-        }
-        if (e.keyCode === 40 || e.key === 'ArrowDown') {
-            onSelectChange(-1);
-        }
         if (e.keyCode === 27 || e.key === 'ESC') {
             onClose(false);
         }
+        if (e.keyCode === 40 || e.key === 'ArrowDown') {
+            onOpen();
+        }
     };
+
     return (
         <div className={classNames(classes.searchbar, { [classes.searchbarClosed]: !open })}>
             <div className={classNames(classes.inputField, { [classes.inputFieldOpen]: open > 0 })}>

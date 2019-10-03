@@ -11,11 +11,10 @@ import SearchResult from './SearchResult';
 import { classNames } from '../../Common/const';
 import { connect } from 'react-redux';
 import { setTimeTable, loadMe } from '../actions';
-import FilterBar from './FilterBar';
 import SearchBar from './SearchBar';
 
 class Search extends React.PureComponent {
-    state = { open: false, nonEmpty: false, value: '', select: 0, filter: '' };
+    state = { open: false, value: '', select: 0, filter: '' };
 
     handleOpen = () => {
         if (!this.state.open) {
@@ -25,41 +24,19 @@ class Search extends React.PureComponent {
         this.setState({ open: !this.state.open, value: '' });
     };
 
-    handleFocus = () => {
-        this.setState({ open: true });
-    };
-
-    handleInputRef = ref => {
-        this.input = ref;
-    };
-
-    handleClear = () => {
-        this.setState({ nonEmpty: false, value: '', select: 0 });
-    };
-
     handleClickAway = () => {
         if (this.state.open && !this.props.open) {
-            this.setState({ open: false, nonEmpty: false, value: '' });
+            this.setState({ open: false, value: '' });
         }
     };
 
     handleClick = obj => {
-        this.setState({ open: false, nonEmpty: false, value: '' });
+        this.setState({ open: false, value: '' });
         this.props.setTimetable(obj);
     };
 
     handleKeyboardInput = transform => {
-        this.handleInput({ target: { value: transform(this.state.value) } });
-    };
-
-    setFilter(filter) {
-        this.setState({
-            filter,
-        });
-    }
-
-    setCurrentItem = object => {
-        this.setState({ currentItem: object });
+        this.setState({ value: transform(this.state.value) });
     };
 
     render() {
@@ -71,13 +48,12 @@ class Search extends React.PureComponent {
                 <ClickAwayListener mouseEvent="onClick" onClickAway={this.handleClickAway}>
                     <div className={classes.searchbarWrapper}>
                         <SearchBar
-                            handleInputRef={this.handleInputRef}
                             value={value}
                             open={isOpen}
                             onOpen={() => this.setState({ open: true })}
                             onClose={() => this.setState({ open: false, value: '' })}
-                            onChange={value => this.setState({ value })}
-                        ></SearchBar>
+                            onChange={value => this.setState({ value, open: value !== '' })}
+                        />
                         <div
                             className={classNames(
                                 classes.dropDownContainer,
@@ -98,11 +74,8 @@ class Search extends React.PureComponent {
                             <SearchResult
                                 open={this.state.open}
                                 value={this.state.value}
-                                selectedFilter={this.state.filter}
                                 onClick={this.handleClick}
                                 tv={this.props.tv}
-                                selected={small ? -1 : this.state.select}
-                                setCurrentItem={this.setCurrentItem}
                             />
                         </div>
                     </div>

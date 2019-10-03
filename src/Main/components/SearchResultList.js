@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { connect, useSelector, useDispatch } from 'react-redux';
-import { loadAvatars } from '../actions';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import makeGetSearchResult from '../../Selector/search';
 import SearchItem from './SearchItem';
 import VList from 'react-virtualized/dist/commonjs/List';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import makeStyles from '@material-ui/styles/makeStyles';
+import useKeyPress from '../../Common/hooks/useKeyDown';
 
 const useStyles = makeStyles(theme => ({
     overflow: {
@@ -14,10 +14,25 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const SearchResult = props => {
+const SearchResult = ({ results, onClick }) => {
     const classes = useStyles();
+    const [selected, setSelected] = useState(0);
+    useKeyPress(e => {
+        if (e.keyCode === 38 || e.key === 'ArrowUp') {
+            setSelected(Math.max(0, selected - 1));
+        }
+        if (e.keyCode === 40 || e.key === 'ArrowDown') {
+            setSelected(Math.min(results.length - 1, selected + 1));
+        }
+        if (e.charCode === 13 || e.key === 'Enter') {
+            onClick(results[selected]);
+        }
+    });
 
-    const { results, onClick, selected } = props;
+    useEffect(() => {
+        setSelected(0);
+    }, [results]);
+
     return (
         <div className={classes.overflow}>
             <AutoSizer disableHeight>
