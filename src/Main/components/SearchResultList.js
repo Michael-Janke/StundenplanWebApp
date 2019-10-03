@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import makeGetSearchResult from '../../Selector/search';
 import SearchItem from './SearchItem';
 import VList from 'react-virtualized/dist/commonjs/List';
@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
 const SearchResult = ({ results, onClick }) => {
     const classes = useStyles();
     const [selected, setSelected] = useState(0);
+    const small = useSelector(state => state.browser.lessThan.medium);
     useKeyPress(e => {
         if (e.keyCode === 38 || e.key === 'ArrowUp') {
             setSelected(Math.max(0, selected - 1));
@@ -48,14 +49,14 @@ const SearchResult = ({ results, onClick }) => {
                                     key={key}
                                     object={object}
                                     onClick={onClick}
-                                    selected={selected === index}
+                                    selected={!small && selected === index}
                                     style={style}
                                 />
                             );
                         }}
                         scrollToIndex={0}
                         width={width}
-                        height={Math.min(results.length * 61, window.innerHeight - 200)}
+                        height={Math.min(results.length * 61, window.innerHeight - 180)}
                     />
                 )}
             </AutoSizer>

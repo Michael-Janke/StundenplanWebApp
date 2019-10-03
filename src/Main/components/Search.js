@@ -14,11 +14,10 @@ import { setTimeTable, loadMe } from '../actions';
 import SearchBar from './SearchBar';
 
 class Search extends React.PureComponent {
-    state = { open: false, value: '', select: 0, filter: '' };
+    state = { open: false, value: '', filter: '' };
 
     handleOpen = () => {
         if (!this.state.open) {
-            this.input.focus();
             this.props.loadMe();
         }
         this.setState({ open: !this.state.open, value: '' });
@@ -42,14 +41,15 @@ class Search extends React.PureComponent {
     render() {
         const { classes, shrinkChildren, alwaysOpen, Keyboard, small, style } = this.props;
         const { open, value } = this.state;
-        const isOpen = alwaysOpen || open || this.props.open;
+        const isOpen = alwaysOpen || open;
         return (
             <div className={classes.root} style={style}>
                 <ClickAwayListener mouseEvent="onClick" onClickAway={this.handleClickAway}>
                     <div className={classes.searchbarWrapper}>
                         <SearchBar
                             value={value}
-                            open={isOpen}
+                            preOpen={alwaysOpen || open}
+                            open={open}
                             onOpen={() => this.setState({ open: true })}
                             onClose={() => this.setState({ open: false, value: '' })}
                             onChange={value => this.setState({ value, open: value !== '' })}
@@ -95,38 +95,17 @@ class Search extends React.PureComponent {
     }
 }
 
-Search.getDerivedStateFromProps = (props, state) => {
-    const { open: openProps } = props;
-    const { open, prevOpenProps } = state;
-
-    return {
-        prevOpenProps: openProps,
-        open: prevOpenProps !== openProps ? openProps : open || openProps,
-    };
-};
-
 const styles = theme => ({
-    icon: {
-        transition: theme.transitions.create(['transform']),
-        WebkitTransition: theme.transitions.create(['transform']),
-        color: 'rgb(158, 158, 158)',
-        transform: 'scale(1,1)',
-    },
-    listItemSelected: {
-        backgroundColor: 'rgba(0, 0, 0, 0.08)',
-    },
     root: {
         flex: 1,
         display: 'flex',
         justifyContent: 'space-between',
     },
-    rootClosed: {},
     searchbarWrapper: {
         width: '100%',
         position: 'relative',
         maxWidth: 840,
     },
-
     dropDownContainer: {
         position: 'absolute',
         width: '100%',
@@ -147,12 +126,24 @@ const styles = theme => ({
         opacity: 0,
         pointerEvents: 'none',
     },
-
+    dropDown: {
+        marginTop: theme.spacing(1),
+        boxShadow: theme.shadows[4],
+        borderRadius: 2,
+        transition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
+        WebkitTransition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
+        willChange: 'opacity, transform',
+        transform: 'translate(0,0)',
+        maxHeight: 'inherit',
+    },
+    dropDownClosed: {
+        boxShadow: 'none',
+        transform: 'translate(0,-8px)',
+    },
     keyboard: {
         backgroundColor: theme.palette.background.paper,
         height: '100%',
     },
-
     children: {
         transform: 'translate3d(0,0,0)',
         display: 'flex',
@@ -165,13 +156,6 @@ const styles = theme => ({
     },
     child: {
         width: '100%',
-    },
-    type: {
-        color: grey[500],
-    },
-    name: {
-        minWidth: 100,
-        display: 'inline-block',
     },
 });
 

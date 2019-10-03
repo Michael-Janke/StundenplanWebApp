@@ -69,7 +69,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const SearchBar = ({ open, onOpen, value, onChange, onClose }) => {
+const SearchBar = ({ open, preOpen, onOpen, value, onChange, onClose }) => {
     const classes = useStyles();
     const inputRef = useRef(null);
     const handleKeyUp = e => {
@@ -81,9 +81,17 @@ const SearchBar = ({ open, onOpen, value, onChange, onClose }) => {
         }
     };
 
+    useEffect(() => {
+        if (open) {
+            inputRef.current.focus();
+        } else {
+            inputRef.current.blur();
+        }
+    }, [open]);
+
     return (
-        <div className={classNames(classes.searchbar, { [classes.searchbarClosed]: !open })}>
-            <div className={classNames(classes.inputField, { [classes.inputFieldOpen]: open > 0 })}>
+        <div className={classNames(classes.searchbar, { [classes.searchbarClosed]: !preOpen })}>
+            <div className={classNames(classes.inputField, { [classes.inputFieldOpen]: preOpen })}>
                 <Input
                     inputRef={inputRef}
                     placeholder="Suchen"
@@ -103,7 +111,7 @@ const SearchBar = ({ open, onOpen, value, onChange, onClose }) => {
                 onClick={onOpen}
                 className={classNames(classes.icon, classes.searchIcon, {
                     [classes.iconHidden]: value.length > 0,
-                    [classes.searchIconActive]: !open,
+                    [classes.searchIconActive]: !preOpen,
                 })}
             >
                 <SearchIcon />
