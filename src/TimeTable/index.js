@@ -58,6 +58,7 @@ const useStyles = makeStyles(
                 maxWidth: 492,
             },
             minHeight: 500,
+            zIndex: 2,
         },
         row: {
             display: 'flex',
