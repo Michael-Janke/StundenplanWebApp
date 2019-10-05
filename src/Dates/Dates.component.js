@@ -18,8 +18,8 @@ import { classNames } from '../Common/const';
 import { asynchronize } from '../Router/asynchronize';
 import { EditButton, DeleteButton, HomepageButton, HomepageBoxButton } from './DateEditButtons';
 
-const DateDialog = asynchronize()(() => import('./DateDialog'));
-const DateDeletionDialog = asynchronize()(() => import('./DateDeletionDialog'));
+const DateDialog = asynchronize(() => import('./DateDialog'), { hideSplash: false });
+const DateDeletionDialog = asynchronize(() => import('./DateDeletionDialog'), { hideSplash: false });
 
 const styles = theme => ({
     root: {

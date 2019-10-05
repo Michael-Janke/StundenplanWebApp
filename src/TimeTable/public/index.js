@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import TimeTableContainer from '../components/container';
 import indigo from '@material-ui/core/colors/indigo';
 import { Paper, AppBar, Grid, Toolbar } from '@material-ui/core';
@@ -101,9 +101,10 @@ function PublicDisplay({ open }) {
     const classes = useStyles();
     const theme = useTheme();
     const small = useMediaQuery(theme.breakpoints.down(smallBreakpoint));
+    const isAdmin = useSelector(state => state.user.scope === 'admin');
     useIntervalCheck();
 
-    if (!window.params.token) {
+    if (!window.params.token && !isAdmin) {
         return 'Leider bin ich noch nicht vollständig eingerichtet';
     }
 

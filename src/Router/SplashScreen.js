@@ -1,7 +1,4 @@
-export function hideSplash() {
+export function hideSplash(now = false) {
     const splashScreen = document.getElementById('splash-screen');
-    if (splashScreen.className !== 'ended' && splashScreen.className !== 'ending') {
-        splashScreen.className = 'ending';
-        setTimeout(() => (splashScreen.className = 'ended'), 300);
-    }
+    setTimeout(() => requestAnimationFrame(() => (splashScreen.className = 'ended')), now ? 0 : 150);
 }
