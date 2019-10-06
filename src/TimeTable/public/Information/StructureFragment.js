@@ -8,16 +8,12 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
         flexBasis: 0,
         margin: 2,
-        textAlign: 'center',
-        overflow: 'hidden'
-    }
+        textAlign: 'left',
+        overflow: 'hidden',
+    },
 }));
 
 export default function StructureFragment({ children, className }) {
     const classes = useStyles();
-    return (
-        <div className={classNames(classes.root, className)}>
-            {children}
-        </div>
-    )
+    return <div className={classNames(classes.root, className)}>{children}</div>;
 }

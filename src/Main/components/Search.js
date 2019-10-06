@@ -3,9 +3,6 @@ import React from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Zoom from '@material-ui/core/Zoom';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-
-import grey from '@material-ui/core/colors/grey';
-
 import SearchResult from './SearchResult';
 
 import { classNames } from '../../Common/const';
@@ -40,8 +37,8 @@ class Search extends React.PureComponent {
 
     render() {
         const { classes, shrinkChildren, alwaysOpen, Keyboard, small, style } = this.props;
-        const { open, value } = this.state;
-        const isOpen = alwaysOpen || open;
+        const { open: openState, value } = this.state;
+        const open = openState || this.props.open;
         return (
             <div className={classes.root} style={style}>
                 <ClickAwayListener mouseEvent="onClick" onClickAway={this.handleClickAway}>
@@ -80,11 +77,11 @@ class Search extends React.PureComponent {
                         </div>
                     </div>
                 </ClickAwayListener>
-                <div className={classNames(classes.children, isOpen && shrinkChildren && classes.childrenOpen)}>
+                <div className={classNames(classes.children, open && shrinkChildren && classes.childrenOpen)}>
                     {React.Children.map(this.props.children, child => {
                         if (!child) return;
                         return (
-                            <Zoom in={!shrinkChildren || !isOpen} className={classes.child}>
+                            <Zoom in={!shrinkChildren || !open} className={classes.child}>
                                 <div>{child}</div>
                             </Zoom>
                         );

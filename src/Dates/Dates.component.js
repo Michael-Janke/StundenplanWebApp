@@ -78,6 +78,8 @@ class Dates extends Component {
         };
     }
 
+    shouldComponentUpdate(nextProps, next) {}
+
     handleDateAddEdit = date => {
         this.setState({
             dialogOpen: false,

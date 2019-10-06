@@ -31,11 +31,10 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const SearchResult = props => {
+const SearchResult = ({ open, onClick, value }) => {
     const classes = useStyles();
-    const [filter, setFilter] = useState(filter);
+    const [filter, setFilter] = useState('');
     const small = useSelector(state => state.browser.lessThan.medium);
-    const { open, onClick, value } = props;
     return (
         <List className={classNames(classes.dropDown, classes.list, !open && classes.dropDownClosed)}>
             {open && <FilterBar onChange={filter => setFilter(filter)} small={small} filter={filter} />}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import NotFoundPage from './NotFoundPage';
 import Loadable from 'react-loadable';
 import { hideSplash as hideSplash2 } from './SplashScreen';
