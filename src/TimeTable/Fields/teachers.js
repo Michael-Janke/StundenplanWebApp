@@ -33,19 +33,23 @@ const TeachersContainer = type => teachers => ({ small, left, themeClasses, desc
         'instead-by': teachers.substitution,
         'instead-of': teachers.substitution,
     }[type];
-    return field.map(teacher => (
-        <Container
-            left={left}
-            teacher={teacher}
-            description={description}
-            setTimeTable={setTimeTable}
-            type={type}
-            className={className}
-            key={teacher.TEACHER_ID}
-        >
-            {teacherToName(teacher, small)}
-        </Container>
-    ));
+    return field.map(teacher =>
+        teacher ? (
+            <Container
+                left={left}
+                teacher={teacher}
+                description={description}
+                setTimeTable={setTimeTable}
+                type={type}
+                className={className}
+                key={teacher.TEACHER_ID}
+            >
+                {teacherToName(teacher, small)}
+            </Container>
+        ) : (
+            '???'
+        )
+    );
 };
 
 export const teacherStyles = theme => ({
