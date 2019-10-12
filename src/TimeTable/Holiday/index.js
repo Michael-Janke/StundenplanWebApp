@@ -12,7 +12,7 @@ import germanImg from './german.jpg';
 import ascentionImg from './ascention.jpg';
 import flowerImg from './flower.jpg';
 
-const holidayImageMap = {
+export const holidayImageMap = {
     Oster: easterImg,
     Ferientag: bridgeImg,
     '01.05': firstMayImg,
@@ -24,6 +24,15 @@ const holidayImageMap = {
     Himmel: ascentionImg,
     Pfings: flowerImg,
 };
+
+var images = [];
+function preload(pImages) {
+    for (var i = 0; i < pImages.length; i++) {
+        images[i] = new Image();
+        images[i].src = pImages[i];
+    }
+}
+setTimeout(() => preload(Object.values(holidayImageMap)), 5000);
 
 class Holiday extends React.PureComponent {
     render() {
