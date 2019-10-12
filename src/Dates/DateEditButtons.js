@@ -6,6 +6,8 @@ import WebsiteOffIcon from '@material-ui/icons/GridOff';
 import FlashIcon from '@material-ui/icons/FlashOn';
 import FlashOffIcon from '@material-ui/icons/FlashOff';
 import IconButton from '@material-ui/core/IconButton';
+import { editDate } from './actions';
+import { useDispatch } from 'react-redux';
 
 export function EditButton({ onClick }) {
     return (
@@ -21,9 +23,28 @@ export function DeleteButton({ onClick }) {
         </IconButton>
     );
 }
-export function HomepageButton({ toggled, onClick }) {
-    return <IconButton onClick={onClick}>{toggled ? <WebsiteIcon /> : <WebsiteOffIcon />}</IconButton>;
+export function HomepageButton({ date }) {
+    const dispatch = useDispatch();
+    const toggleHomepage = () => {
+        dispatch(
+            editDate({
+                DATE_ID: date.DATE_ID,
+                HOMEPAGE: !date.HOMEPAGE + 0,
+            })
+        );
+    };
+    return <IconButton onClick={toggleHomepage}>{date.HOMEPAGE ? <WebsiteIcon /> : <WebsiteOffIcon />}</IconButton>;
 }
-export function HomepageBoxButton({ toggled, onClick }) {
-    return <IconButton onClick={onClick}>{toggled ? <FlashIcon /> : <FlashOffIcon />}</IconButton>;
+export function HomepageBoxButton({ date }) {
+    const dispatch = useDispatch();
+
+    const toggleHomepageBox = () => {
+        dispatch(
+            editDate({
+                DATE_ID: date.DATE_ID,
+                HOMEPAGE_BOX: !date.HOMEPAGE_BOX + 0,
+            })
+        );
+    };
+    return <IconButton onClick={toggleHomepageBox}>{date.HOMEPAGE_BOX ? <FlashIcon /> : <FlashOffIcon />}</IconButton>;
 }

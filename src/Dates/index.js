@@ -1,2 +1,2 @@
-import Dates from './Dates.container';
+import Dates from './Dates';
 export default Dates;

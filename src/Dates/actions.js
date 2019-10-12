@@ -13,3 +13,7 @@ export function getDates() {
 export function deleteDate(date) {
     return { type: 'DELETE_DATE', payload: date };
 }
+
+export function setEditMode(mode) {
+    return { type: 'SET_EDIT_MODE', payload: mode };
+}

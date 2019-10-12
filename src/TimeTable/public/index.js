@@ -6,7 +6,7 @@ import { Paper, Grid } from '@material-ui/core';
 import Dates from '../../Dates';
 import ErrorBoundary from '../../Common/ErrorBoundary';
 import Substitutions from './Substitutions';
-import { makeStyles, useTheme } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
 import Search from '../../Main/components/Search';
 import Keyboard from '../../Main/components/Keyboard';
 import { classNames } from '../../Common/const';

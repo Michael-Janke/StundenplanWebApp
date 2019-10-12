@@ -1,6 +1,7 @@
 const initalState = {
     dates: [],
     loading: false,
+    editMode: false,
 };
 
 export default function datesReducer(state = initalState, action) {
@@ -33,6 +34,11 @@ export default function datesReducer(state = initalState, action) {
             return {
                 ...state,
                 availableHash: action.payload.DATES_HASH,
+            };
+        case 'SET_EDIT_MODE':
+            return {
+                ...state,
+                editMode: action.payload,
             };
         default:
             return state;
