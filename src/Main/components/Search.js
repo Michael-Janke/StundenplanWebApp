@@ -36,11 +36,11 @@ class Search extends React.PureComponent {
     };
 
     render() {
-        const { classes, shrinkChildren, alwaysOpen, Keyboard, small, style } = this.props;
+        const { classes, shrinkChildren, alwaysOpen, Keyboard, small, style, tv } = this.props;
         const { open: openState, value } = this.state;
         const open = openState || this.props.open;
         return (
-            <div className={classes.root} style={style}>
+            <div className={classes.root} style={{ ...style, height: tv && open ? '100%' : 'unset' }}>
                 <ClickAwayListener mouseEvent="onClick" onClickAway={this.handleClickAway}>
                     <div className={classes.searchbarWrapper}>
                         <SearchBar

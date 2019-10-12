@@ -13,6 +13,7 @@ import { classNames } from '../../Common/const';
 import ClearTimetable from './ClearTimetable';
 import InformationView from './Information';
 import { useIntervalCheck } from '../../Common/intervalCheck';
+import FastSelect from './FastSelect';
 
 const useStyles = makeStyles(
     theme => ({
@@ -104,17 +105,10 @@ function PublicDisplay({ open }) {
                         </Paper>
                     </Grid>
                     <Grid item xs={5} className={classes.gridItem}>
-                        <Search
-                            style={{ paddingBottom: 8, zIndex: 2, height: open ? '100%' : 'unset' }}
-                            alwaysOpen
-                            tv
-                            open={open}
-                            Keyboard={Keyboard}
-                        />
+                        <Search style={{ paddingBottom: 8 }} alwaysOpen tv={true} Keyboard={Keyboard} />
+
                         <Paper className={classNames(classes.timetable, classes.paper)} square>
-                            <ErrorBoundary>
-                                <TimeTableContainer />
-                            </ErrorBoundary>
+                            <ErrorBoundary>{open ? <TimeTableContainer /> : <FastSelect />}</ErrorBoundary>
                         </Paper>
                     </Grid>
                     <Grid item xs={5} container direction="column" spacing={1}>
@@ -143,7 +137,7 @@ function PublicDisplay({ open }) {
 
 const mapStateToProps = state => {
     return {
-        open: !state.timetable.currentTimeTableId,
+        open: state.timetable.currentTimeTableId,
     };
 };
 

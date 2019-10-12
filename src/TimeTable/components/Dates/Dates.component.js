@@ -110,7 +110,7 @@ const Dates = ({ dates, date, classes, small }) => {
                 <TableRow className={classes.tableHeaderRow}>
                     <PeriodCell small={small}>
                         <div className={classes.iconWrapper}>
-                            <CalendarIcon />
+                            <CalendarIcon fontSize="inherit" />
                         </div>
                     </PeriodCell>
                     {WEEKDAY_NAMES.map((day, i) => {

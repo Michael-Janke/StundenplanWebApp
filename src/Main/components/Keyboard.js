@@ -58,7 +58,7 @@ class Keyboard extends React.PureComponent {
                     </div>
                 ))}
                 <div className={classes.row} key={-1}>
-                    <Key className={classes.key} onPress={this.onKeyPress.bind(this, ' ')} name="SPACE" />
+                    <Key className={classes.key} onPress={this.onKeyPress.bind(this, ' ')} name="Leerzeichen" />
                 </div>
             </div>
         );
