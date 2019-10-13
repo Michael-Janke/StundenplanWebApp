@@ -42,7 +42,7 @@ class Search extends React.PureComponent {
         return (
             <div className={classes.root} style={{ ...style, height: tv && open ? '100%' : 'unset' }}>
                 <ClickAwayListener mouseEvent="onClick" onClickAway={this.handleClickAway}>
-                    <div className={classes.searchbarWrapper}>
+                    <div className={classNames(classes.searchbarWrapper, { [classes.searchbarWrapperTv]: tv })}>
                         <SearchBar
                             value={value}
                             preOpen={alwaysOpen || open}
@@ -102,17 +102,28 @@ const styles = theme => ({
         width: '100%',
         position: 'relative',
         maxWidth: 840,
+        flexDirection: 'column',
+    },
+    searchbarWrapperTv: {
+        display: 'flex',
+        '& $dropDownContainer': {
+            position: 'unset',
+        },
+        '& $dropDownContainerClosed': {
+            maxHeight: 0,
+        },
     },
     dropDownContainer: {
-        position: 'absolute',
         width: '100%',
+        position: 'absolute',
         color: theme.palette.text.primary,
         flexDirection: 'column',
-        maxHeight: 'calc(100vh - 64px - 8px)',
+        flex: 1,
         opacity: 1,
         display: 'flex',
         transition: theme.transitions.create(['opacity']),
         WebkitTransition: theme.transitions.create(['opacity']),
+        height: 'calc(100vh - 64px)',
     },
     dropDownContainerFullscreen: {
         position: 'fixed',
@@ -139,7 +150,6 @@ const styles = theme => ({
     },
     keyboard: {
         backgroundColor: theme.palette.background.paper,
-        height: '100%',
     },
     children: {
         transform: 'translate3d(0,0,0)',

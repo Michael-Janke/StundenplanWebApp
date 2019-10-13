@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        flex: 1,
     },
 }));
 

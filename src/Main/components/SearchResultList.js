@@ -36,8 +36,8 @@ const SearchResult = ({ results, onClick }) => {
 
     return (
         <div className={classes.overflow}>
-            <AutoSizer disableHeight>
-                {({ width }) => (
+            <AutoSizer>
+                {({ width, height }) => (
                     <VList
                         rowCount={results.length}
                         rowHeight={({ index }) => (results[index].secondary ? 61 : 48)}
@@ -56,7 +56,7 @@ const SearchResult = ({ results, onClick }) => {
                         }}
                         scrollToIndex={0}
                         width={width}
-                        height={Math.min(results.length * 61, window.innerHeight - 180)}
+                        height={Math.min(results.length * 61, height - 2)}
                     />
                 )}
             </AutoSizer>

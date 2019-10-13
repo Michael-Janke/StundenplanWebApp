@@ -110,7 +110,7 @@ const SearchBar = ({ open, preOpen, onOpen, value, onChange, onClose }) => {
             <IconButton
                 onClick={onOpen}
                 className={classNames(classes.icon, classes.searchIcon, {
-                    [classes.iconHidden]: value.length > 0,
+                    [classes.iconHidden]: open,
                     [classes.searchIconActive]: !preOpen,
                 })}
             >
@@ -118,7 +118,7 @@ const SearchBar = ({ open, preOpen, onOpen, value, onChange, onClose }) => {
             </IconButton>
             <IconButton
                 onClick={() => onClose(false)}
-                className={classNames(classes.icon, classes.closeIcon, { [classes.iconHidden]: value.length === 0 })}
+                className={classNames(classes.icon, classes.closeIcon, { [classes.iconHidden]: !open })}
             >
                 <ClearIcon />
             </IconButton>

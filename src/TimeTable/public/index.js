@@ -51,6 +51,8 @@ const useStyles = makeStyles(
         gridItem: {
             height: '100%',
             paddingTop: 0,
+            display: 'flex',
+            flexDirection: 'column',
         },
         grid: {
             height: '100%',
@@ -61,6 +63,10 @@ const useStyles = makeStyles(
         },
         timetable: {
             maxWidth: 800,
+        },
+        timetableScroll: {
+            flex: 1,
+            overflow: 'auto',
         },
         dates: {
             maxWidth: 340,
@@ -105,11 +111,12 @@ function PublicDisplay({ open }) {
                         </Paper>
                     </Grid>
                     <Grid item xs={5} className={classes.gridItem}>
-                        <Search style={{ paddingBottom: 8 }} alwaysOpen tv={true} Keyboard={Keyboard} />
-
-                        <Paper className={classNames(classes.timetable, classes.paper)} square>
-                            <ErrorBoundary>{open ? <TimeTableContainer /> : <FastSelect />}</ErrorBoundary>
-                        </Paper>
+                        <Search style={{ paddingBottom: 8, flex: 'none' }} alwaysOpen tv={true} Keyboard={Keyboard} />
+                        <div className={classes.timetableScroll}>
+                            <Paper className={classNames(classes.timetable, classes.paper)} square>
+                                <ErrorBoundary>{open ? <TimeTableContainer /> : <FastSelect />}</ErrorBoundary>
+                            </Paper>
+                        </div>
                     </Grid>
                     <Grid item xs={5} container direction="column" spacing={1}>
                         <Grid item xs container>
