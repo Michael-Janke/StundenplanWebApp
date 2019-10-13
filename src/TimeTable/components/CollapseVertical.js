@@ -1,7 +1,7 @@
 import React from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { withStyles } from '@material-ui/core';
-import { classNames } from '../../Common/const';
+import classNames from 'classnames';
 
 const styles = theme => ({
     root: {

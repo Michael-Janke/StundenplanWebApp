@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles, Typography } from '@material-ui/core';
 import StructureFragment from './StructureFragment';
-import { classNames } from '../../../Common/const';
+import classNames from 'classnames';
 import green from '@material-ui/core/colors/green';
 import { getRoomFields, styles } from '../../Fields';
 

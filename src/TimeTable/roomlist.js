@@ -4,7 +4,8 @@ import indigo from '@material-ui/core/colors/indigo';
 import red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
 import { darken } from '@material-ui/core/styles/colorManipulator';
-import { classNames } from '../Common/const';
+import classNames from 'classnames';
+
 class RoomList extends React.Component {
     extractRooms(rooms) {
         let e = {};

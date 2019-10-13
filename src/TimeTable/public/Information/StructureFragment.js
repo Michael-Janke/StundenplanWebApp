@@ -1,6 +1,6 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
-import { classNames } from '../../../Common/const';
+import makeStyles from '@material-ui/styles/makeStyles';
+import classNames from 'classnames';
 
 const useStyles = makeStyles(theme => ({
     root: {

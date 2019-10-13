@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles, TableCell } from '@material-ui/core';
-import { classNames } from '../../Common/const';
+import classNames from 'classnames';
 
 const styles = {
     tableHeaderCell: {

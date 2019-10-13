@@ -5,7 +5,7 @@ import Zoom from '@material-ui/core/Zoom';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import SearchResult from './SearchResult';
 
-import { classNames } from '../../Common/const';
+import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { setTimeTable, loadMe } from '../actions';
 import SearchBar from './SearchBar';

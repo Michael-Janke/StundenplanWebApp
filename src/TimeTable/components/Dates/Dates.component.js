@@ -1,6 +1,6 @@
 import React from 'react';
 import grey from '@material-ui/core/colors/grey';
-import { classNames, WEEKDAY_NAMES, DATE_COLORS } from '../../../Common/const';
+import { WEEKDAY_NAMES, DATE_COLORS } from '../../../Common/const';
 import TableHead from '@material-ui/core/TableHead';
 import Table from '@material-ui/core/Table';
 import TableRow from '@material-ui/core/TableRow';
@@ -13,6 +13,7 @@ import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 import indigo from '@material-ui/core/colors/indigo';
 import { darken } from '@material-ui/core/styles';
+import classNames from 'classnames';
 
 const moment = extendMoment(Moment);
 

@@ -9,7 +9,7 @@ import Substitutions from './Substitutions';
 import { makeStyles } from '@material-ui/styles';
 import Search from '../../Main/components/Search';
 import Keyboard from '../../Main/components/Keyboard';
-import { classNames } from '../../Common/const';
+import classNames from 'classnames';
 import ClearTimetable from './ClearTimetable';
 import InformationView from './Information';
 import { useIntervalCheck } from '../../Common/intervalCheck';

@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function InformationComponent({}) {
+function FastSelect() {
     const classes = useStyles();
     const teacher = useSelector(state => state.timetable.masterdata.Teacher);
     const dispatch = useDispatch();
@@ -48,4 +48,4 @@ function InformationComponent({}) {
     );
 }
 
-export default InformationComponent;
+export default FastSelect;

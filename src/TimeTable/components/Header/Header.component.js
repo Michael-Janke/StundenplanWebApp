@@ -8,7 +8,7 @@ import NextIcon from '@material-ui/icons/ArrowForward';
 import ResetIcon from '@material-ui/icons/ArrowDownward';
 import TimeTableInformation from '../information';
 import grey from '@material-ui/core/colors/grey';
-import { classNames, WEEKDAY_NAMES } from '../../../Common/const';
+import { WEEKDAY_NAMES } from '../../../Common/const';
 import OfflinePin from '@material-ui/icons/OfflinePin';
 import TableHead from '@material-ui/core/TableHead';
 import Table from '@material-ui/core/Table';
@@ -17,6 +17,7 @@ import TableCell from '@material-ui/core/TableCell';
 import PeriodCell from '../periodCell';
 import { Typography, ListItem, ListItemIcon } from '@material-ui/core';
 import CollapseVertical from '../CollapseVertical';
+import classNames from 'classnames';
 
 const styles = theme => ({
     tableToolbar: {

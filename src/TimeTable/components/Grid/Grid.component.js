@@ -6,7 +6,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import PeriodColumn from '../../period';
-import { WEEKDAY_NAMES, classNames } from '../../../Common/const';
+import { WEEKDAY_NAMES } from '../../../Common/const';
 import { setTimeTable, retryTimetable } from '../../../Main/actions';
 import Holiday from '../../Holiday';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -18,6 +18,7 @@ import PeriodCell from '../periodCell';
 import Offline from './offline';
 import OfflineLesson from './OfflineLesson';
 import { grey } from '@material-ui/core/colors';
+import classNames from 'classnames';
 
 class TimeTableGrid extends React.Component {
     periodTime(timeAsNumber) {
