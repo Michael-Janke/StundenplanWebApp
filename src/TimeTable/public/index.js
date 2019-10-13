@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import TimeTableContainer from '../components/container';
 import indigo from '@material-ui/core/colors/indigo';
-import { Paper, Grid } from '@material-ui/core';
+import { Paper, Grid, Grow } from '@material-ui/core';
 import Dates from '../../Dates';
 import ErrorBoundary from '../../Common/ErrorBoundary';
 import Substitutions from './Substitutions';
@@ -75,6 +75,16 @@ const useStyles = makeStyles(
         substitutions: {
             flexGrow: 1,
         },
+        growContainer: {
+            position: 'relative',
+            flex: 1,
+            '& > *': {
+                position: 'absolute',
+                top: 0,
+                height: '100%',
+                width: '100%',
+            },
+        },
     }),
     { name: 'PublicDisplay' }
 );
@@ -85,9 +95,11 @@ function PublicDisplay({ open }) {
     const isAdmin = useSelector(state => state.user.scope === 'admin');
     useIntervalCheck();
 
-    const [zoom, setZoom] = useState(document.body.offsetWidth / 1920);
     useEffect(() => {
-        window.addEventListener('resize', () => setZoom(document.body.offsetWidth / 1920));
+        const setZoom = () => (document.body.style['zoom'] = document.body.parentElement.clientWidth / 1920);
+        window.addEventListener('resize', setZoom);
+        setZoom();
+        return () => window.removeEventListener('resize', setZoom);
     }, []);
 
     if (!window.params.token && !isAdmin) {
@@ -97,7 +109,7 @@ function PublicDisplay({ open }) {
     window.open = () => {};
 
     return (
-        <div className={classes.root} style={{ zoom }}>
+        <div className={classes.root}>
             <ClearTimetable />
 
             <div className={classes.extendedAppBar} />
@@ -112,10 +124,17 @@ function PublicDisplay({ open }) {
                     </Grid>
                     <Grid item xs={5} className={classes.gridItem}>
                         <Search style={{ paddingBottom: 8, flex: 'none' }} alwaysOpen tv={true} Keyboard={Keyboard} />
-                        <div className={classes.timetableScroll}>
-                            <Paper className={classNames(classes.timetable, classes.paper)} square>
-                                <ErrorBoundary>{open ? <TimeTableContainer /> : <FastSelect />}</ErrorBoundary>
-                            </Paper>
+                        <div className={classes.growContainer}>
+                            <FastSelect open={!open} />
+                            <Grow in={open}>
+                                <div className={classes.timetableScroll}>
+                                    <Paper className={classNames(classes.timetable, classes.paper)} square>
+                                        <ErrorBoundary>
+                                            <TimeTableContainer />
+                                        </ErrorBoundary>
+                                    </Paper>
+                                </div>
+                            </Grow>
                         </div>
                     </Grid>
                     <Grid item xs={5} container direction="column" spacing={1}>

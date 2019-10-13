@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 function ClearTimetable({ id, clearTimetable }) {
     useEffect(() => {
-        let timeout = setTimeout(clearTimetable, 60 * 1000);
+        let timeout = setTimeout(clearTimetable, 30 * 1000);
         return () => clearTimeout(timeout);
     }, [clearTimetable, id]);
     return null;
@@ -17,7 +17,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        id: state.timetable.currentTimeTableId + state.timetable.currentTimeTableType,
+        id: state.timetable.currentTimeTableId + state.timetable.currentTimeTableType + state.timetable.timetableDate,
     };
 };
 

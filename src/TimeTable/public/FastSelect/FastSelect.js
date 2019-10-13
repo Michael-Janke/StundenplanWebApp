@@ -4,12 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import { ObjectIcon } from '../../../Main/components/Avatars';
-import { setTimeTable } from '../../../Main/actions';
+import { changeWeek } from '../../../Main/actions';
+import { Paper, Grow } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        backgroundColor: theme.palette.background.default,
-        height: 1080 - 82,
+        backgroundColor: theme.palette.background.paper,
         display: 'flex',
         flexWrap: 'wrap',
     },
@@ -19,32 +19,39 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function FastSelect() {
+function FastSelect({ open }) {
     const classes = useStyles();
     const teacher = useSelector(state => state.timetable.masterdata.Teacher);
     const dispatch = useDispatch();
 
     return (
-        <div className={classes.root}>
-            {Object.values(teacher)
-                .sort((a, b) => (a.LASTNAME < b.LASTNAME ? -1 : 1))
-                .map(teacher => (
-                    <ButtonBase
-                        focusRipple
-                        key={teacher.TEACHER_ID}
-                        className={classes.image}
-                        style={{
-                            width: '16.66667%',
-                        }}
-                        onClick={() => dispatch(setTimeTable('teacher', teacher.TEACHER_ID))}
-                    >
-                        <ObjectIcon upn={teacher.UPN} type="teacher" size={40} outline={true} />
-                        <Typography component="span" variant="subtitle1" color="inherit" className={classes.imageTitle}>
-                            {teacher.LASTNAME.length > 10 ? '' : teacher.FIRSTNAME[0] + '.'} {teacher.LASTNAME}
-                        </Typography>
-                    </ButtonBase>
-                ))}
-        </div>
+        <Grow in={open}>
+            <Paper className={classes.root} square style={{ flex: open ? 1 : 'none' }}>
+                {Object.values(teacher)
+                    .sort((a, b) => (a.LASTNAME < b.LASTNAME ? -1 : 1))
+                    .map(teacher => (
+                        <ButtonBase
+                            focusRipple
+                            key={teacher.TEACHER_ID}
+                            className={classes.image}
+                            style={{
+                                width: '16.66667%',
+                            }}
+                            onClick={() => dispatch(changeWeek('now', teacher.TEACHER_ID, 'teacher'))}
+                        >
+                            <ObjectIcon upn={teacher.UPN} type="teacher" size={40} outline={true} />
+                            <Typography
+                                component="span"
+                                variant="subtitle1"
+                                color="inherit"
+                                className={classes.imageTitle}
+                            >
+                                {teacher.LASTNAME.length > 10 ? '' : teacher.FIRSTNAME[0] + '.'} {teacher.LASTNAME}
+                            </Typography>
+                        </ButtonBase>
+                    ))}
+            </Paper>
+        </Grow>
     );
 }
 
