@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles, TableCell } from '@material-ui/core';
 import classNames from 'classnames';
+import { grey } from '@material-ui/core/colors';
 
 const styles = {
     tableHeaderCell: {
@@ -14,16 +15,18 @@ const styles = {
     tableHeaderCellPeriodSmall: {
         width: 20,
     },
+    now: {
+        backgroundColor: grey[400],
+    },
 };
 
-const PeriodCell = ({ classes, small, children }) => (
+const PeriodCell = ({ classes, small, now, children }) => (
     <TableCell
         padding="none"
-        className={classNames(
-            classes.tableHeaderCell,
-            classes.tableHeaderCellPeriod,
-            small && classes.tableHeaderCellPeriodSmall
-        )}
+        className={classNames(classes.tableHeaderCell, classes.tableHeaderCellPeriod, {
+            [classes.tableHeaderCellPeriodSmall]: small,
+            [classes.now]: now,
+        })}
     >
         {children}
     </TableCell>

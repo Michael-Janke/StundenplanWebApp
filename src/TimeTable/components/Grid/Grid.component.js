@@ -136,21 +136,24 @@ class TimeTableGrid extends React.Component {
     }
 
     renderRows() {
-        const { small, periods } = this.props;
+        const { small, periods, currentPeriod } = this.props;
         return [
             this.renderAbsences(),
             this.renderUnmatchedAssignments(),
-            ...Object.values(periods).map(period => (
-                <TableRow style={{ height: '100%' }} key={period.PERIOD_TIME_ID}>
-                    <PeriodCell small={small}>
-                        <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
-                            {small || this.renderPeriodTimes(period)}
-                            {this.renderPeriodHeader(period)}
-                        </div>
-                    </PeriodCell>
-                    {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
-                </TableRow>
-            )),
+            ...Object.values(periods).map(period => {
+                const isCurrentPriod = currentPeriod === period;
+                return (
+                    <TableRow style={{ height: '100%' }} key={period.PERIOD_TIME_ID}>
+                        <PeriodCell small={small} now={isCurrentPriod}>
+                            <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
+                                {small || this.renderPeriodTimes(period)}
+                                {this.renderPeriodHeader(period)}
+                            </div>
+                        </PeriodCell>
+                        {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
+                    </TableRow>
+                );
+            }),
         ];
     }
 

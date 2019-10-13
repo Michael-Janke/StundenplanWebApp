@@ -1,23 +1,24 @@
 import moment from 'moment';
 
-function periodTime(timeAsNumber) {
-    const lpad2 = number => (number < 10 ? '0' : '') + number;
-    return Math.floor(timeAsNumber / 100) + ':' + lpad2(timeAsNumber % 100);
-}
-
+const noPeriod = { END_TIME: null, noPeriod: true };
 const periodService = store => next => action => {
     next(action);
     switch (action.type) {
         case 'CHECK_CURRENT_PERIOD': {
+            if (moment().isoWeekday() > 5) {
+                //weekend
+                return store.dispatch({ type: 'SET_CURRENT_PERIOD', payload: noPeriod });
+            }
             const masterdata = store.getState().timetable.masterdata;
             if (masterdata) {
                 const periods = Object.values(masterdata.Period_Time);
                 if (periods.length) {
+                    noPeriod.END_TIME = periods[0].START_TIME;
                     const period = periods.reduce((prev, period) => {
-                        const from = moment(periodTime(prev.END_TIME), 'hh:mm');
-                        const to = moment(periodTime(period.END_TIME), 'hh:mm');
-                        return moment().isBetween(from, to) ? period : prev;
-                    });
+                        const from = moment(prev.END_TIME, 'Hmm');
+                        const to = moment(period.END_TIME, 'Hmm');
+                        return moment('15:00', 'hh:mm').isBetween(from, to) ? period : prev;
+                    }, noPeriod);
                     store.dispatch({ type: 'SET_CURRENT_PERIOD', payload: period });
                 }
             }
