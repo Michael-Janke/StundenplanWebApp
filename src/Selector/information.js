@@ -10,7 +10,7 @@ function getInformation(timetable, currentPeriod, date) {
     const weekdayData = timetable[weekday - 1];
     let studentsInSchool, teachersInSchool, period;
     if (weekdayData.periods) {
-        period = weekdayData.periods[currentPeriod.PERIOD_TIME_ID - 1];
+        period = weekdayData.periods[currentPeriod.PERIOD_TIME_ID - 1 || 0];
         studentsInSchool = period.lessons.reduce((prev, current) => {
             return prev + (current && !current.isOld ? (current.reference && current.reference.STUDENT_COUNT) || 0 : 0);
         }, 0);
