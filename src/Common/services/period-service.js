@@ -17,7 +17,7 @@ const periodService = store => next => action => {
                     const period = periods.reduce((prev, period) => {
                         const from = moment(prev.END_TIME, 'Hmm');
                         const to = moment(period.END_TIME, 'Hmm');
-                        return moment('15:00', 'hh:mm').isBetween(from, to) ? period : prev;
+                        return moment().isBetween(from, to) ? period : prev;
                     }, noPeriod);
                     store.dispatch({ type: 'SET_CURRENT_PERIOD', payload: period });
                 }
