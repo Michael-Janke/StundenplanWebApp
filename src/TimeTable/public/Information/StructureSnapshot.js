@@ -68,10 +68,7 @@ export default function StructureSnapshot({ lessons }) {
                 return (
                     <div className={classes.etage} key={i}>
                         {etage.rooms.map((room, i) => {
-                            if (room === 'stairs') {
-                                return <StructureFragment key={i}></StructureFragment>;
-                            }
-                            if (!room) {
+                            if (room === 'stairs' || !room) {
                                 return <StructureFragment key={i} />;
                             }
                             let lesson = lessons.find(lesson =>

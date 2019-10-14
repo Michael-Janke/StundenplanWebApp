@@ -1,3 +1,9 @@
+export function loadSupervisions() {
+    return {
+        type: 'GET_SUPERVISIONS',
+    };
+}
+
 export function openCreateAssignment({ date, team }) {
     return {
         type: 'OPEN_CREATE_ASSIGNMENT',

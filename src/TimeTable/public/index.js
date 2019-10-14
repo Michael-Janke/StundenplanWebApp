@@ -24,6 +24,7 @@ const useStyles = makeStyles(
             position: 'relative',
             backgroundColor: theme.palette.background.default,
             maxHeight: 1080,
+            minHeight: 1080,
             overflow: 'hidden',
         },
         appBar: {
