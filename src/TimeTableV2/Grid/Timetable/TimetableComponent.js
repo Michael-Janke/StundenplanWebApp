@@ -7,14 +7,51 @@ import LessonCell from '../LessonCell';
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'grid',
-        gridTemplateColumns: props => `70px repeat(${props.columns},1fr)`,
         gridTemplateRows: props => `repeat(${props.rows},auto)`,
         gridAutoFlow: 'column',
+        [theme.breakpoints.down('sm')]: {
+            gridTemplateColumns: props => `20px repeat(${props.columns},1fr)`,
+        },
+        [theme.breakpoints.up('sm')]: {
+            gridTemplateColumns: props => `70px repeat(${props.columns},1fr)`,
+        },
+
     }
 }), { name: "GridComponent" });
 
+
+
 export default function GridComponent({ children, rows, timetable, type, GridCellComponent, index, renderRow }) {
 
+    function Period(row, dayObject, day) {
+        const period = row.period;
+        const periodNumber = period.PERIOD_TIME_ID - 1;
+        if (!dayObject || !dayObject.periods) {
+            return (
+                <GridCellComponent key={row.key}>
+                    {periodNumber >= 1 && periodNumber < (9 - (day * 2) % 3) &&
+                        <Lesson></Lesson>
+                    }
+                </GridCellComponent>
+            )
+        }
+        const periodObject = dayObject.periods[periodNumber];
+        if (!periodObject) {
+            // empty cell
+            return (
+                null
+            )
+        }
+        return (
+            <LessonCell
+                GridCellComponent={GridCellComponent}
+                rowspan={(periodObject.skip || 0) + 1}
+                lessons={periodObject.lessons}
+                type={type}
+                key={row.key}
+            />
+        )
+    }
 
     const weekDays = [0, 1, 2, 3, 4];
     const classes = useStyles({
@@ -29,33 +66,13 @@ export default function GridComponent({ children, rows, timetable, type, GridCel
                 return (
                     <React.Fragment key={day}>
                         {rows.map((row, i) => {
-                            const period = row.period;
-                            const periodNumber = period.PERIOD_TIME_ID - 1;
-                            if (!dayObject || !dayObject.periods) {
-                                return (
-                                    <GridCellComponent key={i}>
-                                        {periodNumber >= 1 && periodNumber < (9 - (day * 2) % 3) &&
-                                            <Lesson></Lesson>
-                                        }
-                                    </GridCellComponent>
-                                )
+
+                            switch (row.type) {
+                                case "main":
+                                    return Period(row, dayObject, day);
+                                default: ;  
                             }
-                            const periodObject = dayObject.periods[periodNumber];
-                            if (!periodObject) {
-                                // empty cell
-                                return (
-                                    null
-                                )
-                            }
-                            return (
-                                <LessonCell
-                                    GridCellComponent={GridCellComponent}
-                                    key={i}
-                                    rowspan={(periodObject.skip || 0) + 1}
-                                    lessons={periodObject.lessons}
-                                    type={type}
-                                />
-                            )
+                            return <GridCellComponent key={row.key}></GridCellComponent>
                         })}
                     </React.Fragment>
                 )

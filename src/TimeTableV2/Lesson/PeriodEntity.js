@@ -10,17 +10,17 @@ export default function PeriodEntity({ lessons, supervision, type }) {
     return (
         <>
             {lessons && lessons.map((lesson, i) => {
-                let { ...other } = lesson;
-                if (other.absence) {
-                    return <Absence {...other} key={other.absence.ABSENCE_ID} table />;
+                if (lesson.absence) {
+                    return <Absence {...lesson} key={lesson.absence.ABSENCE_ID} table />;
                 } else {
                     return (
                         <Lesson
                             key={lesson.reference.TIMETABLE_ID || -i}
+                            specificSubstitutionType={lesson.specificSubstitutionType}
                         >
                             <LessonContent
                                 type={type}
-                                {...other}
+                                lesson={lesson}
                             ></LessonContent>
                         </Lesson>
                     );

@@ -34,7 +34,6 @@ const Teachers = ({ type, teachers, small }) => {
     }[type];
     return field.map(teacher => (
         <div
-            type={type}
             className={className}
             key={teacher.TEACHER_ID}
         >

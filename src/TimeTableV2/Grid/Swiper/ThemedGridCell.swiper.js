@@ -7,6 +7,7 @@ const useStyles = makeStyles(theme => ({
     root: {
         padding: theme.spacing(.5),
         display: 'flex',
+        overflow: 'hidden',
     }
 }), { name: "ThemedGridCell" });
 

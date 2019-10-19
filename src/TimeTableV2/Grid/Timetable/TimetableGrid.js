@@ -17,23 +17,28 @@ function TimetableGrid({ periods, date, min, max, changeWeek }) {
     // structure of grid
     const rows = React.useMemo(() =>
         [
+            {
+                key: -1,
+                component: HeaderBackground,
+                type: 'header',
+            },
             ...Object.values(periods).map((period, i) => {
                 return (
                     {
                         key: i,
                         period,
+                        type: 'main',
                         component: TimetablePeriodCell,
                     }
                 )
             }),
+            {
+                key: -2,
+                component: HeaderBackground,
+                type: 'footer',
+            }
         ], [periods]
     )
-
-    const header = [
-        {
-            component: HeaderBackground
-        }
-    ]
 
 
     function handleChangeIndex(index, newIndex) {
@@ -42,31 +47,27 @@ function TimetableGrid({ periods, date, min, max, changeWeek }) {
     }
 
     function renderMain(index, rows, children) {
-        return <TimetableContainer index={index} rows={rows} GridCellComponent={ThemedGridCell}>{children}</TimetableContainer>
+        return <TimetableContainer
+            index={index}
+            rows={rows}
+            GridCellComponent={ThemedGridCell}>
+            {children}
+        </TimetableContainer>
     }
-    function renderHeader(index, rows, children) {
-        return <div style={{ display: 'flex' }}>{children}Montag Dienstag</div>
-    }
-
 
     return (
         <GridSwiperComponent
             index={index}
             onChangeIndex={handleChangeIndex}
         >
+
             <div>
-                <slide
-                    rows={header}
-                    render={renderHeader}
-                />
-            </div>
-            <div style={{ overflowY: 'overlay', maxHeight: 'calc(100vh - 180px)' }}>
                 <slide
                     rows={rows}
                     render={renderMain}
                 />
             </div>
-            
+
         </GridSwiperComponent>
     )
 }

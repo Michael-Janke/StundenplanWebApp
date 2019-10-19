@@ -6,17 +6,13 @@ import { useMeasureCallback } from './helpers';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        display: 'grid',
-        gridTemplateColumns: props => `1fr`,
-        gridTemplateRows: props => `repeat(${props.rows},auto)`,
-        gridAutoFlow: 'column',
+        display: 'flex',
+        flexDirection: 'column',
     }
 }), { name: "GridPeriods" });
 
 export default function GridPeriods({ rows, periodsCellArray }) {
-    const classes = useStyles({
-        rows: rows.length,
-    });
+    const classes = useStyles();
     return (
         <Paper elevation={0} className={classes.root}>
             {rows.map((row, i) => <ThemedGridCell
@@ -24,7 +20,6 @@ export default function GridPeriods({ rows, periodsCellArray }) {
                 Component={animated.div}
                 style={{
                     height: periodsCellArray[i].height,
-                    willChange: 'height',
                     boxSizing: 'border-box',
                 }}>
                 <row.component

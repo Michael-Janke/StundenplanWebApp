@@ -37,7 +37,7 @@ class Performance {
 
 class GridSwiperComponent extends React.Component {
 
-    tempIndex = 0;
+    tempIndex = this.props.index;
     width = 0;
 
     areas = [];
@@ -45,7 +45,7 @@ class GridSwiperComponent extends React.Component {
     performance = new Performance(() => this.tempIndex)
 
     state = {
-        index: 0
+        index: this.props.index
     };
 
 
@@ -65,7 +65,7 @@ class GridSwiperComponent extends React.Component {
 
         this.setTranslate((i, controller) => {
             const x = -((this.tempIndex - this.state.index)) * this.width;
-            return { x }
+            return { x, immediate: false, }
         })
 
     }
@@ -115,13 +115,13 @@ class GridSwiperComponent extends React.Component {
 
         setTranslate(() => {
             const x = (down ? xDelta : 0) - ((this.tempIndex - index)) * width;
-            return { x }
+            return { x, immediate: down, config: { velocity: vx } }
         })
 
         Object.values(this.areas).forEach((value) => {
             value.setter((i) => {
                 const vIndex = this.tempIndex;
-                const newVIndex = vIndex + (down ? (xDir > 0 ? -1 : 1) : 0);
+                const newVIndex = vIndex + (down ? (xDelta > 0 ? -1 : 1) : 0);
                 let slide = value.slides[vIndex];
                 let newSlide = value.slides[newVIndex];
                 if (!newSlide || !slide) {
@@ -170,7 +170,7 @@ class GridSwiperComponent extends React.Component {
         return {
             x: 0,
             // https://www.react-spring.io/docs/hooks/api
-            config: { mass: 1, tension: 200, friction: 20, clamp: true },
+            config: {  mass: 1, tension: 120, friction: 14, clamp: true },
             onRest: () => {
                 if (this.tempIndex !== this.state.index) {
                     console.debug("updating slides due to new index", this.tempIndex, this.state.index)

@@ -1,33 +1,65 @@
 import React from 'react';
-import { useTheme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import Subject from './Fields/Subject';
-import Room from './Fields/Room';
+import StudentView from './Views/StudentView';
+import { useMediaQuery } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
-    substitutionText: {
-
-    },
     root: {
-        display: 'grid',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+        overflow: 'hidden',
+    },
+    small: {
+        overflow: 'hidden',
         
+    },
+    left: {
+        float: 'left',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        overflow: 'hidden',
+    },
+    right: {
+        float: 'right',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        textAlign: 'right',
     }
 }), { name: 'LessonContent' });
 
-export default function LessonContent({ type, specificSubstitutionType, substitutionText, subject, room, lessonType }) {
-    const theme = useTheme();
-    const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
+export default function LessonContent({ type, lesson }) {
+    const small = useMediaQuery('(max-width:600px)');
     
+    const View = {
+        'student': StudentView,
+    }[type];
+    const { left, right } = View(lesson);
+
     const classes = useStyles();
-    const substitutionTextStyles = React.useMemo(() => ({ color: styles.color }), [styles.color]);
+
+    if (small) {
+        return (
+            <div className={classes.small}>
+                {left}
+                {right}
+            </div>
+        )
+    }
 
     return (
         <div className={classes.root}>
-            <div className={classes.substitutionText} style={substitutionTextStyles}>
-                {substitutionText}
+            <div className={classes.left}>
+                {left}
             </div>
-            <Subject subject={subject} type={lessonType}></Subject>
-            <Room room={room} type={lessonType}></Room>
+            <div className={classes.right}>
+                {right}
+            </div>
         </div>
     )
 }

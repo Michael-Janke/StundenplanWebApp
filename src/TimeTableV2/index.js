@@ -1,27 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import TimeTableContainer from './TimeTable';
 import indigo from '@material-ui/core/colors/indigo';
-import { Paper, Grid } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import makeStyles from '@material-ui/styles/makeStyles';
+import grey from '@material-ui/core/colors/grey';
+import classNames from 'classnames';
+
+import ComponentWrapper from '../Posts/ComponentWrapper';
 import Dates from '../Dates';
 import ErrorBoundary from '../Common/ErrorBoundary';
-import { makeStyles } from '@material-ui/styles';
-import { classNames } from '../Common/const';
-import TimeTable from './TimeTable';
+import makeGetPosts from '../Posts/index.selector';
 
 const smallBreakpoint = 800;
 
 const useStyles = makeStyles(
     theme => ({
         root: {
-            flexGrow: 1,
-            display: 'flex',
-            flexDirection: 'column',
             position: 'relative',
             overflowY: 'auto',
-            backgroundColor: theme.palette.background.default,
-        },
-        appBar: {
-            backgroundColor: indigo[600],
+            backgroundColor: grey[100],
+            height: '100%',
         },
         extendedAppBar: {
             display: 'flex',
@@ -32,35 +31,17 @@ const useStyles = makeStyles(
             position: 'absolute',
             backgroundColor: indigo[600],
         },
-        toolbar: {
-            display: 'flex',
-        },
 
-        panel: {
-            [theme.breakpoints.up(smallBreakpoint)]: {
-                flexGrow: 1,
-                display: 'flex',
-            },
-            paddingLeft: 8,
-            paddingRight: 8,
-            paddingBottom: 8,
+        content: {
             zIndex: 1,
-        },
-        gridItem: {
-            [theme.breakpoints.up(smallBreakpoint)]: {
-                height: '100%',
-            },
+            margin: '0 auto',
             display: 'flex',
-            paddingTop: 0,
-        },
-        grid: {
-            [theme.breakpoints.down(smallBreakpoint)]: {
-                display: 'block',
-            },
-            flexDirection: 'row-reverse',
-            justifyContent: 'flex-end',
+            flexDirection: 'column',
+            width: '100%',
+            maxWidth: 840,
         },
         paper: {
+            zIndex: 1,
             display: 'flex',
             flexDirection: 'column',
             [theme.breakpoints.down(smallBreakpoint)]: {
@@ -69,58 +50,79 @@ const useStyles = makeStyles(
             width: '100%',
         },
         timetable: {
-            maxWidth: 800,
             flexDirection: 'column',
         },
         dates: {
             maxWidth: 340,
             [theme.breakpoints.down(smallBreakpoint)]: {
-                maxWidth: 'initial',
+                maxWidth: 492,
             },
+            minHeight: 500,
+        },
+
+        row: {
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap-reverse',
+            margin: theme.spacing(1, 0),
+            justifyContent: 'center',
+        },
+        posts: {
+            maxWidth: 492,
+            marginLeft: theme.spacing(1),
+            [theme.breakpoints.down(smallBreakpoint)]: {
+                marginLeft: 0,
+            },
+        },
+        post: {
+            marginBottom: theme.spacing(1),
         },
     }),
     { name: 'TimeTableView' }
 );
 
-function TimeTableView({ small, smallTimetable }) {
+function TimeTableView({ small, smallTimetable, posts }) {
     const classes = useStyles();
     return (
         <div className={classes.root} key={0} id="content-root">
             <div className={classes.extendedAppBar} />
-            <div className={classes.panel}>
-                <Grid container spacing={1} className={classes.grid} direction="row">
-                    <Grid item xs className={classNames(classes.timetable, classes.gridItem)}>
-                        <Paper className={classes.paper} square>
-                            <ErrorBoundary>
-                                <TimeTable small={smallTimetable} />
-                            </ErrorBoundary>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs className={classNames(classes.dates, classes.gridItem)}>
-                        <Paper className={classes.paper} square>
-                            <ErrorBoundary>
-                                <Dates filterDate={small} />
-                            </ErrorBoundary>
-                        </Paper>
-                    </Grid>
-                </Grid>
+            <div className={classes.content}>
+                <Paper className={classNames(classes.timetable, classes.paper)} square>
+                    <ErrorBoundary>
+                        <TimeTableContainer small={smallTimetable} />
+                    </ErrorBoundary>
+                </Paper>
+
+                <div className={classes.row}>
+                    <Paper className={classNames(classes.dates, classes.paper)} square>
+                        <ErrorBoundary>
+                            <Dates filterDate={small} />
+                        </ErrorBoundary>
+                    </Paper>
+                    <div className={classes.posts}>
+                        {posts &&
+                            posts.map(post => (
+                                <ComponentWrapper
+                                    key={post.POST_ID}
+                                    post={post}
+                                    className={classes.post}
+                                ></ComponentWrapper>
+                            ))}
+                    </div>
+                </div>
+
             </div>
         </div>
     );
 }
 
-const mapDispatchToProps = dispatch => {
-    return {};
-};
-
 const mapStateToProps = state => {
+    const getPosts = makeGetPosts();
     return {
         small: state.browser.lessThan.medium,
         smallTimetable: state.browser.lessThan.large && !state.browser.is.small,
+        ...getPosts(state),
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(TimeTableView);
+export default connect(mapStateToProps)(TimeTableView);

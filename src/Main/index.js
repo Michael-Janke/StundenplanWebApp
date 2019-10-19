@@ -1,5 +1,5 @@
 import React from 'react';
-import TimeTable from '../TimeTable';
+import TimeTable from '../TimeTableV2';
 import { useIntervalCheck } from '../Common/intervalCheck';
 
 function Main() {

@@ -6,9 +6,12 @@ import GridCell from './GridCell';
 
 const useStyles = makeStyles(theme => ({
     times: {
-        display: 'flex',
+        display: 'none',
         flexDirection: 'column',
         padding: theme.spacing(1),
+        [theme.breakpoints.up('sm')]: {
+            display: 'flex',
+        },
     },
     root: {
         display: 'flex',
@@ -22,6 +25,7 @@ const useStyles = makeStyles(theme => ({
         margin: 'auto',
         fontSize: theme.typography.pxToRem(15),
     },
+
 
 }), { name: "PeriodCell" });
 
