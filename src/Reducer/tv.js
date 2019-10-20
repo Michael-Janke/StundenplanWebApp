@@ -16,6 +16,11 @@ export default function tvReducer(state = {}, action) {
                 ...state,
                 transportInfo: action.payload,
             };
+        case 'GET_SUPERVISIONS_RECEIVED':
+            return {
+                ...state,
+                supervisions: action.payload,
+            };
         default:
     }
     return state;

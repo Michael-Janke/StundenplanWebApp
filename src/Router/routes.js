@@ -4,22 +4,17 @@ import { withRouter, matchPath } from 'react-router';
 import NotFoundPage from './NotFoundPage';
 import { asynchronize } from './asynchronize';
 
-/**
- * asynchronize without postWrappers
- */
-const asynchronized = asynchronize();
+const AppBar = asynchronize(() => import('./AppBar'), { hideSplash: false });
+const AppDrawer = asynchronize(() => import('./AppDrawer'), { hideSplash: false });
 
-const AppBar = asynchronized(() => import('./AppBar'));
-const AppDrawer = asynchronized(() => import('./AppDrawer'));
-
-const Posts = asynchronized(() => import('../Posts'));
-const PostEditor = asynchronized(() => import('../Posts/editIndex'));
-const Main = asynchronized(() => import('../Main'));
-const MainAppBar = asynchronized(() => import('../Main/components/AppBar'));
-const Statistics = asynchronized(() => import('../Statistics'));
-const Dates = asynchronized(() => import('../Dates'));
-const PublicPosts = asynchronized(() => import('../Posts/public'));
-const PublicTimetable = asynchronized(() => import('../TimeTable/public'));
+const Posts = asynchronize(() => import('../Posts'));
+const PostEditor = asynchronize(() => import('../Posts/editIndex'));
+const Main = asynchronize(() => import('../Main'));
+const MainAppBar = asynchronize(() => import('../Main/components/AppBar'));
+const Statistics = asynchronize(() => import('../Statistics'));
+const Dates = asynchronize(() => import('../Dates'));
+const PublicPosts = asynchronize(() => import('../Posts/public'));
+const PublicTimetable = asynchronize(() => import('../TimeTable/public'));
 
 const Route = props => {
     const renderComponent = React.useCallback(

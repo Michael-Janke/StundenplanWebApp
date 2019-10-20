@@ -1,21 +1,19 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { connect, useSelector } from 'react-redux';
 import TimeTableContainer from '../components/container';
 import indigo from '@material-ui/core/colors/indigo';
-import { Paper, AppBar, Grid, Toolbar } from '@material-ui/core';
+import { Paper, Grid, Grow } from '@material-ui/core';
 import Dates from '../../Dates';
 import ErrorBoundary from '../../Common/ErrorBoundary';
 import Substitutions from './Substitutions';
-import { makeStyles, useTheme } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
 import Search from '../../Main/components/Search';
 import Keyboard from '../../Main/components/Keyboard';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { classNames } from '../../Common/const';
+import classNames from 'classnames';
 import ClearTimetable from './ClearTimetable';
 import InformationView from './Information';
 import { useIntervalCheck } from '../../Common/intervalCheck';
-
-const smallBreakpoint = 800;
+import FastSelect from './FastSelect';
 
 const useStyles = makeStyles(
     theme => ({
@@ -24,8 +22,10 @@ const useStyles = makeStyles(
             display: 'flex',
             flexDirection: 'column',
             position: 'relative',
-            overflowY: 'auto',
             backgroundColor: theme.palette.background.default,
+            maxHeight: 1080,
+            minHeight: 1080,
+            overflow: 'hidden',
         },
         appBar: {
             backgroundColor: indigo[600],
@@ -36,7 +36,7 @@ const useStyles = makeStyles(
             flexDirection: 'row',
             alignItems: 'center',
             width: '100%',
-            height: 104,
+            height: 208,
             position: 'absolute',
             backgroundColor: indigo[600],
         },
@@ -45,53 +45,46 @@ const useStyles = makeStyles(
             ...theme.mixins.toolbar,
         },
         panel: {
-            [theme.breakpoints.up(smallBreakpoint)]: {
-                flexGrow: 1,
-                display: 'flex',
-                paddingLeft: 20,
-                paddingRight: 20,
-            },
-            paddingLeft: 8,
-            paddingRight: 8,
-            paddingBottom: 8,
+            padding: theme.spacing(1),
             zIndex: 1,
+            height: '100%',
         },
         gridItem: {
-            [theme.breakpoints.up(smallBreakpoint)]: {
-                height: '100%',
-            },
-            [theme.breakpoints.down(smallBreakpoint)]: {
-                maxWidth: 'initial',
-            },
+            height: '100%',
             paddingTop: 0,
+            display: 'flex',
+            flexDirection: 'column',
         },
         grid: {
-            [theme.breakpoints.down(smallBreakpoint)]: {
-                display: 'block',
-            },
-            flexDirection: 'row-reverse',
-            justifyContent: 'flex-end',
+            height: '100%',
         },
         paper: {
             display: 'flex',
             flexDirection: 'column',
-            [theme.breakpoints.down(smallBreakpoint)]: {
-                flexGrow: 1,
-            },
-            margin: theme.spacing(0.5),
         },
         timetable: {
             maxWidth: 800,
         },
+        timetableScroll: {
+            flex: 1,
+            overflow: 'auto',
+        },
         dates: {
             maxWidth: 340,
             width: '100%',
-            [theme.breakpoints.down(smallBreakpoint)]: {
-                maxWidth: 'initial',
-            },
         },
         substitutions: {
             flexGrow: 1,
+        },
+        growContainer: {
+            position: 'relative',
+            flex: 1,
+            '& > *': {
+                position: 'absolute',
+                top: 0,
+                height: '100%',
+                width: '100%',
+            },
         },
     }),
     { name: 'PublicDisplay' }
@@ -99,42 +92,53 @@ const useStyles = makeStyles(
 
 function PublicDisplay({ open }) {
     const classes = useStyles();
-    const theme = useTheme();
-    const small = useMediaQuery(theme.breakpoints.down(smallBreakpoint));
+
+    const isAdmin = useSelector(state => state.user.scope === 'admin');
     useIntervalCheck();
 
-    if (!window.params.token) {
+    useEffect(() => {
+        const setZoom = () => (document.body.style['zoom'] = document.body.parentElement.clientWidth / 1920);
+        window.addEventListener('resize', setZoom);
+        setZoom();
+        return () => window.removeEventListener('resize', setZoom);
+    }, []);
+
+    if (!window.params.token && !isAdmin) {
         return 'Leider bin ich noch nicht vollständig eingerichtet';
     }
+
+    window.open = () => {};
 
     return (
         <div className={classes.root}>
             <ClearTimetable />
-            <AppBar position="relative" className={classes.appBar}>
-                <Toolbar className={classes.toolbar}>
-                    <Grid item xs />
-                    <Grid item xs>
-                        <Search
-                            style={{ paddingLeft: 4, paddingRight: 4 }}
-                            alwaysOpen
-                            tv
-                            open={open}
-                            Keyboard={Keyboard}
-                        />
-                    </Grid>
-                </Toolbar>
-            </AppBar>
+
             <div className={classes.extendedAppBar} />
             <div className={classes.panel}>
-                <Grid container className={classes.grid}>
-                    <Grid item xs={6} className={classes.gridItem}>
-                        <Paper className={classNames(classes.timetable, classes.paper)} square>
+                <Grid container className={classes.grid} spacing={1}>
+                    <Grid item container xs={2}>
+                        <Paper className={classNames(classes.dates, classes.paper)} square>
                             <ErrorBoundary>
-                                <TimeTableContainer />
+                                <Dates filterDate={false} />
                             </ErrorBoundary>
                         </Paper>
                     </Grid>
-                    <Grid item xs={6} container direction="column">
+                    <Grid item xs={5} className={classes.gridItem}>
+                        <Search style={{ paddingBottom: 8, flex: 'none' }} alwaysOpen tv={true} Keyboard={Keyboard} />
+                        <div className={classes.growContainer}>
+                            <FastSelect open={!open} />
+                            <Grow in={open}>
+                                <div className={classes.timetableScroll}>
+                                    <Paper className={classNames(classes.timetable, classes.paper)} square>
+                                        <ErrorBoundary>
+                                            <TimeTableContainer />
+                                        </ErrorBoundary>
+                                    </Paper>
+                                </div>
+                            </Grow>
+                        </div>
+                    </Grid>
+                    <Grid item xs={5} container direction="column" spacing={1}>
                         <Grid item xs container>
                             <Paper className={classNames(classes.substitutions, classes.paper)} square>
                                 <ErrorBoundary>
@@ -143,17 +147,10 @@ function PublicDisplay({ open }) {
                             </Paper>
                         </Grid>
                         <Grid item xs container>
-                            <Grid item container xs={8}>
+                            <Grid item container>
                                 <Paper className={classNames(classes.substitutions, classes.paper)} square>
                                     <ErrorBoundary>
                                         <Substitutions addDays={0} />
-                                    </ErrorBoundary>
-                                </Paper>
-                            </Grid>
-                            <Grid item container xs={4}>
-                                <Paper className={classNames(classes.dates, classes.paper)} square>
-                                    <ErrorBoundary>
-                                        <Dates filterDate={small} />
                                     </ErrorBoundary>
                                 </Paper>
                             </Grid>
@@ -167,8 +164,7 @@ function PublicDisplay({ open }) {
 
 const mapStateToProps = state => {
     return {
-        small: state.browser.lessThan.medium,
-        open: !state.timetable.currentTimeTableId,
+        open: state.timetable.currentTimeTableId,
     };
 };
 

@@ -13,16 +13,15 @@ export default store => next => action => {
         case 'REMOVE_FAVORITE':
         case 'SET_NOTIFICATION':
         case 'GET_PROFILE_PICTURE':
-        case 'GET_PROFILE_PICTURE_SMALL':
         case 'GET_UNREAD_MESSAGES':
         case 'GET_ASSIGNMENTS':
         case 'GET_JOINED_TEAMS':
         case 'SEND_LOGIN_STATISTIC':
             getAuthContext().then(authContext => {
-                if(!(authContext instanceof TokenAuthContext)){
+                if (!(authContext instanceof TokenAuthContext)) {
                     next(action);
                 }
-            })
+            });
             return;
         default:
     }

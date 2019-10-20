@@ -4,7 +4,8 @@ import moment from 'moment';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Typography, Paper } from '@material-ui/core';
 import Linkify from 'react-linkify';
-import { classNames, DATE_COLORS } from '../Common/const';
+import classNames from 'classnames';
+import { DATE_COLORS } from '../Common/const';
 
 const styles = theme => ({
     ...DATE_COLORS(theme),

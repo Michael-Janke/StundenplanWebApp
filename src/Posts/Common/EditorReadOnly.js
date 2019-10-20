@@ -11,7 +11,7 @@ const ReadOnlyEditor = ({ content }) => {
 
     return (
         <div className={editorStyles.editor}>
-            {editorState && <Editor editorState={editorState} readOnly={true} />}
+            {editorState && <Editor editorState={editorState} readOnly={true} onChange={() => {}} />}
         </div>
     );
 };

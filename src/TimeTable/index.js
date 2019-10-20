@@ -58,6 +58,7 @@ const useStyles = makeStyles(
                 maxWidth: 492,
             },
             minHeight: 500,
+            zIndex: 2,
         },
         row: {
             display: 'flex',
@@ -80,7 +81,7 @@ const useStyles = makeStyles(
     { name: 'TimeTableView' }
 );
 
-function TimeTableView({ small, smallTimetable, posts }) {
+function TimeTableView({ small, posts }) {
     const classes = useStyles();
     return (
         <div className={classes.root} key={0} id="content-root">
@@ -88,13 +89,13 @@ function TimeTableView({ small, smallTimetable, posts }) {
             <div className={classes.content}>
                 <Paper className={classNames(classes.timetable, classes.paper)} square>
                     <ErrorBoundary>
-                        <TimeTableContainer small={smallTimetable} />
+                        <TimeTableContainer small={small} />
                     </ErrorBoundary>
                 </Paper>
                 <div className={classes.row}>
                     <Paper className={classNames(classes.dates, classes.paper)} square>
                         <ErrorBoundary>
-                            <Dates filterDate={small} />
+                            <Dates />
                         </ErrorBoundary>
                     </Paper>
                     <div className={classes.posts}>
@@ -118,7 +119,6 @@ const mapStateToProps = state => {
     const getPosts = makeGetPosts();
     return {
         small: state.browser.lessThan.medium,
-        smallTimetable: state.browser.lessThan.large && !state.browser.is.small,
         ...getPosts(state),
     };
 };

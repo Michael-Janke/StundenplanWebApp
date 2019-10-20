@@ -16,6 +16,7 @@ const mapStateToProps = (state, props) => ({
     me:
         state.timetable.currentTimeTableType === state.user.type &&
         state.timetable.currentTimeTableId === state.user.id,
+    currentPeriod: state.period.currentPeriod,
 });
 
 const ConnectedTimeTableGrid = connect(mapStateToProps)(Grid);

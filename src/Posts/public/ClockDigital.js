@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import moment from 'moment';
 import { Typography } from '@material-ui/core';
-import { classNames } from '../../Common/const';
+import classNames from 'classnames';
 
 const useStyles = makeStyles(theme => ({
     root: {

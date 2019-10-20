@@ -4,6 +4,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
@@ -62,6 +64,8 @@ export class AddDialog extends Component {
                 TEXT: date.TEXT || '',
                 SUBTEXT: date.SUBTEXT || '',
                 TYPE: date.TYPE || 'NORMAL',
+                HOMEPAGE: date.HOMEPAGE ? 1 : (date.HOMEPAGE === undefined) + 0,
+                HOMEPAGE_BOX: date.HOMEPAGE_BOX ? 1 : 0,
                 DATE_FROM: date.DATE_FROM
                     ? parseISOLocal(date.DATE_FROM.date)
                     : moment()
@@ -80,6 +84,10 @@ export class AddDialog extends Component {
 
     handleChange = key => event => {
         this.setState({ [key]: event.target.value });
+    };
+
+    handleChangeBox = key => event => {
+        this.setState({ [key]: event.target.checked ? 1 : 0 });
     };
 
     handleFromDateChange = date => {
@@ -136,13 +144,13 @@ export class AddDialog extends Component {
         });
     };
 
-    renderDialogContent = () => {
-        const { edit, classes } = this.props;
+    render() {
+        const { edit, classes, small } = this.props;
         const { timeEdit } = this.state;
         const Picker = timeEdit ? DateTimePicker : DatePicker;
         const mask = timeEdit ? DateTimeMask : DateMask;
         return (
-            <>
+            <Dialog open={this.props.open} onClose={this.handleClose(true)} fullScreen={small}>
                 <DialogTitle>
                     <CalendarIcon color="primary" style={{ marginRight: '1vmin' }} />
                     {'Termin ' + (edit ? 'editieren' : 'hinzufügen')}
@@ -223,6 +231,26 @@ export class AddDialog extends Component {
                             onChange={this.handleChange('SUBTEXT')}
                         />
                     </FormControl>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={this.state.HOMEPAGE}
+                                onChange={this.handleChangeBox('HOMEPAGE')}
+                                value={1}
+                            />
+                        }
+                        label="Auf Webseite anzeigen"
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={this.state.HOMEPAGE_BOX}
+                                onChange={this.handleChangeBox('HOMEPAGE_BOX')}
+                                value={1}
+                            />
+                        }
+                        label="In Homepage-Box anzeigen"
+                    />
 
                     <Preview>
                         <PreviewHeader>Vorschau</PreviewHeader>
@@ -239,17 +267,6 @@ export class AddDialog extends Component {
                         Absenden
                     </Button>
                 </DialogActions>
-            </>
-        );
-    };
-
-    render() {
-        const { small } = this.props;
-
-        // in fact we get many dialog instances wrapping content in new component saves cpu
-        return (
-            <Dialog open={this.props.open} onClose={this.handleClose(true)} fullScreen={small}>
-                {React.createElement(this.renderDialogContent)}
             </Dialog>
         );
     }

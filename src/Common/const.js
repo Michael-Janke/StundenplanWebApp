@@ -65,23 +65,6 @@ SUBJECTS.forEach((subject, i) => {
     SUBJECT_COLORS_MAP[subject] = SUBJECT_COLORS[i % SUBJECT_COLORS.length];
 });
 
-export function classNames(...classes) {
-    if (!classes.length) return '';
-    return classes
-        .map(arg => {
-            return arg && typeof arg === 'object'
-                ? Object.entries(arg)
-                      .map(([key, entry]) => {
-                          return entry && key;
-                      })
-                      .filter(e => !!e)
-                      .join(' ')
-                : arg;
-        })
-        .filter(e => !!e)
-        .join(' ');
-}
-
 function normalize(v) {
     return v || (v === 0 ? 0 : undefined);
 }

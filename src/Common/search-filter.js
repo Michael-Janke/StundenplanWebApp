@@ -1,9 +1,9 @@
 export default function searchFunction(needle = '', haystack = '') {
-    needle = replaceUmlaute(needle.toLowerCase());
-    haystack = haystack.split(' ');
-    needle = needle.split(' ');
-    return needle.every(subNeedle => {
-        return haystack.some(subHaystack => {
+    const cleanNeedle = replaceUmlaute(needle.toLowerCase());
+    const haystacks = haystack.split(' ');
+    const cleanNeedles = cleanNeedle.split(' ');
+    return cleanNeedles.every(subNeedle => {
+        return haystacks.some(subHaystack => {
             return subHaystack.indexOf(subNeedle) >= 0;
         });
     });

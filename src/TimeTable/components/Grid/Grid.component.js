@@ -6,7 +6,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import PeriodColumn from '../../period';
-import { WEEKDAY_NAMES, classNames } from '../../../Common/const';
+import { WEEKDAY_NAMES } from '../../../Common/const';
 import { setTimeTable, retryTimetable } from '../../../Main/actions';
 import Holiday from '../../Holiday';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -18,6 +18,7 @@ import PeriodCell from '../periodCell';
 import Offline from './offline';
 import OfflineLesson from './OfflineLesson';
 import { grey } from '@material-ui/core/colors';
+import classNames from 'classnames';
 
 class TimeTableGrid extends React.Component {
     periodTime(timeAsNumber) {
@@ -135,21 +136,24 @@ class TimeTableGrid extends React.Component {
     }
 
     renderRows() {
-        const { small, periods } = this.props;
+        const { small, periods, currentPeriod } = this.props;
         return [
             this.renderAbsences(),
             this.renderUnmatchedAssignments(),
-            ...Object.values(periods).map(period => (
-                <TableRow style={{ height: '100%' }} key={period.PERIOD_TIME_ID}>
-                    <PeriodCell small={small}>
-                        <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
-                            {small || this.renderPeriodTimes(period)}
-                            {this.renderPeriodHeader(period)}
-                        </div>
-                    </PeriodCell>
-                    {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
-                </TableRow>
-            )),
+            ...Object.values(periods).map(period => {
+                const isCurrentPriod = currentPeriod === period;
+                return (
+                    <TableRow style={{ height: '100%' }} key={period.PERIOD_TIME_ID}>
+                        <PeriodCell small={small} now={isCurrentPriod}>
+                            <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
+                                {small || this.renderPeriodTimes(period)}
+                                {this.renderPeriodHeader(period)}
+                            </div>
+                        </PeriodCell>
+                        {WEEKDAY_NAMES.map((name, i) => this.renderPeriodsColumn(i, period.PERIOD_TIME_ID))}
+                    </TableRow>
+                );
+            }),
         ];
     }
 

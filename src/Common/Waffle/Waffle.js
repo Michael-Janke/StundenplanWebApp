@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles, ButtonBase, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { classNames } from '../../Common/const';
+import classNames from 'classnames';
 const styles = theme => ({
     root: {},
     button: {

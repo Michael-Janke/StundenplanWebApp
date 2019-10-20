@@ -56,6 +56,7 @@ class AppBar extends React.Component {
             this.body.addEventListener('scroll', this.handleScroll);
         }
     };
+
     handleScroll = e => {
         const boxShadow = this.state.boxShadow;
         const scrollTop = Boolean(e.target.scrollTop !== 0);

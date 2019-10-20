@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="theme-color" content="#000000">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Stundenplan">
-    <meta name="google" content="notranslate" />
-    <!--
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content="Stundenplan" />
+        <meta name="google" content="notranslate" />
+        <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <link rel="apple-touch-icon" sizes="72x72" href="%PUBLIC_URL%/img/icons/icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="96x96" href="%PUBLIC_URL%/img/icons/icon-96x96.png" />
-    <link rel="apple-touch-icon" sizes="128x128" href="%PUBLIC_URL%/img/icons/icon-128x128.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="%PUBLIC_URL%/img/icons/icon-144x144.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/img/icons/icon-152x152.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/img/icons/icon-192x192.png" />
-    <link rel="apple-touch-icon" sizes="384x384" href="%PUBLIC_URL%/img/icons/icon-384x384.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/img/icons/icon-512x512.png" />
-    <!--
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+        <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="72x72" href="%PUBLIC_URL%/img/icons/icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="96x96" href="%PUBLIC_URL%/img/icons/icon-96x96.png" />
+        <link rel="apple-touch-icon" sizes="128x128" href="%PUBLIC_URL%/img/icons/icon-128x128.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="%PUBLIC_URL%/img/icons/icon-144x144.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/img/icons/icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/img/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" sizes="384x384" href="%PUBLIC_URL%/img/icons/icon-384x384.png" />
+        <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/img/icons/icon-512x512.png" />
+        <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -31,57 +31,129 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <style>
-        @keyframes in {
-            0%   {opacity: 0;}
-            100% {opacity: 1;}
-        }
-        @keyframes out {
-            0%   {opacity: 1;}
-            100% {opacity: 0;}
-        }
-        #splash-screen {
-            height: 100%;
-            width: 100%;
-            background-color: #3949ab;
-            position: absolute;
-            top: 0;
-            right: 0;
-            left: 0;
-            bottom: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            animation: in 150ms;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            z-index: 2000;
-        }
-        #splash-screen.ending {
-            animation: out 300ms;
-            opacity: 0;
-        }
-        #splash-screen.ended {
-            display: none;
-        }
-        #splash-screen .padding {
-            padding: 8px;
-            color: white;
-            font-size: 24px;
-        }
-    </style>
-    <title>Wolkenberg Stundenplan</title>
-  </head>
-  <body translate="no" class="notranslate">
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <div id="root"></div>
-    <div id="splash-screen">
-        <img class="padding" src="%PUBLIC_URL%/img/icons/icon-192x192.png" width="192" height="192"/>
-        <div class="padding">Wolkenberg Stundenplan</div>
-    </div>
-    <!--
+        <style>
+            #splash-screen {
+                height: 100%;
+                width: 100%;
+                background-color: #3949ab;
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: 0;
+                bottom: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                visibility: visible;
+                transition: ease-out opacity 1000ms, visibility 1000ms;
+
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+                    'Open Sans', 'Helvetica Neue', sans-serif;
+                z-index: 2000;
+            }
+            #splash-screen.ended {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+            #splash-screen .padding {
+                padding: 8px;
+                color: white;
+                font-size: 24px;
+            }
+        </style>
+        <title>Wolkenberg Stundenplan</title>
+    </head>
+    <body translate="no" class="notranslate">
+        <noscript>
+            You need to enable JavaScript to run this app.
+        </noscript>
+        <div id="root"></div>
+        <div id="splash-screen">
+            <img class="padding" src="%PUBLIC_URL%/img/icons/icon-192x192.png" width="192" height="192" />
+            <div class="padding">Wolkenberg Stundenplan</div>
+            <svg version="1.1" id="preloader" x="0px" y="0px" width="240px" height="120px" viewBox="0 0 240 120">
+                <style type="text/css">
+                    #plug,
+                    #socket {
+                        fill: #ffffff;
+                    }
+
+                    #loop-normal {
+                        fill: none;
+                        stroke: #ffffff;
+                        stroke-width: 12;
+                    }
+
+                    #loop-offset {
+                        display: none;
+                    }
+                </style>
+
+                <path
+                    id="loop-normal"
+                    class="st1"
+                    d="M120.5,60.5L146.48,87.02c14.64,14.64,38.39,14.65,53.03,0s14.64-38.39,0-53.03s-38.39-14.65-53.03,0L120.5,60.5
+            L94.52,87.02c-14.64,14.64-38.39,14.64-53.03,0c-14.64-14.64-14.64-38.39,0-53.03c14.65-14.64,38.39-14.65,53.03,0z"
+                >
+                    <animate
+                        attributeName="stroke-dasharray"
+                        attributeType="XML"
+                        from="500, 50"
+                        to="450 50"
+                        begin="0s"
+                        dur="3s"
+                        repeatCount="indefinite"
+                    />
+                    <animate
+                        attributeName="stroke-dashoffset"
+                        attributeType="XML"
+                        from="-40"
+                        to="-540"
+                        begin="0s"
+                        dur="3s"
+                        repeatCount="indefinite"
+                    />
+                </path>
+
+                <path
+                    id="loop-offset"
+                    d="M146.48,87.02c14.64,14.64,38.39,14.65,53.03,0s14.64-38.39,0-53.03s-38.39-14.65-53.03,0L120.5,60.5
+            L94.52,87.02c-14.64,14.64-38.39,14.64-53.03,0c-14.64-14.64-14.64-38.39,0-53.03c14.65-14.64,38.39-14.65,53.03,0L120.5,60.5
+            L146.48,87.02z"
+                />
+
+                <path id="socket" d="M7.5,0c0,8.28-6.72,15-15,15l0-30C0.78-15,7.5-8.28,7.5,0z" />
+
+                <path id="plug" d="M0,9l15,0l0-5H0v-8.5l15,0l0-5H0V-15c-8.29,0-15,6.71-15,15c0,8.28,6.71,15,15,15V9z" />
+
+                <animateMotion
+                    xlink:href="#plug"
+                    dur="3s"
+                    rotate="auto"
+                    repeatCount="indefinite"
+                    calcMode="linear"
+                    keyTimes="0;1"
+                    keySplines="0.42, 0, 0.58, 1"
+                >
+                    <mpath xlink:href="#loop-normal" />
+                </animateMotion>
+
+                <animateMotion
+                    xlink:href="#socket"
+                    dur="3s"
+                    rotate="auto"
+                    repeatCount="indefinite"
+                    calcMode="linear"
+                    keyTimes="0;1"
+                    keySplines="0.42, 0, 0.58, 1"
+                >
+                    <mpath xlink:href="#loop-offset" />
+                </animateMotion>
+            </svg>
+        </div>
+        <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
 
@@ -90,6 +162,5 @@
 
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+    --></body>
 </html>

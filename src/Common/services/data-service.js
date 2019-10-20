@@ -24,10 +24,8 @@ const dataService = store => next => action => {
             });
         }
         case 'GET_SUPERVISIONS': {
-            let { year, week } = action.payload;
-            return requestApiGenerator(next)(API_URL, `supervision/${year - week}`, {
+            return requestApiGenerator(next)(API_URL, `supervision`, {
                 type: 'GET_SUPERVISIONS',
-                request: action.payload,
             });
         }
         case 'SEND_LOGIN_STATISTIC':
@@ -82,8 +80,6 @@ const dataService = store => next => action => {
             );
         case 'GET_PROFILE_PICTURE':
             return getImageGenerator(next)(GRAPH_URL, 'beta/me/photo/$value', { type: 'PROFILE_PICTURE' });
-        case 'GET_PROFILE_PICTURE_SMALL':
-            return getImageGenerator(next)(GRAPH_URL, 'beta/me/photos/48x48/$value', { type: 'PROFILE_PICTURE_SMALL' });
         default:
             break;
     }

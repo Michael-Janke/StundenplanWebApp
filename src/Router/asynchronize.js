@@ -1,7 +1,7 @@
 import React from 'react';
 import NotFoundPage from './NotFoundPage';
 import Loadable from 'react-loadable';
-import { hideSplash } from './SplashScreen';
+import { hideSplash as hideSplash2 } from './SplashScreen';
 import { withRouter } from 'react-router';
 
 const Loading = ({ isLoading, error, retry }) => {
@@ -9,7 +9,7 @@ const Loading = ({ isLoading, error, retry }) => {
     if (isLoading) {
         return null;
     }
-    hideSplash();
+    hideSplash2();
     // Handle the error state
     console.error(error);
     if (error) {
@@ -21,23 +21,14 @@ const Loading = ({ isLoading, error, retry }) => {
     }
 };
 
-export const asynchronize = (...postWrappers) => importFunc =>
+export const asynchronize = (importFunc, { hideSplash = true } = {}) =>
     Loadable({
         loader: importFunc,
         loading: Loading,
+
         render(loaded, props) {
             const Component = loaded.default;
-            hideSplash();
-            return <AsynchronizedComponent
-                Component={Component}
-                postWrappers={postWrappers}
-                {...props} />
+            hideSplash && hideSplash2();
+            return <Component {...props} />;
         },
     });
-
-function AsynchronizedComponent({ Component, postWrappers, ...other }) {
-    const Comp = React.useMemo(() =>
-        postWrappers.reduce((fn, current) => current(fn), Component),
-        [Component, postWrappers]);
-    return <Comp key={0} {...other}></Comp>
-}

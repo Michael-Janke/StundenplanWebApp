@@ -18,7 +18,7 @@ export default ({ date, open, handleClose, handleDelete }) => (
             <Button onClick={handleClose} color="secondary">
                 Abbrechen
             </Button>
-            <Button onClick={handleDelete} color="primary" autoFocus>
+            <Button onClick={() => handleDelete(date)} color="primary" autoFocus>
                 Löschen
             </Button>
         </DialogActions>

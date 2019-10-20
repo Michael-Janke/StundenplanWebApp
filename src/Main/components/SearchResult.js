@@ -1,115 +1,47 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { loadAvatars } from '../actions';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import List from '@material-ui/core/List';
-import { RootRef } from '@material-ui/core';
-import makeGetSearchResult from '../../Selector/search';
-import SearchItem from './SearchItem';
+import classNames from 'classnames';
+import makeStyles from '@material-ui/styles/makeStyles';
+import FilterBar from './FilterBar';
+import SearchList from './SearchResultList';
 
-const growthFactor = 18;
+const useStyles = makeStyles(theme => ({
+    dropDown: {
+        marginTop: theme.spacing(1),
+        boxShadow: theme.shadows[4],
+        borderRadius: 2,
+        transition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
+        WebkitTransition: theme.transitions.create(['opacity', 'transform', 'box-shadow']),
+        willChange: 'opacity, transform',
+        transform: 'translate(0,0)',
+        maxHeight: 'inherit',
+    },
+    dropDownClosed: {
+        boxShadow: 'none',
+        transform: 'translate(0,-8px)',
+    },
+    list: {
+        backgroundColor: theme.palette.background.paper,
+        paddingTop: 0,
+        paddingBottom: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        flex: 1,
+    },
+}));
 
-class SearchResult extends React.PureComponent {
-    state = { elements: [] };
-    static getResults(props, start, end) {
-        return props.results.slice(start, end);
-    }
-
-    static getDerivedStateFromProps(props, state) {
-        if (!props.open || !props.results) {
-            // do nothing if closing
-            return { open: props.open };
-        }
-        const resultChanged =
-            (props.results && state.results && !props.results.every((v, i) => (state.results[i] || {}).id === v.id)) ||
-            props.open !== state.open;
-
-        return {
-            ...props,
-            elements:
-                props.results !== state.results
-                    ? SearchResult.getResults(
-                          props,
-                          0,
-                          !resultChanged && state.elements ? state.elements.length : growthFactor
-                      )
-                    : state.elements,
-        };
-    }
-
-    componentDidUpdate(prevState, prevProps) {
-        if (this.state.resultChanged) {
-            this.scroll.scrollTop = 0;
-        }
-        this.onScroll();
-        this.props.setCurrentItem && this.props.setCurrentItem(this.state.elements[Math.max(this.props.selected, 0)]);
-    }
-
-    onScroll = () => {
-        if (!this.state.elements || !this.state.open) {
-            return;
-        }
-        if (
-            this.scroll.scrollTop + this.scroll.clientHeight >=
-            (this.scroll.scrollHeight || this.scroll.clientHeight) - 20
-        ) {
-            if (this.props.results.length > this.state.elements.length) {
-                this.setState({
-                    elements: SearchResult.getResults(this.props, 0, this.state.elements.length + growthFactor),
-                });
-            }
-        }
-    };
-
-    handleRef = ref => {
-        this.scroll = ref;
-        if (this.scroll) {
-            this.scroll.addEventListener('scroll', this.onScroll);
-        }
-    };
-
-    componentWillUnmount() {
-        this.scroll.removeEventListener('scroll', this.onScroll);
-    }
-
-    render() {
-        const { className, selected } = this.props;
-        return (
-            <RootRef rootRef={this.handleRef}>
-                <List component="div" className={className}>
-                    {this.state.elements ? (
-                        <React.Fragment>
-                            {this.props.filterBar}
-                            {this.state.elements.map((object, i) => (
-                                <SearchItem
-                                    key={object.id + object.type}
-                                    {...object}
-                                    onClick={this.props.onClick}
-                                    toggleFavorite={this.props.toggleFavorite}
-                                    selected={selected === i}
-                                />
-                            ))}
-                        </React.Fragment>
-                    ) : null}
-                </List>
-            </RootRef>
-        );
-    }
-}
-
-const makeMapStateToProps = () => {
-    const getSearchResult = makeGetSearchResult();
-    return (state, props) => ({
-        results: getSearchResult(state, props),
-    });
+const SearchResult = ({ open, onClick, value }) => {
+    const classes = useStyles();
+    const [filter, setFilter] = useState('');
+    const small = useSelector(state => state.browser.lessThan.medium);
+    return (
+        <List className={classNames(classes.dropDown, classes.list, !open && classes.dropDownClosed)}>
+            {open && <FilterBar onChange={filter => setFilter(filter)} small={small} filter={filter} />}
+            {open && <SearchList onClick={onClick} filter={filter} value={value} />}
+        </List>
+    );
 };
 
-const mapDispatchToProps = dispatch => ({
-    loadAvatars: upns => {
-        dispatch(loadAvatars(upns));
-    },
-});
-
-export default connect(
-    makeMapStateToProps,
-    mapDispatchToProps
-)(SearchResult);
+export default SearchResult;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { classNames } from '../../../Common/const';
+import withStyles from '@material-ui/styles/withStyles';
+import classNames from 'classnames';
 
 const styles = {
     img: {
@@ -43,7 +43,8 @@ const Image = ({ classes, className, src, alt, onClick, children }) => (
     <div className={classNames(classes.root, className)} onClick={onClick}>
         <img className={classes.img} src={src} alt={alt}></img>
         <div className={classes.hover}>
-        <div className={classes.text}>{children}</div></div>
+            <div className={classes.text}>{children}</div>
+        </div>
     </div>
 );
 
