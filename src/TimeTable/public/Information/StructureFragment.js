@@ -13,6 +13,10 @@ const useStyles = makeStyles(theme => ({
         margin: 2,
         textAlign: 'left',
         overflow: 'hidden',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        fontSize: '1em',
+        fontFamily: theme.typography.fontFamily,
     },
 }));
 

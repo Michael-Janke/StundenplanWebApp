@@ -1,10 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import StructureSnapshot from './StructureSnapshot';
-import { Typography, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import BackIcon from '@material-ui/icons/ArrowBack';
+import NextIcon from '@material-ui/icons/ArrowForward';
+import ResetIcon from '@material-ui/icons/ArrowDownward';
+import {
+    Typography,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    ListItemSecondaryAction,
+    IconButton,
+} from '@material-ui/core';
 import ApartmentIcon from '@material-ui/icons/Apartment';
-import { grey } from '@material-ui/core/colors';
+import grey from '@material-ui/core/colors/grey';
 
+import StructureSnapshot from './StructureSnapshot';
 const useStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.background.default,
@@ -34,11 +44,8 @@ const breakMap = {
 };
 
 function InformationComponent({
-    lessons,
-    absentClasses,
-    studentsInSchool,
-    teachersInSchool,
-    period,
+    substitutions,
+    currentPeriod,
     getAllTimetable,
     loadSupervisions,
     date,
@@ -46,28 +53,48 @@ function InformationComponent({
     counter,
 }) {
     const classes = useStyles();
+
+    const [period, setPeriod] = useState(currentPeriod.PERIOD_TIME_ID - 1 || 0);
+    const { lessons, absentClasses, studentsInSchool, teachersInSchool } = substitutions[period];
     useEffect(() => {
-        if (!lessons) {
-            getAllTimetable(date);
-        }
-    }, [lessons, getAllTimetable, date, counter]);
+        getAllTimetable(date);
+    }, [getAllTimetable, date, counter]);
 
     useEffect(() => {
         loadSupervisions();
     }, [counter, date, loadSupervisions]);
 
-    if (!lessons || !period) {
-        return null;
-    }
-    const periodNumber = period.PERIOD_TIME_ID || 1;
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setPeriod(currentPeriod.PERIOD_TIME_ID - 1 || 0);
+        }, 10000);
+        return () => clearTimeout(timer);
+    }, [period]);
 
     return (
         <div className={classes.root}>
-            <ListItem className={classes.header}>
+            <ListItem className={classes.header} ContainerComponent="div">
                 <ListItemIcon>
                     <ApartmentIcon />
                 </ListItemIcon>
-                <ListItemText>Raumübersicht {periodNumber - 1}. Stunde</ListItemText>
+                <ListItemText>Raumübersicht {period}. Stunde</ListItemText>
+                <ListItemSecondaryAction>
+                    <IconButton disabled={period <= 0} onClick={() => setPeriod(period => period - 1)}>
+                        <BackIcon />
+                    </IconButton>
+                    <IconButton
+                        disabled={!currentPeriod.PERIOD_TIME_ID}
+                        onClick={() => setPeriod(currentPeriod.PERIOD_TIME_ID - 1)}
+                    >
+                        <ResetIcon />
+                    </IconButton>
+                    <IconButton
+                        disabled={period >= Math.max(...Object.keys(substitutions))}
+                        onClick={() => setPeriod(period => period + 1)}
+                    >
+                        <NextIcon />
+                    </IconButton>
+                </ListItemSecondaryAction>
             </ListItem>
             <div className={classes.padding}>
                 <Typography variant="body2" component="div">

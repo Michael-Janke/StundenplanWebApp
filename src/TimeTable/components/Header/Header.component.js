@@ -46,7 +46,7 @@ const styles = theme => ({
         height: 28,
     },
     today: {
-        backgroundColor: grey[400],
+        backgroundColor: theme.palette.type === 'dark' ? grey[600] : grey[400],
     },
     offline: {
         width: 'unset',
