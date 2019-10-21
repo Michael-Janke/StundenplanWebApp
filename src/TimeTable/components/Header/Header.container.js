@@ -19,6 +19,7 @@ const mapDispatchToProps = dispatch => ({
     setNextWeek: () => dispatch(changeWeek(1)),
     setThisWeek: () => dispatch(changeWeek('now')),
     setPreviousWeek: () => dispatch(changeWeek(-1)),
+    close: () => dispatch({ type: 'SET_TIMETABLE', payload: { type: null, id: 0 } }),
 });
 
 const ConnectedTimeTableHeader = connect(

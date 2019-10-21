@@ -131,7 +131,7 @@ function PublicDisplay({ open }) {
                                 <div className={classes.timetableScroll}>
                                     <Paper className={classNames(classes.timetable, classes.paper)} square>
                                         <ErrorBoundary>
-                                            <TimeTableContainer />
+                                            <TimeTableContainer tv={true} />
                                         </ErrorBoundary>
                                     </Paper>
                                 </div>
