@@ -45,7 +45,7 @@ const breakMap = {
 
 function InformationComponent({
     substitutions,
-    currentPeriod = {},
+    currentPeriod,
     getAllTimetable,
     loadSupervisions,
     date,
@@ -53,9 +53,9 @@ function InformationComponent({
     counter,
 }) {
     const classes = useStyles();
-
-    const [period, setPeriod] = useState(currentPeriod.PERIOD_TIME_ID - 1 || 0);
+    const [period, setPeriod] = useState((currentPeriod || {}).PERIOD_TIME_ID - 1 || 0);
     const { lessons, absentClasses, studentsInSchool, teachersInSchool } = substitutions[period];
+
     useEffect(() => {
         getAllTimetable(date);
     }, [getAllTimetable, date, counter]);
