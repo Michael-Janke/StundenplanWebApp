@@ -54,7 +54,7 @@ function InformationComponent({
 }) {
     const classes = useStyles();
     const [period, setPeriod] = useState((currentPeriod || {}).PERIOD_TIME_ID - 1 || 0);
-    const { lessons, absentClasses, studentsInSchool, teachersInSchool } = substitutions[period];
+    const { lessons, absentClasses, studentsInSchool, teachersInSchool } = substitutions[period] || {};
 
     useEffect(() => {
         getAllTimetable(date);
@@ -119,7 +119,7 @@ function InformationComponent({
                 )}
             </div>
             <div className={classes.content}>
-                <StructureSnapshot lessons={lessons}></StructureSnapshot>
+                {lessons && <StructureSnapshot lessons={lessons}></StructureSnapshot>}
             </div>
         </div>
     );
