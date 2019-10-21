@@ -69,7 +69,7 @@ class Search extends React.PureComponent {
                                 />
                             )}
                             <SearchResult
-                                open={this.state.open}
+                                open={open}
                                 value={this.state.value}
                                 onClick={this.handleClick}
                                 tv={this.props.tv}
