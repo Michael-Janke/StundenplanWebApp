@@ -18,21 +18,31 @@ const styles = theme => ({
         fontFamily: theme.typography.fontFamily,
         fontSize: '100%',
         display: 'flex',
-        flexDirection: 'column',
         flexGrow: 1,
+        flexDirection: 'column',
+    },
+    row: {
+        position: 'relative',
+        flex: 1,
     },
     rootHeader: {
         backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
         padding: theme.spacing(1),
         borderBottom: `1px solid ${theme.palette.divider}`,
-        display: 'flex',
-        flexDirection: 'column',
     },
-    rootContent: {
-        padding: theme.spacing(1),
+    rowContent: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        flex: 1,
+    },
+    column: {
         overflowY: 'auto',
         backgroundColor: theme.palette.background.default,
-        flex: '1 0 0',
+        width: '50%',
+        height: '100%',
     },
     substitutionsHeader: {
         fontSize: '90%',
@@ -129,30 +139,63 @@ class Substitutions extends React.Component {
                     className={classes.rootHeader}
                     key={1}
                 />
-                <div className={classes.rootContent}>
-                    {substitutions.substitutions.map((entry, i) => (
-                        <SubstitutionsContainer key={i}>
-                            <div className={classes.substitutionsHeader}>
-                                {this.renderName(entry) || <div />}
-                                <IconButton
-                                    variant="mini"
-                                    className={classes.button}
-                                    onClick={this.handleSelectTimetable.bind(this, entry)}
-                                >
-                                    <LinkIcon fontSize="small" />
-                                </IconButton>
-                            </div>
-                            <div className={classes.substitutionsContainer}>
-                                {entry.substitutions.map((substitution, i) => (
-                                    <SubstitutionEntry
-                                        substitution={substitution}
-                                        type={sortBy.type.singular}
-                                        key={substitution.SUBSTITUTION_ID + "" + i}
-                                    />
+                <div className={classes.row}>
+                    <div className={classes.rowContent}>
+                        <div className={classes.column}>
+                            {substitutions.substitutions
+                                .filter((e, i, a) => i <= a.length / 2)
+                                .map((entry, i) => (
+                                    <SubstitutionsContainer key={i}>
+                                        <div className={classes.substitutionsHeader}>
+                                            {this.renderName(entry) || <div />}
+                                            <IconButton
+                                                variant="mini"
+                                                className={classes.button}
+                                                onClick={this.handleSelectTimetable.bind(this, entry)}
+                                            >
+                                                <LinkIcon fontSize="small" />
+                                            </IconButton>
+                                        </div>
+                                        <div className={classes.substitutionsContainer}>
+                                            {entry.substitutions.map((substitution, i) => (
+                                                <SubstitutionEntry
+                                                    substitution={substitution}
+                                                    type={sortBy.type.singular}
+                                                    key={substitution.SUBSTITUTION_ID + '' + i}
+                                                />
+                                            ))}
+                                        </div>
+                                    </SubstitutionsContainer>
                                 ))}
-                            </div>
-                        </SubstitutionsContainer>
-                    ))}
+                        </div>
+                        <div className={classes.column}>
+                            {substitutions.substitutions
+                                .filter((e, i, a) => i > a.length / 2)
+                                .map((entry, i) => (
+                                    <SubstitutionsContainer key={i}>
+                                        <div className={classes.substitutionsHeader}>
+                                            {this.renderName(entry) || <div />}
+                                            <IconButton
+                                                variant="mini"
+                                                className={classes.button}
+                                                onClick={this.handleSelectTimetable.bind(this, entry)}
+                                            >
+                                                <LinkIcon fontSize="small" />
+                                            </IconButton>
+                                        </div>
+                                        <div className={classes.substitutionsContainer}>
+                                            {entry.substitutions.map((substitution, i) => (
+                                                <SubstitutionEntry
+                                                    substitution={substitution}
+                                                    type={sortBy.type.singular}
+                                                    key={substitution.SUBSTITUTION_ID + '' + i}
+                                                />
+                                            ))}
+                                        </div>
+                                    </SubstitutionsContainer>
+                                ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -179,7 +222,7 @@ const makeStateToProps = () => {
     });
 };
 const mapDispatchToProps = dispatch => ({
-    getTimetableAll: (date) => {
+    getTimetableAll: date => {
         dispatch(getTimetable(-1, 'all', date));
     },
     setTimetable: (type, id) => dispatch(setTimeTable(type, id)),

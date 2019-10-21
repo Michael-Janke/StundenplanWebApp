@@ -41,19 +41,18 @@ const getCurrentSubstitutions = createSelector(
     getSubstitutions,
     getWeekSelector,
     getYearSelector,
-    (substitutions, week, year) => substitutions[getSubstitutionsCacheKey({ id: '-1', type: 'all', week, year })]
+    substitutions => substitutions[getSubstitutionsCacheKey({ id: '-1', type: 'all' })]
 );
 
 function getAllSubstitutions(sortBy, substitutions, masterdata, addDays, periods, currentPeriod) {
     if (!substitutions || !masterdata) {
         return null;
     }
-    let day = moment()
-        .add(addDays, 'days')
-        .weekday();
+    let day = moment().add(addDays, 'days');
     periods = Object.values(periods);
-    if (substitutions.substitutions[day]) {
-        let subst = substitutions.substitutions[day];
+    let subOfWeek = substitutions.substitutions[day.format('GGGG-WW')] || {};
+    if (subOfWeek[day.weekday()]) {
+        let subst = subOfWeek[day.weekday()];
         return { addDays, substitutions: extract(sortBy.type, sortBy.fieldName, subst, masterdata, currentPeriod) };
     }
 }

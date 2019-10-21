@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import StructureSnapshot from './StructureSnapshot';
-import { Typography } from '@material-ui/core';
+import { Typography, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import ApartmentIcon from '@material-ui/icons/Apartment';
+import { grey } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -11,11 +13,7 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
     },
     header: {
-        padding: theme.spacing(1),
-        backgroundColor: theme.palette.background.paper,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
+        backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
     },
     padding: {
         padding: `0 ${theme.spacing(1)}px`,
@@ -65,14 +63,22 @@ function InformationComponent({
 
     return (
         <div className={classes.root}>
-            <div className={classes.header}>
-                <Typography variant="h6">Raumübersicht {periodNumber}. Stunde</Typography>
-            </div>
+            <ListItem className={classes.header}>
+                <ListItemIcon>
+                    <ApartmentIcon />
+                </ListItemIcon>
+                <ListItemText>Raumübersicht {periodNumber - 1}. Stunde</ListItemText>
+            </ListItem>
             <div className={classes.padding}>
                 <Typography variant="body2" component="div">
-                    <b>{studentsInSchool}</b> Schüler werden von <b>{teachersInSchool}</b> Lehrern unterrichtet, absente
-                    Klassen: <b>{Array.from(new Set(absentClasses.map(absence => absence.class.NAME))).join(', ')}</b>
+                    <b>{studentsInSchool}</b> Schüler werden von <b>{teachersInSchool}</b> Lehrern unterrichtet.
                 </Typography>
+                {!!absentClasses.length && (
+                    <Typography variant="body2" component="div">
+                        Absente Klassen:{' '}
+                        <b>{Array.from(new Set(absentClasses.map(absence => absence.class.NAME))).join(', ')}</b>
+                    </Typography>
+                )}
                 {Object.values(supervisions).length > 0 && (
                     <Typography variant="body2" component="div">
                         Fehlende Aufsichten heute:{' '}
