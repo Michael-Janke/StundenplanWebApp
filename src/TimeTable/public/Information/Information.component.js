@@ -101,7 +101,7 @@ function InformationComponent({
                 <Typography variant="body2" component="div">
                     <b>{studentsInSchool}</b> Schüler werden von <b>{teachersInSchool}</b> Lehrern unterrichtet.
                 </Typography>
-                {!!absentClasses.length && (
+                {absentClasses && !!absentClasses.length && (
                     <Typography variant="body2" component="div">
                         Absente Klassen:{' '}
                         <b>{Array.from(new Set(absentClasses.map(absence => absence.class.NAME))).join(', ')}</b>
