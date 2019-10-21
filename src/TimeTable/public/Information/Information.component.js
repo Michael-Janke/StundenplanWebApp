@@ -45,7 +45,7 @@ const breakMap = {
 
 function InformationComponent({
     substitutions = {},
-    currentPeriod = {},
+    currentPeriod,
     getAllTimetable,
     loadSupervisions,
     date,
@@ -55,6 +55,7 @@ function InformationComponent({
     const classes = useStyles();
     const [period, setPeriod] = useState((currentPeriod || {}).PERIOD_TIME_ID - 1 || 0);
     const { lessons, absentClasses, studentsInSchool, teachersInSchool } = substitutions[period] || {};
+    const currentPeriodNumber = ((currentPeriod || {}).PERIOD_TIME_ID || 1) - 1;
 
     useEffect(() => {
         getAllTimetable(date);
@@ -66,7 +67,7 @@ function InformationComponent({
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setPeriod(currentPeriod.PERIOD_TIME_ID - 1 || 0);
+            setPeriod(currentPeriodNumber);
         }, 10000);
         return () => clearTimeout(timer);
     }, [period]);
@@ -83,8 +84,8 @@ function InformationComponent({
                         <BackIcon />
                     </IconButton>
                     <IconButton
-                        disabled={!currentPeriod.PERIOD_TIME_ID}
-                        onClick={() => setPeriod(currentPeriod.PERIOD_TIME_ID - 1)}
+                        disabled={!currentPeriod || !currentPeriod.PERIOD_TIME_ID}
+                        onClick={() => setPeriod(currentPeriodNumber)}
                     >
                         <ResetIcon />
                     </IconButton>
