@@ -45,7 +45,7 @@ const breakMap = {
 
 function InformationComponent({
     substitutions = {},
-    currentPeriod,
+    currentPeriod = {},
     getAllTimetable,
     loadSupervisions,
     date,
