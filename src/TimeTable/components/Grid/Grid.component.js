@@ -264,7 +264,7 @@ const Periods = styled.div`
     flex: 1;
 `;
 const Period = styled.div`
-    color: ${grey[600]};
+    color: ${grey[500]};
 `;
 
 const mapDispatchToProps = dispatch => {

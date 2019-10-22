@@ -83,7 +83,7 @@ export default function Connection({ connection }) {
 
             <div className={classes.direction}>
                 {connection.direction.split(',').map(line => (
-                    <div>{line}</div>
+                    <div key={line}>{line}</div>
                 ))}
             </div>
 

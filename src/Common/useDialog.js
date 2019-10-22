@@ -1,23 +1,26 @@
 import React from 'react';
-import { DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Paper, Popover } from '@material-ui/core';
+import {
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+    Button,
+    Paper,
+    Popover,
+} from '@material-ui/core';
 
 export default function useDialogPopper(options) {
-    const {
-        title = "Title",
-        text = "Text",
-        textAccept = "Akzeptieren",
-        textDecline = "Ablehnen"
-    } = options || {};
-    
+    const { title = 'Titel', text = 'Text', textAccept = 'Akzeptieren', textDecline = 'Ablehnen' } = options || {};
+
     const callback = React.useRef();
     const [anchorRef, setAnchorRef] = React.useState();
 
     const set = (anchorRef, cb) => {
         setAnchorRef(anchorRef);
         callback.current = cb;
-    }
+    };
 
-    const handleClose = (status) => {
+    const handleClose = status => {
         setAnchorRef(null);
         callback.current && callback.current(status);
     };

@@ -70,7 +70,7 @@ function InformationComponent({
             setPeriod(currentPeriodNumber);
         }, 10000);
         return () => clearTimeout(timer);
-    }, [period]);
+    }, [period, currentPeriodNumber]);
 
     return (
         <div className={classes.root}>

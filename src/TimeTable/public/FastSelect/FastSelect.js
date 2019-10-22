@@ -57,11 +57,11 @@ function FastSelect({ open }) {
                 </Tabs>
 
                 <div className={classes.growContent}>
-                    <Teacher open={filter === 'teacher'} />
-                    <Classes open={filter === 'class'} />
-                    <Rooms open={filter === 'room'} />
-                    <Students open={filter === 'student'} />
-                    <Grow in={filter === 'search'}>
+                    <Teacher open={open && filter === 'teacher'} />
+                    <Classes open={open && filter === 'class'} />
+                    <Rooms open={open && filter === 'room'} />
+                    <Students open={open && filter === 'student'} />
+                    <Grow in={open && filter === 'search'}>
                         <Search style={{ paddingBottom: 8, flex: 'none' }} open={true} tv={true} Keyboard={Keyboard} />
                     </Grow>
                 </div>

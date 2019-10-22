@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { connect } from 'react-redux';
 
@@ -13,6 +13,10 @@ import TransportInfo from './TransportInfo/TransportInfo';
 import { fade } from '@material-ui/core/styles';
 import { indigo } from '@material-ui/core/colors';
 import { useIntervalCheck } from '../../Common/intervalCheck';
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+import useInterval from 'react-useinterval';
+const moment = extendMoment(Moment);
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -94,6 +98,27 @@ const Posts = ({ getPosts, posts }) => {
         window.addEventListener('resize', () => setZoom(document.body.offsetWidth / 1920));
     }, []);
 
+    const [today, setToday] = useState(moment().format('ymd'));
+    useInterval(() => setToday(moment().format('ymd')), 1000 * 60 * 60);
+
+    const [postOverflow, setPostOverflow] = useState(0);
+    const overflow = posts ? posts.length - 4 : 0;
+    useInterval(() => setPostOverflow((postOverflow + 1) % overflow), 1000 * 30);
+
+    const sortedPosts = useMemo(
+        () =>
+            posts &&
+            today &&
+            posts.sort((a, b) => {
+                const fromA = moment.range(a.DATE_FROM.date, moment()).diff('days');
+                const toA = moment.range(a.DATE_TO.date, moment()).diff('days');
+                const fromB = moment.range(b.DATE_FROM.date, moment()).diff('days');
+                const toB = moment.range(b.DATE_TO.date, moment()).diff('days');
+                return Math.min(fromA, Math.abs(toA)) - Math.min(fromB, Math.abs(toB));
+            }),
+        [posts, today]
+    );
+
     return (
         <TransitionGroup className={classes.root} style={{ zoom }}>
             <AppBar position="static" className={classes.appBar}>
@@ -113,28 +138,39 @@ const Posts = ({ getPosts, posts }) => {
                             <GridListTile rows={1} cols={1} classes={{ tile: classes.tile }}>
                                 <DayInfo></DayInfo>
                             </GridListTile>
-
-                            {posts &&
-                                posts.map(post => (
-                                    <GridListTile key={post.POST_ID} rows={1} cols={1} classes={{ tile: classes.tile }}>
-                                        <CSSTransition
-                                            classNames={{
-                                                enter: classes.postEnter,
-                                                enterActive: classes.postEnterActive,
-                                                exit: classes.postExit,
-                                                exitActive: classes.postExitActive,
-                                            }}
+                            {sortedPosts &&
+                                sortedPosts
+                                    .filter((v, i) => i < 4 || i === 4 + postOverflow)
+                                    .map((post, i) => (
+                                        <GridListTile
                                             key={post.POST_ID}
-                                            timeout={500}
+                                            rows={1}
+                                            cols={1}
+                                            classes={{ tile: classes.tile }}
                                         >
-                                            <ComponentWrapper
-                                                post={post}
-                                                noButtons={true}
-                                                className={classes.post}
-                                            ></ComponentWrapper>
-                                        </CSSTransition>
-                                    </GridListTile>
-                                ))}
+                                            <CSSTransition
+                                                classNames={{
+                                                    enter: classes.postEnter,
+                                                    enterActive: classes.postEnterActive,
+                                                    exit: classes.postExit,
+                                                    exitActive: classes.postExitActive,
+                                                }}
+                                                key={post.POST_ID}
+                                                timeout={500}
+                                            >
+                                                <ComponentWrapper
+                                                    post={post}
+                                                    noButtons={true}
+                                                    className={classes.post}
+                                                    titleAdd={
+                                                        i === 4 && overflow > 0
+                                                            ? ` (${postOverflow + 1}/${overflow})`
+                                                            : ''
+                                                    }
+                                                ></ComponentWrapper>
+                                            </CSSTransition>
+                                        </GridListTile>
+                                    ))}
                         </GridList>
                     </GridListTile>
                 </GridList>

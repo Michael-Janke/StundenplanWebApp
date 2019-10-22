@@ -5,7 +5,7 @@ import SettingsIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Diashow from './Common/Diashow';
 
-function PostWrapper({ onEdit, onDelete, post, noButtons, className }) {
+function PostWrapper({ onEdit, onDelete, post, noButtons, className, titleAdd = '' }) {
     const { IMAGES, CREATOR, TITLE, TEXT, TYPE } = post;
     const content = React.useMemo(() => JSON.parse(TEXT), [TEXT]);
 
@@ -35,7 +35,7 @@ function PostWrapper({ onEdit, onDelete, post, noButtons, className }) {
         <Component
             images={IMAGES}
             upn={CREATOR}
-            title={TITLE}
+            title={TITLE + titleAdd}
             content={content}
             buttons={buttons}
             edit={false}

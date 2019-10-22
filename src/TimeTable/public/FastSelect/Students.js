@@ -31,9 +31,8 @@ function FastSelect({ open }) {
     const dispatch = useDispatch();
     const [filter, setFilter] = useState('');
 
-    useEffect(() => {
-        setFilter('');
-    }, [open]);
+    useEffect(() => setFilter(''), [open]);
+
     const initials = useMemo(
         () =>
             Object.values(students).reduce((acc, student) => {
