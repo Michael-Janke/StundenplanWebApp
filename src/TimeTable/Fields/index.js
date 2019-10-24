@@ -1,20 +1,7 @@
-import { SUBJECT_COLORS_MAP } from '../../Common/const';
 import RoomContainer, { roomStyles } from './room';
 import SubjectContainer, { subjectStyles } from './subject';
 import TeachersContainer, { teacherStyles } from './teachers';
 import ClassesContainer, { classStyles } from './classes';
-
-const extractSubject = name => {
-    return name
-        .replace(/[0-9]/g, '')
-        .substring(0, 3)
-        .toLowerCase();
-};
-
-const ColorBar = subject => {
-    const object = subject.new || subject.old;
-    return object && SUBJECT_COLORS_MAP[extractSubject(object.NAME)];
-};
 
 export const styles = theme => ({
     ...subjectStyles(theme),
@@ -35,7 +22,6 @@ export function getFields(type) {
 export function getStudentFields(lesson) {
     const { subject, room, teachers } = lesson;
     return {
-        colorBar: ColorBar(subject),
         fields: {
             new: !lesson.isOld && [
                 SubjectContainer('new')(subject),
@@ -54,7 +40,6 @@ export function getStudentFields(lesson) {
 export function getTeacherFields(lesson) {
     const { subject, room, classes, teachers } = lesson;
     return {
-        colorBar: ColorBar(subject),
         fields: {
             new: !lesson.isOld && [
                 SubjectContainer('new')(subject),
@@ -73,7 +58,6 @@ export function getTeacherFields(lesson) {
 export function getRoomFields(lesson) {
     const { subject, teachers, classes } = lesson;
     return {
-        colorBar: ColorBar(subject),
         fields: {
             new: !lesson.isOld && [
                 SubjectContainer('new')(subject),
