@@ -110,10 +110,10 @@ const Posts = ({ getPosts, posts }) => {
             posts &&
             today &&
             posts.sort((a, b) => {
-                const fromA = moment.range(a.DATE_FROM.date, moment()).diff('days');
-                const toA = moment.range(a.DATE_TO.date, moment()).diff('days');
-                const fromB = moment.range(b.DATE_FROM.date, moment()).diff('days');
-                const toB = moment.range(b.DATE_TO.date, moment()).diff('days');
+                const fromA = moment.range(a.DATE_FROM.date, moment().startOf('day')).diff('days');
+                const toA = moment.range(a.DATE_TO.date, moment().startOf('day')).diff('days');
+                const fromB = moment.range(b.DATE_FROM.date, moment().startOf('day')).diff('days');
+                const toB = moment.range(b.DATE_TO.date, moment().startOf('day')).diff('days');
                 return Math.min(fromA, Math.abs(toA)) - Math.min(fromB, Math.abs(toB));
             }),
         [posts, today]
