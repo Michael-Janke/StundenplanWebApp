@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setNotification, setMyTimetable, sendLoginStatistic, changeTheme, setSortBy } from '../Main/actions';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import createTheme from '../Common/theme';
 import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -9,6 +8,7 @@ import { HashRouter as Router } from 'react-router-dom';
 import Routes from './routes';
 import Notifier from './Notifier';
 import { SnackbarProvider } from 'notistack';
+import { MuiThemeProvider } from '@material-ui/core';
 
 class AppRouter extends Component {
     constructor(props) {
