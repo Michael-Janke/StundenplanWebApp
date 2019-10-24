@@ -1,39 +1,11 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import { animated } from 'react-spring'
 import { Width, Springs, Gesture, Spring } from './helpers';
 
-import TimetableContainer from '../Timetable/Timetable.container'
 import GridBackground from './Grid.background';
-import GridSlideComponent, { ReportingRowComponent } from './Grid.slide.component';
+import GridSlideComponent from './Grid.slide.component';
 
 
-class Performance {
-    constructor(getIndex) {
-        this.getIndex = getIndex;
-    }
-
-    loaders = []
-    timeout = 0
-    start = () => {
-        this.stop();
-        this.loadNext();
-    }
-    loadNext = () => {
-        const index = this.getIndex();
-        this.loaders.sort((o1, o2) => Math.abs(o1.index - index) - Math.abs(o2.index - index));
-        if (this.loaders[0]) {
-            this.loaders[0].load();
-            this.loaders.splice(0, 1);
-        }
-        const next = this.loaders[0];
-        if (next) {
-            this.interval = setTimeout(this.loadNext, Math.abs(next.index - index) * 100);
-        }
-    }
-    stop = () => {
-        clearTimeout(this.timeout)
-    }
-}
 
 class GridSwiperComponent extends React.Component {
 
@@ -41,20 +13,10 @@ class GridSwiperComponent extends React.Component {
     width = 0;
 
     areas = [];
-    // performance object
-    performance = new Performance(() => this.tempIndex)
-
+    
     state = {
         index: this.props.index
     };
-
-
-    componentDidUpdate() {
-        this.performance.start();
-    }
-    componentDidMount() {
-        this.performance.start();
-    }
 
     componentWillReceiveProps(nextProps) {
         // index changed
@@ -94,12 +56,8 @@ class GridSwiperComponent extends React.Component {
     }
 
     handleGesture = ({ down, delta: [xDelta, yDelta], vxvy: [vx, vy], direction: [xDir, yDir], distance, cancel }) => {
-        const { width, setPeriodsCell, slides, setTranslate } = this;
+        const { width, setTranslate } = this;
         const { index } = this.state;
-        if (down) {
-            // stop background loading
-            this.performance.stop();
-        }
         if (down && Math.abs(xDelta) < 5) {
             return;
         }
@@ -210,7 +168,6 @@ class GridSwiperComponent extends React.Component {
                 }}>
 
                 <GridSlideComponent
-                    performance={this.performance}
                     onRowHeight={onRowHeight}
                     renderComponent={areaObject.render}
                     index={vIndex}

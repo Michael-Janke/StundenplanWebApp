@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setNotification, setMyTimetable, sendLoginStatistic, changeTheme, setSortBy } from '../Main/actions';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import {ThemeProvider} from '@material-ui/core/styles';
 import createTheme from '../Common/theme';
 import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -39,14 +39,14 @@ class AppRouter extends Component {
     render() {
         return (
             <Router>
-                <MuiThemeProvider theme={this.state.theme}>
+                <ThemeProvider theme={this.state.theme}>
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
                             <Notifier />
                         </SnackbarProvider>
                         <Routes />
                     </MuiPickersUtilsProvider>
-                </MuiThemeProvider>
+                </ThemeProvider>
             </Router>
         );
     }

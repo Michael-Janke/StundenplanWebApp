@@ -9,10 +9,11 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexGrow: 1,
         backgroundColor: props => props.backgroundColor || darken(indigo[50], theme.palette.type === 'dark' ? 0.6 : 0),
+        paddingRight: theme.spacing(.5),
     },
     colorBar: {
         width: '3%',
-        marginRight: 5,
+        marginRight: theme.spacing(.5),
         backgroundColor: props => props.color || grey[400],
     }
 }), { name: "Lesson" });

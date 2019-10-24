@@ -1,7 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import StudentView from './Views/StudentView';
+import StudentView from './Fields/Views/StudentView';
 import { useMediaQuery } from '@material-ui/core';
+import TeacherView from './Fields/Views/TeacherView';
+import RoomView from './Fields/Views/RoomView';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -38,6 +40,9 @@ export default function LessonContent({ type, lesson }) {
     
     const View = {
         'student': StudentView,
+        'class': StudentView,
+        'teacher': TeacherView,
+        'room': RoomView,
     }[type];
     const { left, right } = View(lesson);
 

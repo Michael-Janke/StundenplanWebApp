@@ -7,7 +7,7 @@ import BackIcon from '@material-ui/icons/ArrowBack';
 import NextIcon from '@material-ui/icons/ArrowForward';
 import ResetIcon from '@material-ui/icons/ArrowDownward';
 import grey from '@material-ui/core/colors/grey';
-import { classNames, WEEKDAY_NAMES } from '../../Common/const';
+import classNames from 'classnames';
 import OfflinePin from '@material-ui/icons/OfflinePin';
 import TableHead from '@material-ui/core/TableHead';
 import Table from '@material-ui/core/Table';

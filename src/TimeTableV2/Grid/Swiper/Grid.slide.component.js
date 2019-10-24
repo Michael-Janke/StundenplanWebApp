@@ -1,36 +1,5 @@
 import React from 'react';
 import { useMeasureCallback } from './helpers';
-import ThemedGridCellSwiper from './ThemedGridCell.swiper';
-
-class LazyLoadGridSlideComponent extends React.Component {
-
-    componentWillMount() {
-        this.loader = {
-            index: this.props.index,
-            load: () => {
-                this.setState({
-                    rendered: (
-                        <GridSlideComponent {...this.props}></GridSlideComponent>
-                    )
-                })
-            }
-        };
-        this.props.performance.loaders.push(this.loader);
-    }
-    componentWillUnmount() {
-        // this.props.performance.loaders.splice(
-        //     this.props.performance.loaders.indexOf(this.loader),
-        //     1);
-    }
-
-    state = {
-        rendered: null,
-    }
-
-    render() {
-        return this.state.rendered;
-    }
-}
 
 function GridSlideComponent({ index, rows, slide, onRowHeight, renderComponent }) {
     return renderComponent(
@@ -71,4 +40,4 @@ export function ReportingRowComponent({ row = {}, slide, onRowHeight, index }) {
     );
 }
 
-export default LazyLoadGridSlideComponent;
+export default GridSlideComponent;

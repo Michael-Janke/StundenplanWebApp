@@ -25,7 +25,7 @@ export default function SubstitutionText({ substitutionText, specificSubstitutio
         <div className={classes.root}>
             {textTooltip ?
                 <Tooltip title={textTooltip}>
-                    <div> {textMain}</div>
+                    <div>{textMain}</div>
                 </Tooltip>
                 : textMain
             }

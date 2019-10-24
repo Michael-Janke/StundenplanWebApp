@@ -1,8 +1,8 @@
 import React from 'react';
-import Subject from '../Fields/Subject';
-import Room from '../Fields/Room';
-import Teachers from '../Fields/Teachers';
-import SubstitutionText from '../Fields/SubstitutionText';
+import Subject from '../Subject';
+import Room from '../Room';
+import Teachers from '../Teachers';
+import SubstitutionText from '../SubstitutionText';
 
 export default function StudentView(lesson) {
     const { subject, room, teachers, lessonType, substitutionText, specificSubstitutionType } = lesson;

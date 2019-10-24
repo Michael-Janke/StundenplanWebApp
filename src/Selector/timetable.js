@@ -265,7 +265,7 @@ function readTimetable(_data, day, periods, date) {
         }
         data[y] = { lessons };
     }
-    return { periods: data };
+    return { periods: data, date: timetableDate };
 }
 
 export function translatePeriods(masterdata, day, periods, teams, assignmentsMatching) {
@@ -306,7 +306,7 @@ export function equalPeriods(p1, p2) {
     const period1 = p1.reference;
     const period2 = p2.reference;
 
-    if (p1.assignments !== p2.assignments) {
+    if (!equalArrays(p1.assignments, p2.assignments)) {
         return false;
     }
     if (

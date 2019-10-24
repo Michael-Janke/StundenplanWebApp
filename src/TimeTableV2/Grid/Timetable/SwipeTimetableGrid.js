@@ -1,44 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import GridSwiperComponent from '../Swiper/Grid.swiper.component';
-import PeriodCell from '../PeriodCell';
-import moment from 'moment';
 import { changeWeek } from '../../../Main/actions';
-import HeaderBackground from './TimetableHeaderBackground';
-import { TimetablePeriodCell } from './TimetablePeriodCell';
 import TimetableContainer from './Timetable.container';
-import ThemedGridCell from '../Swiper/ThemedGridCell.swiper';
+import SwipeThemedGridCell from '../Swiper/SwipeThemedGridCell';
+import useRows from './useRows';
 
-function TimetableGrid({ periods, date, min, max, changeWeek }) {
+function SwipeTimetableGrid({ periods, date, min, max, changeWeek }) {
 
 
     const index = date.startOf('week').diff(min, 'week');
 
-    // structure of grid
-    const rows = React.useMemo(() =>
-        [
-            {
-                key: -1,
-                component: HeaderBackground,
-                type: 'header',
-            },
-            ...Object.values(periods).map((period, i) => {
-                return (
-                    {
-                        key: i,
-                        period,
-                        type: 'main',
-                        component: TimetablePeriodCell,
-                    }
-                )
-            }),
-            {
-                key: -2,
-                component: HeaderBackground,
-                type: 'footer',
-            }
-        ], [periods]
-    )
+    const rows = useRows(periods);
 
 
     function handleChangeIndex(index, newIndex) {
@@ -50,7 +23,7 @@ function TimetableGrid({ periods, date, min, max, changeWeek }) {
         return <TimetableContainer
             index={index}
             rows={rows}
-            GridCellComponent={ThemedGridCell}>
+            GridCellComponent={SwipeThemedGridCell}>
             {children}
         </TimetableContainer>
     }
@@ -86,4 +59,4 @@ const mapDispatchToProps = (dispatch) => ({
 
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimetableGrid);
+export default connect(mapStateToProps, mapDispatchToProps)(SwipeTimetableGrid);
