@@ -25,7 +25,7 @@ export const usePosts = ({ filter, sort } = {}) => {
     useInterval(() => setToday(moment().format('ymd')), 1000 * 60 * 60);
 
     let posts = useSelector(state => state.posts.posts);
-    return useMemo(() => (posts || []).filter(filter || dateFilter).sort(sort || dateSorter), [
+    return useMemo(() => today && (posts || []).filter(filter || dateFilter).sort(sort || dateSorter), [
         posts,
         filter,
         sort,
