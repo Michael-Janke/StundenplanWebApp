@@ -1,17 +1,17 @@
-import React from 'react';
-import withStyles from '@material-ui/core/styles/withStyles';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { useDispatch, useSelector } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import { Button, Fab, Fade } from '@material-ui/core';
-import { addPost, editPost, getPosts, deletePost } from './actions';
-import { withRouter } from 'react-router';
+import { useHistory } from 'react-router-dom';
+import { deletePost as deletePostAction } from './actions';
 import ComponentWrapper from './ComponentWrapper';
-import makeGetPosts from './index.selector';
+import { usePosts } from './hooks';
 import useDialog from '../Common/useDialog';
 import { useIntervalCheck } from '../Common/intervalCheck';
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
         boxSizing: 'border-box',
@@ -40,7 +40,7 @@ const styles = theme => ({
     },
     headerContainer: {},
     header: {
-        maxWidth: 600,
+        maxWidth: 800,
         margin: '0 auto',
         padding: `${theme.spacing(2)}px`,
     },
@@ -57,10 +57,18 @@ const styles = theme => ({
         display: 'flex',
         justifyContent: 'center',
     },
-});
+}));
 
-function Posts({ getPosts, classes, isAdmin, posts, hasPosts, history, deletePost }) {
+function Posts() {
     useIntervalCheck();
+
+    const classes = useStyles();
+    const history = useHistory();
+    const [showMyPosts, setShowMyPosts] = useState(false);
+    const posts = usePosts({ filter: showMyPosts && (post => post.USER_CREATED) });
+    const isAdmin = useSelector(state => state.user.scope === 'admin');
+    const dispatch = useDispatch();
+    const deletePost = post => dispatch(deletePostAction(post));
 
     const handleCreate = type => () => {
         history.push('/posts/new/' + type);
@@ -77,6 +85,7 @@ function Posts({ getPosts, classes, isAdmin, posts, hasPosts, history, deletePos
             }
         });
     };
+
     const [dialog, setDialog] = useDialog({
         title: 'Beitrag löschen',
         text: 'Möchtest du diesen Beitrag wirklich löschen?',
@@ -102,32 +111,38 @@ function Posts({ getPosts, classes, isAdmin, posts, hasPosts, history, deletePos
                         <Button variant="outlined" color="primary" onClick={handleCreate('diashow')}>
                             Diashow erstellen
                         </Button>
+
+                        <Button
+                            variant={['outlined', 'contained'][showMyPosts * 1]}
+                            color="primary"
+                            onClick={() => setShowMyPosts(s => !s)}
+                        >
+                            {['Meine', 'Alle aktuellen'][showMyPosts * 1]} Beiträge anzeigen
+                        </Button>
                     </div>
                 </div>
             </div>
             <div className={classes.layout}>
-                {!hasPosts && (
+                {!posts.length && (
                     <Typography variant="h6" align="center" color="textSecondary">
                         Es sind keine Beiträge vorhanden. Sei der erste und erstelle jetzt einen Beitrag oder eine
                         Diashow.
                     </Typography>
                 )}
                 <div className={classes.postGrid}>
-                    {posts &&
-                        posts.map(post => {
-                            const canEdit = isAdmin || post.USER_CREATED;
-
-                            return (
-                                <Fade key={post.POST_ID}>
-                                    <ComponentWrapper
-                                        post={post}
-                                        onEdit={canEdit && handleOnEdit}
-                                        onDelete={canEdit && handleOnDelete}
-                                        className={classes.post}
-                                    ></ComponentWrapper>
-                                </Fade>
-                            );
-                        })}
+                    {posts.map(post => {
+                        const canEdit = isAdmin || post.USER_CREATED;
+                        return (
+                            <Fade key={post.POST_ID}>
+                                <ComponentWrapper
+                                    post={post}
+                                    onEdit={canEdit && handleOnEdit}
+                                    onDelete={canEdit && handleOnDelete}
+                                    className={classes.post}
+                                ></ComponentWrapper>
+                            </Fade>
+                        );
+                    })}
                 </div>
             </div>
             <Fab color="primary" className={classes.createButton} onClick={handleCreate('post')}>
@@ -136,27 +151,5 @@ function Posts({ getPosts, classes, isAdmin, posts, hasPosts, history, deletePos
         </div>
     );
 }
-const makeMapStateToProps = () => {
-    const getPosts = makeGetPosts();
 
-    return state => ({
-        ...getPosts(state),
-        isAdmin: state.user.scope === 'admin',
-    });
-};
-
-const mapDispatchToProps = dispatch => ({
-    getPosts: () => dispatch(getPosts()),
-    addPost: post => dispatch(addPost(post)),
-    editPost: post => dispatch(editPost(post)),
-    deletePost: post => dispatch(deletePost(post)),
-});
-
-export default withStyles(styles)(
-    withRouter(
-        connect(
-            makeMapStateToProps,
-            mapDispatchToProps
-        )(Posts)
-    )
-);
+export default Posts;
