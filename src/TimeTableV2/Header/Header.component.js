@@ -70,14 +70,6 @@ const styles = theme => ({
 });
 
 const TimeTableHeader = ({ classes, offline, lastCheck, small, date, id, type, print, isMin, isMax, ...other }) => {
-    const dateIterator = date
-        ? date
-              .clone()
-              .startOf('day')
-              .weekday(0)
-        : moment()
-              .startOf('day')
-              .weekday(0);
     return (
         <React.Fragment>
             <div className={classNames(classes.tableToolbar, classes.tableHeader)}>
@@ -99,32 +91,6 @@ const TimeTableHeader = ({ classes, offline, lastCheck, small, date, id, type, p
                     </React.Fragment>
                 )}
             </div>
-            {/* <Table className={classes.tableHeader}>
-                <TableHead>
-                    <TableRow className={classNames(classes.tableHeaderRow, small && classes.tableHeaderRowSmall)}>
-                        <PeriodCell small={small} />
-                        {WEEKDAY_NAMES.map((day, i) => {
-                            const mDate = dateIterator.clone().add(i, 'days');
-                            const isToday =
-                                date &&
-                                moment()
-                                    .startOf('day')
-                                    .diff(mDate, 'days') === 0;
-                            return (
-                                <TableCell
-                                    key={i}
-                                    className={classNames(classes.tableHeaderCell, isToday && classes.today)}
-                                    padding="none"
-                                >
-                                    {(!small || !date) && mDate.format('dddd')}
-                                    {(!small || !date) && <br />}
-                                    {date && mDate.format('DD.MM.')}
-                                </TableCell>
-                            );
-                        })}
-                    </TableRow>
-                </TableHead>
-            </Table> */}
         </React.Fragment>
     );
 };

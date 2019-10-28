@@ -2,15 +2,18 @@ import React from 'react';
 import { useMeasureCallback } from './helpers';
 
 function GridSlideComponent({ index, rows, slide, onRowHeight, renderComponent }) {
+
+    const children = React.useMemo(() => rows.map((row, i) => <ReportingRowComponent
+        row={row}
+        slide={slide}
+        key={i}
+        index={i}
+        onRowHeight={onRowHeight}></ReportingRowComponent>), [onRowHeight, rows, slide]);
+
     return renderComponent(
         index,
         rows,
-        rows.map((row, i) => <ReportingRowComponent
-            row={row}
-            slide={slide}
-            key={i}
-            index={i}
-            onRowHeight={onRowHeight}></ReportingRowComponent>)
+        children
     ) || null;
 }
 

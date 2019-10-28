@@ -12,6 +12,11 @@ export default function useRows(periods) {
                 swipeComponent: HeaderBackground,
                 type: 'header',
             },
+            {
+                key: -3,
+                swipeComponent: 'div',
+                type: 'absences',
+            },
             ...Object.values(periods).map((period, i) => {
                 return {
                     key: i,
@@ -22,8 +27,14 @@ export default function useRows(periods) {
                 };
             }),
             {
-                key: -2,
+                key: -4,
                 swipeComponent: HeaderBackground,
+                type: 'header',
+                variant: 'small',
+            },
+            {
+                key: -2,
+                swipeComponent: 'div',
                 type: 'footer',
             },
         ],

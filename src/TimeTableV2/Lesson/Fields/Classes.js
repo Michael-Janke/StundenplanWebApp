@@ -21,6 +21,9 @@ function joinClasses(classes) {
     let regex = /(\d+|[a-z]+)([a-z]+|\d+)/g;
 
     let match = regex.exec(c);
+    if (!match) {
+        return "-";
+    }
     strBuilder += match[1] + match[2];
     while (true) {
         let newMatch = regex.exec(c);

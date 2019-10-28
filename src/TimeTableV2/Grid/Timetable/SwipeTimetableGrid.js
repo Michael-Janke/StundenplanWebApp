@@ -5,11 +5,12 @@ import { changeWeek } from '../../../Main/actions';
 import TimetableContainer from './Timetable.container';
 import SwipeThemedGridCell from '../Swiper/SwipeThemedGridCell';
 import useRows from './useRows';
+import moment from 'moment';
 
 function SwipeTimetableGrid({ periods, date, min, max, changeWeek }) {
 
 
-    const index = date.startOf('week').diff(min, 'week');
+    const index = date.diff(min, 'week');
 
     const rows = useRows(periods);
 
@@ -20,8 +21,10 @@ function SwipeTimetableGrid({ periods, date, min, max, changeWeek }) {
     }
 
     function renderMain(index, rows, children) {
+        const date = moment(min).add(index, 'week').startOf('isoWeek');
+
         return <TimetableContainer
-            index={index}
+            date={+date}
             rows={rows}
             GridCellComponent={SwipeThemedGridCell}>
             {children}

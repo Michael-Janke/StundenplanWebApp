@@ -1,9 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import classNames from 'classnames';
-import Lesson from './Lesson';
 import ExpandLessonContent from './ExpandLessonContent';
-import { Collapse } from '@material-ui/core';
+import ExpandPopover from './ExpandPopover';
 
 const useStyles = makeStyles(
     theme => ({
@@ -16,11 +15,8 @@ const useStyles = makeStyles(
             zIndex: 0,
             margin: 0,
         },
-        popover: {
-            
-        },
+        popover: {},
         open: {
-            margin: '0 -48px',
             boxShadow: theme.shadows[20],
             zIndex: 1,
         },
@@ -33,20 +29,25 @@ export default function ExpandLesson({ children, lesson }) {
 
     const [open, setOpen] = React.useState(false);
 
-    function handleClick() {
-        setOpen(!open);
+    function handleToggle(newOpen) {
+        if (typeof newOpen === 'boolean') {
+            setOpen(newOpen);
+        } else {
+            setOpen(!open);
+        }
+    }
+
+    function renderContent(props) {
+        return (
+            <div {...props} className={classNames(classes.root)} onClick={handleToggle}>
+                {children}
+            </div>
+        );
     }
 
     return (
-        <div className={classNames(classes.root, open && classes.open)} onClick={handleClick}>
-            {children}
-            <div className={classes.popover}>
-                <Collapse in={open}>
-                    <Lesson>
-                        <ExpandLessonContent lesson={lesson}></ExpandLessonContent>
-                    </Lesson>
-                </Collapse>
-            </div>
-        </div>
+        <ExpandPopover renderContent={renderContent} open={open} onToggle={handleToggle}>
+            <ExpandLessonContent></ExpandLessonContent>
+        </ExpandPopover>
     );
 }

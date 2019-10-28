@@ -11,6 +11,8 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'space-between',
         overflow: 'hidden',
+        paddingTop: theme.spacing(.5),
+        paddingBottom: theme.spacing(.5),
     },
     small: {
         overflow: 'hidden',
@@ -37,7 +39,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function LessonContent({ type, lesson }) {
     const small = useMediaQuery('(max-width:600px)');
-    
     const View = {
         'student': StudentView,
         'class': StudentView,

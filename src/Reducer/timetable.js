@@ -14,11 +14,11 @@ const initialState = {
     timetables: {},
     substitutions: {},
     timetableDate:
-        moment().isoWeekday() >= 5
+        moment().isoWeekday() >= 6
             ? moment()
-                .add(1, 'week')
-                .startOf('week')
-            : moment().startOf('week'),
+                .add(1, 'isoWeek')
+                .startOf('isoWeek')
+            : moment().startOf('isoWeek'),
 };
 
 export default function timetableReducer(state = initialState, action = {}) {
@@ -45,15 +45,15 @@ export default function timetableReducer(state = initialState, action = {}) {
                 moment()
                     .weekYear(masterdata.minMaxDates.min.year)
                     .week(masterdata.minMaxDates.min.week),
-                moment().add(-1, 'week')
+                moment().add(-1, 'isoWeek')
             );
             const max = moment()
                 .weekYear(masterdata.minMaxDates.max.year)
                 .week(masterdata.minMaxDates.max.week);
             return {
                 ...state,
-                min,
-                max,
+                min: min.startOf('isoWeek'),
+                max: max.startOf('isoWeek'),
                 loadingMasterData: false,
                 masterdata: masterdata,
             };
@@ -88,9 +88,9 @@ export default function timetableReducer(state = initialState, action = {}) {
             } else if (action.payload.date) {
                 newDate = moment(action.payload.date);
             } else {
-                newDate = moment().isoWeekday() >= 6 ? moment().add(1, 'week') : moment();
+                newDate = moment().isoWeekday() >= 6 ? moment().add(1, 'isoWeek') : moment();
             }
-            let timetableDate = moment(moment.max(min, moment.min(max, newDate))).startOf('day');
+            let timetableDate = moment(moment.max(min, moment.min(max, newDate))).startOf('isoWeek');
 
             return {
                 ...state,

@@ -6,6 +6,8 @@ import classNames from 'classnames';
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
+        marginBottom: 1,
+        overflow: 'hidden',
     }
 }), { name: "SwipeThemedGridCell" });
 

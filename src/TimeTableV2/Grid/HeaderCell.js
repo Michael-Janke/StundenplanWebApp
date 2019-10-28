@@ -12,6 +12,9 @@ const useStyles = makeStyles(
             alignItems: 'center',
             padding: theme.spacing(0.5),
         },
+        weekdayName: {
+            display: props=> props.variant === 'small' ? 'none': 'block',
+        },
         [theme.breakpoints.down('sm')]: {
             weekdayName: {
                 display: 'none',
@@ -22,8 +25,8 @@ const useStyles = makeStyles(
     'HeaderCell'
 );
 
-export default function HeaderCell({ GridCellComponent, className, date, ...other }) {
-    const classes = useStyles();
+export default function HeaderCell({ GridCellComponent, className, date, variant, ...other }) {
+    const classes = useStyles({ variant: variant });
     return (
         <GridCellComponent {...other} className={classNames(classes.root, className)}>
             <Typography variant="body2" className={classes.weekdayName}>

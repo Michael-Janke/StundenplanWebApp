@@ -8,8 +8,12 @@ export default function PeriodEntity({ lessons, supervision, type }) {
         <>
             {lessons &&
                 lessons.map((lesson, i) => {
-                    if (lesson.absence) {
-                        return <Absence {...lesson} key={lesson.absence.ABSENCE_ID} table />;
+                    if (lesson.ABSENCE_ID) {
+                        if (!lesson.room) {
+                            // dont show absences when no room
+                            return null;
+                        }
+                        return <Absence absence={lesson} key={lesson.ABSENCE_ID} table />;
                     } else {
                         return (
                             <LessonEntity

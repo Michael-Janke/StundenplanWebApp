@@ -48,7 +48,7 @@ function RowComponent({ row, children }) {
         }
     });
     return (
-        <div {...bind} style={{display: 'flex'}}>
+        <div {...bind} style={{display: 'flex', flexGrow: 1}}>
             {children}
         </div>
     )

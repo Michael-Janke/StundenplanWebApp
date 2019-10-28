@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from './reselect';
 import {
     WEEKDAY_NAMES,
     getSubstitutionsCacheKey,
@@ -310,7 +310,7 @@ export function equalPeriods(p1, p2) {
         return false;
     }
     if (
-        (!!period1.TIMETABLE_ID ? period1.TIMETABLE_ID === period2.TIMETABLE_ID : false) ||
+        (!!period1.TIMETABLE_ID ? period1.TIMETABLE_ID === period2.TIMETABLE_ID : false) &&
         (period1.substitutionText === period2.substitutionText &&
             period1.substitutionRemove === period2.substitutionRemove &&
             period1.specificSubstitutionType === period2.specificSubstitutionType &&
@@ -420,33 +420,39 @@ export function translateLesson(masterdata, lesson, teams = [], assignmentsMatch
 const makeGetCurrentTimetable = () => {
     const getTimetableState = state => state.timetable;
     const getMasterdata = createSelector(
+        "getMasterdata",
         getTimetableState,
         state => state.masterdata
     );
     const getTimetables = createSelector(
+        "getTimetables",
         getTimetableState,
         state => state.timetables
     );
     const getTeams = state => state.teams.joinedTeams;
     const getAssignments = state => state.teams.assignments;
     const getSubstitutions = createSelector(
+        "getSubstitutions",
         getTimetableState,
         state => state.substitutions
     );
 
-    const getDate = (state, props) => props.index ?
-        +moment(state.timetable.min).clone().add(props.index, 'week')
-        : state.timetable.timetableDate;
+    const getDate = (state, props) => +(props.date ?
+        props.date
+        : state.timetable.timetableDate);
 
     const getWeekSelector = createSelector(
+        "getWeekSelector",
         getDate,
         date => moment(date).week()
     );
     const getYearSelector = createSelector(
+        "getYearSelector",
         getDate,
         date => moment(date).weekYear()
     );
     const getAssignmentsSelector = createSelector(
+        "getAssignmentsSelector",
         getDate,
         getAssignments,
         (date, assignments) =>
@@ -457,13 +463,15 @@ const makeGetCurrentTimetable = () => {
     const getId = (state, props) => props.id || state.timetable.currentTimeTableId;
 
     const getPeriods = createSelector(
-        getTimetableState,
-        state => state.masterdata.Period_Time
+        "getPeriods",
+        getMasterdata,
+        masterdata => masterdata.Period_Time
     );
 
     const getIgnore = (state, props) => props && props.noSubstitutions;
 
     const getCurrentTimetableSelector = createSelector(
+        "getCurrentTimetableSelector",
         getTimetables,
         getType,
         getId,
@@ -471,6 +479,7 @@ const makeGetCurrentTimetable = () => {
     );
 
     const getCurrentSubstitutionsSelector = createSelector(
+        "getCurrentSubstitutionsSelector",
         getIgnore,
         getSubstitutions,
         getType,
@@ -490,6 +499,7 @@ const makeGetCurrentTimetable = () => {
     );
 
     return createSelector(
+        "translate",
         getMasterdata,
         getCurrentTimetableSelector,
         getCurrentSubstitutionsSelector,

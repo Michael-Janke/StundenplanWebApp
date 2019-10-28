@@ -3,30 +3,33 @@ import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import ThemedGridCell from './ThemedGridCell';
 
-const useStyles = makeStyles(theme => ({
-    times: {
-        display: 'none',
-        flexDirection: 'column',
-        padding: theme.spacing(1),
-        [theme.breakpoints.up('sm')]: {
-            display: 'flex',
+const useStyles = makeStyles(
+    theme => ({
+        times: {
+            display: 'none',
+            flexDirection: 'column',
+            padding: theme.spacing(1),
+            justifyContent: 'center',
+            [theme.breakpoints.up('sm')]: {
+                display: 'flex',
+            },
         },
-    },
-    root: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignContent: 'center'
-    },
-    timeTypography: {
-        fontSize: theme.typography.pxToRem(9),
-    },
-    periodNumber: {
-        margin: 'auto',
-        fontSize: theme.typography.pxToRem(15),
-    },
-
-
-}), { name: "PeriodCell" });
+        root: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignContent: 'center',
+            flexGrow: 1,
+        },
+        timeTypography: {
+            fontSize: theme.typography.pxToRem(9),
+        },
+        periodNumber: {
+            margin: 'auto',
+            fontSize: theme.typography.pxToRem(15),
+        },
+    }),
+    { name: 'PeriodCell' }
+);
 
 function periodTime(timeAsNumber) {
     const lpad2 = number => (number < 10 ? '0' : '') + number;
