@@ -38,6 +38,7 @@ const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
         height: '100%',
+        width: '100%',
         backgroundImage: props => `url(${props.img})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
