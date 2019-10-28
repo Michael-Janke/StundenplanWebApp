@@ -8,6 +8,7 @@ import useInterval from 'react-useinterval';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import { green } from '@material-ui/core/colors';
+import moment from 'moment';
 
 const useStyles = makeStyles(
     theme => ({
@@ -47,7 +48,7 @@ function DayInfo({ dayInfo = [], getDayInfo }) {
     useInterval(() => setCurrentId((currentId + 1) % dayInfo.length), 15000);
 
     // fetch dayInfo once component was mounted
-    useEffect(getDayInfo, []);
+    useEffect(getDayInfo, [moment().format('Ymd')]);
 
     return (
         <TransitionGroup className={classes.root}>

@@ -39,8 +39,8 @@ const SubstitutionEntry = props => {
     let InsteadBy =
         substitutionInfo === 'instead-by' ? (
             <SubstitutionRow>
-                <InsteadInformation>durch:</InsteadInformation>
                 <SubstitutionContent>
+                    <InsteadInformation>durch:</InsteadInformation>
                     {SubstitutingFields.map((Field, i) => (
                         <Field key={i} />
                     ))}
@@ -52,8 +52,8 @@ const SubstitutionEntry = props => {
     let InsteadOf =
         substitutionInfo === 'instead-of' ? (
             <SubstitutionRow>
-                <InsteadInformation>statt:</InsteadInformation>
                 <SubstitutionContent>
+                    <InsteadInformation>statt:</InsteadInformation>
                     {SubstitutingFields.map((Field, i) => (
                         <Field key={i} />
                     ))}
@@ -97,13 +97,11 @@ const SubstitutionEntry = props => {
             <ColorBar lineColor={colorBar} />
             <Period>{period}</Period>
             {substitutionType}
-            <SubstitutionContainer>
-                {New && New()}
-                {InsteadOf}
-                {Old && Old()}
-                {InsteadBy}
-                {extraInfo}
-            </SubstitutionContainer>
+            {InsteadOf}
+            {Old && Old()}
+            {New && New()}
+            {InsteadBy}
+            {extraInfo}
         </SubstitutionRow>
     );
 };
@@ -163,7 +161,7 @@ const SubstitutionRow = styled.div`
 const SubstitutionContent = styled.div`
     align-items: center;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex: 2;
     overflow: hidden;
 `;

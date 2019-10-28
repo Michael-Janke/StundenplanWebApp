@@ -54,8 +54,8 @@ function TransportInfo({ transportInfo, getTransportInfo }) {
             </CardContent>
             <CardHeader avatar={<DepartureBoard />} title={'Michendorf ~10 Minuten 🚶'} />
             <CardContent>
-                {michendorf.map((arrival, i) => (
-                    <Connection connection={arrival} key={i} />
+                {michendorf.map(arrival => (
+                    <Connection connection={arrival} key={arrival.time + arrival.name} />
                 ))}
             </CardContent>
             {uptodate}

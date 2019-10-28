@@ -11,7 +11,7 @@ import AssignmentCreation from './components/AssignmentCreation';
 import ComponentWrapper from '../Posts/ComponentWrapper';
 import Dates from '../Dates';
 import ErrorBoundary from '../Common/ErrorBoundary';
-import makeGetPosts from '../Posts/index.selector';
+import { usePosts } from '../Posts/hooks';
 
 const smallBreakpoint = 800;
 
@@ -81,8 +81,9 @@ const useStyles = makeStyles(
     { name: 'TimeTableView' }
 );
 
-function TimeTableView({ small, posts }) {
+function TimeTableView({ small }) {
     const classes = useStyles();
+    const posts = usePosts();
     return (
         <div className={classes.root} key={0} id="content-root">
             <div className={classes.extendedAppBar} />
@@ -99,14 +100,13 @@ function TimeTableView({ small, posts }) {
                         </ErrorBoundary>
                     </Paper>
                     <div className={classes.posts}>
-                        {posts &&
-                            posts.map(post => (
-                                <ComponentWrapper
-                                    key={post.POST_ID}
-                                    post={post}
-                                    className={classes.post}
-                                ></ComponentWrapper>
-                            ))}
+                        {posts.map(post => (
+                            <ComponentWrapper
+                                key={post.POST_ID}
+                                post={post}
+                                className={classes.post}
+                            ></ComponentWrapper>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -115,12 +115,8 @@ function TimeTableView({ small, posts }) {
     );
 }
 
-const mapStateToProps = state => {
-    const getPosts = makeGetPosts();
-    return {
-        small: state.browser.lessThan.medium,
-        ...getPosts(state),
-    };
-};
+const mapStateToProps = state => ({
+    small: state.browser.lessThan.medium,
+});
 
 export default connect(mapStateToProps)(TimeTableView);

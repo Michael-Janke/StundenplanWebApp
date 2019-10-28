@@ -9,11 +9,12 @@ import moment from 'moment';
 
 function SwipeTimetableGrid({ periods, date, min, max, changeWeek }) {
 
-
     const index = date.diff(min, 'week');
-
     const rows = useRows(periods);
-
+    if (!Object.values(periods).length) {
+        console.log(periods);
+        return null;
+    }
 
     function handleChangeIndex(index, newIndex) {
         changeWeek(newIndex - index);

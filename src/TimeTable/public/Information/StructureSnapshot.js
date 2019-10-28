@@ -86,6 +86,7 @@ export default function StructureSnapshot({ lessons }) {
                                 <StructureFragment
                                     className={classNames(lesson ? classes.occupied : classes.free)}
                                     key={i}
+                                    room={room}
                                 >
                                     <Typography variant="h6" className={classes.title} component="p">
                                         {room}

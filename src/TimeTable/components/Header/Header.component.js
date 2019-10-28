@@ -6,6 +6,7 @@ import moment from 'moment';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import NextIcon from '@material-ui/icons/ArrowForward';
 import ResetIcon from '@material-ui/icons/ArrowDownward';
+import CloseIcon from '@material-ui/icons/Close';
 import TimeTableInformation from '../information';
 import grey from '@material-ui/core/colors/grey';
 import { WEEKDAY_NAMES } from '../../../Common/const';
@@ -45,7 +46,7 @@ const styles = theme => ({
         height: 28,
     },
     today: {
-        backgroundColor: grey[400],
+        backgroundColor: theme.palette.type === 'dark' ? grey[600] : grey[400],
     },
     offline: {
         width: 'unset',
@@ -111,6 +112,11 @@ const TimeTableHeader = ({ classes, offline, lastCheck, small, date, id, type, p
                             <NextIcon />
                         </IconButton>
                     </React.Fragment>
+                )}
+                {other.tv && (
+                    <IconButton onClick={other.close}>
+                        <CloseIcon />
+                    </IconButton>
                 )}
             </div>
             <Table className={classes.tableHeader}>

@@ -12,13 +12,13 @@ const useStyles = makeStyles(
             alignItems: 'center',
             padding: theme.spacing(0.5),
         },
-        weekdayName: {
-            display: props=> props.variant === 'small' ? 'none': 'block',
-        },
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.up('sm')]: {
             weekdayName: {
-                display: 'none',
+                display: props => (props.variant === 'small' ? 'none' : 'block'),
             },
+        },
+        weekdayName: {
+            display: 'none'
         },
         date: {},
     }),

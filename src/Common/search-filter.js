@@ -4,7 +4,7 @@ export default function searchFunction(needle = '', haystack = '') {
     const cleanNeedles = cleanNeedle.split(' ');
     return cleanNeedles.every(subNeedle => {
         return haystacks.some(subHaystack => {
-            return subHaystack.indexOf(subNeedle) >= 0;
+            return subHaystack.startsWith(subNeedle);
         });
     });
 }

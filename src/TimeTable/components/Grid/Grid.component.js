@@ -111,7 +111,6 @@ class TimeTableGrid extends React.Component {
                         textAlign: 'center',
                         padding: small ? 2 : 4,
                         paddingRight: 2,
-                        borderLeft: period.skip ? '1px solid rgba(224, 224, 224, 1)' : '',
                         overflow: 'visible',
                         fontSize: '100%',
                     }}
@@ -265,7 +264,7 @@ const Periods = styled.div`
     flex: 1;
 `;
 const Period = styled.div`
-    color: ${grey[600]};
+    color: ${grey[500]};
 `;
 
 const mapDispatchToProps = dispatch => {

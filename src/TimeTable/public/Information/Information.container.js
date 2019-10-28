@@ -12,8 +12,8 @@ if (date.isoWeekday() > 5) {
 const mapStateToProps = () => {
     const getInformation = makeGetInformation();
     return state => ({
-        ...getInformation(state, { date }),
-        period: state.period.currentPeriod,
+        substitutions: getInformation(state, { date }),
+        currentPeriod: state.period.currentPeriod,
         date: date,
         supervisions:
             state.substitutions.sortBy &&

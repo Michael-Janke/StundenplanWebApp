@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import TimeTableContainer from '../components/container';
 import indigo from '@material-ui/core/colors/indigo';
@@ -7,8 +7,7 @@ import Dates from '../../Dates';
 import ErrorBoundary from '../../Common/ErrorBoundary';
 import Substitutions from './Substitutions';
 import { makeStyles } from '@material-ui/styles';
-import Search from '../../Main/components/Search';
-import Keyboard from '../../Main/components/Keyboard';
+
 import classNames from 'classnames';
 import ClearTimetable from './ClearTimetable';
 import InformationView from './Information';
@@ -124,14 +123,13 @@ function PublicDisplay({ open }) {
                         </Paper>
                     </Grid>
                     <Grid item xs={5} className={classes.gridItem}>
-                        <Search style={{ paddingBottom: 8, flex: 'none' }} alwaysOpen tv={true} Keyboard={Keyboard} />
                         <div className={classes.growContainer}>
                             <FastSelect open={!open} />
                             <Grow in={open}>
                                 <div className={classes.timetableScroll}>
                                     <Paper className={classNames(classes.timetable, classes.paper)} square>
                                         <ErrorBoundary>
-                                            <TimeTableContainer />
+                                            <TimeTableContainer tv={true} />
                                         </ErrorBoundary>
                                     </Paper>
                                 </div>

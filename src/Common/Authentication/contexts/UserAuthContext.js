@@ -35,13 +35,15 @@ export default class UserAuthContext extends AuthContext {
 
     logOut() {
         super.logOut();
-        window.location.replace(
-            'https://login.microsoftonline.com/common/oauth2/v2.0/logout?' +
-            'post_logout_redirect_uri=' +
-            encodeURIComponent('https://wolkenberg-gymnasium.de/')
-        );
         this.authCodes = [];
-        setAuthContext(null);
+        setAuthContext(this).then(() => {
+            // wait for save completed
+            window.location.replace(
+                'https://login.microsoftonline.com/common/oauth2/v2.0/logout?' +
+                'post_logout_redirect_uri=' +
+                encodeURIComponent('https://wolkenberg-gymnasium.de/')
+            );
+        });
     }
 
     isLoggedIn() {

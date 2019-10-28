@@ -9,62 +9,6 @@ import red from '@material-ui/core/colors/red';
 
 export const WEEKDAY_NAMES = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
 
-const colorsArray = [
-    'red',
-    'pink',
-    'purple',
-    'deepPurple',
-    'indigo',
-    'blue',
-    'cyan',
-    'teal',
-    'green',
-    'lime',
-    'yellow',
-    'amber',
-    'orange',
-    'deepOrange',
-    'brown',
-    'blueGrey',
-    'grey',
-];
-
-export const SUBJECT_COLORS = colorsArray.map(color => colors[color][600]);
-
-export const COLOR_STYLE_MAP = colorsArray.reduce((prev, current) => {
-    prev[current] = { color: colors[current][600] };
-    return prev;
-}, {});
-
-export const SUBJECTS = [
-    'de',
-    'inf',
-    'en',
-    'sp',
-    'geo',
-    'ph',
-    'la',
-    'ch',
-    'ge',
-    'bio',
-    'ma',
-    'ku',
-    'ds',
-    'mu',
-    'fr',
-    'ru',
-    'pb',
-    'sn',
-    'ler',
-    'rel',
-    'wat',
-];
-
-export const SUBJECT_COLORS_MAP = {};
-SUBJECTS.forEach((subject, i) => {
-    SUBJECT_COLORS_MAP[subject] = SUBJECT_COLORS[i % SUBJECT_COLORS.length];
-});
-
 function normalize(v) {
     return v || (v === 0 ? 0 : undefined);
 }
@@ -182,6 +126,7 @@ export const SUBSTITUTION_MAP = {
             backgroundColor: bgColor(theme.palette.type, colors.lime[50]),
         }),
         name: 'Tausch',
+        mask: createMask(fromViewer, removeIf('room')),
     },
     EXTRA_LESSON: {
         style: theme => ({

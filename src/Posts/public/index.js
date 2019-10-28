@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { GridList, GridListTile, AppBar, Toolbar } from '@material-ui/core';
 import ComponentWrapper from '../ComponentWrapper';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { getPosts } from '../actions';
+import { getPosts as getPostsAction } from '../actions';
 import ClockDigital from './ClockDigital';
 import CurrentDate from './CurrentDate';
 import DayInfo from './DayInfo';
@@ -13,13 +13,16 @@ import TransportInfo from './TransportInfo/TransportInfo';
 import { fade } from '@material-ui/core/styles';
 import { indigo } from '@material-ui/core/colors';
 import { useIntervalCheck } from '../../Common/intervalCheck';
+import useInterval from 'react-useinterval';
+import { usePosts } from '../hooks';
 
 const useStyles = makeStyles(theme => ({
     root: {
         width: 1920,
         boxSizing: 'border-box',
         overflow: 'hidden',
-        height: 1080,
+        minHeight: 1080,
+        maxHeight: 1080,
         backgroundColor: theme.palette.background.default,
         display: 'flex',
         flexDirection: 'column',
@@ -84,14 +87,22 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Posts = ({ getPosts, posts }) => {
+const Posts = () => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const getPosts = () => dispatch(getPostsAction());
     useEffect(getPosts, []);
     useIntervalCheck();
     const [zoom, setZoom] = useState(document.body.offsetWidth / 1920);
     useEffect(() => {
         window.addEventListener('resize', () => setZoom(document.body.offsetWidth / 1920));
     }, []);
+
+    const posts = usePosts();
+
+    const [postOverflow, setPostOverflow] = useState(0);
+    const overflow = posts ? posts.length - 4 : 0;
+    useInterval(() => setPostOverflow((postOverflow + 1) % overflow), 1000 * 30);
 
     return (
         <TransitionGroup className={classes.root} style={{ zoom }}>
@@ -112,9 +123,9 @@ const Posts = ({ getPosts, posts }) => {
                             <GridListTile rows={1} cols={1} classes={{ tile: classes.tile }}>
                                 <DayInfo></DayInfo>
                             </GridListTile>
-
-                            {posts &&
-                                posts.map(post => (
+                            {posts
+                                .filter((v, i) => i < 4 || i === 4 + postOverflow)
+                                .map((post, i) => (
                                     <GridListTile key={post.POST_ID} rows={1} cols={1} classes={{ tile: classes.tile }}>
                                         <CSSTransition
                                             classNames={{
@@ -130,6 +141,9 @@ const Posts = ({ getPosts, posts }) => {
                                                 post={post}
                                                 noButtons={true}
                                                 className={classes.post}
+                                                titleAdd={
+                                                    i === 4 && overflow > 0 ? ` (${postOverflow + 1}/${overflow})` : ''
+                                                }
                                             ></ComponentWrapper>
                                         </CSSTransition>
                                     </GridListTile>
@@ -142,15 +156,4 @@ const Posts = ({ getPosts, posts }) => {
     );
 };
 
-const mapStateToProps = state => ({
-    posts: state.posts.posts,
-});
-
-const mapDispatchToProps = dispatch => ({
-    getPosts: () => dispatch(getPosts()),
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Posts);
+export default Posts;

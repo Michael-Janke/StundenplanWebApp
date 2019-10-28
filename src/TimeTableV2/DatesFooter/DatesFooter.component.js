@@ -43,11 +43,11 @@ const Dates = ({ dates, classes }) => {
                 <React.Fragment key={date.DATE_ID}>
                     <div style={{ width: date.leftSpan * 20 + '%' }} />
                     <div style={{ width: date.duration * 20 + '%' }} className={classes.dateWrapper}>
-                        <Tooltip title={date.SUBTEXT}>
-                            <Lesson>
+                        <Lesson>
+                            <Tooltip title={date.SUBTEXT}>
                                 <div className={classNames(classes[date.TYPE], classes.dateText)}>{date.TEXT}</div>
-                            </Lesson>
-                        </Tooltip>
+                            </Tooltip>
+                        </Lesson>
                     </div>
                     <div style={{ width: date.rightSpan * 20 + '%' }} />
                 </React.Fragment>

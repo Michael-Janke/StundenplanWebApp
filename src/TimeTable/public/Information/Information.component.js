@@ -1,8 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import StructureSnapshot from './StructureSnapshot';
-import { Typography } from '@material-ui/core';
+import BackIcon from '@material-ui/icons/ArrowBack';
+import NextIcon from '@material-ui/icons/ArrowForward';
+import ResetIcon from '@material-ui/icons/ArrowDownward';
+import {
+    Typography,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    ListItemSecondaryAction,
+    IconButton,
+} from '@material-ui/core';
+import ApartmentIcon from '@material-ui/icons/Apartment';
+import grey from '@material-ui/core/colors/grey';
 
+import StructureSnapshot from './StructureSnapshot';
 const useStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.background.default,
@@ -11,11 +23,7 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
     },
     header: {
-        padding: theme.spacing(1),
-        backgroundColor: theme.palette.background.paper,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
+        backgroundColor: theme.palette.type === 'dark' ? theme.palette.background.paper : grey[200],
     },
     padding: {
         padding: `0 ${theme.spacing(1)}px`,
@@ -36,11 +44,8 @@ const breakMap = {
 };
 
 function InformationComponent({
-    lessons,
-    absentClasses,
-    studentsInSchool,
-    teachersInSchool,
-    period,
+    substitutions = {},
+    currentPeriod,
     getAllTimetable,
     loadSupervisions,
     date,
@@ -48,31 +53,60 @@ function InformationComponent({
     counter,
 }) {
     const classes = useStyles();
+    const [period, setPeriod] = useState((currentPeriod || {}).PERIOD_TIME_ID - 1 || 0);
+    const { lessons, absentClasses, studentsInSchool, teachersInSchool } = substitutions[period] || {};
+    const currentPeriodNumber = ((currentPeriod || {}).PERIOD_TIME_ID || 1) - 1;
+
     useEffect(() => {
-        if (!lessons) {
-            getAllTimetable(date);
-        }
-    }, [lessons, getAllTimetable, date, counter]);
+        getAllTimetable(date);
+    }, [getAllTimetable, date, counter]);
 
     useEffect(() => {
         loadSupervisions();
     }, [counter, date, loadSupervisions]);
 
-    if (!lessons || !period) {
-        return null;
-    }
-    const periodNumber = period.PERIOD_TIME_ID || 1;
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setPeriod(currentPeriodNumber);
+        }, 10000);
+        return () => clearTimeout(timer);
+    }, [period, currentPeriodNumber]);
 
     return (
         <div className={classes.root}>
-            <div className={classes.header}>
-                <Typography variant="h6">Raumübersicht {periodNumber}. Stunde</Typography>
-            </div>
+            <ListItem className={classes.header} ContainerComponent="div">
+                <ListItemIcon>
+                    <ApartmentIcon />
+                </ListItemIcon>
+                <ListItemText>Raumübersicht {period}. Stunde</ListItemText>
+                <ListItemSecondaryAction>
+                    <IconButton disabled={period <= 0} onClick={() => setPeriod(period => period - 1)}>
+                        <BackIcon />
+                    </IconButton>
+                    <IconButton
+                        disabled={!currentPeriod || !currentPeriod.PERIOD_TIME_ID}
+                        onClick={() => setPeriod(currentPeriodNumber)}
+                    >
+                        <ResetIcon />
+                    </IconButton>
+                    <IconButton
+                        disabled={period >= Math.max(...Object.keys(substitutions))}
+                        onClick={() => setPeriod(period => period + 1)}
+                    >
+                        <NextIcon />
+                    </IconButton>
+                </ListItemSecondaryAction>
+            </ListItem>
             <div className={classes.padding}>
                 <Typography variant="body2" component="div">
-                    <b>{studentsInSchool}</b> Schüler werden von <b>{teachersInSchool}</b> Lehrern unterrichtet, absente
-                    Klassen: <b>{Array.from(new Set(absentClasses.map(absence => absence.class.NAME))).join(', ')}</b>
+                    <b>{studentsInSchool}</b> Schüler werden von <b>{teachersInSchool}</b> Lehrern unterrichtet.
                 </Typography>
+                {absentClasses && !!absentClasses.length && (
+                    <Typography variant="body2" component="div">
+                        Absente Klassen:{' '}
+                        <b>{Array.from(new Set(absentClasses.map(absence => absence.class.NAME))).join(', ')}</b>
+                    </Typography>
+                )}
                 {Object.values(supervisions).length > 0 && (
                     <Typography variant="body2" component="div">
                         Fehlende Aufsichten heute:{' '}
@@ -86,7 +120,7 @@ function InformationComponent({
                 )}
             </div>
             <div className={classes.content}>
-                <StructureSnapshot lessons={lessons}></StructureSnapshot>
+                {lessons && <StructureSnapshot lessons={lessons}></StructureSnapshot>}
             </div>
         </div>
     );
