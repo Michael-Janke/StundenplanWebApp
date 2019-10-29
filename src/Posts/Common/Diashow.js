@@ -12,19 +12,20 @@ import { ObjectIcon } from '../../Main/components/Avatars';
 import Name from './Name';
 import Title from './Title';
 import { Tooltip } from '@material-ui/core';
+import classNames from 'classnames';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const useStyles = makeStyles(theme => ({
-    card: {
+    card: ({ fixedHeight }) => ({
         maxWidth: 500,
-        height: 480,
+        height: fixedHeight || 'unset',
         position: 'relative',
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
         fontSize: 17.5, //fix for all screensizes
-    },
+    }),
     mediaWrapper: {
         overflow: 'hidden',
     },
@@ -61,11 +62,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Diashow = ({ images, title, upn, noButtons, interval = 5000, buttons }) => {
-    const classes = useStyles();
+const Diashow = ({ images, title, upn, noButtons, interval = 5000, buttons, className, fixedHeight = false }) => {
+    const classes = useStyles({ fixedHeight });
     const [activeStep, setActiveStep] = useState(0);
     return (
-        <Card className={classes.card}>
+        <Card className={classNames(className, classes.card)}>
             <AutoPlaySwipeableViews
                 axis={'x'}
                 index={activeStep}

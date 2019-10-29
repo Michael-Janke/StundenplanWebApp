@@ -27,6 +27,7 @@ const PostWrapper = ({ upn, images, title, content, onUpdateContent, onUpdateTit
                 content={content}
                 onUpdateTitle={onUpdateTitle}
                 onUpdateContent={onUpdateContent}
+                fixedHeight={480}
             />
         </div>
     );
@@ -37,11 +38,14 @@ const mapStateToProps = state => ({
     title: state.postcreation.title,
     content: state.postcreation.content,
     user: state.user.upn,
-})
+});
 
 const mapDispatchToProps = dispatch => ({
-    onUpdateTitle: (title) => dispatch({ type: 'SET_TITLE', payload: title }),
-    onUpdateContent: (content) => dispatch({ type: 'SET_CONTENT', payload: content }),
-})
+    onUpdateTitle: title => dispatch({ type: 'SET_TITLE', payload: title }),
+    onUpdateContent: content => dispatch({ type: 'SET_CONTENT', payload: content }),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostWrapper);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(PostWrapper);
