@@ -17,25 +17,23 @@ import Tooltip from '@material-ui/core/Tooltip';
 import classNames from 'classnames';
 
 const useStyles = makeStyles(theme => ({
-    card: {
+    card: ({ fixedHeight }) => ({
         maxWidth: 500,
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
         //fontSize: 17.5, //fix for all screensizes
-        [theme.breakpoints.up('sm')]: {
-            height: 480,
-        },
+        height: fixedHeight ? 480 : 'unset',
         borderRadius: 0,
-    },
-    mediaWrapper: {
+    }),
+    mediaWrapper: ({ fixedHeight }) => ({
         minHeight: 52,
         flex: 1,
         position: 'relative',
         [theme.breakpoints.up('sm')]: {
-            height: 0,
+            height: fixedHeight ? 0 : 'unset',
         },
-    },
+    }),
     media: {
         objectFit: 'cover',
         height: '100%',
@@ -50,7 +48,7 @@ const useStyles = makeStyles(theme => ({
         left: 0,
         right: 0,
         background: 'rgba(0,0,0,0.6)',
-        padding: theme.spacing(2),
+        padding: theme.spacing(1.5),
     },
     input: {
         color: 'white',
@@ -71,8 +69,20 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Post = ({ className, images, title, upn, content, edit, onUpdateTitle, onUpdateContent, noButtons, buttons }) => {
-    const classes = useStyles();
+const Post = ({
+    className,
+    images,
+    title,
+    upn,
+    content,
+    edit,
+    onUpdateTitle,
+    onUpdateContent,
+    noButtons,
+    buttons,
+    fixedHeight,
+}) => {
+    const classes = useStyles({ fixedHeight });
     const image = images && images[0];
     return (
         <Card className={classNames(className, classes.card)}>

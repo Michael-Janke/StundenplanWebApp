@@ -28,6 +28,7 @@ const useStyles = makeStyles(
             top: 0,
             bottom: 0,
             borderRadius: 0,
+            width: '100%',
         },
         readAnimation: {
             width: '100%',

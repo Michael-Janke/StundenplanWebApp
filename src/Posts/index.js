@@ -21,11 +21,9 @@ const useStyles = makeStyles(theme => ({
     },
     postGrid: {
         display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        maxWidth: 1200,
     },
     post: {
         margin: theme.spacing(1, 0),
