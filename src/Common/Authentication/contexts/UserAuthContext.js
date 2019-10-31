@@ -40,8 +40,8 @@ export default class UserAuthContext extends AuthContext {
             // wait for save completed
             window.location.replace(
                 'https://login.microsoftonline.com/common/oauth2/v2.0/logout?' +
-                'post_logout_redirect_uri=' +
-                encodeURIComponent('https://wolkenberg-gymnasium.de/')
+                    'post_logout_redirect_uri=' +
+                    encodeURIComponent('https://wolkenberg-gymnasium.de/')
             );
         });
     }
@@ -66,7 +66,7 @@ export default class UserAuthContext extends AuthContext {
                 &redirect_uri=${encodeURIComponent(window.location.href.split('?')[0].split('#')[0])}
                 &response_mode=query
                 &scope=${encodeURIComponent(this.getScope().join(' '))}
-                &state=${JSON.stringify({ resource })}
+                &state=${encodeURIComponent(JSON.stringify({ resource, hash: window.location.hash }))}
                 &domain_hint=wgmail.de
         `.replace(/ /g, '');
     }
@@ -74,7 +74,6 @@ export default class UserAuthContext extends AuthContext {
     loadAuthCode(resource) {
         window.location.replace(this.getAuthCodeLink(resource));
     }
-
 
     handleCallback(code, session_state, state) {
         if (!this.authCodes.find(authCode => authCode.code === code)) {
@@ -99,11 +98,10 @@ export default class UserAuthContext extends AuthContext {
             this.loadAuthCode(endpoint);
             return;
         }
-        const { code, state } = authCode || {};
+        const { code } = authCode || {};
         const body = {
             code,
             refresh_token,
-            state,
             scope: this.getScope(UserAuthContext.resources[endpoint]).join(' '),
         };
         const response = await fetchData(`https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/token`, {
