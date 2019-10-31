@@ -70,13 +70,14 @@ function NotebookSelector() {
             });
     }, [teams, dispatch, urls, loading]);
 
-    const iframe = useRef();
+    const link = useRef();
 
     const open = useCallback(
         id => {
-            iframe.current.src = urls[id].client + '/_Inhaltsbibliothek/';
+            link.current.href = urls[id].client + '/_Inhaltsbibliothek/';
+            link.current.click();
         },
-        [urls, iframe]
+        [urls, link]
     );
 
     const getCurrentTimetable = useMemo(makeGetCurrentTimetable, []);
@@ -107,7 +108,7 @@ function NotebookSelector() {
                     <Typography variant="h6" align="center" color="textSecondary">
                         Liste aktueller Klassen-Notizbücher
                     </Typography>
-                    <iframe style={{ display: 'none' }} title="openframe" ref={iframe} />
+                    <a style={{ visibility: 'none' }} title="openframe" ref={link} />
                 </div>
             </div>
             <div className={classes.layout}>
