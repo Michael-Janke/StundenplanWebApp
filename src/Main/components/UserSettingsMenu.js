@@ -15,6 +15,7 @@ import NotificationsOn from '@material-ui/icons/NotificationsActive';
 import NotificationsOff from '@material-ui/icons/NotificationsOff';
 import LogOutIcon from '@material-ui/icons/ExitToApp';
 import MailIcon from '@material-ui/icons/Mail';
+import { withRouter } from 'react-router';
 
 import { purge } from '../../store';
 import { unregister } from '../../serviceWorker';
@@ -25,6 +26,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ReminderSettingsDialog from './ReminderSettingsDialog';
 import Feedback from './Feedback';
 import { getAuthContext } from '../../Common/Authentication/storage';
+import OneNoteIcon from '../../Common/icons/OneNote';
 
 class UserSettingsMenu extends React.Component {
     state = {
@@ -89,6 +91,14 @@ class UserSettingsMenu extends React.Component {
         this.setState({ feedbackOpen: false });
     };
 
+    closeFeedback = () => {
+        this.setState({ feedbackOpen: false });
+    };
+
+    openOneNote = () => {
+        this.props.history.push('/onenote');
+    };
+
     render() {
         const { anchorEl } = this.state;
         return (
@@ -128,6 +138,12 @@ class UserSettingsMenu extends React.Component {
                             <FeedbackIcon />
                         </ListItemIcon>
                         <ListItemText primary="Feedback senden" />
+                    </MenuItem>
+                    <MenuItem onClick={this.openOneNote}>
+                        <ListItemIcon>
+                            <OneNoteIcon style={{ filter: 'grayscale(100%)' }} />
+                        </ListItemIcon>
+                        <ListItemText primary="Notizbücher" />
                     </MenuItem>
                     <MenuItem onClick={this.profilePicChange}>
                         <ListItemIcon>
@@ -205,4 +221,4 @@ const mapStateToProps = state => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(withTheme(UserSettingsMenu));
+)(withTheme(withRouter(UserSettingsMenu)));

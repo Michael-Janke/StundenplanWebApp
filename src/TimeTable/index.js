@@ -1,5 +1,5 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { connect, useDispatch } from 'react-redux';
 import TimeTableContainer from './components/container';
 import indigo from '@material-ui/core/colors/indigo';
 import Paper from '@material-ui/core/Paper';
@@ -12,6 +12,7 @@ import ComponentWrapper from '../Posts/ComponentWrapper';
 import Dates from '../Dates';
 import ErrorBoundary from '../Common/ErrorBoundary';
 import { usePosts } from '../Posts/hooks';
+import { setMyTimetable } from './actions';
 
 const smallBreakpoint = 800;
 
@@ -84,6 +85,10 @@ const useStyles = makeStyles(
 function TimeTableView({ small }) {
     const classes = useStyles();
     const posts = usePosts();
+
+    const dispatch = useDispatch();
+    useEffect(() => dispatch(setMyTimetable()), [dispatch]);
+
     return (
         <div className={classes.root} key={0} id="content-root">
             <div className={classes.extendedAppBar} />

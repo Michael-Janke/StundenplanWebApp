@@ -141,15 +141,6 @@ export function setDate(date, id, type) {
     return { type: 'SET_DATE', payload: { date, id, type } };
 }
 
-export function setMyTimetable() {
-    return (dispatch, getState) => {
-        let { id, type } = getState().user;
-        if (id && type) {
-            dispatch({ type: 'SET_MY_TIMETABLE', payload: { id, type } });
-        }
-    };
-}
-
 export function loadMasterData() {
     return {
         type: 'GET_MASTERDATA',

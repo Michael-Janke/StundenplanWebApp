@@ -50,3 +50,12 @@ export function createAssignment({ teamId, title, instructions, date }) {
         },
     };
 }
+
+export function setMyTimetable() {
+    return (dispatch, getState) => {
+        let { id, type } = getState().user;
+        if (id && type) {
+            dispatch({ type: 'SET_MY_TIMETABLE', payload: { id, type } });
+        }
+    };
+}
