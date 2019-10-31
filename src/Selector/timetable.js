@@ -347,29 +347,46 @@ function translateAbsence(masterdata, absence) {
     };
 }
 
+const teamMatching = (team, classes = [], subjectLesson) => {
+    if (!team.externalName) return false;
+    const [className, subject] = team.externalName.split(' ');
+    if (subject !== subjectLesson) {
+        return false;
+    }
+
+    const classIsGrade = !(className || '').match(/[a-z]/i); //10 Inf1
+
+    const matchingClass = classes.some(c => {
+        if (c === className) return true;
+        if (classIsGrade) return c.indexOf(className) >= 0;
+        return false;
+    });
+
+    return matchingClass;
+};
+
 export function translateLesson(masterdata, lesson, teams = [], assignmentsMatching = { toMatch: [] }) {
     if (lesson.absence) {
         return translateAbsence(masterdata, lesson.absence);
     }
     let matchedTeams = teams.filter(team => {
-        if (!team.externalName) return false;
-        const [className, subject] = team.externalName.split(' ');
-        const classIsGrade = !(className || '').match(/[a-z]/i); //10 Inf1
-        const matchingClass = (lesson.CLASS_IDS || []).some(c => {
-            const lessonClassName = masterdata.Class[c].NAME;
-            if (lessonClassName === className) return true;
-            if (classIsGrade) return lessonClassName.indexOf(className) >= 0;
-            return false;
-        });
-        const matchingClassOld = (lesson.CLASS_IDS_OLD || []).some(c => {
-            const lessonClassName = masterdata.Class[c].NAME;
-            if (lessonClassName === className) return true;
-            if (classIsGrade) return lessonClassName.indexOf(className) >= 0;
-            return false;
-        });
-        const matchingSubject = lesson.SUBJECT_ID && masterdata.Subject[lesson.SUBJECT_ID].NAME === subject;
-        const matchingSubjectOld = lesson.SUBJECT_ID_OLD && masterdata.Subject[lesson.SUBJECT_ID_OLD].NAME === subject;
-        return (matchingClass && matchingSubject) || (matchingClassOld && matchingSubjectOld);
+        return (
+            teamMatching(
+                team,
+                lesson.CLASS_IDS && lesson.CLASS_IDS.map(c => masterdata.Class[c].NAME),
+                lesson.SUBJECT_ID && masterdata.Subject[lesson.SUBJECT_ID].NAME
+            ) ||
+            teamMatching(
+                team,
+                lesson.CLASS_IDS_OLD && lesson.CLASS_IDS_OLD.map(c => masterdata.Class[c].NAME),
+                lesson.SUBJECT_ID_OLD && masterdata.Subject[lesson.SUBJECT_ID_OLD].NAME
+            ) ||
+            teamMatching(
+                team,
+                lesson.CLASS_IDS_NEW && lesson.CLASS_IDS_NEW.map(c => masterdata.Class[c].NAME),
+                lesson.SUBJECT_ID_NEW && masterdata.Subject[lesson.SUBJECT_ID_NEW].NAME
+            )
+        );
     });
 
     let validAssignments = [];
