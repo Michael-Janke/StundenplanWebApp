@@ -30,8 +30,9 @@ export const runApplication = async app => {
         setAuthContext(authContext);
     }
     if (code) {
-        // back to '/' without reloading page
-        window.history.replaceState('', '', window.location.pathname);
+        // back to previous path without reloading page
+        const hash = JSON.parse(decodeURIComponent(state) || '{}').hash || '';
+        window.history.replaceState('', '', window.location.pathname + hash);
         authContext.handleCallback(code, session_state, state);
     }
     if (!authContext.isLoggedIn() && authContext.isLoggingIn()) {

@@ -19,7 +19,9 @@ const periodService = store => next => action => {
                         const to = moment(period.END_TIME, 'Hmm');
                         return moment().isBetween(from, to) ? period : prev;
                     }, noPeriod);
-                    store.dispatch({ type: 'SET_CURRENT_PERIOD', payload: period });
+                    if (store.getState().period.currentPeriod !== period) {
+                        store.dispatch({ type: 'SET_CURRENT_PERIOD', payload: period });
+                    }
                 }
             }
             break;

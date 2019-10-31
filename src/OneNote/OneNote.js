@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     },
     list: {
         backgroundColor: theme.palette.background.paper,
-        width: 600,
+        width: 400,
     },
 }));
 
@@ -127,7 +127,7 @@ function NotebookSelector() {
                                     }
                                 />
 
-                                <ListItemSecondaryAction>
+                                <ListItemSecondaryAction onClick={() => open(team.id)}>
                                     <IconButton edge="end" aria-label="Notebook öffnen">
                                         <OpenIcon />
                                     </IconButton>
