@@ -20,7 +20,7 @@ class AppRouter extends Component {
         }
         window.setTimeout(() => {
             window.addEventListener('focus', this.props.sendLoginStatistic);
-            this.props.sendLoginStatistic();
+            this.props.sendLoginStatistic({ firstLoad: true });
         }, 1000);
     }
 
