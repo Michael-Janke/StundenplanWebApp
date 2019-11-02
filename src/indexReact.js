@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { register } from './serviceWorker';
+import { register, unregister } from './serviceWorker';
 import moment from 'moment';
 import 'moment/locale/de';
 moment.locale('de');
@@ -24,9 +24,11 @@ if (module.hot) {
     module.hot.accept('./App', renderApp);
 }
 
-register({
+/*register({
     onUpdate: registration => {
         console.log('reload app due to new files');
         window.location.reload();
     },
-});
+});*/
+
+unregister();
