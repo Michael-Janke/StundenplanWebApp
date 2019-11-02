@@ -56,7 +56,7 @@ export function checkCounter() {
     return { type: 'GET_COUNTER' };
 }
 
-export function sendLoginStatistic(data) {
+export function sendLoginStatistic({ firstLoad = false } = {}) {
     return {
         type: 'SEND_LOGIN_STATISTIC',
         payload: {
@@ -68,6 +68,7 @@ export function sendLoginStatistic(data) {
             buildNumber: version.build,
             version: version.version,
             production: process.env.NODE_ENV === 'production',
+            firstLoad,
         },
     };
 }
