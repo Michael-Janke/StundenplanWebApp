@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useRef, useState, useCallback } from 'react'
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { useDispatch, useSelector } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
-import { useParams } from 'react-router';
+import { useParams, useHistory, useLocation } from 'react-router';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -44,6 +44,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function NotebookSelector() {
+    const history = useHistory();
+    const location = useLocation();
+
+    useEffect(() => {
+        history.push('/');
+        history.push(location.pathname);
+        // eslint-disable-next-line
+    }, [history]);
+
     const classes = useStyles();
     const teams = useSelector(state => state.teams.joinedTeams);
     const urls = useSelector(state => state.teams.notebookUrls);
@@ -87,17 +96,26 @@ function NotebookSelector() {
     const periodNumber = period.PERIOD_TIME_ID - 1;
     const props = useMemo(() => ({ type: user.type, id: user.id, date: moment().startOf('week') }), [user]);
     const timetable = useSelector(state => getCurrentTimetable(state, props));
-    const period0 = timetable && timetable[weekday].periods && timetable[weekday].periods[periodNumber];
+    const period0 =
+        timetable && timetable[weekday] && timetable[weekday].periods && timetable[weekday].periods[periodNumber];
     const currentTeams0 =
         (period0 && period0.lessons.reduce((acc, lesson) => [...acc, ...lesson.teams], []).map(team => team.id)) || [];
-    const period1 = timetable && timetable[weekday].periods && timetable[weekday].periods[periodNumber + 1];
+    const period1 =
+        timetable && timetable[weekday] && timetable[weekday].periods && timetable[weekday].periods[periodNumber + 1];
     const currentTeams1 =
         (period1 && period1.lessons.reduce((acc, lesson) => [...acc, ...lesson.teams], []).map(team => team.id)) || [];
 
     const params = useParams();
     const openTeam = params.directOpen && (currentTeams0[0] || currentTeams1[0]);
     const openTeamIfUrl = urls[openTeam] && openTeam;
-    useEffect(() => openTeamIfUrl && open(openTeamIfUrl), [openTeamIfUrl, open]);
+    const [opened, setOpened] = useState(false);
+
+    useEffect(() => {
+        if (!opened && openTeamIfUrl) {
+            open(openTeamIfUrl);
+            setOpened(true);
+        }
+    }, [openTeamIfUrl, open, opened]);
 
     useIntervalCheck();
 
@@ -108,7 +126,9 @@ function NotebookSelector() {
                     <Typography variant="h6" align="center" color="textSecondary">
                         Liste aktueller Klassen-Notizbücher
                     </Typography>
-                    <a style={{ visibility: 'none' }} title="openframe" ref={link} />
+                    <a style={{ display: 'none' }} title="openframe" ref={link} href="/#">
+                        Open Onenote
+                    </a>
                 </div>
             </div>
             <div className={classes.layout}>
