@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useRef, useState, useCallback } from 'react'
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { useDispatch, useSelector } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
-import { useParams, useHistory, useLocation } from 'react-router';
+import { useParams } from 'react-router';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -44,22 +44,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function NotebookSelector() {
-    const history = useHistory();
-    const location = useLocation();
-
-    useEffect(() => {
-        history.push('/');
-        history.push(location.pathname);
-        // eslint-disable-next-line
-    }, [history]);
-
     const classes = useStyles();
     const teams = useSelector(state => state.teams.joinedTeams);
     const urls = useSelector(state => state.teams.notebookUrls);
     const schoolyear = useSelector(state => state.user.schoolyear);
     const masterdata = useSelector(state => state.timetable.masterdata);
     const dispatch = useDispatch();
-    const [loading, setLoading] = useState([]);
+    const [loading, setLoading] = useState({});
 
     useEffect(() => {
         dispatch(loadMe());
@@ -72,10 +63,12 @@ function NotebookSelector() {
     }, [schoolyear, dispatch]);
     useEffect(() => {
         teams
-            .filter(team => !urls[team.id] && !loading[team.id])
+            .filter(team => !urls[team.id])
+            .slice(0, 2)
+            .filter(team => !loading[team.id])
             .forEach(team => {
                 dispatch(getTeamsNotebook(team.id));
-                setLoading(loading => loading.push(team.id) && loading);
+                setLoading(loading => ({ ...loading, [team.id]: true }));
             });
     }, [teams, dispatch, urls, loading]);
 
