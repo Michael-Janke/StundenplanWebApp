@@ -1,15 +1,10 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
 import { SUBSTITUTION_MAP } from '../Common/const';
 
@@ -46,7 +41,8 @@ function ReportList({ report }) {
     return (
         <Table className={classes.table}>
             <TableHead>
-                <TableRow>
+                <TableRow className={classes.kw}>
+                    <TableCell>Datum</TableCell>
                     <TableCell>Typ</TableCell>
                     <TableCell align="right">Informationen</TableCell>
                     <TableCell align="right">Wert</TableCell>
@@ -67,8 +63,11 @@ function ReportList({ report }) {
                             <>
                                 {weeks[week].reserves && (windowSum += sums.reserves) && (
                                     <TableRow>
+                                        <TableCell component="th" scope="row" style={{ width: 50 }}>
+                                            {moment(week, 'GGGG-WW').format('[KW] WW')}
+                                        </TableCell>
                                         <TableCell component="th" scope="row">
-                                            Reservestunden {moment(week, 'GGGG-WW').format('[KW] WW')}
+                                            Reservestunden
                                         </TableCell>
                                         <TableCell align="right">{weeks[week].reserves.length} Schultage</TableCell>
                                         <TableCell align="right">{numberFormat(sums.reserves)}</TableCell>
@@ -80,6 +79,9 @@ function ReportList({ report }) {
                                         windowSum += row.VALUE;
                                         return (
                                             <TableRow key={JSON.stringify(row)}>
+                                                <TableCell component="th" scope="row">
+                                                    {moment(row.DATE.date).format('DD.MM.')}
+                                                </TableCell>
                                                 <TableCell component="th" scope="row">
                                                     {SUBSTITUTION_MAP[row.TYPE].name}
                                                 </TableCell>
@@ -95,7 +97,7 @@ function ReportList({ report }) {
                                         );
                                     })}
                                 <TableRow className={classes.kw}>
-                                    <TableCell className={classes.kw}>
+                                    <TableCell className={classes.kw} colSpan={2}>
                                         Zwischensumme {moment(week, 'GGGG-WW').format('[KW] WW')}
                                     </TableCell>
                                     <TableCell className={classes.dates} align="right">
