@@ -7,6 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import moment from 'moment';
 import { SUBSTITUTION_MAP } from '../Common/const';
+import { green, red } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(theme => ({
     kw: {
@@ -16,11 +17,17 @@ const useStyles = makeStyles(theme => ({
     dates: {
         color: theme.palette.text.secondary,
     },
+    plus: {
+        backgroundColor: red[50],
+    },
+    minus: {
+        backgroundColor: green[50],
+    },
 }));
 
 const numberFormat = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format;
 
-function ReportList({ report }) {
+function ReportList({ report, showNeutral }) {
     const classes = useStyles();
     const maxDate = moment()
         .endOf('week')
@@ -37,6 +44,7 @@ function ReportList({ report }) {
     }, {});
 
     let windowSum = 0;
+    const valueClass = v => [classes.minus, null, classes.plus][v > 0 ? 2 : v < 0 ? 0 : -1];
 
     return (
         <Table className={classes.table}>
@@ -58,10 +66,10 @@ function ReportList({ report }) {
                             return acc;
                         }, {});
                         const sum = Object.values(sums).reduce((sum, row) => sum + row, 0);
-
+                        windowSum += sums.reserves;
                         return (
                             <>
-                                {weeks[week].reserves && (windowSum += sums.reserves) && (
+                                {weeks[week].reserves && (
                                     <TableRow>
                                         <TableCell component="th" scope="row" style={{ width: 50 }}>
                                             {moment(week, 'GGGG-WW').format('[KW] WW')}
@@ -70,12 +78,39 @@ function ReportList({ report }) {
                                             Reservestunden
                                         </TableCell>
                                         <TableCell align="right">{weeks[week].reserves.length} Schultage</TableCell>
-                                        <TableCell align="right">{numberFormat(sums.reserves)}</TableCell>
-                                        <TableCell align="right">{numberFormat(Math.ceil(windowSum))}</TableCell>
+                                        <TableCell align="right" className={valueClass(sums.reserves)}>
+                                            {numberFormat(sums.reserves)}
+                                        </TableCell>
+                                        <TableCell align="right" className={valueClass(windowSum)}>
+                                            {numberFormat(Math.ceil(windowSum))}
+                                        </TableCell>
                                     </TableRow>
                                 )}
+                                {weeks[week].corrections &&
+                                    weeks[week].corrections.map(row => {
+                                        if (row.VALUE === 0 && !showNeutral) return null;
+                                        windowSum += row.VALUE;
+                                        return (
+                                            <TableRow key={JSON.stringify(row)}>
+                                                <TableCell component="th" scope="row">
+                                                    {moment(row.DATE.date).format('DD.MM.')}
+                                                </TableCell>
+                                                <TableCell component="th" scope="row">
+                                                    Wertkorrektur
+                                                </TableCell>
+                                                <TableCell align="right">{row.TEXT}</TableCell>
+                                                <TableCell align="right" className={valueClass(row.VALUE)}>
+                                                    {row.VALUE}
+                                                </TableCell>
+                                                <TableCell align="right" className={valueClass(windowSum)}>
+                                                    {numberFormat(Math.ceil(windowSum))}
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
                                 {weeks[week].substitutions &&
                                     weeks[week].substitutions.map(row => {
+                                        if (row.VALUE === 0 && !showNeutral) return null;
                                         windowSum += row.VALUE;
                                         return (
                                             <TableRow key={JSON.stringify(row)}>
@@ -89,29 +124,17 @@ function ReportList({ report }) {
                                                     {moment(row.DATE.date).format('dd')}/{row.PERIOD - 1} {row.SUBJECT}{' '}
                                                     {row.CLASSES} {row.TEXT}
                                                 </TableCell>
-                                                <TableCell align="right">{row.VALUE}</TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="right" className={valueClass(row.VALUE)}>
+                                                    {row.VALUE}
+                                                </TableCell>
+                                                <TableCell align="right" className={valueClass(windowSum)}>
                                                     {numberFormat(Math.ceil(windowSum))}
                                                 </TableCell>
                                             </TableRow>
                                         );
                                     })}
                                 <TableRow className={classes.kw}>
-                                    <TableCell className={classes.kw} colSpan={2}>
-                                        Zwischensumme {moment(week, 'GGGG-WW').format('[KW] WW')}
-                                    </TableCell>
-                                    <TableCell className={classes.dates} align="right">
-                                        {moment(week, 'GGGG-WW').format('DD.MM.YY')} -{' '}
-                                        {moment(week, 'GGGG-WW')
-                                            .add(4, 'days')
-                                            .format('DD.MM.YY')}
-                                    </TableCell>
-                                    <TableCell className={classes.kw} align="right">
-                                        {numberFormat(sum)}
-                                    </TableCell>
-                                    <TableCell className={classes.kw} align="right">
-                                        {numberFormat(Math.ceil(windowSum))}
-                                    </TableCell>
+                                    <TableCell className={classes.kw} colSpan={5}></TableCell>
                                 </TableRow>
                             </>
                         );
