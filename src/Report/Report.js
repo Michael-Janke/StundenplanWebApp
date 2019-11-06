@@ -3,6 +3,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { useDispatch, useSelector } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import ReportList from './ReportList';
 import { loadReport } from './actions';
 import TeacherDropdown from './TeacherDropdown';
@@ -42,6 +44,7 @@ function Report() {
     const myId = useSelector(state => state.user.id);
     const isAdmin = useSelector(state => state.user.scope == 'admin');
     const [id, setId] = useState(myId);
+    const [showNeutral, setShowNeutral] = useState(false);
     const report = useSelector(state => state.report[id]);
 
     const dispatch = useDispatch();
@@ -55,11 +58,21 @@ function Report() {
                 <Typography variant="h6" align="center" color="textSecondary">
                     Bericht von <TeacherDropdown value={id} onChange={e => setId(e.target.value)} disabled={!isAdmin} />
                 </Typography>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={showNeutral}
+                            onChange={e => setShowNeutral(e.target.checked)}
+                            color="primary"
+                        />
+                    }
+                    label="Anzeige nicht zu zählender Vertretungen/Entfälle"
+                />
             </div>
             <div className={classes.layout}>
                 {(!report || report.loading) && <CircularProgress />}
                 {report && report.error && <div>Fehler beim Laden</div>}
-                {report && report.substitutions && <ReportList report={report} />}
+                {report && report.substitutions && <ReportList report={report} showNeutral={showNeutral} />}
             </div>
         </div>
     );
