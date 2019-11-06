@@ -15,7 +15,7 @@ import version from './version.json';
 const persistConfig = {
     key: 'root',
     storage: localForage,
-    blacklist: ['browser', 'error', 'favorites', 'assignments', 'notifications'],
+    blacklist: ['browser', 'error', 'favorites', 'assignments', 'notifications', 'report'],
     version: version.build,
     migrate: state => {
         if (!state || !state._persist || state._persist.version === version.build) return Promise.resolve(state);

@@ -15,6 +15,7 @@ const Statistics = asynchronize(() => import('../Statistics'));
 const Dates = asynchronize(() => import('../Dates'));
 const PublicPosts = asynchronize(() => import('../Posts/public'));
 const PublicTimetable = asynchronize(() => import('../TimeTable/public'));
+const Report = asynchronize(() => import('../Report'));
 const NotebookSelector = asynchronize(() => import('../OneNote'));
 
 const Route = props => {
@@ -38,6 +39,7 @@ const routeConfig = location => (
         <Route path="/posts/new/:type" component={PostEditor} title="Beitrag erstellen" back withApp />
         <Route exact path="/admin" component={Statistics} withApp />
         <Route exact path="/onenote/:directOpen?" component={NotebookSelector} title="Notizbücher" back withApp />
+        <Route exact path="/report" component={Report} title="Bericht" back withApp />
 
         <Route exact path="/error" component={NotFoundPage} />
         <Redirect
