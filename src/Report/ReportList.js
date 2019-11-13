@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -29,19 +30,12 @@ const numberFormat = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }
 
 function ReportList({ report, showNeutral }) {
     const classes = useStyles();
-    const maxDate = moment()
-        .endOf('week')
-        .add(1, 'week');
-    const weeks = Object.keys(report).reduce((weeks, key) => {
-        report[key].forEach(row => {
-            let date = moment(row.DATE.date);
-            if (maxDate < date) return;
-            weeks[date.format('GGGG-WW')] = weeks[date.format('GGGG-WW')] || {};
-            weeks[date.format('GGGG-WW')][key] = weeks[date.format('GGGG-WW')][key] || [];
-            weeks[date.format('GGGG-WW')][key].push(row);
-        }, {});
-        return weeks;
-    }, {});
+    const isAdmin = useSelector(state => state.user.scope === 'admin');
+    const maxWeek = moment()
+        .add(1, 'week')
+        .format('GGGG-WW');
+    console.log(maxWeek);
+    const weeks = report;
 
     let windowSum = 0;
     const valueClass = v => [classes.minus, null, classes.plus][v > 0 ? 2 : v < 0 ? 0 : -1];
@@ -59,35 +53,33 @@ function ReportList({ report, showNeutral }) {
             </TableHead>
             <TableBody>
                 {Object.keys(weeks)
+                    .filter(week => week <= maxWeek)
                     .sort()
                     .map(week => {
-                        const sums = Object.keys(report).reduce((acc, key) => {
-                            acc[key] = weeks[week][key] ? weeks[week][key].reduce((sum, row) => sum + row.VALUE, 0) : 0;
-                            return acc;
-                        }, {});
-                        const sum = Object.values(sums).reduce((sum, row) => sum + row, 0);
-                        windowSum += sums.reserves;
+                        const sum = (weeks[week].RESERVE || []).reduce((sum, row) => sum + row.VALUE, 0);
+                        const commited = (weeks[week].RESERVE || []).reduce((sum, row) => sum + row.COMMITED, 0);
+                        windowSum += sum;
                         return (
-                            <>
-                                {weeks[week].reserves && (
+                            <React.Fragment key={week}>
+                                {weeks[week].RESERVE && (
                                     <TableRow>
                                         <TableCell component="th" scope="row" style={{ width: 50 }}>
                                             {moment(week, 'GGGG-WW').format('[KW] WW')}
                                         </TableCell>
                                         <TableCell component="th" scope="row">
-                                            Reservestunden
+                                            Reservestunden {isAdmin && commited > 0 && '•'}
                                         </TableCell>
-                                        <TableCell align="right">{weeks[week].reserves.length} Schultage</TableCell>
-                                        <TableCell align="right" className={valueClass(sums.reserves)}>
-                                            {numberFormat(sums.reserves)}
+                                        <TableCell align="right">{weeks[week].RESERVE.length} Schultage</TableCell>
+                                        <TableCell align="right" className={valueClass(sum)}>
+                                            {numberFormat(sum)}
                                         </TableCell>
                                         <TableCell align="right" className={valueClass(windowSum)}>
                                             {numberFormat(Math.ceil(windowSum))}
                                         </TableCell>
                                     </TableRow>
                                 )}
-                                {weeks[week].corrections &&
-                                    weeks[week].corrections.map(row => {
+                                {weeks[week].CORRECTION &&
+                                    weeks[week].CORRECTION.map(row => {
                                         if (row.VALUE === 0 && !showNeutral) return null;
                                         windowSum += row.VALUE;
                                         return (
@@ -96,7 +88,7 @@ function ReportList({ report, showNeutral }) {
                                                     {moment(row.DATE.date).format('DD.MM.')}
                                                 </TableCell>
                                                 <TableCell component="th" scope="row">
-                                                    Wertkorrektur
+                                                    Wertkorrektur {isAdmin && row.COMMITED > 0 && '•'}
                                                 </TableCell>
                                                 <TableCell align="right">{row.TEXT}</TableCell>
                                                 <TableCell align="right" className={valueClass(row.VALUE)}>
@@ -108,8 +100,8 @@ function ReportList({ report, showNeutral }) {
                                             </TableRow>
                                         );
                                     })}
-                                {weeks[week].substitutions &&
-                                    weeks[week].substitutions.map(row => {
+                                {weeks[week].SUBSTITUTION &&
+                                    weeks[week].SUBSTITUTION.map(row => {
                                         if (row.VALUE === 0 && !showNeutral) return null;
                                         windowSum += row.VALUE;
                                         return (
@@ -118,10 +110,11 @@ function ReportList({ report, showNeutral }) {
                                                     {moment(row.DATE.date).format('DD.MM.')}
                                                 </TableCell>
                                                 <TableCell component="th" scope="row">
-                                                    {SUBSTITUTION_MAP[row.TYPE].name}
+                                                    {SUBSTITUTION_MAP[row.TYPE].name}{' '}
+                                                    {isAdmin && row.COMMITED > 0 && '•'}
                                                 </TableCell>
                                                 <TableCell align="right">
-                                                    {moment(row.DATE.date).format('dd')}/{row.PERIOD - 1} {row.SUBJECT}{' '}
+                                                    {moment(row.DATE.date).format('dd')}/{row.PERIOD - 1} {row.SUBJECTS}{' '}
                                                     {row.CLASSES} {row.TEXT}
                                                 </TableCell>
                                                 <TableCell align="right" className={valueClass(row.VALUE)}>
@@ -136,7 +129,7 @@ function ReportList({ report, showNeutral }) {
                                 <TableRow className={classes.kw}>
                                     <TableCell className={classes.kw} colSpan={5}></TableCell>
                                 </TableRow>
-                            </>
+                            </React.Fragment>
                         );
                     })}
             </TableBody>

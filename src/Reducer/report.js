@@ -8,12 +8,27 @@ export default function reportReducer(state = {}, action) {
         case 'GET_REPORT_RECEIVED':
             return {
                 ...state,
-                [action.id]: action.payload,
+                [action.id]: { report: action.payload },
             };
-        case 'GET_REPORT_RECEIVED':
+        case 'GET_REPORT_ERROR':
             return {
                 ...state,
                 [action.id]: { error: true },
+            };
+        case 'COMMIT_REPORT':
+            return {
+                ...state,
+                commit: { loading: true },
+            };
+        case 'COMMIT_REPORT_RECEIVED':
+            return {
+                ...state,
+                commit: action.payload,
+            };
+        case 'COMMIT_REPORT_ERROR':
+            return {
+                ...state,
+                commit: { error: action.payload },
             };
         default:
     }
