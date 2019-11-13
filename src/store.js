@@ -16,9 +16,9 @@ const persistConfig = {
     key: 'root',
     storage: localForage,
     blacklist: ['browser', 'error', 'favorites', 'assignments', 'notifications', 'report'],
-    version: version.build,
+    version: version.redux,
     migrate: state => {
-        if (!state || !state._persist || state._persist.version === version.build) return Promise.resolve(state);
+        if (!state || !state._persist || state._persist.version === version.redux) return Promise.resolve(state);
         console.log('purge state, new build');
         return Promise.resolve({});
     },
