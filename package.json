@@ -57,10 +57,10 @@
         "why-did-you-update": "^1.0.6"
     },
     "scripts": {
-        "start": "set REACT_APP_MODE=app & react-scripts start",
-        "start:tv": "set REACT_APP_MODE=tv & react-scripts start",
-        "build": "node ./increment_build.js && set REACT_APP_MODE=app && react-scripts build && node ./modify-sw.js",
-        "build:tv": "node ./increment_build.js && set REACT_APP_MODE=tv&& react-scripts build && node ./modify-sw.js",
+        "start": "react-scripts start",
+        "start:tv": "react-scripts start",
+        "build": "node ./increment_build.js &&  react-scripts build",
+        "build:tv": "node ./increment_build.js && react-scripts build",
         "deploy": " scp -r build/* u45065@www.wolkenberg-gymnasium.de:~/wolkenberg-app/stundenplan-web-app",
         "deploy:tv": " scp -r build/* u45065@www.wolkenberg-gymnasium.de:~/wolkenberg-app/stundenplan-web-app-tv",
         "push": "npm run build && npm run deploy",

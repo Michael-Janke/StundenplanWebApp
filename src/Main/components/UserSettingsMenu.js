@@ -95,10 +95,6 @@ class UserSettingsMenu extends React.Component {
         this.setState({ feedbackOpen: false });
     };
 
-    openOneNote = () => {
-        this.props.history.push('/onenote');
-    };
-
     render() {
         const { anchorEl } = this.state;
         return (
@@ -138,12 +134,6 @@ class UserSettingsMenu extends React.Component {
                             <FeedbackIcon />
                         </ListItemIcon>
                         <ListItemText primary="Feedback senden" />
-                    </MenuItem>
-                    <MenuItem onClick={this.openOneNote}>
-                        <ListItemIcon>
-                            <OneNoteIcon style={{ filter: 'grayscale(100%)' }} />
-                        </ListItemIcon>
-                        <ListItemText primary="Notizbücher" />
                     </MenuItem>
                     <MenuItem onClick={this.profilePicChange}>
                         <ListItemIcon>
@@ -218,7 +208,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(withTheme(withRouter(UserSettingsMenu)));
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(withRouter(UserSettingsMenu)));
