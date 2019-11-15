@@ -14,7 +14,6 @@ const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
         boxSizing: 'border-box',
-        height: '100%',
         backgroundColor: theme.palette.background.default,
     },
     header: {
