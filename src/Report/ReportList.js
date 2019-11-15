@@ -34,8 +34,11 @@ function ReportList({ report, showNeutral }) {
     const maxWeek = moment()
         .add(1, 'week')
         .format('GGGG-WW');
-    console.log(maxWeek);
+
     const weeks = report;
+    const neutralWeeks = showNeutral
+        ? () => true
+        : week => Object.keys(weeks[week]).some(type => weeks[week][type].some(row => row.VALUE !== 0));
 
     let windowSum = 0;
     const valueClass = v => [classes.minus, null, classes.plus][v > 0 ? 2 : v < 0 ? 0 : -1];
@@ -54,6 +57,7 @@ function ReportList({ report, showNeutral }) {
             <TableBody>
                 {Object.keys(weeks)
                     .filter(week => week <= maxWeek)
+                    .filter(neutralWeeks)
                     .sort()
                     .map(week => {
                         const sum = (weeks[week].RESERVE || []).reduce((sum, row) => sum + row.VALUE, 0);
