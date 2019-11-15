@@ -12,6 +12,7 @@ const initialState = {
     notifications: false,
     themeType: 'light',
     favorites: null,
+    minVersion: 0,
 };
 
 export default function userReducer(state = initialState, action = {}) {

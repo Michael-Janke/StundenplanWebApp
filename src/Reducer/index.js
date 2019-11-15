@@ -17,6 +17,7 @@ import tv from './tv';
 import assignments from './assignments';
 import postcreation from './postcreation';
 import report from './report';
+import update from './update';
 
 export default combineReducers({
     browser: createResponsiveStateReducer({
@@ -42,4 +43,5 @@ export default combineReducers({
     tv,
     assignments,
     report,
+    update,
 });

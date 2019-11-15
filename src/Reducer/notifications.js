@@ -18,6 +18,10 @@ function errorDescription(type) {
             return 'Abrufen von ungelesenen Nachrichten fehlgeschlagen';
         case 'GET_ASSIGNMENTS_ERROR':
             return 'Abrufen von Aufgaben fehlgeschlagen';
+        case 'SERVICE_WORKER_AVAILABLE':
+            return 'App ist nun offline verfügbar';
+        case 'UPDATE_AVAILABLE':
+            return 'Neue App-Version verfügbar';
         default:
     }
     return 'Unbekannter Fehler';
@@ -83,24 +87,3 @@ export default (state = defaultState, action) => {
             return state;
     }
 };
-
-// export default function errorReducer(state = { error: null }, action = {}) {
-//     if (action.type.endsWith("_ERROR")) {
-//         if (!action.payload)
-//             return { error: null };
-//         var error = null;
-//         if (action.payload.text) {
-//             error = action.payload.text;
-//         } else if (action.payload.crossDomain) {
-//             error = "Interner Serverfehler";
-//         } else if (action.payload.response) {
-//             error = action.payload.response.statusCode + ' | ' + action.payload.response.text;
-//         };
-//         return {
-//             error: action.type + ':' + error,
-//             type: action.type
-//         }
-//     } else {
-//         return state;
-//     }
-// }
