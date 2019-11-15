@@ -29,7 +29,7 @@ export default {
         router: true,
         scope: ['admin', 'teacher'],
     },
-    Noitzbücher: {
+    Notizbücher: {
         color: '#00233a',
         icon: OneNoteIcon,
         link: '/onenote',
