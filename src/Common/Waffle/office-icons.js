@@ -1,5 +1,6 @@
 import React from 'react';
 import TextSmsIcon from '@material-ui/icons/Textsms';
+import ReportIcon from '@material-ui/icons/FormatListNumberedRtl';
 import OneNoteIcon from '../icons/OneNote';
 import OutlookIcon from '../icons/Outlook';
 import TeamsIcon from '../icons/Teams';
@@ -19,6 +20,19 @@ export default {
         color: '#00233a',
         icon: TextSmsIcon,
         link: '/posts',
+        router: true,
+    },
+    Bericht: {
+        color: '#00233a',
+        icon: ReportIcon,
+        link: '/report',
+        router: true,
+        scope: ['admin', 'teacher'],
+    },
+    Noitzbücher: {
+        color: '#00233a',
+        icon: OneNoteIcon,
+        link: '/onenote',
         router: true,
     },
     Outlook: {

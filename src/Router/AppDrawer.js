@@ -34,24 +34,26 @@ const styles = theme => ({
 
 class AppDrawer extends React.Component {
     render() {
-        const { classes } = this.props;
+        const { classes, scope } = this.props;
         const links = (
             <div className={classes.links} onMouseOver={Loadable.preloadAll}>
                 <Typography gutterBottom color="textSecondary" variant="body1">
                     Apps
                 </Typography>
                 <div className={classes.linksList}>
-                    {Object.entries(officeIcons).map(([key, value]) => {
-                        return (
-                            <Waffle
-                                name={key}
-                                waffle={value}
-                                key={key}
-                                onClick={this.props.closeDrawer}
-                                className={classes.link}
-                            />
-                        );
-                    })}
+                    {Object.entries(officeIcons)
+                        .filter(([key, value]) => value.scope === undefined || value.scope.indexOf(scope) >= 0)
+                        .map(([key, value]) => {
+                            return (
+                                <Waffle
+                                    name={key}
+                                    waffle={value}
+                                    key={key}
+                                    onClick={this.props.closeDrawer}
+                                    className={classes.link}
+                                />
+                            );
+                        })}
                 </div>
             </div>
         );
@@ -84,6 +86,7 @@ class AppDrawer extends React.Component {
 
 const mapStateToProps = state => ({
     open: state.drawer.open,
+    scope: state.user.scope,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -91,7 +94,4 @@ const mapDispatchToProps = dispatch => ({
     closeDrawer: () => dispatch(closeDrawer()),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(withStyles(styles)(AppDrawer));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AppDrawer));
