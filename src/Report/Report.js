@@ -6,6 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import ReportList from './ReportList';
+import { useParams, useHistory } from 'react-router';
 import { loadReport } from './actions';
 import TeacherDropdown from './TeacherDropdown';
 import Commit from './Commit';
@@ -49,11 +50,12 @@ function Report() {
     const classes = useStyles();
     const myId = useSelector(state => state.user.id);
     const isAdmin = useSelector(state => state.user.scope === 'admin');
-    const [id, setId] = useState(myId);
+    const id = useParams().id || myId;
     const [showNeutral, setShowNeutral] = useState(false);
     const report = useSelector(state => state.report[id]);
 
     const dispatch = useDispatch();
+    const history = useHistory();
 
     useEffect(() => dispatch(loadReport(id)), [id, dispatch]);
 
@@ -63,7 +65,11 @@ function Report() {
                 <div className={classes.row}>
                     <Typography variant="h6" align="center" color="textSecondary">
                         Bericht von{' '}
-                        <TeacherDropdown value={id} onChange={e => setId(e.target.value)} disabled={!isAdmin} />
+                        <TeacherDropdown
+                            value={id}
+                            onChange={e => history.replace('/report/' + e.target.value)}
+                            disabled={!isAdmin}
+                        />
                     </Typography>
                     <Commit />
                 </div>

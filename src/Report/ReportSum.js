@@ -7,6 +7,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import { Link } from 'react-router-dom';
 import { green, red } from '@material-ui/core/colors';
 import { loadReport } from './actions';
 
@@ -84,7 +85,14 @@ function Report() {
                     <TableBody>
                         {((report && report.report) || []).map(row => (
                             <TableRow key={row.NAME + row.SUM}>
-                                <TableCell>{row.NAME}</TableCell>
+                                <TableCell>
+                                    <Link
+                                        style={{ textDecoration: 'none', color: 'inherit' }}
+                                        to={'/report/' + row.TEACHER_ID}
+                                    >
+                                        {row.NAME}
+                                    </Link>
+                                </TableCell>
                                 <TableCell align="right" className={valueClass(row.SUM)}>
                                     {row.SUM}
                                 </TableCell>
