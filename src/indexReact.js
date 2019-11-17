@@ -13,19 +13,26 @@ const renderApp = () => {
     return ReactDOM.render(<App />, document.getElementById('root'));
 };
 
-renderApp();
-
-if (module.hot) {
-    module.hot.accept('./App', renderApp);
-}
-
 register({
     onSuccess: registration => {
         dispatch({ type: 'SERVICE_WORKER_AVAILABLE' });
     },
     onUpdate: registration => {
-        registration.unregister().then(() => {
-            dispatch({ type: 'UPDATE_AVAILABLE' });
-        });
+        const waitingServiceWorker = registration.waiting;
+
+        if (waitingServiceWorker) {
+            waitingServiceWorker.addEventListener('statechange', event => {
+                if (event.target.state === 'activated') {
+                    dispatch({ type: 'UPDATE_AVAILABLE' });
+                }
+            });
+            waitingServiceWorker.postMessage({ type: 'SKIP_WAITING' });
+        }
     },
 });
+
+renderApp();
+
+if (module.hot) {
+    module.hot.accept('./App', renderApp);
+}
