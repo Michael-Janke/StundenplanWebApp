@@ -29,6 +29,13 @@ export default {
         router: true,
         scope: ['admin', 'teacher'],
     },
+    Berichte: {
+        color: '#00233a',
+        icon: ReportIcon,
+        link: '/reportsum',
+        router: true,
+        scope: ['admin'],
+    },
     Notizbücher: {
         color: '#00233a',
         icon: OneNoteIcon,
