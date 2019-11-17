@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         boxSizing: 'border-box',
         backgroundColor: theme.palette.background.default,
+        padding: theme.spacing(2),
     },
     header: {
         maxWidth: 800,

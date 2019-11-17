@@ -26,7 +26,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ReminderSettingsDialog from './ReminderSettingsDialog';
 import Feedback from './Feedback';
 import { getAuthContext } from '../../Common/Authentication/storage';
-import OneNoteIcon from '../../Common/icons/OneNote';
 
 class UserSettingsMenu extends React.Component {
     state = {
