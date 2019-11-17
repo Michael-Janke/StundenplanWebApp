@@ -40,7 +40,7 @@ const routeConfig = location => (
         <Route path="/posts/new/:type" component={PostEditor} title="Beitrag erstellen" back withApp />
         <Route exact path="/admin" component={Statistics} withApp />
         <Route exact path="/onenote/:directOpen?" component={NotebookSelector} title="Notizbücher" back withApp />
-        <Route exact path="/report" component={Report} title="Bericht" withApp />
+        <Route exact path="/report/:id?" component={Report} title="Bericht" withApp />
         <Route exact path="/reportsum" component={ReportSum} title="Berichtsübersicht" withApp />
 
         <Route exact path="/error" component={NotFoundPage} />
