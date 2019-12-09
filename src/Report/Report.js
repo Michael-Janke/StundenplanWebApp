@@ -16,7 +16,6 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         boxSizing: 'border-box',
         backgroundColor: theme.palette.background.default,
-        padding: theme.spacing(2),
     },
     header: {
         maxWidth: 800,
@@ -36,13 +35,10 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
-        margin: theme.spacing(2),
+
         marginLeft: 'auto',
         marginRight: 'auto',
-    },
-    list: {
-        backgroundColor: theme.palette.background.paper,
-        width: 400,
+        overflowY: 'auto',
     },
 }));
 

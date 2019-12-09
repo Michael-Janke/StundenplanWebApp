@@ -22,7 +22,8 @@ export async function fetchData(url, options) {
         throw error;
     });
     if (response && response.ok) {
-        return await response.json();
+        let text = await response.text();
+        return text && text.length > 0 ? JSON.parse(text) : {};
     }
     throw await response.json();
 }
