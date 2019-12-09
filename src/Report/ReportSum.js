@@ -41,7 +41,6 @@ const useStyles = makeStyles(theme => ({
     },
     table: {
         backgroundColor: theme.palette.background.paper,
-        width: 400,
     },
     plus: {
         backgroundColor: red[50],

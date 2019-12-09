@@ -13,7 +13,7 @@ import { green, red } from '@material-ui/core/colors';
 const useStyles = makeStyles(theme => ({
     kw: {
         backgroundColor: theme.palette.background.paper,
-        fontWeight: 'boldz',
+        fontWeight: 'bold',
     },
     dates: {
         color: theme.palette.text.secondary,
