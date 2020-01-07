@@ -95,9 +95,7 @@ function TimeTableView({ small, smallTimetable, posts }) {
 
                 <div className={classes.row}>
                     <Paper className={classNames(classes.dates, classes.paper)} square>
-                        <ErrorBoundary>
-                            <Dates filterDate={small} />
-                        </ErrorBoundary>
+                       
                     </Paper>
                     <div className={classes.posts}>
                         {posts &&

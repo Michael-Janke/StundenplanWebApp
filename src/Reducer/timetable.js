@@ -80,7 +80,9 @@ export default function timetableReducer(state = initialState, action = {}) {
         case 'SET_DATE':
         case 'SET_MY_TIMETABLE':
             let { id, type } = action.payload;
-            const { min, max } = state;
+            let { min, max } = state;
+            min = moment(min);
+            max = moment(max);
 
             let newDate;
             if (action.payload.direction && action.payload.direction !== 'now') {

@@ -30,7 +30,7 @@ export default class LazySlideComponent extends React.Component {
                 } else {
                     this.lazyLoad();
                 }
-            }, diff * 300);
+            }, diff * 20);
             
         } else {
             this.setState({ rendered: this.renderSlide() });

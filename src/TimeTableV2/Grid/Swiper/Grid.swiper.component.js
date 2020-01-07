@@ -3,13 +3,16 @@ import { animated } from 'react-spring';
 import { Width, Springs, Gesture, Spring } from './helpers';
 
 import GridBackground from './Grid.background';
-import LazySlideComponent from './LazySlideComponent';
+// import GridSlideComponent from './LazySlideComponent';
+import GridSlideComponent from './Grid.slide.component';
+
 
 class GridSwiperComponent extends React.Component {
     tempIndex = this.props.index;
     width = 0;
     swiping = false;
     lazyComponents = [];
+    slideCount = 3;
 
 
     handleLazyComponents() {
@@ -68,7 +71,7 @@ class GridSwiperComponent extends React.Component {
 
         if (down && Math.abs(xDelta) < Math.abs(yDelta)) {
             return;
-        } else if (!down && Math.abs(xDelta) > width / 2) {
+        } else if (!down && Math.abs(xDelta) > width /5) {
             cancel();
             this.props.onChangeIndex(this.tempIndex, this.tempIndex + (xDelta > 0 ? -1 : 1));
             return;
@@ -83,8 +86,8 @@ class GridSwiperComponent extends React.Component {
             value.setter(i => {
                 const vIndex = this.tempIndex;
                 const newVIndex = vIndex + (down ? (xDelta > 0 ? -1 : 1) : 0);
-                let slide = value.slides[vIndex];
-                let newSlide = value.slides[newVIndex];
+                let slide = value.slides[vIndex % this.slideCount];
+                let newSlide = value.slides[newVIndex % this.slideCount];
                 if (!newSlide || !slide) {
                     return null;
                 }
@@ -111,7 +114,7 @@ class GridSwiperComponent extends React.Component {
                     return;
                 }
                 const vIndex = tempIndex;
-                let slide = value.slides[vIndex];
+                let slide = value.slides[vIndex % this.slideCount];
                 if (!slide) {
                     return null;
                 }
@@ -131,7 +134,7 @@ class GridSwiperComponent extends React.Component {
         return {
             x: 0,
             // https://www.react-spring.io/docs/hooks/api
-            config: { mass: 1, tension: 120, friction: 14, clamp: true },
+            config: { duration: 250 },
             onRest: () => {
                 this.swiping = false;
                 if (this.tempIndex !== this.state.index) {
@@ -160,26 +163,31 @@ class GridSwiperComponent extends React.Component {
         this.areas[location].setter = set;
     };
 
-    renderSlide(vIndex, area, key) {
+    renderSlide(vIndex, area) {
         const { onRowHeight } = this;
         const areaObject = this.areas[area];
-        let slide = areaObject.slides[vIndex] || (areaObject.slides[vIndex] = []);
+        const key = vIndex % this.slideCount;
+        let slide = areaObject.slides[key] || (areaObject.slides[key] = []);
         return (
-            <div
-                key={vIndex}
+          <div
+                // reusing components
+                // 2 = 1,2,0
+                // 3 = 2, 0, 1
+                // 4 = 1, 2, 0
+                key={vIndex % this.slideCount}
                 style={{
                     width: '100%',
                     flexShrink: 0,
                 }}
             >
-                <LazySlideComponent
+                <GridSlideComponent
                     swiper={this}
                     onRowHeight={onRowHeight}
                     renderComponent={areaObject.render}
                     index={vIndex}
                     slide={slide}
                     rows={areaObject.rows}
-                ></LazySlideComponent>
+                ></GridSlideComponent>
             </div>
         );
     }
@@ -254,9 +262,8 @@ class GridSwiperComponent extends React.Component {
 
     render() {
         const { index } = this.state;
-        const length = 3;
-        const pivot = Math.floor(length / 2);
-        const displayArray = new Array(length).fill(0, 0, length).map((_, i) => i - pivot + index);
+        const pivot = Math.floor(this.slideCount / 2);
+        const displayArray = new Array(this.slideCount).fill(0, 0, this.slideCount).map((_, i) => i - pivot + index);
         return (
             <Gesture onGesture={this.handleGesture}>
                 <Width style={{ overflow: 'hidden' }} onWidth={this.handleWidth}>

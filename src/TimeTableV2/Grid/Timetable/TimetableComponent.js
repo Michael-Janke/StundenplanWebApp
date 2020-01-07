@@ -119,6 +119,7 @@ function GridComponent({ children, rows, timetable, type, GridCellComponent, ind
         rows: rows.length || 10,
         columns: weekDays.length || 5,
     });
+    console.log("test");
     return (
         <div className={classes.root}>
             {children}
@@ -150,6 +151,4 @@ function GridComponent({ children, rows, timetable, type, GridCellComponent, ind
     );
 }
 
-export default React.memo(GridComponent, (prevProps, nextProps) => {
-    return false;
-});
+export default React.memo(GridComponent);
