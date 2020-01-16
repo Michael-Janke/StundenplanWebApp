@@ -78,7 +78,8 @@ function Report() {
                     <TableHead>
                         <TableRow className={classes.kw}>
                             <TableCell>Name</TableCell>
-                            <TableCell align="right">Zähler</TableCell>
+                            <TableCell align="right">Zähler Heute</TableCell>
+                            <TableCell align="right">Zähler +1 Woche</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -94,6 +95,9 @@ function Report() {
                                 </TableCell>
                                 <TableCell align="right" className={valueClass(row.SUM)}>
                                     {row.SUM}
+                                </TableCell>
+                                <TableCell align="right" className={valueClass(row.SUM1)}>
+                                    {row.SUM1}
                                 </TableCell>
                             </TableRow>
                         ))}
