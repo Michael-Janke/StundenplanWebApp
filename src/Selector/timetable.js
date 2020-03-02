@@ -21,7 +21,7 @@ function freeRooms(masterdata, day, periods) {
         let rooms = Object.values(masterdata.Room);
         const absencesFiltered = day.absences
             ? day.absences.filter(
-                  absence => absence.PERIOD_FROM - 1 <= y && absence.PERIOD_TO - 1 >= y && absence.ROOM_ID
+                  absence => absence.PERIOD_FROM - 1 <= y && absence.PERIOD_TO - 1 >= y && absence.room
               )
             : [];
 
@@ -30,7 +30,7 @@ function freeRooms(masterdata, day, periods) {
                 ...room,
                 status:
                     !lessons.find(current => ((current && current.new) || {}).ROOM_ID === room.ROOM_ID) &&
-                    !absencesFiltered.find(absence => Number(absence.ROOM_ID) === room.ROOM_ID),
+                    !absencesFiltered.find(absence => absence.room === room),
             };
         });
         period.freeRooms = rooms;
