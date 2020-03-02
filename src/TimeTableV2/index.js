@@ -10,7 +10,7 @@ import classNames from 'classnames';
 import ComponentWrapper from '../Posts/ComponentWrapper';
 import Dates from '../Dates';
 import ErrorBoundary from '../Common/ErrorBoundary';
-import makeGetPosts from '../Posts/index.selector';
+import { usePosts } from '../Posts/hooks';
 
 const smallBreakpoint = 800;
 
@@ -81,8 +81,11 @@ const useStyles = makeStyles(
     { name: 'TimeTableView' }
 );
 
-function TimeTableView({ small, smallTimetable, posts }) {
+function TimeTableView({ small, smallTimetable }) {
     const classes = useStyles();
+
+    const posts = usePosts();
+
     return (
         <div className={classes.root} key={0} id="content-root">
             <div className={classes.extendedAppBar} />
@@ -115,11 +118,9 @@ function TimeTableView({ small, smallTimetable, posts }) {
 }
 
 const mapStateToProps = state => {
-    const getPosts = makeGetPosts();
     return {
         small: state.browser.lessThan.medium,
         smallTimetable: state.browser.lessThan.large && !state.browser.is.small,
-        ...getPosts(state),
     };
 };
 
