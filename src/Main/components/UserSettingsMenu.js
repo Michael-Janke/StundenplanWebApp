@@ -25,7 +25,6 @@ import withTheme from '@material-ui/core/styles/withTheme';
 import Tooltip from '@material-ui/core/Tooltip';
 import ReminderSettingsDialog from './ReminderSettingsDialog';
 import Feedback from './Feedback';
-import { getAuthContext } from '../../Common/Authentication/storage';
 
 class UserSettingsMenu extends React.Component {
     state = {
@@ -64,11 +63,6 @@ class UserSettingsMenu extends React.Component {
 
     handleClose = () => {
         this.setState({ anchorEl: null });
-    };
-
-    logout = () => {
-        this.props.logOut();
-        getAuthContext().then(authContext => authContext.logOut());
     };
 
     openFeedback = () => {
@@ -171,7 +165,7 @@ class UserSettingsMenu extends React.Component {
                             />
                         </MenuItem>
                     )}
-                    <MenuItem onClick={this.logout}>
+                    <MenuItem onClick={this.props.logOut}>
                         <ListItemIcon>
                             <LogOutIcon />
                         </ListItemIcon>
