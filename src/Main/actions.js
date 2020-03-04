@@ -1,5 +1,6 @@
 import version from '../version.json';
 import { detect } from 'detect-browser';
+import { getAuthContext } from '../Common/Authentication/storage.js';
 
 export function loadMe() {
     return { type: 'GET_ME' };
@@ -123,7 +124,10 @@ export function changeTheme(type) {
 }
 
 export function logOut() {
-    return { type: 'LOGOUT' };
+    return (dispatch) => {
+        dispatch({ type: 'LOGOUT' });
+        getAuthContext().then(authContext => authContext.logOut());
+    }
 }
 
 export function setNotification({ newToken, oldToken }) {

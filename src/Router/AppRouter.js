@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setNotification, setMyTimetable, sendLoginStatistic, changeTheme, setSortBy } from '../Main/actions';
+import { setNotification, 
+     sendLoginStatistic, changeTheme, setSortBy } from '../Main/actions';
 import {ThemeProvider} from '@material-ui/core/styles';
 import createTheme from '../Common/theme';
 import MomentUtils from '@date-io/moment';
