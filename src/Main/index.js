@@ -1,8 +1,8 @@
 import React from 'react';
-import TimeTable from '../TimeTableV2';
 import { useIntervalCheck } from '../Common/intervalCheck';
 
-function Main() {
+function Main({ match }) {
+    const v2 = match.path === '/beta';
     const dispatchActions = React.useCallback((dispatch, intervalCount) => {
         dispatch({
             type: 'GET_UNREAD_MESSAGES',
@@ -21,8 +21,13 @@ function Main() {
         return (intervalCount + 1) % (6 * 60 * 24); // at least once a day;
     }, []);
     useIntervalCheck(dispatchActions);
-
-    return <TimeTable />;
+    let TimetableComponent;
+    if (v2) {
+        TimetableComponent = require("../TimeTableV2").default;
+    } else {
+        TimetableComponent = require("../TimeTable").default;
+    }
+    return <TimetableComponent />;
 }
 
 

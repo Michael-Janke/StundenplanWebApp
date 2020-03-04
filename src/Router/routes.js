@@ -32,6 +32,8 @@ const Route = props => {
 const routeConfig = location => (
     <>
         <Route exact path="/" component={Main} noBoxShadow appBarComponent={MainAppBar} withApp />
+        <Route exact path="/beta" component={Main} noBoxShadow appBarComponent={MainAppBar} withApp />
+
         <Route exact path="/public/dates" component={Dates} />
         <Route exact path="/public/posts" component={PublicPosts} />
         <Route exact path="/public/tv" component={PublicTimetable} />

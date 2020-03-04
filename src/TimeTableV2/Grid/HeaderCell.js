@@ -27,7 +27,6 @@ const useStyles = makeStyles(
 
 export default function HeaderCell({ GridCellComponent, className, date, variant, ...other }) {
     const classes = useStyles({ variant: variant });
-    console.log(date);
     return (
         <GridCellComponent {...other} className={classNames(classes.root, className)}>
             <Typography variant="body2" className={classes.weekdayName}>

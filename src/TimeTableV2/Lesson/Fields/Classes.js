@@ -44,7 +44,6 @@ function joinClasses(classes) {
 
 const Classes = ({ type, classes }) => {
     const themeClasses = useStyles();
-
     let field;
     if (type === 'new') {
         field = classes.new;

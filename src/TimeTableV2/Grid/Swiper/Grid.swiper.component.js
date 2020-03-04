@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { animated } from 'react-spring';
 import { Width, Springs, Gesture, Spring } from './helpers';
 
@@ -57,6 +58,10 @@ class GridSwiperComponent extends React.Component {
         if (this.width !== w) {
             console.debug('width changed', this.width, w);
             this.width = w;
+            // width has to be set
+            // to improve performance
+            let wrapper = ReactDOM.findDOMNode(this.refs.root);
+            wrapper.style.width = this.width + "px";
             this.toZero();
         }
     };
@@ -71,7 +76,7 @@ class GridSwiperComponent extends React.Component {
 
         if (down && Math.abs(xDelta) < Math.abs(yDelta)) {
             return;
-        } else if (!down && Math.abs(xDelta) > width /5) {
+        } else if (!down && Math.abs(xDelta) > width / 5) {
             cancel();
             this.props.onChangeIndex(this.tempIndex, this.tempIndex + (xDelta > 0 ? -1 : 1));
             return;
@@ -134,7 +139,7 @@ class GridSwiperComponent extends React.Component {
         return {
             x: 0,
             // https://www.react-spring.io/docs/hooks/api
-            config: { duration: 250 },
+            config: { duration: 200 },
             onRest: () => {
                 this.swiping = false;
                 if (this.tempIndex !== this.state.index) {
@@ -169,7 +174,7 @@ class GridSwiperComponent extends React.Component {
         const key = vIndex % this.slideCount;
         let slide = areaObject.slides[key] || (areaObject.slides[key] = []);
         return (
-          <div
+            <div
                 // reusing components
                 // 2 = 1,2,0
                 // 3 = 2, 0, 1
@@ -196,7 +201,7 @@ class GridSwiperComponent extends React.Component {
         if (!this.areas[index]) {
             this.areas[index] = {
                 slides: [],
-                setter: () => {},
+                setter: () => { },
                 rows: rows,
                 render: render,
             };
@@ -267,9 +272,11 @@ class GridSwiperComponent extends React.Component {
         return (
             <Gesture onGesture={this.handleGesture}>
                 <Width style={{ overflow: 'hidden' }} onWidth={this.handleWidth}>
-                    <Spring getProps={this.handleCalcProps} onSet={this.handleSetTranslate}>
-                        {translationValue => <>{this.renderChildren(displayArray, pivot, translationValue)}</>}
-                    </Spring>
+                    <div ref="root">
+                        <Spring getProps={this.handleCalcProps} onSet={this.handleSetTranslate}>
+                            {translationValue => <>{this.renderChildren(displayArray, pivot, translationValue)}</>}
+                        </Spring>
+                    </div>
                 </Width>
             </Gesture>
         );

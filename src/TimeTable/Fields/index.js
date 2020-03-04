@@ -23,13 +23,13 @@ export function getStudentFields(lesson) {
     const { subject, room, teachers } = lesson;
     return {
         fields: {
-            new: !lesson.isOld && [
+            new: lesson.lessonType === 'new' && [
                 SubjectContainer('new')(subject),
                 RoomContainer('new')(room),
                 TeachersContainer('new')(teachers),
             ],
-            old: lesson.isOld && [SubjectContainer('old')(subject), TeachersContainer('old')(teachers)],
-            substitution: lesson.substitutionInfo && [
+            old: lesson.lessonType === 'old' && [SubjectContainer('old')(subject), TeachersContainer('old')(teachers)],
+            substitution: lesson.lessonType === 'substitution' && [
                 SubjectContainer(lesson.substitutionInfo)(subject),
                 TeachersContainer(lesson.substitutionInfo)(teachers),
             ],
@@ -41,13 +41,13 @@ export function getTeacherFields(lesson) {
     const { subject, room, classes, teachers } = lesson;
     return {
         fields: {
-            new: !lesson.isOld && [
+            new: lesson.lessonType === 'new' && [
                 SubjectContainer('new')(subject),
                 ClassesContainer('new')(classes),
                 RoomContainer('new')(room),
             ],
-            old: lesson.isOld && [SubjectContainer('old')(subject), ClassesContainer('old')(classes)],
-            substitution: lesson.substitutionInfo && [
+            old: lesson.lessonType === 'old' && [SubjectContainer('old')(subject), ClassesContainer('old')(classes)],
+            substitution: lesson.lessonType === 'substitution' && [
                 SubjectContainer(lesson.substitutionInfo)(subject),
                 TeachersContainer(lesson.substitutionInfo)(teachers),
             ],
@@ -59,12 +59,12 @@ export function getRoomFields(lesson) {
     const { subject, teachers, classes } = lesson;
     return {
         fields: {
-            new: !lesson.isOld && [
+            new: lesson.lessonType === 'new' && [
                 SubjectContainer('new')(subject),
                 ClassesContainer('new')(classes),
                 TeachersContainer('new')(teachers),
             ],
-            old: lesson.isOld && [ClassesContainer('old')(classes), TeachersContainer('old')(teachers)],
+            old: lesson.lessonType === 'old' && [ClassesContainer('old')(classes), TeachersContainer('old')(teachers)],
         },
     };
 }

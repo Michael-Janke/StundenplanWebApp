@@ -18,6 +18,8 @@ export default function SubstitutionText({ substitutionText, specificSubstitutio
     const texts = [substitutionText, specificSubstitutionType && specificSubstitutionType.name]
         .sort((t1, t2) => (t1 ? t1.length : Infinity) - (t2 ? t2.length : Infinity));
 
+    // use the text that is shorter
+    
     const textMain = texts[0];
     const textTooltip = texts[1];
 

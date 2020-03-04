@@ -24,7 +24,7 @@ const useStyles = makeStyles(
     { name: 'Lesson' }
 );
 
-export default function Lesson({ children, specificSubstitutionType, className, ...other }) {
+export default React.forwardRef(function Lesson({ children, specificSubstitutionType, className, ...other }) {
     const styles = useSpecificSubsitutionType(specificSubstitutionType);
     const classes = useStyles(styles);
 
@@ -34,4 +34,4 @@ export default function Lesson({ children, specificSubstitutionType, className, 
             {children}
         </div>
     );
-}
+});

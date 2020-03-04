@@ -47,7 +47,7 @@ export default function ExpandLesson({ children, lesson }) {
 
     return (
         <ExpandPopover renderContent={renderContent} open={open} onToggle={handleToggle}>
-            <ExpandLessonContent></ExpandLessonContent>
+            <ExpandLessonContent lesson={lesson}></ExpandLessonContent>
         </ExpandPopover>
     );
 }

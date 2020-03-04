@@ -2,7 +2,7 @@ import React from 'react';
 
 import Popper from '@material-ui/core/Popper';
 import { withStyles, RootRef, ClickAwayListener, Collapse } from '@material-ui/core';
-import Lesson from './Lesson';
+import Lesson from '../Lesson';
 
 const styles = theme => ({
     popper: {
@@ -14,7 +14,7 @@ const styles = theme => ({
         minWidth: 125,
         maxWidth: 300,
         maxHeight: 500,
-        overflowY: 'auto',
+        overflow: 'auto',
         color: theme.palette.text.primary,
         boxShadow: theme.shadows[20],
     },
@@ -37,7 +37,7 @@ class ExpandPopover extends React.PureComponent {
 
     handleMouseLeave = () => {
         clearTimeout(this.leaveTimer);
-        // this.leaveTimer = setTimeout(this.handleClose, 1000);
+        //this.leaveTimer = setTimeout(this.handleClose, 1000);
     };
 
     handleToggle = () => {
@@ -81,14 +81,17 @@ class ExpandPopover extends React.PureComponent {
                     }}
                     onMouseLeave={this.handleMouseLeave}
                     onMouseEnter={this.handleMouseEnter}
+                    onClick={this.handleClickAway}
                 >
                     {({ TransitionProps }) => (
                         <ClickAwayListener onClickAway={this.handleClickAway}>
-                            <Lesson className={classes.paper}>
-                                <Collapse {...TransitionProps} appear>
-                                    {this.props.children}
-                                </Collapse>
-                            </Lesson>
+                            <div>
+                                <Lesson className={classes.paper}>
+                                    <Collapse {...TransitionProps} appear style={{ overflowX: 'hidden' }}>
+                                        {this.props.children}
+                                    </Collapse>
+                                </Lesson>
+                            </div>
                         </ClickAwayListener>
                     )}
                 </Popper>
