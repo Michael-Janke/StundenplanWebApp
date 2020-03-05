@@ -32,14 +32,14 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const SearchResult = ({ open, onClick, value }) => {
+const SearchResult = ({ open, onClick, value, tv }) => {
     const classes = useStyles();
     const [filter, setFilter] = useState('');
     const small = useSelector(state => state.browser.lessThan.medium);
     return (
         <List className={classNames(classes.dropDown, classes.list, !open && classes.dropDownClosed)}>
             {open && <FilterBar onChange={filter => setFilter(filter)} small={small} filter={filter} />}
-            {open && <SearchList onClick={onClick} filter={filter} value={value} />}
+            {open && <SearchList onClick={onClick} filter={filter} value={value} tv={tv} />}
         </List>
     );
 };

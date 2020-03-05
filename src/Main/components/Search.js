@@ -68,12 +68,7 @@ class Search extends React.PureComponent {
                                     onInput={this.handleKeyboardInput}
                                 />
                             )}
-                            <SearchResult
-                                open={open}
-                                value={this.state.value}
-                                onClick={this.handleClick}
-                                tv={this.props.tv}
-                            />
+                            <SearchResult open={open} value={this.state.value} onClick={this.handleClick} tv={tv} />
                         </div>
                     </div>
                 </ClickAwayListener>
@@ -176,7 +171,4 @@ const mapDispatchToProps = dispatch => ({
     loadMe: () => dispatch(loadMe()),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(withStyles(styles)(Search));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Search));

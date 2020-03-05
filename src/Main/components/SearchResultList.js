@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const SearchResult = ({ results, onClick }) => {
+const SearchResult = ({ results, onClick, tv }) => {
     const classes = useStyles();
     const [selected, setSelected] = useState(0);
     const small = useSelector(state => state.browser.lessThan.medium);
@@ -51,6 +51,7 @@ const SearchResult = ({ results, onClick }) => {
                                     onClick={onClick}
                                     selected={!small && selected === index}
                                     style={style}
+                                    tv={tv}
                                 />
                             );
                         }}
