@@ -8,6 +8,7 @@ import OneDriveIcon from '../icons/OneDrive';
 import ExcelIcon from '../icons/Excel';
 import PowerPointIcon from '../icons/PowerPoint';
 import WordIcon from '../icons/Word';
+import FormsIcon from '../icons/Forms';
 
 export default {
     Stundenplan: {
@@ -77,6 +78,11 @@ export default {
         icon: TeamsIcon,
         link: 'https://teams.microsoft.com/_',
     },
+    Forms: {
+        color: '#036c70',
+        icon: FormsIcon,
+        link: 'https://forms.office.com',
+    },
     Homepage: {
         color: 'black',
         icon: Icon(require('../icons/logoicon.png'), {
@@ -84,6 +90,12 @@ export default {
             WebkitFilter: 'invert(100%)',
         }),
         link: 'https://www.wolkenberg-gymnasium.de/',
+    },
+    weBBschule: {
+        color: 'black',
+        icon: Icon(require('../icons/webbschule.jpg')),
+        link: 'https://schulen.brandenburg.de/webbschule/anmeldung?schulnr=120571',
+        scope: ['teacher', 'admin'],
     },
 };
 
