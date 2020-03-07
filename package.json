@@ -4,7 +4,9 @@
     "private": true,
     "homepage": "https://www.wolkenberg-gymnasium.de/wolkenberg-app/stundenplan-web-app/",
     "dependencies": {
-        "@date-io/moment": "^2.4.0",
+        "@date-io/core": "^1.x",
+        "@date-io/jalaali": "1.x",
+        "@date-io/moment": "1.x",
         "@material-ui/core": "^4.9.5",
         "@material-ui/icons": "^4.9.1",
         "@material-ui/lab": "^4.0.0-alpha.45",

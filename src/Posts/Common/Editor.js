@@ -26,20 +26,22 @@ export const { Toolbar } = toolbarPlugin;
 export const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
 export const plugins = [toolbarPlugin, emojiPlugin, linkifyPlugin];
 
-
-const text = 'Hier den Text eingeben. Oben findest du die Toolbar. Auch Smileys sind möglich 🙈. Gib dazu ein : ein.';
+const text =
+    'Hier den Text eingeben. Oben findest du die Toolbar. Auch Smileys sind möglich 🙈. Gib dazu ein Doppelpunkt ein.';
 
 const initialState = ContentState.createFromText(text);
 
 export default class CustomEditor extends Component {
     state = {
-        editorState: createWithContent(
-            this.props.content ? convertFromRaw(this.props.content) : initialState,
-        ),
+        editorState: createWithContent(this.props.content ? convertFromRaw(this.props.content) : initialState),
     };
 
     componentDidMount() {
         this.focus();
+    }
+
+    componentDidCatch() {
+        this.forceUpdate();
     }
 
     onChange = editorState => {
