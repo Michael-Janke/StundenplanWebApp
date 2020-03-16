@@ -104,13 +104,23 @@ export default class UserAuthContext extends AuthContext {
             refresh_token,
             scope: this.getScope(UserAuthContext.resources[endpoint]).join(' '),
         };
-        const response = await fetchData(`https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/token`, {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'Application/Json',
-            },
-        });
-        return response;
+        try {
+            const response = await fetchData(`https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/token`, {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: {
+                    'Content-Type': 'Application/Json',
+                },
+            });
+            return response;
+        } catch (error) {
+            // if there is a error_codes property
+            // reload authCode
+            if (error && error.error_codes) {
+                this.loadAuthCode(endpoint);
+                return;
+            }
+            throw error;
+        }
     }
 }

@@ -27,16 +27,20 @@ export default class AuthContext extends EventEmitter {
 
     isLoggingIn() {}
 
-    async aquireToken(token, endpoint) {}
+    async aquireToken(token, endpoint) { }
+    
+    checkToken(token) {
+        var expires_in = token.expires_in;
+        // check if not expired
+        const diff = Math.round((Date.now() - token.acquired) / 1000);
+        return expires_in > diff;
+    }
 
     getToken(endpoint) {
         return new Promise(async (resolve, reject) => {
             const token = this.tokens[endpoint];
             if (token) {
-                var expires_in = token.expires_in;
-                // check if not expired
-                const diff = Math.round((Date.now() - token.acquired) / 1000);
-                if (expires_in > diff) {
+                if (this.checkToken(token)) {
                     resolve(token);
                     return;
                 }
