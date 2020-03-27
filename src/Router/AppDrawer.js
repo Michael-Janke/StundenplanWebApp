@@ -57,7 +57,9 @@ class AppDrawer extends React.Component {
                 </div>
 
                 <Typography variant="body1" gutterBottom style={{ marginTop: 10 }} color="textSecondary">
-                    <a href="https://portal.office.com/OLS/MySoftware.aspx">Microsoft Office herunterladen</a>
+                    <a href="https://portal.office.com/OLS/MySoftware.aspx" target="_blank">
+                        Microsoft Office herunterladen
+                    </a>
                 </Typography>
             </div>
         );
