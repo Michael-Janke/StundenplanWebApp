@@ -5,6 +5,7 @@ const initialState = {
     schoolyear: 0,
     joinedTeams: [],
     assignments: [],
+    events: [],
     teamUrls: {},
     notebookUrls: {},
     createAssignmentFor: null,
@@ -65,6 +66,12 @@ export default function teamsReducer(state = initialState, action = {}) {
                         client: notebook.links.oneNoteClientUrl.href,
                     },
                 },
+            };
+        }
+        case 'GET_EVENTS_RECEIVED': {
+            return {
+                ...state,
+                events: action.payload.value,
             };
         }
 

@@ -11,6 +11,9 @@ function Main() {
             dispatch({
                 type: 'GET_ASSIGNMENTS',
             });
+            dispatch({
+                type: 'GET_EVENTS',
+            });
         }
         if (intervalCount === 1) {
             //not immedantly
@@ -24,6 +27,5 @@ function Main() {
 
     return <TimeTable />;
 }
-
 
 export default Main;

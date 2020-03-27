@@ -20,9 +20,7 @@ function freeRooms(masterdata, day, periods) {
         // delete period.lessons;
         let rooms = Object.values(masterdata.Room);
         const absencesFiltered = day.absences
-            ? day.absences.filter(
-                  absence => absence.PERIOD_FROM - 1 <= y && absence.PERIOD_TO - 1 >= y && absence.room
-              )
+            ? day.absences.filter(absence => absence.PERIOD_FROM - 1 <= y && absence.PERIOD_TO - 1 >= y && absence.room)
             : [];
 
         rooms = rooms.map(room => {
@@ -37,7 +35,19 @@ function freeRooms(masterdata, day, periods) {
     }
 }
 
-export function translateDay(masterdata, timetable, x, substitutions, periods, type, id, date, teams, assignments) {
+export function translateDay(
+    masterdata,
+    timetable,
+    x,
+    substitutions,
+    periods,
+    type,
+    id,
+    date,
+    teams,
+    assignments,
+    events
+) {
     let day = readTimetable(timetable, x, periods, date);
     if (substitutions) {
         joinSubstitutions(day, substitutions[x], type, id);
@@ -57,15 +67,30 @@ export function translateDay(masterdata, timetable, x, substitutions, periods, t
         freeRooms(masterdata, day, periods);
     }
     day.unmatchedAssignments = assignmentsMatching.toMatch;
+
+    day.events = events.filter(event => moment(event.start.dateTime).isSame(moment(date).weekday(x), 'day'));
+
     return day;
 }
 
-function translateTimetable(masterdata, timetable, substitutions, periods, type, id, date, teams, assignments) {
+function translateTimetable(masterdata, timetable, substitutions, periods, type, id, date, teams, assignments, events) {
     if (!timetable || !masterdata || !substitutions) return null;
     periods = Object.values(periods);
     let data = [];
     for (let x = 0; x < WEEKDAY_NAMES.length; x++) {
-        data[x] = translateDay(masterdata, timetable, x, substitutions, periods, type, id, date, teams, assignments);
+        data[x] = translateDay(
+            masterdata,
+            timetable,
+            x,
+            substitutions,
+            periods,
+            type,
+            id,
+            date,
+            teams,
+            assignments,
+            events
+        );
     }
     return data;
 }
@@ -436,44 +461,27 @@ export function translateLesson(masterdata, lesson, teams = [], assignmentsMatch
 
 const makeGetCurrentTimetable = () => {
     const getTimetableState = state => state.timetable;
-    const getMasterdata = createSelector(
-        getTimetableState,
-        state => state.masterdata
-    );
-    const getTimetables = createSelector(
-        getTimetableState,
-        state => state.timetables
-    );
+    const getMasterdata = createSelector(getTimetableState, state => state.masterdata);
+    const getTimetables = createSelector(getTimetableState, state => state.timetables);
     const getTeams = state => state.teams.joinedTeams;
     const getAssignments = state => state.teams.assignments;
-    const getSubstitutions = createSelector(
-        getTimetableState,
-        state => state.substitutions
-    );
+    const getEvents = state => state.teams.events;
+    const getSubstitutions = createSelector(getTimetableState, state => state.substitutions);
 
     const getDate = (state, props) => props.date || state.timetable.timetableDate;
-    const getWeekSelector = createSelector(
-        getDate,
-        date => moment(date).week()
+    const getWeekSelector = createSelector(getDate, date => moment(date).week());
+    const getYearSelector = createSelector(getDate, date => moment(date).weekYear());
+    const getAssignmentsSelector = createSelector(getDate, getAssignments, (date, assignments) =>
+        assignments.filter(assignment => moment(date).isSame(moment(assignment.dueDateTime), 'week'))
     );
-    const getYearSelector = createSelector(
-        getDate,
-        date => moment(date).weekYear()
-    );
-    const getAssignmentsSelector = createSelector(
-        getDate,
-        getAssignments,
-        (date, assignments) =>
-            assignments.filter(assignment => moment(date).isSame(moment(assignment.dueDateTime), 'week'))
+    const getEventsSelector = createSelector(getDate, getEvents, (date, events) =>
+        events.filter(event => moment(date).isSame(moment(event.start.dateTime), 'week'))
     );
 
     const getType = (state, props) => props.type || state.timetable.currentTimeTableType;
     const getId = (state, props) => props.id || state.timetable.currentTimeTableId;
 
-    const getPeriods = createSelector(
-        getTimetableState,
-        state => state.masterdata.Period_Time
-    );
+    const getPeriods = createSelector(getTimetableState, state => state.masterdata.Period_Time);
 
     const getIgnore = (state, props) => props && props.noSubstitutions;
 
@@ -513,6 +521,7 @@ const makeGetCurrentTimetable = () => {
         getDate,
         getTeams,
         getAssignmentsSelector,
+        getEvents,
         translateTimetable
     );
 };

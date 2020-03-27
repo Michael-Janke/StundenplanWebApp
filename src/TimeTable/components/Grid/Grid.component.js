@@ -19,6 +19,7 @@ import Offline from './offline';
 import OfflineLesson from './OfflineLesson';
 import { grey } from '@material-ui/core/colors';
 import classNames from 'classnames';
+import Event from './Event';
 
 class TimeTableGrid extends React.Component {
     periodTime(timeAsNumber) {
@@ -139,6 +140,7 @@ class TimeTableGrid extends React.Component {
         return [
             this.renderAbsences(),
             this.renderUnmatchedAssignments(),
+            this.renderEvents(),
             ...Object.values(periods).map(period => {
                 const isCurrentPriod = currentPeriod === period;
                 return (
@@ -176,6 +178,28 @@ class TimeTableGrid extends React.Component {
                                         <Time>{assignment.displayName}</Time>
                                     </Times>
                                 ))}
+                        </TableCell>
+                    );
+                })}
+            </TableRow>
+        );
+    }
+
+    renderEvents() {
+        const { currentTimetable: timetable, small, me } = this.props;
+        if (!timetable || !me || !timetable.some(day => !!day.events.length)) {
+            return null;
+        }
+        return (
+            <TableRow style={{ height: 'unset' }} key={-3}>
+                <PeriodCell small={small}>
+                    <Times>{small ? 'Besp.' : 'Besprechungen'}</Times>
+                </PeriodCell>
+                {WEEKDAY_NAMES.map((name, i) => {
+                    const day = timetable[i];
+                    return (
+                        <TableCell key={name} style={{ padding: small ? 2 : 4, paddingRight: 2, fontSize: '100%' }}>
+                            {day.events && day.events.map(event => <Event event={event} />)}
                         </TableCell>
                     );
                 })}
@@ -274,7 +298,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(
-    null,
-    mapDispatchToProps
-)(withStyles(styles, { withTheme: true })(TimeTableGrid));
+export default connect(null, mapDispatchToProps)(withStyles(styles, { withTheme: true })(TimeTableGrid));

@@ -36,7 +36,18 @@ const teamsService = store => next => action => {
                 type: 'GET_TEAMS_NOTEBOOK',
                 id: action.id,
             });
-
+        case 'GET_EVENTS':
+            let date = moment()
+                .subtract(1, 'weeks')
+                .startOf('isoWeek')
+                .format('YYYY-MM-DD');
+            return requestApiGenerator(next)(
+                GRAPH_URL,
+                `beta/me/events?$select=start, end, organizer, subject, onlineMeeting&$filter=start/dateTime ge '${date}T00:00:00Z' `,
+                {
+                    type: 'GET_EVENTS',
+                }
+            );
         default:
             break;
     }
