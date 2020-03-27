@@ -6,7 +6,6 @@ import Badge from '@material-ui/core/Badge';
 import MailIcon from '@material-ui/icons/Mail';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
-import MailDialog from './Mail';
 
 const useStyles = makeStyles({
     icon: {
@@ -17,18 +16,16 @@ const useStyles = makeStyles({
 const UnreadMessages = () => {
     const unreadMessages = useSelector(state => state.teams.unreadMessages || 0);
     const classes = useStyles();
-    const [dialogOpen, setDialogOpen] = useState(false);
 
     return (
         <>
             <Tooltip id="tooltip-print" title="Ungelesene Nachrichten" disableTouchListener disableFocusListener>
-                <IconButton onClick={() => setDialogOpen(true)}>
+                <IconButton onClick={() => window.open('https://outlook.office365.com', '_blank')}>
                     <Badge badgeContent={unreadMessages} invisible={!unreadMessages} color="secondary">
                         <MailIcon className={classes.icon} />
                     </Badge>
                 </IconButton>
             </Tooltip>
-            <MailDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
         </>
     );
 };

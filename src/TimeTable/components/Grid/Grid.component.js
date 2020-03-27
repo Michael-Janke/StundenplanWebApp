@@ -258,7 +258,6 @@ const styles = theme => ({
     },
     rootLarge: {
         maxHeight: `calc(100vh - ${190}px)`,
-        overflowY: 'auto',
     },
     table: {
         backgroundColor: theme.palette.background.default,
