@@ -17,7 +17,7 @@ import { setMyTimetable } from './actions';
 const smallBreakpoint = 800;
 
 const useStyles = makeStyles(
-    theme => ({
+    (theme) => ({
         root: {
             position: 'relative',
             overflowY: 'auto',
@@ -52,6 +52,7 @@ const useStyles = makeStyles(
         },
         timetable: {
             flexDirection: 'column',
+            overflowX: 'hidden',
         },
         dates: {
             maxWidth: 340,
@@ -105,7 +106,7 @@ function TimeTableView({ small }) {
                         </ErrorBoundary>
                     </Paper>
                     <div className={classes.posts}>
-                        {posts.map(post => (
+                        {posts.map((post) => (
                             <ComponentWrapper
                                 key={post.POST_ID}
                                 post={post}
@@ -120,7 +121,7 @@ function TimeTableView({ small }) {
     );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     small: state.browser.lessThan.medium,
 });
 

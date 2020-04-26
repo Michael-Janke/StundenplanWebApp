@@ -36,24 +36,23 @@ const computeData = (masterdata, favorites, user) => {
             filterType: 'Raum',
         },
         ...Object.values(masterdata.Class)
-            .filter((o) => o.NAME !== '07-08')
-            .sort(sortName)
+            .sort((o1, o2) => !!o2.STUDENT_COUNT - !!o1.STUDENT_COUNT || sortName(o1, o2))
             .map((entry) => {
                 let teacher = entry.TEACHER.length
-                    ? ' von ' +
-                      entry.TEACHER.map((id) => masterdata.Teacher[id])
-                          .map((teacher) => (teacher ? teacher.LASTNAME : ''))
+                    ? entry.TEACHER.map((id) => masterdata.Teacher[id])
+                          .map((teacher) => (teacher ? teacher.FIRSTNAME[0] + '. ' + teacher.LASTNAME : ''))
                           .join(', ')
-                    : '';
-                let count = entry.STUDENT_COUNT > 0 ? ` (${entry.STUDENT_COUNT})` : '';
+                    : undefined;
+                let count = entry.STUDENT_COUNT > 0 ? `SuS: ${entry.STUDENT_COUNT}` : undefined;
+                let secondary = [count, teacher].filter((a) => !!a).join(', ');
                 return {
                     searchString: entry.NAME === '07-12' ? '' : entry.NAME.toLowerCase(),
                     type: 'class',
                     upn: entry.UPN,
                     id: entry.CLASS_ID,
                     favorite: favorites.indexOf(entry.NAME) >= 0,
-                    text: entry.NAME === '07-12' ? 'Nachschreiben' : entry.NAME,
-                    secondary: entry.NAME === '07-12' ? undefined : `Klasse${teacher}${count}`,
+                    text: 'Klasse ' + entry.NAME,
+                    secondary: secondary || '',
                     filterType: 'Klasse',
                 };
             }),

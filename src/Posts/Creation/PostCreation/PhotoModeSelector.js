@@ -8,7 +8,7 @@ import { ReactComponent as PhotoIcon } from '../Icons/photo.svg';
 import { ReactComponent as StockPhotoIcon } from '../Icons/stockphoto.svg';
 import { connect } from 'react-redux';
 
-const styles = theme => ({
+const styles = (theme) => ({
     root: {
         display: 'flex',
         justifyContent: 'space-evenly',
@@ -56,8 +56,8 @@ const PhotoModeSelector = ({ classes, onPhotoModeSelect }) => {
     return (
         <div className={classes.root}>
             <Typography className={classes.captionText}>
-                Mache deinen Beitrag mit einem Bild schön! Lade entweder ein selbstfotografiertes Bild hoch oder wähle eins
-                aus tausenden Stockfotos aus!
+                Verschönere deinen Beitrag mit einem Bild! Lade entweder ein selbstfotografiertes Bild hoch oder wähle
+                eins aus tausenden Stockfotos aus!
             </Typography>
             <div className={classes.buttons}>
                 <ButtonBase
@@ -70,7 +70,7 @@ const PhotoModeSelector = ({ classes, onPhotoModeSelect }) => {
                         <PhotoIcon className={classes.icon} />
                         <br />
                         Eigenes Foto hochladen
-                </Typography>
+                    </Typography>
                 </ButtonBase>
                 <ButtonBase
                     focusRipple
@@ -82,18 +82,18 @@ const PhotoModeSelector = ({ classes, onPhotoModeSelect }) => {
                         <StockPhotoIcon className={classes.icon} />
                         <br />
                         Stockfoto auswählen
-                </Typography>
+                    </Typography>
                 </ButtonBase>
             </div>
-            <Button onClick={() => onPhotoModeSelect('no')}>Kein Foto</Button>
+            <Button onClick={() => onPhotoModeSelect('no')}>Kein Foto (bitte nicht)</Button>
         </div>
-    )
+    );
 };
 
-const mapDispatchToProps = dispatch => ({
-    onPhotoModeSelect: mode => {
-        dispatch({ type: "SET_PHOTO_MODE", payload: mode })
-    }
-})
+const mapDispatchToProps = (dispatch) => ({
+    onPhotoModeSelect: (mode) => {
+        dispatch({ type: 'SET_PHOTO_MODE', payload: mode });
+    },
+});
 
 export default connect(undefined, mapDispatchToProps)(withStyles(styles, { withTheme: true })(PhotoModeSelector));

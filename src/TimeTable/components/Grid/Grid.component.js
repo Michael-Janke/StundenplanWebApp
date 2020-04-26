@@ -18,9 +18,15 @@ import PeriodCell from '../periodCell';
 import Offline from './offline';
 import OfflineLesson from './OfflineLesson';
 import { grey } from '@material-ui/core/colors';
-import classNames from 'classnames';
 import Event from './Event';
 import Assignment from './Assignment';
+
+const padding = (small) => ({
+    paddingLeft: small ? 2 : 4,
+    paddingTop: small ? 2 : 4,
+    paddingBottom: small ? 2 : 4,
+    paddingRight: 2,
+});
 
 class TimeTableGrid extends React.Component {
     periodTime(timeAsNumber) {
@@ -60,8 +66,7 @@ class TimeTableGrid extends React.Component {
                     rowSpan={1}
                     style={{
                         textAlign: 'center',
-                        padding: small ? 2 : 4,
-                        paddingRight: 2,
+                        ...padding(small),
                         overflow: 'visible',
                         fontSize: '100%',
                         color: grey[500],
@@ -105,8 +110,7 @@ class TimeTableGrid extends React.Component {
                     key={day}
                     style={{
                         textAlign: 'center',
-                        padding: small ? 2 : 4,
-                        paddingRight: 2,
+                        ...padding(small),
                         overflow: 'visible',
                         fontSize: '100%',
                     }}
@@ -166,7 +170,7 @@ class TimeTableGrid extends React.Component {
                 {WEEKDAY_NAMES.map((name, i) => {
                     const day = timetable[i];
                     return (
-                        <TableCell key={i} style={{ padding: 0, fontSize: '100%' }}>
+                        <TableCell key={i} style={{ ...padding(small), fontSize: '100%' }}>
                             {day.unmatchedAssignments &&
                                 day.unmatchedAssignments.map((assignment) => (
                                     <Assignment key={assignment.id} assignment={assignment} />
@@ -191,7 +195,7 @@ class TimeTableGrid extends React.Component {
                 {WEEKDAY_NAMES.map((name, i) => {
                     const day = timetable[i];
                     return (
-                        <TableCell key={name} style={{ padding: small ? 2 : 4, paddingRight: 2, fontSize: '100%' }}>
+                        <TableCell key={name} style={{ ...padding(small), fontSize: '100%' }}>
                             {day.events && day.events.map((event) => <Event key={event.id} event={event} />)}
                         </TableCell>
                     );
@@ -230,13 +234,9 @@ class TimeTableGrid extends React.Component {
     }
 
     render() {
-        const { classes, small, print, offline, currentTimetable: timetable, retry } = this.props;
+        const { classes, offline, currentTimetable: timetable, retry } = this.props;
         return (
-            <Offline
-                retry={retry}
-                in={offline && !timetable}
-                className={classNames(classes.root, !small && !print && classes.rootLarge)}
-            >
+            <Offline retry={retry} in={offline && !timetable} className={classes.root}>
                 <Table className={classes.table}>
                     <TableBody>{this.renderRows()}</TableBody>
                 </Table>
@@ -248,9 +248,6 @@ class TimeTableGrid extends React.Component {
 const styles = (theme) => ({
     root: {
         position: 'relative',
-    },
-    rootLarge: {
-        maxHeight: `calc(100vh - ${190}px)`,
     },
     table: {
         backgroundColor: theme.palette.background.default,
