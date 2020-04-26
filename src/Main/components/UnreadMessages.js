@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import grey from '@material-ui/core/colors/grey';
@@ -14,7 +14,7 @@ const useStyles = makeStyles({
 });
 
 const UnreadMessages = () => {
-    const unreadMessages = useSelector(state => state.teams.unreadMessages || 0);
+    const unreadMessages = useSelector((state) => state.teams.unreadMessages || 0);
     const classes = useStyles();
 
     return (

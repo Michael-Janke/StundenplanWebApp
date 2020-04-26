@@ -2,8 +2,8 @@ import { createSelector } from 'reselect';
 import searchFilter, { replaceUmlaute } from '../Common/search-filter';
 import computeUser from './user';
 
-const getMasterdata = state => state.timetable.masterdata;
-const getFavorites = state => state.user.favorites;
+const getMasterdata = (state) => state.timetable.masterdata;
+const getFavorites = (state) => state.user.favorites;
 const getCurrentValue = (state, props) => props.value;
 const getSelectedFilter = (state, props) => props.filter;
 
@@ -36,21 +36,30 @@ const computeData = (masterdata, favorites, user) => {
             filterType: 'Raum',
         },
         ...Object.values(masterdata.Class)
-            .filter(o => o.NAME !== '07-08')
+            .filter((o) => o.NAME !== '07-08')
             .sort(sortName)
-            .map(entry => ({
-                searchString: entry.NAME === '07-12' ? '' : entry.NAME.toLowerCase(),
-                type: 'class',
-                upn: entry.UPN,
-                id: entry.CLASS_ID,
-                favorite: favorites.indexOf(entry.NAME) >= 0,
-                text: entry.NAME === '07-12' ? 'Nachschreiben' : entry.NAME,
-                secondary: entry.NAME === '07-12' ? undefined : 'Klasse',
-                filterType: 'Klasse',
-            })),
+            .map((entry) => {
+                let teacher = entry.TEACHER.length
+                    ? ' von ' +
+                      entry.TEACHER.map((id) => masterdata.Teacher[id])
+                          .map((teacher) => (teacher ? teacher.LASTNAME : ''))
+                          .join(', ')
+                    : '';
+                let count = entry.STUDENT_COUNT > 0 ? ` (${entry.STUDENT_COUNT})` : '';
+                return {
+                    searchString: entry.NAME === '07-12' ? '' : entry.NAME.toLowerCase(),
+                    type: 'class',
+                    upn: entry.UPN,
+                    id: entry.CLASS_ID,
+                    favorite: favorites.indexOf(entry.NAME) >= 0,
+                    text: entry.NAME === '07-12' ? 'Nachschreiben' : entry.NAME,
+                    secondary: entry.NAME === '07-12' ? undefined : `Klasse${teacher}${count}`,
+                    filterType: 'Klasse',
+                };
+            }),
         ...Object.values(masterdata.Room)
             .sort(sortName)
-            .map(entry => ({
+            .map((entry) => ({
                 searchString: entry.NAME.toLowerCase(),
                 type: 'room',
                 id: entry.ROOM_ID,
@@ -61,7 +70,7 @@ const computeData = (masterdata, favorites, user) => {
             })),
         ...Object.values(masterdata.Teacher)
             .sort(sortName)
-            .map(entry => ({
+            .map((entry) => ({
                 searchString: replaceUmlaute(`${entry.FIRSTNAME} ${entry.LASTNAME}`),
                 upn: entry.UPN,
                 type: 'teacher',
@@ -73,7 +82,7 @@ const computeData = (masterdata, favorites, user) => {
             })),
         ...Object.values(masterdata.Student)
             .sort(sortName)
-            .map(entry => ({
+            .map((entry) => ({
                 searchString: replaceUmlaute(
                     `${entry.FIRSTNAME} ${entry.LASTNAME} ` + (masterdata.Class[entry.CLASS_ID] || {}).NAME
                 ),
@@ -89,27 +98,17 @@ const computeData = (masterdata, favorites, user) => {
     return data;
 };
 
-const getData = createSelector(
-    getMasterdata,
-    getFavorites,
-    computeUser,
-    computeData
-);
+const getData = createSelector(getMasterdata, getFavorites, computeUser, computeData);
 
 const getSearchResult = (data, value, selectedFilter) => {
     return data
-        .filter(obj => selectedFilter || value !== '' || obj.favorite)
-        .filter(obj => !selectedFilter || obj.filterType === selectedFilter)
-        .filter(obj => value === '' || searchFilter(value, obj.searchString));
+        .filter((obj) => selectedFilter || value !== '' || obj.favorite)
+        .filter((obj) => !selectedFilter || obj.filterType === selectedFilter)
+        .filter((obj) => value === '' || searchFilter(value, obj.searchString));
 };
 
 const makeGetSearchResult = () => {
-    return createSelector(
-        getData,
-        getCurrentValue,
-        getSelectedFilter,
-        getSearchResult
-    );
+    return createSelector(getData, getCurrentValue, getSelectedFilter, getSearchResult);
 };
 
 export default makeGetSearchResult;

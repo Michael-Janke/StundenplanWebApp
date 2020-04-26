@@ -6,7 +6,7 @@ import OpenOfficeButton from './openOfficeLink';
 
 export function getAssignmentLink(assignment, link) {
     // from Assignment notification bot
-    const reg = /team\/(\d+:.*%40thread\.skype)/;
+    const reg = /team\/(\d+:.*%40thread\..*)\//;
     const match = reg.exec(link);
 
     const subEntityId = JSON.stringify({
@@ -58,7 +58,7 @@ export default connect(
     ({ teams }, { id, type }) => ({
         url: teams.teamUrls && teams.teamUrls[id],
     }),
-    dispatch => ({
-        getTeamsWebUrl: id => dispatch(getTeamsWebUrl(id)),
+    (dispatch) => ({
+        getTeamsWebUrl: (id) => dispatch(getTeamsWebUrl(id)),
     })
 )(AssignmentLink);

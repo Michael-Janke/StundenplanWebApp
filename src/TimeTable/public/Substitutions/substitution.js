@@ -9,9 +9,9 @@ import ActionInfo from '@material-ui/icons/Info';
 const Field = (field, props, customProps) => (
     <SubstitutionField>{React.createElement(field, { ...props, ...customProps })}</SubstitutionField>
 );
-const BindField = props => field => Field.bind(null, field, props);
+const BindField = (props) => (field) => Field.bind(null, field, props);
 
-const SubstitutionEntry = props => {
+const SubstitutionEntry = (props) => {
     const { substitution, type, classes, theme } = props;
     const { substitutionText, specificSubstitutionType, period, substitutionInfo } = substitution;
     const { fields } = getFields(type)(substitution);
@@ -135,13 +135,6 @@ const InsteadInformation = styled.div`
     text-align: right;
 `;
 
-const SubstitutionContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    font-size: inherit;
-    flex: 1;
-`;
-
 const SubstitutionField = styled.div`
     flex: 1;
     overflow: hidden;
@@ -173,17 +166,17 @@ const SubstitutionType = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    color: ${props => props.color};
+    color: ${(props) => props.color};
 `;
 
 const ColorBar = styled.div`
     width: 2px;
     margin-right: 5px;
-    background-color: ${props => props.lineColor || indigo[100]};
+    background-color: ${(props) => props.lineColor || indigo[100]};
     align-self: normal;
 `;
 
-const extendStyles = theme => ({
+const extendStyles = (theme) => ({
     ...styles(theme),
     substitutionsContentOld: {
         textDecoration: 'line-through ' + (theme.palette.type === 'dark' ? 'white' : 'black'),

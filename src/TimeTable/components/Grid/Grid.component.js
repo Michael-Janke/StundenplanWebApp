@@ -20,10 +20,11 @@ import OfflineLesson from './OfflineLesson';
 import { grey } from '@material-ui/core/colors';
 import classNames from 'classnames';
 import Event from './Event';
+import Assignment from './Assignment';
 
 class TimeTableGrid extends React.Component {
     periodTime(timeAsNumber) {
-        const lpad2 = number => (number < 10 ? '0' : '') + number;
+        const lpad2 = (number) => (number < 10 ? '0' : '') + number;
         return Math.floor(timeAsNumber / 100) + ':' + lpad2(timeAsNumber % 100);
     }
 
@@ -79,14 +80,8 @@ class TimeTableGrid extends React.Component {
             if (periodNumber !== 1) return;
             let isNextDay = (currentTimetable[day - 1] || {}).holiday === dayObject.holiday;
             if (isNextDay) return;
-            let colSpan = currentTimetable.slice(day).filter(dayX => dayX.holiday === dayObject.holiday).length;
-            let mDate = date
-                ? date
-                      .clone()
-                      .weekday(0)
-                      .add(day, 'days')
-                      .format('DD.MM')
-                : null;
+            let colSpan = currentTimetable.slice(day).filter((dayX) => dayX.holiday === dayObject.holiday).length;
+            let mDate = date ? date.clone().weekday(0).add(day, 'days').format('DD.MM') : null;
             return (
                 <TableCell key={day} rowSpan={Object.values(periods).length} style={{ padding: 0 }} colSpan={colSpan}>
                     <Holiday holiday={dayObject.holiday} date={mDate} />
@@ -141,7 +136,7 @@ class TimeTableGrid extends React.Component {
             this.renderAbsences(),
             this.renderUnmatchedAssignments(),
             this.renderEvents(),
-            ...Object.values(periods).map(period => {
+            ...Object.values(periods).map((period) => {
                 const isCurrentPriod = currentPeriod === period;
                 return (
                     <TableRow style={{ height: '100%' }} key={period.PERIOD_TIME_ID}>
@@ -160,7 +155,7 @@ class TimeTableGrid extends React.Component {
 
     renderUnmatchedAssignments() {
         const { currentTimetable: timetable, small, me } = this.props;
-        if (!timetable || !me || !timetable.some(day => !!day.unmatchedAssignments.length)) {
+        if (!timetable || !me || !timetable.some((day) => !!day.unmatchedAssignments.length)) {
             return null;
         }
         return (
@@ -173,10 +168,8 @@ class TimeTableGrid extends React.Component {
                     return (
                         <TableCell key={i} style={{ padding: 0, fontSize: '100%' }}>
                             {day.unmatchedAssignments &&
-                                day.unmatchedAssignments.map(assignment => (
-                                    <Times key={assignment.id}>
-                                        <Time>{assignment.displayName}</Time>
-                                    </Times>
+                                day.unmatchedAssignments.map((assignment) => (
+                                    <Assignment key={assignment.id} assignment={assignment} />
                                 ))}
                         </TableCell>
                     );
@@ -187,7 +180,7 @@ class TimeTableGrid extends React.Component {
 
     renderEvents() {
         const { currentTimetable: timetable, small, me } = this.props;
-        if (!timetable || !me || !timetable.some(day => !!day.events.length)) {
+        if (!timetable || !me || !timetable.some((day) => !!day.events.length)) {
             return null;
         }
         return (
@@ -199,7 +192,7 @@ class TimeTableGrid extends React.Component {
                     const day = timetable[i];
                     return (
                         <TableCell key={name} style={{ padding: small ? 2 : 4, paddingRight: 2, fontSize: '100%' }}>
-                            {day.events && day.events.map(event => <Event event={event} />)}
+                            {day.events && day.events.map((event) => <Event key={event.id} event={event} />)}
                         </TableCell>
                     );
                 })}
@@ -216,7 +209,7 @@ class TimeTableGrid extends React.Component {
             return;
         }
         const absences = WEEKDAY_NAMES.map((name, i) => timetable[i]);
-        if (absences.every(day => !day.absences)) {
+        if (absences.every((day) => !day.absences)) {
             return null;
         }
 
@@ -228,7 +221,7 @@ class TimeTableGrid extends React.Component {
                     return (
                         <TableCell key={i} style={{ padding: 0, fontSize: '100%' }}>
                             {day.absences &&
-                                day.absences.map(absence => <Absence key={absence.ABSENCE_ID} absence={absence} />)}
+                                day.absences.map((absence) => <Absence key={absence.ABSENCE_ID} absence={absence} />)}
                         </TableCell>
                     );
                 })}
@@ -252,7 +245,7 @@ class TimeTableGrid extends React.Component {
     }
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
     root: {
         position: 'relative',
     },
@@ -290,7 +283,7 @@ const Period = styled.div`
     color: ${grey[500]};
 `;
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
         setTimeTable: (type, id) => dispatch(setTimeTable(type, id)),
         retry: () => dispatch(retryTimetable()),

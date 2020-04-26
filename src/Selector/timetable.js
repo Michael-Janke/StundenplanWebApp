@@ -16,19 +16,21 @@ function freeRooms(masterdata, day, periods) {
         if (!period) {
             continue;
         }
-        const lessons = period.lessons.map(lesson => lesson.room);
+        const lessons = period.lessons.map((lesson) => lesson.room);
         // delete period.lessons;
         let rooms = Object.values(masterdata.Room);
         const absencesFiltered = day.absences
-            ? day.absences.filter(absence => absence.PERIOD_FROM - 1 <= y && absence.PERIOD_TO - 1 >= y && absence.room)
+            ? day.absences.filter(
+                  (absence) => absence.PERIOD_FROM - 1 <= y && absence.PERIOD_TO - 1 >= y && absence.room
+              )
             : [];
 
-        rooms = rooms.map(room => {
+        rooms = rooms.map((room) => {
             return {
                 ...room,
                 status:
-                    !lessons.find(current => ((current && current.new) || {}).ROOM_ID === room.ROOM_ID) &&
-                    !absencesFiltered.find(absence => absence.room === room),
+                    !lessons.find((current) => ((current && current.new) || {}).ROOM_ID === room.ROOM_ID) &&
+                    !absencesFiltered.find((absence) => absence.room === room),
             };
         });
         period.freeRooms = rooms;
@@ -55,7 +57,7 @@ export function translateDay(
     if (type !== 'all') {
         skipDuplications(day, periods);
     }
-    let assignmentsOfDay = assignments.filter(assignment =>
+    let assignmentsOfDay = assignments.filter((assignment) =>
         moment(assignment.dueDateTime).isSame(moment(date).weekday(x), 'day')
     );
     let assignmentsMatching = {
@@ -68,7 +70,7 @@ export function translateDay(
     }
     day.unmatchedAssignments = assignmentsMatching.toMatch;
 
-    day.events = events.filter(event => moment(event.start.dateTime).isSame(moment(date).weekday(x), 'day'));
+    day.events = events.filter((event) => moment(event.start.dateTime).isSame(moment(date).weekday(x), 'day'));
 
     return day;
 }
@@ -103,7 +105,7 @@ function joinSubstitutions(day, subOnDay, type, id) {
         return;
     }
     if (subOnDay.substitutions && day.periods) {
-        subOnDay.substitutions.forEach(substitution => {
+        subOnDay.substitutions.forEach((substitution) => {
             let period = day.periods[substitution.PERIOD - 1];
             if (!period) return;
             let lessons = period.lessons;
@@ -111,24 +113,24 @@ function joinSubstitutions(day, subOnDay, type, id) {
             if (!lessons) {
                 period.lessons = lessons = [];
             }
-            const index = lessons.findIndex(lesson => lesson.TIMETABLE_ID === substitution.TIMETABLE_ID);
+            const index = lessons.findIndex((lesson) => lesson.TIMETABLE_ID === substitution.TIMETABLE_ID);
             if (index !== -1) {
                 lessons[index] = lesson ? { ...lessons[index], ...lesson } : null;
-                period.lessons = lessons.filter(c => c);
+                period.lessons = lessons.filter((c) => c);
             } else if (lesson) {
                 lessons.push(lesson);
             }
         });
     }
     if (subOnDay.supervisions) {
-        subOnDay.supervisions.forEach(supervision => {
+        subOnDay.supervisions.forEach((supervision) => {
             const period = day.periods[supervision.PERIOD - 1];
             period.supervision = supervision;
         });
     }
     if (subOnDay.absences) {
         // sort in table
-        subOnDay.absences.forEach(absence => {
+        subOnDay.absences.forEach((absence) => {
             for (let i = absence.PERIOD_FROM - 1; i < absence.PERIOD_TO; i++) {
                 const period = day.periods[i];
                 if (!period) return;
@@ -226,19 +228,19 @@ function skipTeacherDuplications(lessons) {
             ) {
                 if (lesson.TEACHER_IDS)
                     last.TEACHER_IDS
-                        ? lesson.TEACHER_IDS.forEach(item =>
+                        ? lesson.TEACHER_IDS.forEach((item) =>
                               last.TEACHER_IDS.includes(item) ? null : last.TEACHER_IDS.push(item)
                           )
                         : (last.TEACHER_IDS = lesson.TEACHER_IDS);
                 if (lesson.TEACHER_IDS_OLD)
                     last.TEACHER_IDS_OLD
-                        ? lesson.TEACHER_IDS_OLD.forEach(item =>
+                        ? lesson.TEACHER_IDS_OLD.forEach((item) =>
                               last.TEACHER_IDS_OLD.includes(item) ? null : last.TEACHER_IDS_OLD.push(item)
                           )
                         : (last.TEACHER_IDS_OLD = lesson.TEACHER_IDS_OLD);
                 if (lesson.TEACHER_IDS_SUBSTITUTING)
                     last.TEACHER_IDS_SUBSTITUTING
-                        ? lesson.TEACHER_IDS_SUBSTITUTING.forEach(item =>
+                        ? lesson.TEACHER_IDS_SUBSTITUTING.forEach((item) =>
                               last.TEACHER_IDS_SUBSTITUTING.includes(item)
                                   ? null
                                   : last.TEACHER_IDS_SUBSTITUTING.push(item)
@@ -267,21 +269,18 @@ function combineSubstitutions(receiver, lesson) {
 function readTimetable(_data, day, periods, date) {
     if (!_data) return {};
     let data = [];
-    let timetableDate = moment(date)
-        .weekday(0)
-        .startOf('day')
-        .add(day, 'day');
+    let timetableDate = moment(date).weekday(0).startOf('day').add(day, 'day');
     for (let y = 0; y < periods.length; y++) {
         let lessons = (_data[day] || [])[y + 1] || [];
         if (lessons) {
             lessons = lessons
-                .map(lesson => ({
+                .map((lesson) => ({
                     ...lesson,
                     TEACHER_IDS: lesson.TEACHER_ID ? [lesson.TEACHER_ID] : [],
                     TEACHER_ID: undefined,
                 }))
                 .filter(
-                    lesson =>
+                    (lesson) =>
                         lesson.DATE_FROM &&
                         lesson.DATE_TO &&
                         moment(lesson.DATE_FROM.date).isSameOrBefore(timetableDate) &&
@@ -354,7 +353,7 @@ export function equalPeriods(p1, p2) {
 }
 function translate(masterdata, period, teams, assignmentsMatching) {
     if (!period) return null;
-    period.lessons = period.lessons.map(lesson => translateLesson(masterdata, lesson, teams, assignmentsMatching));
+    period.lessons = period.lessons.map((lesson) => translateLesson(masterdata, lesson, teams, assignmentsMatching));
 }
 
 function translateAbsence(masterdata, absence) {
@@ -381,7 +380,7 @@ const teamMatching = (team, classes = [], subjectLesson) => {
 
     const classIsGrade = !(className || '').match(/[a-z]/i); //10 Inf1
 
-    const matchingClass = classes.some(c => {
+    const matchingClass = classes.some((c) => {
         if (c === className) return true;
         if (classIsGrade) return c.indexOf(className) >= 0;
         return false;
@@ -394,21 +393,21 @@ export function translateLesson(masterdata, lesson, teams = [], assignmentsMatch
     if (lesson.absence) {
         return translateAbsence(masterdata, lesson.absence);
     }
-    let matchedTeams = teams.filter(team => {
+    let matchedTeams = teams.filter((team) => {
         return (
             teamMatching(
                 team,
-                lesson.CLASS_IDS && lesson.CLASS_IDS.map(c => masterdata.Class[c].NAME),
+                lesson.CLASS_IDS && lesson.CLASS_IDS.map((c) => masterdata.Class[c].NAME),
                 lesson.SUBJECT_ID && masterdata.Subject[lesson.SUBJECT_ID].NAME
             ) ||
             teamMatching(
                 team,
-                lesson.CLASS_IDS_OLD && lesson.CLASS_IDS_OLD.map(c => masterdata.Class[c].NAME),
+                lesson.CLASS_IDS_OLD && lesson.CLASS_IDS_OLD.map((c) => masterdata.Class[c].NAME),
                 lesson.SUBJECT_ID_OLD && masterdata.Subject[lesson.SUBJECT_ID_OLD].NAME
             ) ||
             teamMatching(
                 team,
-                lesson.CLASS_IDS_NEW && lesson.CLASS_IDS_NEW.map(c => masterdata.Class[c].NAME),
+                lesson.CLASS_IDS_NEW && lesson.CLASS_IDS_NEW.map((c) => masterdata.Class[c].NAME),
                 lesson.SUBJECT_ID_NEW && masterdata.Subject[lesson.SUBJECT_ID_NEW].NAME
             )
         );
@@ -417,8 +416,8 @@ export function translateLesson(masterdata, lesson, teams = [], assignmentsMatch
     let validAssignments = [];
     let stillToMatch = [];
 
-    assignmentsMatching.toMatch.forEach(assignment => {
-        if (matchedTeams.some(t => t.id === assignment.classId)) {
+    assignmentsMatching.toMatch.forEach((assignment) => {
+        if (matchedTeams.some((t) => t.id === assignment.classId)) {
             validAssignments.push(assignment);
         } else {
             stillToMatch.push(assignment);
@@ -434,10 +433,10 @@ export function translateLesson(masterdata, lesson, teams = [], assignmentsMatch
         specificSubstitutionType: lesson.specificSubstitutionType,
         substitutionRemove: lesson.substitutionRemove,
         teachers: {
-            new: lesson.TEACHER_IDS && lesson.TEACHER_IDS.map(t => masterdata.Teacher[t]),
-            old: lesson.TEACHER_IDS_OLD && lesson.TEACHER_IDS_OLD.map(t => masterdata.Teacher[t]),
+            new: lesson.TEACHER_IDS && lesson.TEACHER_IDS.map((t) => masterdata.Teacher[t]),
+            old: lesson.TEACHER_IDS_OLD && lesson.TEACHER_IDS_OLD.map((t) => masterdata.Teacher[t]),
             substitution:
-                lesson.TEACHER_IDS_SUBSTITUTING && lesson.TEACHER_IDS_SUBSTITUTING.map(t => masterdata.Teacher[t]),
+                lesson.TEACHER_IDS_SUBSTITUTING && lesson.TEACHER_IDS_SUBSTITUTING.map((t) => masterdata.Teacher[t]),
         },
         subject: {
             new: lesson.SUBJECT_ID && masterdata.Subject[lesson.SUBJECT_ID],
@@ -450,9 +449,10 @@ export function translateLesson(masterdata, lesson, teams = [], assignmentsMatch
             substitution: lesson.ROOM_ID_SUBSTITUTING && masterdata.Room[lesson.ROOM_ID_SUBSTITUTING],
         },
         classes: {
-            new: lesson.CLASS_IDS && lesson.CLASS_IDS.map(c => masterdata.Class[c]),
-            old: lesson.CLASS_IDS_OLD && lesson.CLASS_IDS_OLD.map(c => masterdata.Class[c]),
-            substitution: lesson.CLASS_IDS_SUBSTITUTING && lesson.CLASS_IDS_SUBSTITUTING.map(c => masterdata.Class[c]),
+            new: lesson.CLASS_IDS && lesson.CLASS_IDS.map((c) => masterdata.Class[c]),
+            old: lesson.CLASS_IDS_OLD && lesson.CLASS_IDS_OLD.map((c) => masterdata.Class[c]),
+            substitution:
+                lesson.CLASS_IDS_SUBSTITUTING && lesson.CLASS_IDS_SUBSTITUTING.map((c) => masterdata.Class[c]),
         },
         teams: matchedTeams,
         assignments: validAssignments,
@@ -460,28 +460,30 @@ export function translateLesson(masterdata, lesson, teams = [], assignmentsMatch
 }
 
 const makeGetCurrentTimetable = () => {
-    const getTimetableState = state => state.timetable;
-    const getMasterdata = createSelector(getTimetableState, state => state.masterdata);
-    const getTimetables = createSelector(getTimetableState, state => state.timetables);
-    const getTeams = state => state.teams.joinedTeams;
-    const getAssignments = state => state.teams.assignments;
-    const getEvents = state => state.teams.events;
-    const getSubstitutions = createSelector(getTimetableState, state => state.substitutions);
+    const getTimetableState = (state) => state.timetable;
+    const getMasterdata = createSelector(getTimetableState, (state) => state.masterdata);
+    const getTimetables = createSelector(getTimetableState, (state) => state.timetables);
+    const getTeams = (state) => state.teams.joinedTeams;
+    const getAssignments = (state) => state.teams.assignments;
+    const getEvents = (state) => state.teams.events;
+    const getSubstitutions = createSelector(getTimetableState, (state) => state.substitutions);
 
     const getDate = (state, props) => props.date || state.timetable.timetableDate;
-    const getWeekSelector = createSelector(getDate, date => moment(date).week());
-    const getYearSelector = createSelector(getDate, date => moment(date).weekYear());
-    const getAssignmentsSelector = createSelector(getDate, getAssignments, (date, assignments) =>
-        assignments.filter(assignment => moment(date).isSame(moment(assignment.dueDateTime), 'week'))
-    );
+    const getWeekSelector = createSelector(getDate, (date) => moment(date).week());
+    const getYearSelector = createSelector(getDate, (date) => moment(date).weekYear());
+    const getAssignmentsSelector = createSelector(getDate, getAssignments, getTeams, (date, assignments, teams) => {
+        let a = assignments.filter((assignment) => moment(date).isSame(moment(assignment.dueDateTime), 'week'));
+        a.forEach((assignment) => (assignment.team = teams.find((team) => team.id === assignment.classId)));
+        return a;
+    });
     const getEventsSelector = createSelector(getDate, getEvents, (date, events) =>
-        events.filter(event => moment(date).isSame(moment(event.start.dateTime), 'week'))
+        events.filter((event) => moment(date).isSame(moment(event.start.dateTime), 'week'))
     );
 
     const getType = (state, props) => props.type || state.timetable.currentTimeTableType;
     const getId = (state, props) => props.id || state.timetable.currentTimeTableId;
 
-    const getPeriods = createSelector(getTimetableState, state => state.masterdata.Period_Time);
+    const getPeriods = createSelector(getTimetableState, (state) => state.masterdata.Period_Time);
 
     const getIgnore = (state, props) => props && props.noSubstitutions;
 
@@ -521,7 +523,7 @@ const makeGetCurrentTimetable = () => {
         getDate,
         getTeams,
         getAssignmentsSelector,
-        getEvents,
+        getEventsSelector,
         translateTimetable
     );
 };

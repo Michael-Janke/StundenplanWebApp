@@ -11,7 +11,7 @@ import { withStyles, Typography } from '@material-ui/core';
 import { toggleDrawer, closeDrawer } from '../Main/actions';
 import { connect } from 'react-redux';
 
-const styles = theme => ({
+const styles = (theme) => ({
     drawer: {
         width: 300,
     },
@@ -57,7 +57,7 @@ class AppDrawer extends React.Component {
                 </div>
 
                 <Typography variant="body1" gutterBottom style={{ marginTop: 10 }} color="textSecondary">
-                    <a href="https://portal.office.com/account#installs" target="_blank">
+                    <a href="https://portal.office.com/account#installs" target="_blank" rel="noopener noreferrer">
                         Microsoft Office herunterladen
                     </a>
                 </Typography>
@@ -90,12 +90,12 @@ class AppDrawer extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     open: state.drawer.open,
     scope: state.user.scope,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     toggleDrawer: () => dispatch(toggleDrawer()),
     closeDrawer: () => dispatch(closeDrawer()),
 });
