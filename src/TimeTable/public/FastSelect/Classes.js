@@ -7,7 +7,7 @@ import Group from '@material-ui/icons/Group';
 import { changeWeek } from '../../../Main/actions';
 import { Paper, Grow } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.background.paper,
         display: 'flex',
@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 
 function FastSelect({ open }) {
     const classes = useStyles();
-    const data = useSelector(state => state.timetable.masterdata.Class);
+    const data = useSelector((state) => state.timetable.masterdata.Class);
     const dispatch = useDispatch();
     const grades = useMemo(
         () =>
@@ -50,9 +50,9 @@ function FastSelect({ open }) {
             <Paper className={classes.root} square>
                 {Object.keys(grades)
                     .sort()
-                    .map(grade => (
-                        <div className={classes.row}>
-                            {grades[grade].map(class_ => (
+                    .map((grade) => (
+                        <div className={classes.row} key={grade}>
+                            {grades[grade].map((class_) => (
                                 <ButtonBase
                                     focusRipple
                                     key={class_.CLASS_ID}
