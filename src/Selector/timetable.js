@@ -456,6 +456,7 @@ export function translateLesson(masterdata, lesson, teams = [], assignmentsMatch
         },
         teams: matchedTeams,
         assignments: validAssignments,
+        studentList: lesson.STUDENT_LIST,
     };
 }
 

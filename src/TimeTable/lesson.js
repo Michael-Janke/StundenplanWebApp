@@ -16,30 +16,16 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import DoneIcon from '@material-ui/icons/Done';
 import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
 import AddAssignment from './components/addAssignment';
+import ShowStudentList from './components/showStudentList';
 
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
-const BindField = props => field => Field.bind(null, field, props);
+const BindField = (props) => (field) => Field.bind(null, field, props);
 
 const SubstitutionText = ({ left, children }) => <SubstitutionTextContainer>({children})</SubstitutionTextContainer>;
 
-const AbstractLesson = props => {
-    let {
-        theme,
-        small,
-        fields,
-        setTimeTable,
-        isTeacher,
-        date,
-        lesson,
-        classes
-    } = props;
-    let {
-        specificSubstitutionType,
-        substitutionText,
-        reference,
-        teams,
-        assignments,
-    } = lesson;
+const AbstractLesson = (props) => {
+    let { theme, small, fields, setTimeTable, isTeacher, date, lesson, classes } = props;
+    let { specificSubstitutionType, substitutionText, reference, teams, assignments, studentList } = lesson;
 
     const styles = specificSubstitutionType ? specificSubstitutionType.style(theme) : {};
     const isNew = fields.new;
@@ -120,12 +106,14 @@ const AbstractLesson = props => {
     );
 
     const popoverActive = true;
-    const allDoneAssignments = assignments.every(assignment =>
-        assignment.submissions ? assignment.submissions.every(submission => submission.status === 'submitted') : false
+    const allDoneAssignments = assignments.every((assignment) =>
+        assignment.submissions ? assignment.submissions.every((submission) => submission.status === 'submitted') : false
     );
-    const hasDrafts = assignments.some(assignment => assignment.status === 'draft');
+    const hasDrafts = assignments.some((assignment) => assignment.status === 'draft');
     const badgeContent = isTeacher ? (
-        <AssignmentIcon style={{ fontSize: '1rem', marginRight: '5px', marginTop: '5px', color: hasDrafts ? grey[500] : undefined }} />
+        <AssignmentIcon
+            style={{ fontSize: '1rem', marginRight: '5px', marginTop: '5px', color: hasDrafts ? grey[500] : undefined }}
+        />
     ) : allDoneAssignments ? (
         <DoneIcon />
     ) : (
@@ -166,7 +154,8 @@ const AbstractLesson = props => {
                     <Field1 description />
                     <Field2 description />
                     {Field3 && <Field3 description />}
-                    {teams.map(team => (
+                    {studentList && <ShowStudentList list={studentList} />}
+                    {teams.map((team) => (
                         <React.Fragment key={team.id}>
                             <Divider />
                             {teams.length === 0 && <ListSubheader component="div">{team.displayName}</ListSubheader>}
@@ -190,7 +179,7 @@ const AbstractLesson = props => {
 const ColorBar = styled.div`
     width: 3%;
     margin-right: 5px;
-    background-color: ${props => props.lineColor || indigo[100]};
+    background-color: ${(props) => props.lineColor || indigo[100]};
 `;
 
 const SubstitutionTextContainer = styled.div`
@@ -207,7 +196,7 @@ const SubstitutionType = styled.div`
     font-size: 60%;
     font-weight: 600;
     white-space: nowrap;
-    color: ${props => props.color};
+    color: ${(props) => props.color};
     overflow: hidden;
 `;
 
@@ -215,7 +204,7 @@ const LessonContainer = styled.div`
     display: flex;
     overflow: hidden;
     width: 100%;
-    ${props =>
+    ${(props) =>
         props.small
             ? `
         flex-direction: column;  
@@ -233,7 +222,7 @@ const LessonWrapper = styled.div`
     flex-direction: column;
     overflow: hidden;
     justify-content: center;
-    ${props =>
+    ${(props) =>
         props.small
             ? `
         padding-top: 0.25vmin;
@@ -246,13 +235,13 @@ const LessonWrapper = styled.div`
 `;
 
 const Lesson = styled.div`
-    flex: ${props => (props.flex ? 'auto' : 'auto')};
+    flex: ${(props) => (props.flex ? 'auto' : 'auto')};
     display: flex;
     overflow: hidden;
     text-align: left;
     padding-right: 1vmin;
     flex-direction: row;
-    background-color: ${props => props.color || darken(indigo[50], props.type === 'dark' ? 0.6 : 0)};
+    background-color: ${(props) => props.color || darken(indigo[50], props.type === 'dark' ? 0.6 : 0)};
 `;
 const mapStateToProps = ({ user }) => ({ isTeacher: user.type === 'teacher' });
 export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(AbstractLesson));

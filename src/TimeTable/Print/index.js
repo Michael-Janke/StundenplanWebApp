@@ -15,7 +15,7 @@ import { Checkbox, ListItemIcon, FormGroup } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Page from './page';
 
-const styles = theme => ({
+const styles = (theme) => ({
     wrapper: {
         display: 'flex',
         overflowY: 'hidden',
@@ -55,10 +55,10 @@ class PrintDialog extends React.PureComponent {
         substitutions: true,
     };
 
-    handleChange = event => {
+    handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
-        this.setState(state => ({ [name]: value || !state[name] }));
+        this.setState((state) => ({ [name]: value || !state[name] }));
     };
 
     onPrint = () => {
@@ -83,19 +83,6 @@ class PrintDialog extends React.PureComponent {
                         </DialogTitle>
                         <DialogContent>
                             <form className={classes.root} autoComplete="off">
-                                {/* <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="format">Format</InputLabel>
-                                    <Select
-                                        value={this.state.format}
-                                        onChange={this.handleChange}
-                                        inputProps={{
-                                            name: 'format',
-                                            id: 'format',
-                                        }}
-                                    >
-                                        <MenuItem value="A4">A4</MenuItem>
-                                    </Select>
-                                </FormControl> */}
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="orientation">Layout</InputLabel>
                                     <Select

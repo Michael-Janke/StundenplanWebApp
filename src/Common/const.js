@@ -51,6 +51,7 @@ export function specifySubstitutionType(id, type, substitution) {
     lesson.substitutionText = window.params.sortBy !== 'teacher' ? substitution.TEXT : substitution.TEXT_TEACHER;
     lesson.isOld = substitution.isOld;
     lesson.substitutionInfo = substitution.substitutionInfo;
+    lesson.STUDENT_LIST = substitution.STUDENT_LIST;
     return lesson;
 }
 export function getSpecificSubstitutionType(substitution) {
@@ -64,7 +65,7 @@ function bgColor(type, color) {
 
 export const SUBSTITUTION_MAP = {
     SUBSTITUTION: {
-        style: theme => ({
+        style: (theme) => ({
             color: colors.red[theme.palette.type === 'dark' ? 300 : 900],
             backgroundColor: bgColor(theme.palette.type, colors.red[50]),
         }),
@@ -73,14 +74,14 @@ export const SUBSTITUTION_MAP = {
         mask: createMask(fromViewer, addSubstitutionInformation, removeIf('room')),
     },
     INSTEAD_OF: {
-        style: theme => ({
+        style: (theme) => ({
             color: colors.grey[600],
             backgroundColor: bgColor(theme.palette.type, colors.grey[100]),
         }),
         name: 'vertreten durch',
     },
     ASSIGNMENT: {
-        style: theme => ({
+        style: (theme) => ({
             color: colors.yellow[900],
             backgroundColor: bgColor(theme.palette.type, colors.yellow[50]),
         }),
@@ -89,7 +90,7 @@ export const SUBSTITUTION_MAP = {
         mask: createMask(transform('old'), removeIf('room')),
     },
     ELIMINATION: {
-        style: theme => ({
+        style: (theme) => ({
             color: colors.green[theme.palette.type === 'dark' ? 300 : 900],
             backgroundColor: bgColor(theme.palette.type, colors.green[100]),
         }),
@@ -97,14 +98,14 @@ export const SUBSTITUTION_MAP = {
         mask: createMask(transform('old'), removeIf('room')),
     },
     CLASS_SUBSTITUTION: {
-        style: theme => ({
+        style: (theme) => ({
             color: '#a7bef7',
         }),
         name: 'Klasse absent',
         mask: createMask(transform('new'), removeIf('room')),
     },
     ROOM_SUBSTITUTION: {
-        style: theme => ({
+        style: (theme) => ({
             color: theme.palette.type === 'dark' ? colors.cyan[600] : colors.blue[900],
             backgroundColor: bgColor(theme.palette.type, colors.lightBlue[50]),
         }),
@@ -113,7 +114,7 @@ export const SUBSTITUTION_MAP = {
         mask: createMask(fromViewer, removeIf('room')),
     },
     INFORMATION: {
-        style: theme => ({
+        style: (theme) => ({
             color: colors.lime[700],
             backgroundColor: bgColor(theme.palette.type, colors.green[50]),
         }),
@@ -121,7 +122,7 @@ export const SUBSTITUTION_MAP = {
         mask: createMask(transform('new'), removeIf('room')),
     },
     SWAP: {
-        style: theme => ({
+        style: (theme) => ({
             color: colors.lime[900],
             backgroundColor: bgColor(theme.palette.type, colors.lime[50]),
         }),
@@ -129,14 +130,14 @@ export const SUBSTITUTION_MAP = {
         mask: createMask(fromViewer, removeIf('room')),
     },
     EXTRA_LESSON: {
-        style: theme => ({
+        style: (theme) => ({
             color: theme.palette.type === 'dark' ? colors.purple[400] : colors.purple[900],
             backgroundColor: bgColor(theme.palette.type, colors.purple[50]),
         }),
         name: 'Zusatzstunde',
     },
     METH_COMP: {
-        style: theme => ({
+        style: (theme) => ({
             color: theme.palette.type === 'dark' ? colors.purple[400] : colors.purple[900],
             backgroundColor: bgColor(theme.palette.type, colors.purple[50]),
         }),
@@ -144,7 +145,7 @@ export const SUBSTITUTION_MAP = {
         mask: createMask(fromViewer, addSubstitutionInformation, removeIf('room')),
     },
     SUPERVISION: {
-        style: theme => ({
+        style: (theme) => ({
             color: theme.palette.type === 'dark' ? colors.grey[300] : colors.grey[900],
             backgroundColor: bgColor(theme.palette.type, colors.red[50]),
         }),
@@ -152,7 +153,7 @@ export const SUBSTITUTION_MAP = {
         mask: createMask(fromViewer, addSubstitutionInformation, removeIf('room')),
     },
     REDUNDANCY: {
-        style: theme => ({
+        style: (theme) => ({
             color: theme.palette.type === 'dark' ? colors.green[300] : colors.green[900],
             backgroundColor: bgColor(theme.palette.type, colors.green[100]),
         }),
@@ -160,7 +161,7 @@ export const SUBSTITUTION_MAP = {
         mask: createMask(transform('old'), removeIf('room')),
     },
     UNKNOWN: {
-        style: theme => ({
+        style: (theme) => ({
             color: colors.grey[600],
             backgroundColor: bgColor(theme.palette.type, colors.grey[100]),
         }),
@@ -172,7 +173,7 @@ export const SUBSTITUTION_MAP = {
 export const getSubstitutionsCacheKey = ({ id, type }) => `substitutions-${id}-${type}`;
 export const getTimetableCacheKey = ({ id, type }) => `timetable-${id}-${type}`;
 
-export const DATE_COLORS = theme => ({
+export const DATE_COLORS = (theme) => ({
     HOLIDAY: {
         color: theme.palette.type === 'dark' ? green[200] : green[600],
         fontWeight: 'bold',
