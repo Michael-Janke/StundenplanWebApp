@@ -140,7 +140,7 @@ function joinSubstitutions(day, subOnDay, type, id) {
         // sort in header
         day.absences = subOnDay.absences;
     }
-    day.coronaAttend = subOnDay.coronaAttend;
+    day.corona = subOnDay.corona;
 }
 function comparePeriod(current, next) {
     if (!next || !current) return false;

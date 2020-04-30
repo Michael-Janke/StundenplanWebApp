@@ -14,6 +14,7 @@ import Grow from '@material-ui/core/Grow';
 import { Checkbox, ListItemIcon, FormGroup } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Page from './page';
+import TimeTableContainer from '../components/container';
 
 const styles = (theme) => ({
     wrapper: {
@@ -33,14 +34,9 @@ const styles = (theme) => ({
     },
     printPreview: {
         padding: theme.spacing(3),
-        overflowY: 'auto',
-        height: '100%',
         boxSizing: 'border-box',
     },
-    pageA4: {
-        height: 800,
-        width: `${(800 * 1) / Math.sqrt(2)}px`,
-    },
+
     formControl: {
         margin: theme.spacing(1),
         minWidth: 120,
@@ -66,13 +62,13 @@ class PrintDialog extends React.PureComponent {
     };
     handlePrintClose = () => {
         this.setState({ openPrint: false });
-        this.props.onClose();
+        //this.props.onClose();
     };
 
     render() {
         const { open, onClose, classes } = this.props;
         return (
-            <Dialog open={open} onClose={onClose} fullWidth maxWidth="md" TransitionComponent={Grow}>
+            <Dialog open={open} onClose={onClose} maxWidth={false} TransitionComponent={Grow}>
                 <div className={classes.wrapper}>
                     <div className={classes.root}>
                         <DialogTitle>
@@ -93,8 +89,8 @@ class PrintDialog extends React.PureComponent {
                                             id: 'orientation',
                                         }}
                                     >
-                                        <MenuItem value="horizontal">Horizontal</MenuItem>
-                                        <MenuItem value="vertical">Vertikal</MenuItem>
+                                        <MenuItem value="horizontal">Querformat</MenuItem>
+                                        <MenuItem value="vertical">Hochformat</MenuItem>
                                     </Select>
                                 </FormControl>
                                 <FormControl className={classes.formControl}>
@@ -135,13 +131,14 @@ class PrintDialog extends React.PureComponent {
                     <div className={classes.preview}>
                         <div className={classes.printPreview}>
                             <Page
-                                open={open}
+                                open={false}
                                 exact={this.state.exact}
                                 horizontal={this.state.orientation === 'horizontal'}
                                 openPrint={this.state.openPrint}
                                 onPrintClose={this.handlePrintClose}
-                                substitutions={this.state.substitutions}
-                            />
+                            >
+                                <TimeTableContainer noSubstitutions={!this.state.substitutions} print small={false} />
+                            </Page>
                         </div>
                     </div>
                 </div>

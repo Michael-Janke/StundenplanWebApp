@@ -20,6 +20,8 @@ import OfflineLesson from './OfflineLesson';
 import { grey } from '@material-ui/core/colors';
 import Event from './Event';
 import Assignment from './Assignment';
+import Computer from '@material-ui/icons/Computer';
+import Business from '@material-ui/icons/Business';
 
 const padding = (small) => ({
     paddingLeft: small ? 2 : 4,
@@ -243,7 +245,7 @@ class TimeTableGrid extends React.Component {
             return;
         }
         const days = WEEKDAY_NAMES.map((name, i) => timetable[i]);
-        if (days.every((day) => day.coronaAttend === null || day.coronaAttend === undefined)) {
+        if (days.every((day) => day.corona === undefined)) {
             return null;
         }
 
@@ -252,9 +254,23 @@ class TimeTableGrid extends React.Component {
                 <PeriodCell small={small}></PeriodCell>
                 {WEEKDAY_NAMES.map((name, i) => {
                     const day = timetable[i];
+                    const attend = day.corona.group === day.corona.currentGroup;
                     return (
-                        <TableCell key={i} style={{ padding: 0, fontSize: '100%' }}>
-                            {{ '0': 'Zuhause', '1': 'Schule' }[day.coronaAttend]}
+                        <TableCell key={i} style={{ padding: 4, fontSize: '80%', textAlign: 'center' }}>
+                            <div>{day.corona && day.corona.currentGroup} Woche</div>
+                            {day.corona && day.corona.group && (
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        flexWrap: 'wrap',
+                                    }}
+                                >
+                                    {attend ? <Business /> : <Computer />}
+                                    {attend ? 'Präsenz' : 'Online'}
+                                </div>
+                            )}
                         </TableCell>
                     );
                 })}

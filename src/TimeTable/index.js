@@ -13,6 +13,7 @@ import Dates from '../Dates';
 import ErrorBoundary from '../Common/ErrorBoundary';
 import { usePosts } from '../Posts/hooks';
 import { setMyTimetable } from './actions';
+import StudentList from './components/StudentList';
 
 const smallBreakpoint = 800;
 
@@ -117,6 +118,7 @@ function TimeTableView({ small }) {
                 </div>
             </div>
             <AssignmentCreation />
+            <StudentList />
         </div>
     );
 }

@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    height: 100vh !important;
+    height: 100vh;
     overscroll-behavior: contain; /* disable pull-to-refresh */
     -ms-scroll-chaining: chained;
 }

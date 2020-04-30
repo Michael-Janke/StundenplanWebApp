@@ -60,10 +60,15 @@ export function setMyTimetable() {
     };
 }
 
-export function loadStudentList(timetableId, date) {
+export function loadStudentList(timetableId) {
     return {
         type: 'GET_STUDENTLIST',
         timetableId,
-        date,
+    };
+}
+
+export function closeStudentList() {
+    return {
+        type: 'CLOSE_STUDENTLIST',
     };
 }

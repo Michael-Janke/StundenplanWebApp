@@ -1,120 +1,44 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import React, { useLayoutEffect, useRef } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { createPortal } from 'react-dom';
-import TimeTableContainer from '../components/container';
 
-class Frame extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.setContentRef = node => {
-            this.contentRef = node ? node.contentWindow.document : null;
-            if (this.props.innerRef) {
-                this.props.innerRef(node);
-            }
-        };
-    }
-
-    render() {
-        const { children, innerRef, ...props } = this.props;
-        return (
-            <iframe title="no" {...props} ref={this.setContentRef}>
-                {this.contentRef &&
-                    React.Children.map(
-                        children,
-                        child =>
-                            this.contentRef[child.type] &&
-                            createPortal(child.props.children, this.contentRef[child.type])
-                    )}
-            </iframe>
-        );
-    }
-}
-const styles = {
-    layout: {
-        backgroundColor: 'white',
-        padding: 8,
-        pointerEvents: 'none',
-    },
+const useStyles = makeStyles({
     page: {
-        overflow: 'hidden',
-        height: '100%',
-        width: '100%',
+        overflow: 'auto',
+        height: '22cm',
+        width: '22cm',
         boxSizing: 'border-box',
+        border: 'none',
     },
     frame: {
-        border: 'none',
         margin: 0,
         display: 'none',
+        pointerEvents: 'none',
     },
-};
+});
 
-class Page extends React.Component {
-    state = {};
-
-    shouldComponentUpdate(nextProps, nextState) {
-        if (!nextProps.open) {
-            return false;
+const Page = ({ openPrint, onPrintClose, horizontal, exact, open, children }) => {
+    const classes = useStyles();
+    const ref = useRef();
+    useLayoutEffect(() => {
+        if (openPrint) {
+            ref.current.contentWindow.print();
+            onPrintClose();
         }
-        return (
-            this.props.horizontal !== nextProps.horizontal ||
-            this.props.substitutions !== nextProps.substitutions ||
-            this.props.openPrint !== nextProps.openPrint ||
-            this.props.exact !== nextProps.exact ||
-            this.state.pageStyles !== nextState.pageStyles
-        );
-    }
+    }, [ref.current, openPrint]);
 
-    componentDidMount() {
-        window.addEventListener('resize', this.handleResize);
-        this.handleResize();
-    }
-
-    componentDidUpdate(prevProps) {
-        if (
-            this.props.horizontal !== prevProps.horizontal ||
-            this.props.substitutions !== prevProps.substitutions ||
-            this.props.exact !== prevProps.exact
-        ) {
-            this.handleResize();
-        }
-        if (this.props.openPrint !== prevProps.openPrint && this.props.openPrint) {
-            this.frameRef.contentWindow.print();
-            this.props.onPrintClose();
-        }
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.handleResize);
-    }
-
-    handleResize = event => {
-        if (!this.refs.page) {
-            return;
-        }
-        const { horizontal } = this.props;
-        const clientWidth = this.refs.page.clientWidth;
-        const height = clientWidth * (horizontal ? 1 / Math.sqrt(2) : Math.sqrt(2));
-        this.setState({
-            pageStyles: { height },
-            frameStyles: { display: 'block' },
-            globalStyles: this.renderStyles(),
-        });
-    };
-
-    toArray(object) {
-        let newChildren = [];
-        for (let i = 0; i < object.length; i++) {
-            newChildren[i] = object[i];
-        }
-        return newChildren;
-    }
-
-    renderStyles() {
+    const renderStyles = () => {
+        const toArray = (object) => {
+            let newChildren = [];
+            for (let i = 0; i < object.length; i++) {
+                newChildren[i] = object[i];
+            }
+            return newChildren;
+        };
         const head = document.getElementsByTagName('head')[0];
-        const children = this.toArray(head.children);
+        const children = toArray(head.children);
 
-        const getAttributes = child => {
+        const getAttributes = (child) => {
             const obj = {};
             for (let i = 0; i < child.attributes.length; i++) {
                 const attr = child.attributes[i];
@@ -122,50 +46,38 @@ class Page extends React.Component {
             }
             return obj;
         };
-        const mapCssRules = child => {
-            const css = this.toArray(child.sheet.cssRules);
-            return css.map(rule => rule.cssText).join('\n');
+        const mapCssRules = (child) => {
+            const css = toArray(child.sheet.cssRules);
+            return css.map((rule) => rule.cssText).join('\n');
         };
 
         const styles = children
-            .filter(child => child.tagName === 'STYLE')
-            .map(child => (
+            .filter((child) => child.tagName === 'STYLE')
+            .map((child) => (
                 <style key={child.getAttribute('data-meta') + child.innerHTML.length} {...getAttributes(child)}>
                     {child.innerHTML || mapCssRules(child)}
                 </style>
             ));
         return styles;
-    }
-
-    handleFrameRef = ref => {
-        this.frameRef = ref;
     };
 
-    render() {
-        const { pageStyles, frameStyles, globalStyles } = this.state;
-        const { classes, horizontal, exact } = this.props;
-        return (
-            <div className={classes.layout}>
-                <div ref="page" className={classes.page} style={pageStyles}>
-                    <Frame
-                        innerRef={this.handleFrameRef}
-                        style={frameStyles}
-                        width="100%"
-                        height="100%"
-                        className={classes.frame}
-                    >
-                        <head>{globalStyles}</head>
-                        <body>
-                            <div style={{ height: 0 }}>
-                                <TimeTableContainer
-                                    {...!this.props.substitutions && { date: null, noSubstitutions: true }}
-                                    print
-                                    small={false}
-                                />
-                            </div>
+    return (
+        <div className={classes.page} style={{ display: open ? 'block' : 'none' }}>
+            <Frame
+                innerRef={ref}
+                style={{
+                    width: horizontal ? '29.7cm' : '21cm',
+                    height: horizontal ? '21cm' : '29.7cm',
+                }}
+                className={classes.frame}
+            >
+                <head>{renderStyles()}</head>
+                <body>
+                    <div>{children}</div>
 
-                            <style type="text/css">
-                                {`body * {
+                    <style type="text/css">
+                        {`
+                            body * {
                                     ${
                                         exact
                                             ? `
@@ -175,23 +87,51 @@ class Page extends React.Component {
                                     }
                                     -webkit-print-color-adjust: exact;
                                     transition: background-image 250ms, background-color 250ms;
-                                }`}
-                            </style>
+                                }
+                            body {
+                                    margin: 20mm;
+                            }`}
+                    </style>
 
-                            <style type="text/css" media="print">
-                                {`@page {
-                                    size: ${horizontal ? 'landscape' : 'portrait'}; 
+                    <style type="text/css" media="print">
+                        {`   @page {
+                                    size: ${horizontal ? '29.7cm 21cm' : '21cm 29.7cm'};
+                                    margin: 20mm !important;
                                 }
                                 body {
-                                    -webkit-print-color-adjust: ${exact ? 'exact' : 'economy'};    
+                                    -webkit-print-color-adjust: ${exact ? 'exact' : 'economy'};  
+                                    margin: 0;
                                 }`}
-                            </style>
-                        </body>
-                    </Frame>
-                </div>
-            </div>
+                    </style>
+                </body>
+            </Frame>
+        </div>
+    );
+};
+
+export default Page;
+
+class Frame extends React.Component {
+    setContentRef = (node) => {
+        this.contentRef = node ? node.contentWindow.document : null;
+        if (this.props.innerRef) {
+            this.props.innerRef.current = node;
+        }
+        this.forceUpdate();
+    };
+
+    render() {
+        const { children, innerRef, ...props } = this.props;
+        return (
+            <iframe title="no" {...props} ref={this.setContentRef}>
+                {this.contentRef &&
+                    React.Children.map(
+                        children,
+                        (child) =>
+                            this.contentRef[child.type] &&
+                            createPortal(child.props.children, this.contentRef[child.type])
+                    )}
+            </iframe>
         );
     }
 }
-
-export default withStyles(styles)(Page);

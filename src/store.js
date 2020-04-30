@@ -15,9 +15,9 @@ import version from './version.json';
 const persistConfig = {
     key: 'root',
     storage: localForage,
-    blacklist: ['browser', 'error', 'favorites', 'assignments', 'notifications', 'report', 'update'],
+    blacklist: ['browser', 'error', 'favorites', 'assignments', 'notifications', 'report', 'update', 'studentList'],
     version: version.redux,
-    migrate: state => {
+    migrate: (state) => {
         if (!state || !state._persist || state._persist.version === version.redux) return Promise.resolve(state);
         console.log('purge state, new build');
         return Promise.resolve({});
