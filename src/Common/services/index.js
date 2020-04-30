@@ -8,6 +8,7 @@ import authenticationService from './authentication-service';
 import tvService from './tv-service';
 import assignmentsService from './assignments-service';
 import reportService from './report-service';
+import studentListService from './studentListService';
 
 export default [
     authenticationService,
@@ -20,4 +21,5 @@ export default [
     tvService,
     assignmentsService,
     reportService,
+    studentListService,
 ];

@@ -137,6 +137,7 @@ class TimeTableGrid extends React.Component {
     renderRows() {
         const { small, periods, currentPeriod } = this.props;
         return [
+            this.renderCorona(),
             this.renderAbsences(),
             this.renderUnmatchedAssignments(),
             this.renderEvents(),
@@ -226,6 +227,34 @@ class TimeTableGrid extends React.Component {
                         <TableCell key={i} style={{ padding: 0, fontSize: '100%' }}>
                             {day.absences &&
                                 day.absences.map((absence) => <Absence key={absence.ABSENCE_ID} absence={absence} />)}
+                        </TableCell>
+                    );
+                })}
+            </TableRow>
+        );
+    }
+
+    renderCorona() {
+        const { type, id, small, currentTimetable: timetable, offline } = this.props;
+        if (!type || !id || offline) {
+            return null;
+        }
+        if (!timetable) {
+            return;
+        }
+        const days = WEEKDAY_NAMES.map((name, i) => timetable[i]);
+        if (days.every((day) => day.coronaAttend === null || day.coronaAttend === undefined)) {
+            return null;
+        }
+
+        return (
+            <TableRow style={{ height: 'unset' }} key={-1}>
+                <PeriodCell small={small}></PeriodCell>
+                {WEEKDAY_NAMES.map((name, i) => {
+                    const day = timetable[i];
+                    return (
+                        <TableCell key={i} style={{ padding: 0, fontSize: '100%' }}>
+                            {{ '0': 'Zuhause', '1': 'Schule' }[day.coronaAttend]}
                         </TableCell>
                     );
                 })}

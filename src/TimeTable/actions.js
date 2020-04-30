@@ -38,7 +38,7 @@ export function createAssignment({ teamId, title, instructions, date }) {
                     contentType: 'html',
                     content: (instructions + '')
                         .split(/\r?\n/)
-                        .map(line => `<p>${line}</p>`)
+                        .map((line) => `<p>${line}</p>`)
                         .join('\n'),
                 },
                 assignTo: {
@@ -57,5 +57,13 @@ export function setMyTimetable() {
         if (id && type) {
             dispatch({ type: 'SET_MY_TIMETABLE', payload: { id, type } });
         }
+    };
+}
+
+export function loadStudentList(timetableId, date) {
+    return {
+        type: 'GET_STUDENTLIST',
+        timetableId,
+        date,
     };
 }

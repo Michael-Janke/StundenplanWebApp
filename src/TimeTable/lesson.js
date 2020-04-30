@@ -154,7 +154,7 @@ const AbstractLesson = (props) => {
                     <Field1 description />
                     <Field2 description />
                     {Field3 && <Field3 description />}
-                    {studentList && <ShowStudentList list={studentList} />}
+                    <ShowStudentList list={studentList} timetableId={reference.TIMETABLE_ID} date={date} />
                     {teams.map((team) => (
                         <React.Fragment key={team.id}>
                             <Divider />
