@@ -84,7 +84,7 @@ export default function ListDialog() {
                         onClick={onClick}
                     />
                 )}
-                <Page open={false} openPrint={print} onPrintClose={printClose} exact={true} horizontal={false}>
+                <Page open={'hidden'} openPrint={print} onPrintClose={printClose} exact={true} horizontal={false}>
                     <div>
                         Kursliste {view && 'Gruppe'} {view}
                     </div>

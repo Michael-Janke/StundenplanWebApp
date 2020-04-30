@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { createPortal } from 'react-dom';
 
@@ -22,8 +22,9 @@ const useStyles = makeStyles({
 const Page = ({ openPrint, onPrintClose, horizontal, exact, open, children }) => {
     const classes = useStyles();
     const ref = useRef();
-    useLayoutEffect(() => {
-        if (openPrint) {
+    useEffect(() => {
+        console.log(ref);
+        if (ref.current && openPrint) {
             ref.current.contentWindow.print();
             onPrintClose();
         }
@@ -63,8 +64,9 @@ const Page = ({ openPrint, onPrintClose, horizontal, exact, open, children }) =>
         return styles;
     };
 
+    if (!open) return null;
     return (
-        <div className={classes.page} style={{ display: open ? 'block' : 'none' }}>
+        <div className={classes.page} style={{ display: open !== 'hidden' ? 'block' : 'none' }}>
             <Frame
                 innerRef={ref}
                 style={{
@@ -115,10 +117,22 @@ export default Page;
 
 class Frame extends React.Component {
     setContentRef = (node) => {
-        this.contentRef = node ? node.contentWindow.document : null;
+        this.node = node;
         if (this.props.innerRef) {
-            this.props.innerRef.current = node;
+            this.props.innerRef.current = this.node;
         }
+    };
+
+    componentDidMount() {
+        this.node.addEventListener('load', this.handleLoad);
+    }
+
+    componentWillUnmout() {
+        this.node.removeEventListener('load', this.handleLoad);
+    }
+
+    handleLoad = () => {
+        this.iframeRoot = this.node.contentDocument;
         this.forceUpdate();
     };
 
@@ -126,12 +140,12 @@ class Frame extends React.Component {
         const { children, innerRef, ...props } = this.props;
         return (
             <iframe title="no" {...props} ref={this.setContentRef}>
-                {this.contentRef &&
+                {this.iframeRoot &&
                     React.Children.map(
                         children,
                         (child) =>
-                            this.contentRef[child.type] &&
-                            createPortal(child.props.children, this.contentRef[child.type])
+                            this.iframeRoot[child.type] &&
+                            createPortal(child.props.children, this.iframeRoot[child.type])
                     )}
             </iframe>
         );
