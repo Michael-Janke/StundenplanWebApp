@@ -8,12 +8,14 @@ const useStyles = makeStyles({
         height: '22cm',
         width: '22cm',
         boxSizing: 'border-box',
-        border: 'none',
+        display: 'none',
+        background: 'white',
     },
     frame: {
         margin: 0,
-        display: 'none',
         pointerEvents: 'none',
+        border: 'none',
+        display: 'block',
     },
 });
 

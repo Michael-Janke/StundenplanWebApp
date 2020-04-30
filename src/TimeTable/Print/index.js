@@ -131,7 +131,7 @@ class PrintDialog extends React.PureComponent {
                     <div className={classes.preview}>
                         <div className={classes.printPreview}>
                             <Page
-                                open={false}
+                                open={open}
                                 exact={this.state.exact}
                                 horizontal={this.state.orientation === 'horizontal'}
                                 openPrint={this.state.openPrint}
