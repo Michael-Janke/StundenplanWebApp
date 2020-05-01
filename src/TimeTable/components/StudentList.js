@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { useSelector, useDispatch } from 'react-redux';
@@ -25,6 +25,7 @@ import Page from '../Print/page';
 export default function ListDialog() {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const ref = useRef(null);
 
     const dispatch = useDispatch();
     const [viewState, setView] = useState(null);
@@ -59,6 +60,19 @@ export default function ListDialog() {
     const className = reference.CLASS_IDS.map((classId) => (classes[classId] || {}).NAME).join(', ');
     const subjectName = (subjects[reference.SUBJECT_ID] || {}).NAME;
 
+    const exportExcel = () => {
+        if (!ref.current) return;
+        //code splitting
+        import('@linways/table-to-excel').then((TableToExcel) => {
+            TableToExcel.default.convert(ref.current, {
+                name: `Kursliste-${className.replace(', ', '')}-${subjectName}.xlsx`,
+                sheet: {
+                    name: 'Blatt 1',
+                },
+            });
+        });
+    };
+
     return (
         <Dialog
             fullScreen={fullScreen}
@@ -80,7 +94,7 @@ export default function ListDialog() {
                 >
                     <Tab label="Alle" value={null} />
                     {groups.map((group) => (
-                        <Tab label={`Gruppe ${group}`} value={group} />
+                        <Tab key={group || 'null'} label={`Gruppe ${group}`} value={group} />
                     ))}
                 </Tabs>
             </AppBar>
@@ -99,7 +113,7 @@ export default function ListDialog() {
                     <div>
                         Kursliste {view && 'Gruppe'} {view} {className} {subjectName}
                     </div>
-                    <table>
+                    <table ref={ref}>
                         <tbody>
                             <tr>
                                 <th>Nachname</th>
@@ -112,7 +126,7 @@ export default function ListDialog() {
                                     .map((o) => ({ ...o, ...students[o.STUDENT_ID] }))
                                     .sort((a, b) => (a.GROUP + a.LASTNAME).localeCompare(b.GROUP + b.LASTNAME))
                                     .map((student) => (
-                                        <tr>
+                                        <tr key={student.STUDENT_ID}>
                                             <td>{student.LASTNAME}</td>
                                             <td>{student.FIRSTNAME}</td>
                                             <td>{student.GROUP}</td>
@@ -124,10 +138,17 @@ export default function ListDialog() {
                 </Page>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => setPrint(true)} color="primary">
-                    Drucken
+                {!fullScreen && (
+                    <Button onClick={() => setPrint(true)} color="primary">
+                        Drucken
+                    </Button>
+                )}
+
+                <Button onClick={exportExcel} color="primary">
+                    Excel exportieren
                 </Button>
-                <Button autoFocus onClick={handleClose} color="primary">
+
+                <Button autoFocus onClick={handleClose} color="secondary">
                     Schließen
                 </Button>
             </DialogActions>
