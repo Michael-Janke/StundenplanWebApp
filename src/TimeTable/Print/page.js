@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { createPortal } from 'react-dom';
 
@@ -23,12 +23,11 @@ const Page = ({ openPrint, onPrintClose, horizontal, exact, open, children }) =>
     const classes = useStyles();
     const ref = useRef();
     useEffect(() => {
-        console.log(ref);
         if (ref.current && openPrint) {
             ref.current.contentWindow.print();
             onPrintClose();
         }
-    }, [ref.current, openPrint]);
+    }, [openPrint, onPrintClose]);
 
     const renderStyles = () => {
         const toArray = (object) => {
@@ -57,7 +56,7 @@ const Page = ({ openPrint, onPrintClose, horizontal, exact, open, children }) =>
         const styles = children
             .filter((child) => child.tagName === 'STYLE')
             .map((child) => (
-                <style key={child.getAttribute('data-meta') + child.innerHTML.length} {...getAttributes(child)}>
+                <style key={child.getAttribute('data-meta') + child.innerText} {...getAttributes(child)}>
                     {child.innerHTML || mapCssRules(child)}
                 </style>
             ));

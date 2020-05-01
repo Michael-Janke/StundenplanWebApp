@@ -60,10 +60,11 @@ export function setMyTimetable() {
     };
 }
 
-export function loadStudentList(timetableId) {
+export function loadStudentList(reference) {
     return {
         type: 'GET_STUDENTLIST',
-        timetableId,
+        timetableId: reference.TIMETABLE_ID,
+        reference,
     };
 }
 

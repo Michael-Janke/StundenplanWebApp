@@ -6,9 +6,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { useDispatch } from 'react-redux';
 import { loadStudentList } from '../actions';
 
-const ShowStudentList = ({ list, timetableId }) => {
+const ShowStudentList = ({ list, reference = {} }) => {
     const dispatch = useDispatch();
-    const open = () => dispatch(loadStudentList(timetableId));
+    const open = () => dispatch(loadStudentList(reference));
 
     return (
         <MenuItem onClick={open}>

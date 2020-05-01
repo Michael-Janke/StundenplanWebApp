@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { useSelector, useDispatch } from 'react-redux';
@@ -27,11 +27,15 @@ export default function ListDialog() {
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const dispatch = useDispatch();
-    const [view, setView] = useState(null);
+    const [viewState, setView] = useState(null);
     const [print, setPrint] = useState(false);
 
-    const { list, timetableId, currenGroup, loading } = useSelector(({ studentList }) => studentList);
-    const students = useSelector(({ timetable }) => timetable.masterdata.Student);
+    const { list, timetableId, loading, reference } = useSelector(({ studentList }) => studentList);
+    const { Student: students, Class: classes, Subject: subjects } = useSelector(
+        ({ timetable }) => timetable.masterdata
+    );
+
+    if (!reference) return null;
 
     const handleClose = () => dispatch(closeStudentList());
     const onClick = (id) => () => {
@@ -42,6 +46,8 @@ export default function ListDialog() {
 
     const groups = list ? [...new Set(list.map((o) => o.GROUP))].filter((group) => group !== null).sort() : [];
 
+    const view = groups.indexOf(viewState) === -1 ? null : viewState;
+
     const studentList =
         list &&
         list
@@ -50,15 +56,20 @@ export default function ListDialog() {
             .map((o) => students[o.STUDENT_ID])
             .sort((a, b) => a.LASTNAME.localeCompare(b.LASTNAME));
 
+    const className = reference.CLASS_IDS.map((classId) => (classes[classId] || {}).NAME).join(', ');
+    const subjectName = (subjects[reference.SUBJECT_ID] || {}).NAME;
+
     return (
         <Dialog
             fullScreen={fullScreen}
             onClose={handleClose}
-            aria-labelledby="simple-dialog-title"
+            aria-labelledby="course-list-dialog"
             open={timetableId !== null}
             scroll="paper"
         >
-            <DialogTitle id="simple-dialog-title">Kursliste</DialogTitle>
+            <DialogTitle id="course-list-dialog">
+                Kursliste {className} {subjectName}
+            </DialogTitle>
             <AppBar position="static" color="default">
                 <Tabs
                     value={view}
@@ -86,20 +97,29 @@ export default function ListDialog() {
                 )}
                 <Page open={'hidden'} openPrint={print} onPrintClose={printClose} exact={true} horizontal={false}>
                     <div>
-                        Kursliste {view && 'Gruppe'} {view}
+                        Kursliste {view && 'Gruppe'} {view} {className} {subjectName}
                     </div>
                     <table>
-                        <tr>
-                            <th>Nachname</th>
-                            <th>Vorname</th>
-                        </tr>
-                        {studentList &&
-                            studentList.map((student) => (
-                                <tr>
-                                    <td>{student.LASTNAME}</td>
-                                    <td>{student.FIRSTNAME}</td>
-                                </tr>
-                            ))}
+                        <tbody>
+                            <tr>
+                                <th>Nachname</th>
+                                <th>Vorname</th>
+                                <th>Gruppe</th>
+                                <th>Klasse</th>
+                            </tr>
+                            {list &&
+                                list
+                                    .map((o) => ({ ...o, ...students[o.STUDENT_ID] }))
+                                    .sort((a, b) => (a.GROUP + a.LASTNAME).localeCompare(b.GROUP + b.LASTNAME))
+                                    .map((student) => (
+                                        <tr>
+                                            <td>{student.LASTNAME}</td>
+                                            <td>{student.FIRSTNAME}</td>
+                                            <td>{student.GROUP}</td>
+                                            <td>{classes[student.CLASS_ID].NAME}</td>
+                                        </tr>
+                                    ))}
+                        </tbody>
                     </table>
                 </Page>
             </DialogContent>
