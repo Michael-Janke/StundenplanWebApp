@@ -46,7 +46,7 @@ const computeData = (masterdata, favorites, user) => {
                 let count = entry.STUDENT_COUNT > 0 ? `SuS: ${entry.STUDENT_COUNT}` : undefined;
                 let secondary = [count, teacher].filter((a) => !!a).join(', ');
                 return {
-                    searchString: entry.NAME === '07-12' ? '' : entry.NAME.toLowerCase(),
+                    searchString: entry.NAME.toLowerCase() + ' ' + entry.NAME.toLowerCase().replace('0', ''),
                     type: 'class',
                     upn: entry.UPN,
                     id: entry.CLASS_ID,

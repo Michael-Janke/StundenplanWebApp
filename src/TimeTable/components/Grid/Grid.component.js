@@ -254,10 +254,9 @@ class TimeTableGrid extends React.Component {
                 <PeriodCell small={small}></PeriodCell>
                 {WEEKDAY_NAMES.map((name, i) => {
                     const day = timetable[i];
-                    const attend = day.corona.group === day.corona.currentGroup;
                     return (
                         <TableCell key={i} style={{ padding: 4, fontSize: '80%', textAlign: 'center' }}>
-                            <div>{day.corona && day.corona.currentGroup} Woche</div>
+                            {day.corona && <div>{day.corona.currentGroup} Woche</div>}
                             {day.corona && day.corona.group && (
                                 <div
                                     style={{
@@ -267,8 +266,8 @@ class TimeTableGrid extends React.Component {
                                         flexWrap: 'wrap',
                                     }}
                                 >
-                                    {attend ? <Business /> : <Computer />}
-                                    {attend ? 'Präsenz' : 'Online'}
+                                    {day.corona.group === day.corona.currentGroup ? <Business /> : <Computer />}
+                                    {day.corona.group === day.corona.currentGroup ? 'Präsenz' : 'Online'}
                                 </div>
                             )}
                         </TableCell>

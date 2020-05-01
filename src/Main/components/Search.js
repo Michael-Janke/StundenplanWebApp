@@ -26,12 +26,12 @@ class Search extends React.PureComponent {
         }
     };
 
-    handleClick = obj => {
+    handleClick = (obj) => {
         this.setState({ open: false, value: '' });
         this.props.setTimetable(obj);
     };
 
-    handleKeyboardInput = transform => {
+    handleKeyboardInput = (transform) => {
         this.setState({ value: transform(this.state.value) });
     };
 
@@ -49,7 +49,7 @@ class Search extends React.PureComponent {
                             open={open}
                             onOpen={() => this.setState({ open: true })}
                             onClose={() => this.setState({ open: false, value: '' })}
-                            onChange={value => this.setState({ value, open: value !== '' })}
+                            onChange={(value) => this.setState({ value })}
                         />
                         <div
                             className={classNames(
@@ -73,7 +73,7 @@ class Search extends React.PureComponent {
                     </div>
                 </ClickAwayListener>
                 <div className={classNames(classes.children, open && shrinkChildren && classes.childrenOpen)}>
-                    {React.Children.map(this.props.children, child => {
+                    {React.Children.map(this.props.children, (child) => {
                         if (!child) return;
                         return (
                             <Zoom in={!shrinkChildren || !open} className={classes.child}>
@@ -87,7 +87,7 @@ class Search extends React.PureComponent {
     }
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
     root: {
         flex: 1,
         display: 'flex',
@@ -161,13 +161,13 @@ const styles = theme => ({
     },
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     masterdata: state.timetable.masterdata,
     small: state.browser.lessThan.medium,
 });
 
-const mapDispatchToProps = dispatch => ({
-    setTimetable: object => dispatch(setTimeTable(object.type, object.id)),
+const mapDispatchToProps = (dispatch) => ({
+    setTimetable: (object) => dispatch(setTimeTable(object.type, object.id)),
     loadMe: () => dispatch(loadMe()),
 });
 
