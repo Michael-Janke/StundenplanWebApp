@@ -110,11 +110,13 @@ export default function ListDialog() {
                     />
                 )}
                 <Page open={'hidden'} openPrint={print} onPrintClose={printClose} exact={true} horizontal={false}>
-                    <div>
-                        Kursliste {view && 'Gruppe'} {view} {className} {subjectName}
-                    </div>
                     <table ref={ref}>
                         <tbody>
+                            <tr>
+                                <th colSpan={4}>
+                                    Kursliste {view && 'Gruppe'} {view} {className} {subjectName}
+                                </th>
+                            </tr>
                             <tr>
                                 <th>Nachname</th>
                                 <th>Vorname</th>
