@@ -20,10 +20,10 @@ export default class UserAuthContext extends AuthContext {
         if (obj) {
             // copy values into this object
             super.tokens = obj.tokens || {};
-            super.authCodes = obj.authCodes || [];
+            super.authCodes = typeof obj.authCodes === 'object' ? obj.authCodes : {};
         }
     }
-    authCodes = [];
+    authCodes = {};
 
     /**
      * get scopes
@@ -35,7 +35,8 @@ export default class UserAuthContext extends AuthContext {
 
     logOut() {
         super.logOut();
-        this.authCodes = [];
+        this.authCodes = {};
+        this.tokens = {};
         setAuthContext(this).then(() => {
             // wait for save completed
             window.location.replace(
@@ -72,35 +73,29 @@ export default class UserAuthContext extends AuthContext {
     }
 
     loadAuthCode(resource) {
-        window.location.replace(this.getAuthCodeLink(resource));
+        return setAuthContext(this).then(() => window.location.replace(this.getAuthCodeLink(resource)));
     }
 
     handleCallback(code, session_state, state) {
-        if (!this.authCodes.find((authCode) => authCode.code === code)) {
-            const obj = { code, session_state, state };
-            this.authCodes.push(obj);
-            setAuthContext(this);
-        }
+        const obj = { code, session_state, state: JSON.parse(decodeURIComponent(state) || '{}') };
+        this.authCodes[obj.state.resource] = obj;
+        setAuthContext(this);
     }
 
     async aquireToken(token, endpoint) {
         let refresh_token = token && token.refresh_token;
+        let authCode = this.authCodes[endpoint] || {};
 
-        // use first authCode as code is recycled from initial login
-        let authCode = this.authCodes.findIndex((authCode) => {
-            let state = JSON.parse(authCode.state);
-            return !state.resource || state.resource === endpoint;
-        });
-        authCode = this.authCodes.splice(authCode, 1)[0];
-        if (!authCode && !refresh_token) {
+        if (!authCode.code && !refresh_token) {
             // reload code
-            this.loadAuthCode(endpoint);
-            return;
+            return this.loadAuthCode(endpoint);
         }
-        const { code } = authCode || {};
+        this.authCodes[endpoint] && delete this.authCodes[endpoint];
+        setAuthContext(this);
+
         const body = {
-            code,
-            refresh_token: code ? undefined : refresh_token,
+            code: authCode.code,
+            refresh_token: authCode.code ? undefined : refresh_token,
             scope: this.getScope(UserAuthContext.resources[endpoint]).join(' '),
         };
         try {
@@ -116,8 +111,8 @@ export default class UserAuthContext extends AuthContext {
             // if there is a error_codes property
             // reload authCode
             if (error && error.error_codes) {
-                this.loadAuthCode(endpoint);
-                return;
+                this.authCodes = {};
+                return this.loadAuthCode(endpoint);
             }
             throw error;
         }

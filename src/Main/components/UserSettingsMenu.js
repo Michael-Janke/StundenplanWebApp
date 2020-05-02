@@ -25,6 +25,7 @@ import withTheme from '@material-ui/core/styles/withTheme';
 import Tooltip from '@material-ui/core/Tooltip';
 import ReminderSettingsDialog from './ReminderSettingsDialog';
 import Feedback from './Feedback';
+import localForage from 'localforage';
 
 class UserSettingsMenu extends React.Component {
     state = {
@@ -52,12 +53,13 @@ class UserSettingsMenu extends React.Component {
     reset = () => {
         purge().finally(() => {
             localStorage.clear();
+            localForage.clear();
             unregister();
             window.location.reload();
         });
     };
 
-    handleClick = event => {
+    handleClick = (event) => {
         this.setState({ anchorEl: event.currentTarget });
     };
 
@@ -177,7 +179,7 @@ class UserSettingsMenu extends React.Component {
     }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
         logOut: () => {
             dispatch(logOut());
@@ -185,7 +187,7 @@ const mapDispatchToProps = dispatch => {
         setNotification: (newToken, oldToken) => {
             dispatch(setNotification(newToken, oldToken));
         },
-        showError: text => {
+        showError: (text) => {
             dispatch(showError(text));
         },
         loadMe: () => {
@@ -194,7 +196,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
         notificationToken: state.user.notificationToken,
         upn: state.user.upn,
