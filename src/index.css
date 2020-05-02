@@ -11,6 +11,10 @@ html {
         'Segoe UI', 'Ubuntu', 'Cantarell', 'Fira Sans', sans-serif;
 }
 
+* {
+    scrollbar-width: thin;
+}
+
 @media (max-width: 1920px) {
     html {
         font-size: 17.5px;
