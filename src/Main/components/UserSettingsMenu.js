@@ -53,9 +53,8 @@ class UserSettingsMenu extends React.Component {
     reset = () => {
         purge().finally(() => {
             localStorage.clear();
-            localForage.clear();
             unregister();
-            window.location.reload();
+            localForage.clear().then(() => window.location.reload());
         });
     };
 
