@@ -46,6 +46,10 @@ export default function ListDialog() {
     const printClose = () => setPrint(false);
 
     const groups = list ? [...new Set(list.map((o) => o.GROUP))].filter((group) => group !== null).sort() : [];
+    const groupCounts = groups.reduce(
+        (acc, group) => ({ ...acc, [group]: list.filter((o) => o.GROUP === group).length }),
+        {}
+    );
 
     const view = groups.indexOf(viewState) === -1 ? null : viewState;
 
@@ -94,9 +98,9 @@ export default function ListDialog() {
                     textColor="primary"
                     variant="fullWidth"
                 >
-                    <Tab label="Alle" value={null} />
+                    <Tab label={`Alle (${list && list.length})`} value={null} />
                     {groups.map((group) => (
-                        <Tab key={group || 'null'} label={`Gruppe ${group}`} value={group} />
+                        <Tab key={group || 'null'} label={`Gruppe ${group} (${groupCounts[group]})`} value={group} />
                     ))}
                 </Tabs>
             </AppBar>
