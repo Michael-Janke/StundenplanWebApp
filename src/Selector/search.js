@@ -83,14 +83,16 @@ const computeData = (masterdata, favorites, user) => {
             .sort(sortName)
             .map((entry) => ({
                 searchString: replaceUmlaute(
-                    `${entry.FIRSTNAME} ${entry.LASTNAME} ` + (masterdata.Class[entry.CLASS_ID] || {}).NAME
+                    `${entry.FIRSTNAME} ${entry.LASTNAME} ${(masterdata.Class[entry.CLASS_ID] || {}).NAME} GRUPPE${
+                        entry.GROUP || ''
+                    }`
                 ),
                 upn: entry.UPN,
                 type: 'student',
                 id: entry.STUDENT_ID,
                 favorite: favorites.indexOf(entry.UPN) >= 0,
                 text: entry.FIRSTNAME + ' ' + entry.LASTNAME,
-                secondary: 'Schüler (' + (masterdata.Class[entry.CLASS_ID] || {}).NAME + ')',
+                secondary: `Schüler (${(masterdata.Class[entry.CLASS_ID] || {}).NAME}) ${entry.GROUP || ''}`,
                 filterType: 'Schüler',
             })),
     ];
