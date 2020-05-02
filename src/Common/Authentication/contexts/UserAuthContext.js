@@ -76,7 +76,7 @@ export default class UserAuthContext extends AuthContext {
     }
 
     handleCallback(code, session_state, state) {
-        if (!this.authCodes.find(authCode => authCode.code === code)) {
+        if (!this.authCodes.find((authCode) => authCode.code === code)) {
             const obj = { code, session_state, state };
             this.authCodes.push(obj);
             setAuthContext(this);
@@ -84,11 +84,10 @@ export default class UserAuthContext extends AuthContext {
     }
 
     async aquireToken(token, endpoint) {
-        if (token) {
-            var refresh_token = token.refresh_token;
-        }
+        let refresh_token = token && token.refresh_token;
+
         // use first authCode as code is recycled from initial login
-        let authCode = this.authCodes.findIndex(authCode => {
+        let authCode = this.authCodes.findIndex((authCode) => {
             let state = JSON.parse(authCode.state);
             return !state.resource || state.resource === endpoint;
         });
@@ -101,7 +100,7 @@ export default class UserAuthContext extends AuthContext {
         const { code } = authCode || {};
         const body = {
             code,
-            refresh_token,
+            refresh_token: code ? undefined : refresh_token,
             scope: this.getScope(UserAuthContext.resources[endpoint]).join(' '),
         };
         try {
