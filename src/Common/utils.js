@@ -1,6 +1,6 @@
-export function timeout(ms, promise) {
-    return new Promise(function(resolve, reject) {
-        setTimeout(function() {
+export function timeout(ms, promise, url) {
+    return new Promise(function (resolve, reject) {
+        setTimeout(function () {
             reject(new Error('timeout'));
         }, ms);
         promise.then(resolve, reject);
@@ -15,11 +15,11 @@ export async function fetchData(url, options) {
         var controller = new AbortController();
         var signal = controller.signal;
     }
-    let response = await timeout(1000 * 6, fetch(url, { ...options, signal })).catch(error => {
+    let response = await timeout(1000 * 6, fetch(url, { ...options, signal }), url).catch((err) => {
         if (controller) {
             controller.abort();
         }
-        throw error;
+        throw err;
     });
     if (response && response.ok) {
         let text = await response.text();

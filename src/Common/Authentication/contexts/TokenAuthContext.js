@@ -15,16 +15,13 @@ export default class TokenAuthContext extends AuthContext {
         this.client_secret = client_secret;
     }
 
-
     logOut() {
         super.logOut();
     }
 
-    toObject() { }
+    toObject() {}
 
-   
-
-    async aquireToken(token, endpoint) {
+    async acquireToken(endpoint) {
         const body = {
             client_secret: this.client_secret,
             client_id,
@@ -37,6 +34,6 @@ export default class TokenAuthContext extends AuthContext {
                 'Content-Type': 'Application/Json',
             },
         });
-        return response;
+        this.setToken(response, endpoint);
     }
 }

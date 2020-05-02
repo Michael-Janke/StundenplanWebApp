@@ -1,6 +1,5 @@
 import { setAuthContext } from '../storage';
 import { EventEmitter } from 'events';
-import trackError from '../../trackError';
 
 export default class AuthContext extends EventEmitter {
     constructor() {
@@ -26,13 +25,25 @@ export default class AuthContext extends EventEmitter {
 
     isLoggingIn() {}
 
-    async aquireToken(token, endpoint) {}
+    async acquireToken(endpoint) {}
 
     checkToken(token) {
         var expires_in = token.expires_in - 60;
-        // check if not expired
         const diff = Math.round((Date.now() - token.acquired) / 1000);
         return expires_in > diff;
+    }
+
+    setToken(token, endpoint) {
+        const newToken = { ...token, acquired: Date.now() };
+        this.tokens[endpoint] = newToken;
+        this.emit('token', { endpoint, target: { token: newToken } });
+        return setAuthContext(this);
+    }
+
+    deleteToken(endpoint, error) {
+        delete this.tokens[endpoint];
+        error && this.emit('token', { endpoint, target: { error } });
+        return setAuthContext(this);
     }
 
     getToken(endpoint) {
@@ -66,22 +77,9 @@ export default class AuthContext extends EventEmitter {
                 this.tokenAcquisistions[endpoint] = true;
             }
 
-            try {
-                console.debug('new token for endpoint ', endpoint, token);
-                const newToken = await this.aquireToken(token, endpoint);
-                console.debug('got token for endpoint ', endpoint, newToken);
-                if (!newToken) return;
-                newToken.acquired = Date.now();
-                this.tokens[endpoint] = newToken;
-                this.emit('token', { endpoint, target: { token: newToken } });
-                setAuthContext(this);
-                delete this.tokenAcquisistions[endpoint];
-            } catch (error) {
-                // an error occured
-                trackError({ error, code: 1000 });
-                this.emit('token', { endpoint, target: { error } });
-                delete this.tokenAcquisistions[endpoint];
-            }
+            this.acquireToken(endpoint)
+                .catch((err) => this.emit('token', { endpoint, target: { error: err } }))
+                .finally(() => delete this.tokenAcquisistions[endpoint]);
         });
     }
 }

@@ -67,6 +67,66 @@
                 color: white;
                 font-size: 24px;
             }
+            #text-on-splash-screen,
+            #splash-screen-quote {
+                color: white;
+                text-align: center;
+                padding: 10px;
+            }
+            .lds-heart {
+                display: inline-block;
+                position: relative;
+                width: 80px;
+                height: 80px;
+                transform: rotate(45deg);
+                transform-origin: 40px 40px;
+            }
+            .lds-heart div {
+                top: 32px;
+                left: 32px;
+                position: absolute;
+                width: 32px;
+                height: 32px;
+                background: #fff;
+                animation: lds-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+            }
+            .lds-heart div:after,
+            .lds-heart div:before {
+                content: ' ';
+                position: absolute;
+                display: block;
+                width: 32px;
+                height: 32px;
+                background: #fff;
+            }
+            .lds-heart div:before {
+                left: -24px;
+                border-radius: 50% 0 0 50%;
+            }
+            .lds-heart div:after {
+                top: -24px;
+                border-radius: 50% 50% 0 0;
+            }
+            @keyframes lds-heart {
+                0% {
+                    transform: scale(0.95);
+                }
+                5% {
+                    transform: scale(1.1);
+                }
+                39% {
+                    transform: scale(0.85);
+                }
+                45% {
+                    transform: scale(1);
+                }
+                60% {
+                    transform: scale(0.95);
+                }
+                100% {
+                    transform: scale(0.9);
+                }
+            }
         </style>
         <title>Wolkenberg Stundenplan</title>
     </head>
@@ -78,94 +138,11 @@
         <div id="splash-screen">
             <img class="padding" src="%PUBLIC_URL%/img/icons/icon-192x192.png" width="192" height="192" />
             <div class="padding">Wolkenberg Stundenplan</div>
-            <svg version="1.1" id="preloader" x="0px" y="0px" width="240px" height="120px" viewBox="0 0 240 120">
-                <style type="text/css">
-                    #plug,
-                    #socket {
-                        fill: #ffffff;
-                    }
-
-                    #loop-normal {
-                        fill: none;
-                        stroke: #ffffff;
-                        stroke-width: 12;
-                    }
-
-                    #loop-offset {
-                        display: none;
-                    }
-                </style>
-
-                <path
-                    id="loop-normal"
-                    class="st1"
-                    d="M120.5,60.5L146.48,87.02c14.64,14.64,38.39,14.65,53.03,0s14.64-38.39,0-53.03s-38.39-14.65-53.03,0L120.5,60.5
-            L94.52,87.02c-14.64,14.64-38.39,14.64-53.03,0c-14.64-14.64-14.64-38.39,0-53.03c14.65-14.64,38.39-14.65,53.03,0z"
-                >
-                    <animate
-                        attributeName="stroke-dasharray"
-                        attributeType="XML"
-                        from="500, 50"
-                        to="450 50"
-                        begin="0s"
-                        dur="3s"
-                        repeatCount="indefinite"
-                    />
-                    <animate
-                        attributeName="stroke-dashoffset"
-                        attributeType="XML"
-                        from="-40"
-                        to="-540"
-                        begin="0s"
-                        dur="3s"
-                        repeatCount="indefinite"
-                    />
-                </path>
-
-                <path
-                    id="loop-offset"
-                    d="M146.48,87.02c14.64,14.64,38.39,14.65,53.03,0s14.64-38.39,0-53.03s-38.39-14.65-53.03,0L120.5,60.5
-            L94.52,87.02c-14.64,14.64-38.39,14.64-53.03,0c-14.64-14.64-14.64-38.39,0-53.03c14.65-14.64,38.39-14.65,53.03,0L120.5,60.5
-            L146.48,87.02z"
-                />
-
-                <path id="socket" d="M7.5,0c0,8.28-6.72,15-15,15l0-30C0.78-15,7.5-8.28,7.5,0z" />
-
-                <path id="plug" d="M0,9l15,0l0-5H0v-8.5l15,0l0-5H0V-15c-8.29,0-15,6.71-15,15c0,8.28,6.71,15,15,15V9z" />
-
-                <animateMotion
-                    xlink:href="#plug"
-                    dur="3s"
-                    rotate="auto"
-                    repeatCount="indefinite"
-                    calcMode="linear"
-                    keyTimes="0;1"
-                    keySplines="0.42, 0, 0.58, 1"
-                >
-                    <mpath xlink:href="#loop-normal" />
-                </animateMotion>
-
-                <animateMotion
-                    xlink:href="#socket"
-                    dur="3s"
-                    rotate="auto"
-                    repeatCount="indefinite"
-                    calcMode="linear"
-                    keyTimes="0;1"
-                    keySplines="0.42, 0, 0.58, 1"
-                >
-                    <mpath xlink:href="#loop-offset" />
-                </animateMotion>
-            </svg>
+            <div id="text-on-splash-screen">Einloggen</div>
+            <div id="splash-screen-quote"></div>
+            <div class="lds-heart" id="loading-heart">
+                <div></div>
+            </div>
         </div>
-        <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    --></body>
+    </body>
 </html>
