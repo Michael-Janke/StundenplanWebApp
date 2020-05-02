@@ -4,24 +4,24 @@ import { withRouter, matchPath } from 'react-router';
 import NotFoundPage from './NotFoundPage';
 import { asynchronize } from './asynchronize';
 
-const AppBar = asynchronize(() => import('./AppBar'), { hideSplash: false });
-const AppDrawer = asynchronize(() => import('./AppDrawer'), { hideSplash: false });
+const AppBar = asynchronize(() => import(/* webpackChunkName: "AppBar" */ './AppBar'), { hideSplash: false });
+const AppDrawer = asynchronize(() => import(/* webpackChunkName: "AppDrawer" */ './AppDrawer'), { hideSplash: false });
 
-const Posts = asynchronize(() => import('../Posts'));
-const PostEditor = asynchronize(() => import('../Posts/editIndex'));
-const Main = asynchronize(() => import('../Main'));
-const MainAppBar = asynchronize(() => import('../Main/components/AppBar'));
-const Statistics = asynchronize(() => import('../Statistics'));
-const Dates = asynchronize(() => import('../Dates'));
-const PublicPosts = asynchronize(() => import('../Posts/public'));
-const PublicTimetable = asynchronize(() => import('../TimeTable/public'));
-const Report = asynchronize(() => import('../Report'));
-const ReportSum = asynchronize(() => import('../Report/ReportSum'));
-const NotebookSelector = asynchronize(() => import('../OneNote'));
+const Posts = asynchronize(() => import(/* webpackChunkName: "Posts" */ '../Posts'));
+const PostEditor = asynchronize(() => import(/* webpackChunkName: "Posts-editIndex" */ '../Posts/editIndex'));
+const Main = asynchronize(() => import(/* webpackChunkName: "Main" */ '../Main'));
+const MainAppBar = asynchronize(() => import(/* webpackChunkName: "AppBar" */ '../Main/components/AppBar'));
+const Statistics = asynchronize(() => import(/* webpackChunkName: "Statistics" */ '../Statistics'));
+const Dates = asynchronize(() => import(/* webpackChunkName: "Dates" */ '../Dates'));
+const PublicPosts = asynchronize(() => import(/* webpackChunkName: "Posts-public" */ '../Posts/public'));
+const PublicTimetable = asynchronize(() => import(/* webpackChunkName: "TimeTable-public" */ '../TimeTable/public'));
+const Report = asynchronize(() => import(/* webpackChunkName: "Report" */ '../Report'));
+const ReportSum = asynchronize(() => import(/* webpackChunkName: "Report-ReportSum" */ '../Report/ReportSum'));
+const NotebookSelector = asynchronize(() => import(/* webpackChunkName: "OneNote" */ '../OneNote'));
 
-const Route = props => {
+const Route = (props) => {
     const renderComponent = React.useCallback(
-        routerProps => {
+        (routerProps) => {
             return <props.component {...props} {...routerProps} />;
         },
         [props]
@@ -29,7 +29,7 @@ const Route = props => {
     return <BrowserRoute {...props} render={renderComponent} component={undefined} />;
 };
 
-const routeConfig = location => (
+const routeConfig = (location) => (
     <>
         <Route exact path="/" component={Main} noBoxShadow appBarComponent={MainAppBar} withApp />
         <Route exact path="/public/dates" component={Dates} />

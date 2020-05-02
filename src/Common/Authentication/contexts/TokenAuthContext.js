@@ -25,7 +25,7 @@ export default class TokenAuthContext extends AuthContext {
         const body = {
             client_secret: this.client_secret,
             client_id,
-            scope: TokenAuthContext.resources[endpoint],
+            scope: this.constructor.resources[endpoint],
         };
         const response = await fetchData(`https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/token`, {
             method: 'POST',

@@ -20,9 +20,11 @@ import DateDeletionDialog from './DateDeletionDialog';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteDate, editDate, addDate, setEditMode } from './actions';
 
-const DateDialog = asynchronize(() => import('./DateDialog'), { hideSplash: false });
+const DateDialog = asynchronize(() => import(/* webpackChunkName: "DateDialog" */ './DateDialog'), {
+    hideSplash: false,
+});
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
@@ -62,27 +64,27 @@ const Dates = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const editMode = useSelector(state => state.dates.editMode);
-    const dates = useSelector(state => state.dates.dates);
-    const isAdmin = useSelector(state => state.user.scope === 'admin');
-    const small = useSelector(state => state.browser.lessThan.medium);
+    const editMode = useSelector((state) => state.dates.editMode);
+    const dates = useSelector((state) => state.dates.dates);
+    const isAdmin = useSelector((state) => state.user.scope === 'admin');
+    const small = useSelector((state) => state.browser.lessThan.medium);
 
     const [selectedDate, selectDate] = useState({});
     const [dialogIsOpen, openDialog] = useState(false);
     const [deleteDialogIsOpen, openDeleteDialog] = useState(false);
 
-    const handleEdit = date => {
+    const handleEdit = (date) => {
         openDialog(false);
         if (!date) return;
         dispatch(date.DATE_ID ? editDate(date) : addDate(date));
     };
 
-    const onDelete = date => {
+    const onDelete = (date) => {
         openDeleteDialog(true);
         selectDate(date);
     };
 
-    const onEdit = date => {
+    const onEdit = (date) => {
         openDialog(true);
         selectDate(date);
     };
@@ -92,7 +94,7 @@ const Dates = () => {
         selectDate({});
     };
 
-    const handleDelete = date => {
+    const handleDelete = (date) => {
         dispatch(deleteDate(date));
         openDeleteDialog(false);
     };

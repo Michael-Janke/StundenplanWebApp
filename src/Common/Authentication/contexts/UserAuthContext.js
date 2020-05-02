@@ -1,24 +1,21 @@
-import { setAuthContext } from '../storage';
 import { fetchData } from '../../utils';
 import AuthContext from './AuthContext';
 
 export default class UserAuthContext extends AuthContext {
-    static resources = {
-        'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/':
-            'https://wgmail.onmicrosoft.com/f863619c-ea91-4f1d-85f4-2f907c53963b/user_impersonation',
-        'https://graph.microsoft.com/': 'https://graph.microsoft.com/mail.read',
-    };
-
     toObject() {
         return {
             tokens: this.tokens,
+            refreshToken: this.refreshToken,
+            upn: this.upn,
         };
     }
     constructor(obj) {
         super();
         if (obj) {
             // copy values into this object
-            super.tokens = obj.tokens || {};
+            this.tokens = obj.tokens || {};
+            this.refreshToken = obj.refreshToken;
+            this.upn = obj.upn;
         }
     }
 
@@ -26,14 +23,12 @@ export default class UserAuthContext extends AuthContext {
      * get scopes
      * @param {string} resource if null all resources are included
      */
-    getScope(resource) {
-        return ['offline_access', ...(resource ? [resource] : Object.values(UserAuthContext.resources))];
+    getScope(endpoint) {
+        return ['offline_access', this.constructor.resources[endpoint]];
     }
 
     logOut() {
-        super.logOut();
-        this.tokens = {};
-        setAuthContext(this).then(() => {
+        super.logOut().then(() => {
             // wait for save completed
             window.location.replace(
                 'https://login.microsoftonline.com/common/oauth2/v2.0/logout?' +
@@ -44,47 +39,45 @@ export default class UserAuthContext extends AuthContext {
     }
 
     isLoggedIn() {
-        const tokens = Object.values(this.tokens).length + Object.values(this.tokenAcquisistions).length;
-        const resources = Object.values(UserAuthContext.resources).length;
-        return tokens >= resources;
+        return !!this.refreshToken;
     }
 
-    logIn() {
-        const needTokenFor = Object.keys(UserAuthContext.resources).filter((endpoint) => !this.tokens[endpoint]);
-        const endpoint = needTokenFor.pop(); //one after another
-        if (endpoint) {
-            this.loadAuthCode(endpoint);
-        }
-    }
-
-    getAuthCodeLink(resource) {
+    getAuthCodeLink() {
         return `https://login.microsoftonline.com/wgmail.de/oauth2/v2.0/authorize?                         
                 client_id=fb82e2a9-1efd-4a8e-9ac6-92413ab4b58b
                 &response_type=code
                 &redirect_uri=${encodeURIComponent(window.location.href.split('?')[0].split('#')[0])}
                 &response_mode=query
-                &scope=${encodeURIComponent(this.getScope().join(' '))}
-                &state=${encodeURIComponent(JSON.stringify({ resource, hash: window.location.hash }))}
+                &scope=${encodeURIComponent(['offline_access', ...Object.values(this.constructor.resources)].join(' '))}
+                &state=${encodeURIComponent(JSON.stringify({ hash: window.location.hash }))}
                 &domain_hint=wgmail.de
+                &login_hint=${this.upn || ''}
         `.replace(/ /g, '');
     }
 
-    loadAuthCode(resource) {
-        window.location.replace(this.getAuthCodeLink(resource));
+    authorize() {
+        return super.logOut().then(() => {
+            window.location.replace(this.getAuthCodeLink());
+        });
     }
 
-    async handleCallback(code, session_state, state) {
-        const obj = { code, session_state, state: JSON.parse(decodeURIComponent(state) || '{}') };
-        const endpoint = obj.state.resource;
-        await this.acquireTokenFromEndpoint(endpoint, { code });
-        return;
+    async handleCallback(code) {
+        //refresh token can be used for all resources
+        const endpoint = Object.keys(this.constructor.resources)[0];
+        const token = await this.acquireTokenFromEndpoint(endpoint, { code });
+        if (!token || !token.refresh_token) throw new Error('Anmeldetoken nicht erhalten');
+        await Promise.all(
+            Object.keys(this.constructor.resources).map((endpoint) =>
+                this.acquireTokenFromEndpoint(endpoint, { refresh_token: token.refresh_token })
+            )
+        );
     }
 
     async acquireTokenFromEndpoint(endpoint, { code, refresh_token }) {
         const body = {
             code,
             refresh_token,
-            scope: this.getScope(UserAuthContext.resources[endpoint]).join(' '),
+            scope: this.constructor.resources[endpoint],
         };
         const token = await fetchData(`https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/token`, {
             method: 'POST',
@@ -98,19 +91,18 @@ export default class UserAuthContext extends AuthContext {
     }
 
     async acquireToken(endpoint) {
-        let refresh_token = this.tokens[endpoint] && this.tokens[endpoint].refresh_token;
+        let refresh_token = this.refreshToken && this.refreshToken.refresh_token;
 
         if (!refresh_token) {
             // reload code
-            await this.loadAuthCode(endpoint);
+            await this.authorize(endpoint);
         }
         try {
             await this.acquireTokenFromEndpoint(endpoint, { refresh_token });
         } catch (err) {
             // if there is a error_codes property
             if (err && err.error_codes) {
-                this.deleteToken(endpoint, err);
-                setTimeout(() => this.logIn(), 3000);
+                setTimeout(() => this.authorize(), 3000);
                 throw err;
             }
             throw err;

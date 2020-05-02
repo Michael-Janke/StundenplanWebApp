@@ -23,6 +23,7 @@ const useStyles = makeStyles(
             position: 'relative',
             overflowY: 'auto',
             backgroundColor: grey[100],
+            flex: 1,
         },
         extendedAppBar: {
             display: 'flex',

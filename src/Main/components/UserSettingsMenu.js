@@ -50,12 +50,12 @@ class UserSettingsMenu extends React.Component {
         );
     };
 
-    reset = () => {
-        purge().finally(() => {
-            localStorage.clear();
-            unregister();
-            localForage.clear().then(() => window.location.reload());
-        });
+    reset = async () => {
+        await purge();
+        await localStorage.clear();
+        unregister();
+        await localForage.clear();
+        window.location.reload();
     };
 
     handleClick = (event) => {

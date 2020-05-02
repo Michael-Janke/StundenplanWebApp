@@ -63,14 +63,16 @@ export default function ListDialog() {
     const exportExcel = () => {
         if (!ref.current) return;
         //code splitting
-        import('@linways/table-to-excel').then((TableToExcel) => {
-            TableToExcel.default.convert(ref.current, {
-                name: `Kursliste-${className.replace(', ', '')}-${subjectName}.xlsx`,
-                sheet: {
-                    name: 'Blatt 1',
-                },
-            });
-        });
+        import(/* webpackChunkName: "table-to-excel" */ '@linways/table-to-excel/dist/tableToExcel')
+            .then(({ default: TableToExcel }) => {
+                TableToExcel.convert(ref.current, {
+                    name: `Kursliste-${className.replace(', ', '')}-${subjectName}.xlsx`,
+                    sheet: {
+                        name: 'Blatt 1',
+                    },
+                });
+            })
+            .catch();
     };
 
     return (

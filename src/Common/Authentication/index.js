@@ -23,12 +23,12 @@ export const runApplicationToken = (token, app) => {
 };
 
 export const runApplication = async (app) => {
-    const { code, session_state, state } = window.params;
+    const { code, state } = window.params;
     let authContext = await getAuthContext('user');
 
     if (!authContext) {
         authContext = new UserAuthContext();
-        setAuthContext(authContext);
+        authContext.save();
     }
     if (code) {
         // back to previous path without reloading page
@@ -36,7 +36,7 @@ export const runApplication = async (app) => {
         window.history.replaceState('', '', window.location.pathname);
         window.history.pushState('', '', window.location.pathname + hash);
         try {
-            await authContext.handleCallback(code, session_state, state);
+            await authContext.handleCallback(code);
         } catch (error) {
             document.getElementById('loading-heart').innerHTML = '';
             document.getElementById('splash-screen-quote').innerText = 'Schade, frag mal nach, was das hier soll.';
@@ -49,7 +49,7 @@ export const runApplication = async (app) => {
     }
 
     if (!authContext.isLoggedIn()) {
-        authContext.logIn();
+        authContext.authorize();
     } else {
         document.getElementById('text-on-splash-screen').innerHTML = 'App wird geladen...';
         app();
