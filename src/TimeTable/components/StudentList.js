@@ -31,7 +31,7 @@ export default function ListDialog() {
     const [viewState, setView] = useState(null);
     const [print, setPrint] = useState(false);
 
-    const { list, timetableId, loading, reference } = useSelector(({ studentList }) => studentList);
+    const { list = [], timetableId, loading, reference } = useSelector(({ studentList }) => studentList);
     const { Student: students, Class: classes, Subject: subjects } = useSelector(
         ({ timetable }) => timetable.masterdata
     );

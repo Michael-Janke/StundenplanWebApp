@@ -6,7 +6,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { useDispatch } from 'react-redux';
 import { loadStudentList } from '../actions';
 
-const ShowStudentList = ({ list, reference = {} }) => {
+const ShowStudentList = ({ list = [], reference = {} }) => {
     const dispatch = useDispatch();
     const open = () => dispatch(loadStudentList(reference));
 

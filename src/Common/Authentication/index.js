@@ -43,7 +43,7 @@ export const runApplication = async (app) => {
             document.getElementById('text-on-splash-screen').innerHTML =
                 'Fehler bei der Anmeldung<BR>' + JSON.stringify(error);
 
-            trackError({ upn: 'login error', code: 1000, error });
+            trackError({ upn: authContext.upn || 'login error', code: 1000, error });
             return;
         }
     }
