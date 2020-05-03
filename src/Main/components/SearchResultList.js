@@ -7,18 +7,18 @@ import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import makeStyles from '@material-ui/styles/makeStyles';
 import useKeyPress from '../../Common/hooks/useKeyDown';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     overflow: {
         overflowY: 'auto',
         flex: 1,
     },
 }));
 
-const SearchResult = ({ results, onClick, tv }) => {
+const SearchResult = ({ results, onClick, tv, onEmptyResult }) => {
     const classes = useStyles();
     const [selected, setSelected] = useState(0);
-    const small = useSelector(state => state.browser.lessThan.medium);
-    useKeyPress(e => {
+    const small = useSelector((state) => state.browser.lessThan.medium);
+    useKeyPress((e) => {
         if (e.keyCode === 38 || e.key === 'ArrowUp') {
             setSelected(Math.max(0, selected - 1));
         }
@@ -33,6 +33,11 @@ const SearchResult = ({ results, onClick, tv }) => {
     useEffect(() => {
         setSelected(0);
     }, [results]);
+    useEffect(() => {
+        if (onEmptyResult && results && results.length === 0) {
+            onEmptyResult();
+        }
+    }, [results, onEmptyResult]);
 
     return (
         <div className={classes.overflow}>

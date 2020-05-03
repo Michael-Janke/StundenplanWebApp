@@ -11,7 +11,7 @@ import { setTimeTable, loadMe } from '../actions';
 import SearchBar from './SearchBar';
 
 class Search extends React.PureComponent {
-    state = { open: false, value: '', filter: '' };
+    state = { open: false, value: '' };
 
     handleOpen = () => {
         if (!this.state.open) {
