@@ -47,7 +47,7 @@ class TimeTableGrid extends React.Component {
 
     renderPeriodHeader(period) {
         return (
-            <Periods key={-period.PERIOD_TIME_ID}>
+            <Periods>
                 <Tooltip
                     placement="right"
                     title={this.periodTime(period.START_TIME) + ' - ' + this.periodTime(period.END_TIME)}
@@ -166,7 +166,7 @@ class TimeTableGrid extends React.Component {
             return null;
         }
         return (
-            <TableRow style={{ height: 'unset' }} key={-2}>
+            <TableRow style={{ height: 'unset' }} key="Assignments">
                 <PeriodCell small={small}>
                     <Times>{small ? 'HA' : 'Aufgaben'}</Times>
                 </PeriodCell>
@@ -191,7 +191,7 @@ class TimeTableGrid extends React.Component {
             return null;
         }
         return (
-            <TableRow style={{ height: 'unset' }} key={-3}>
+            <TableRow style={{ height: 'unset' }} key="Events">
                 <PeriodCell small={small}>
                     <Times>{small ? 'Besp.' : 'Besprechungen'}</Times>
                 </PeriodCell>
@@ -221,7 +221,7 @@ class TimeTableGrid extends React.Component {
         }
 
         return (
-            <TableRow style={{ height: 'unset' }} key={-1}>
+            <TableRow style={{ height: 'unset' }} key="Absence">
                 <PeriodCell small={small} />
                 {WEEKDAY_NAMES.map((name, i) => {
                     const day = timetable[i];
@@ -250,7 +250,7 @@ class TimeTableGrid extends React.Component {
         }
 
         return (
-            <TableRow style={{ height: 'unset' }} key={-1}>
+            <TableRow style={{ height: 'unset' }} key="CoronaGroup">
                 <PeriodCell small={small}></PeriodCell>
                 {WEEKDAY_NAMES.map((name, i) => {
                     const day = timetable[i];
