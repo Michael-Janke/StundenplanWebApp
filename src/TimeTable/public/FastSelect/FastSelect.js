@@ -16,7 +16,7 @@ import Students from './Students';
 import Search from '../../../Main/components/Search';
 import Keyboard from '../../../Main/components/Keyboard';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: { display: 'flex', flexDirection: 'column' },
     growContent: {
         flex: 1,
@@ -43,7 +43,6 @@ function FastSelect({ open }) {
         <Fade className={classes.root} in={open}>
             <Paper square>
                 <Tabs
-                    fullWidth
                     variant="fullWidth"
                     onChange={(e, value) => setFilter(value)}
                     value={filter}

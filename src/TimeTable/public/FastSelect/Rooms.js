@@ -7,7 +7,7 @@ import Room from '@material-ui/icons/Room';
 import { changeWeek } from '../../../Main/actions';
 import { Paper, Grow } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.background.paper,
         display: 'flex',
@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 
 function FastSelect({ open }) {
     const classes = useStyles();
-    const rooms = useSelector(state => state.timetable.masterdata.Room);
+    const rooms = useSelector((state) => state.timetable.masterdata.Room);
     const dispatch = useDispatch();
     const levels = useMemo(
         () =>
@@ -41,7 +41,7 @@ function FastSelect({ open }) {
             }, {}),
         [rooms]
     );
-    const maxCount = Math.max(...Object.values(levels).map(level => level.length));
+    const maxCount = Math.max(...Object.values(levels).map((level) => level.length));
     const width = 100 / maxCount + '%';
     return (
         <Grow in={open}>
@@ -51,12 +51,12 @@ function FastSelect({ open }) {
                 </Typography>
                 {Object.keys(levels)
                     .sort()
-                    .map(level => (
-                        <div className={classes.row}>
-                            {levels[level].map(room => (
+                    .map((level) => (
+                        <div className={classes.row} key={level}>
+                            {levels[level].map((room) => (
                                 <ButtonBase
                                     focusRipple
-                                    key={room.roomID}
+                                    key={room.ROOM_ID}
                                     className={classes.image}
                                     style={{ width }}
                                     onClick={() => dispatch(changeWeek('now', room.ROOM_ID, 'room'))}
