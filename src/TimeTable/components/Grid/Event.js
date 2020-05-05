@@ -5,13 +5,14 @@ import { darken } from '@material-ui/core/styles';
 import moment from 'moment';
 import classnames from 'classnames';
 
-const useStyle = makeStyles(theme => ({
+const useStyle = makeStyles((theme) => ({
     event: {
         overflow: 'hidden',
         backgroundColor: darken(indigo[50], theme.palette.type === 'dark' ? 0.6 : 0),
         display: 'flex',
         flex: 1,
         height: 'auto',
+        cursor: 'pointer',
     },
     text: {
         flex: 1,
@@ -60,15 +61,9 @@ const useStyle = makeStyles(theme => ({
 const Event = ({ event }) => {
     const classes = useStyle();
     const time =
-        moment
-            .utc(event.start.dateTime)
-            .local()
-            .format('hh:mm') +
+        moment.utc(event.start.dateTime).local().format('hh:mm') +
         ' - ' +
-        moment
-            .utc(event.end.dateTime)
-            .local()
-            .format('hh:mm');
+        moment.utc(event.end.dateTime).local().format('hh:mm');
 
     const now = moment().isBetween(moment.utc(event.start.dateTime), moment.utc(event.end.dateTime));
 

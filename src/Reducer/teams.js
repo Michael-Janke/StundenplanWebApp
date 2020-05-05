@@ -32,7 +32,7 @@ export default function teamsReducer(state = initialState, action = {}) {
                       joinedTeams:
                           action.payload &&
                           action.payload.value.filter(
-                              (team) => team.externalId && team.externalId.startsWith(state.schoolyear)
+                              (team) => !(team.externalId && team.externalId.startsWith('Exp'))
                           ),
                   };
         }

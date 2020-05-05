@@ -13,6 +13,7 @@ const useStyle = makeStyles((theme) => ({
         display: 'flex',
         flex: 1,
         height: 'auto',
+        cursor: 'pointer',
     },
     text: {
         flex: 1,

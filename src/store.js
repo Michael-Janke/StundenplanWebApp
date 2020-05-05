@@ -11,6 +11,7 @@ import counterChanged from './Common/services/counter-service';
 import { responsiveStoreEnhancer } from 'redux-responsive';
 import networkStatusEnhancer from './networkStatusEnhancer';
 import version from './version.json';
+import { getAuthContext } from './Common/Authentication/storage';
 
 const persistConfig = {
     key: 'root',
@@ -18,7 +19,15 @@ const persistConfig = {
     blacklist: ['browser', 'error', 'favorites', 'assignments', 'notifications', 'report', 'update', 'studentList'],
     version: version.redux,
     migrate: (state) => {
-        if (!state || !state._persist || state._persist.version === version.redux) return Promise.resolve(state);
+        if (!state || !state._persist || state._persist.version === version.redux) {
+            if (state && state.user && state.user.upn !== null) {
+                return getAuthContext().then((authContext) => {
+                    return authContext.upn === state.user.upn ? Promise.resolve(state) : Promise.resolve({});
+                });
+            } else {
+                return Promise.resolve(state);
+            }
+        }
         console.log('purge state, new build');
         return Promise.resolve({});
     },
