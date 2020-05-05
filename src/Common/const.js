@@ -14,7 +14,7 @@ function normalize(v) {
 }
 
 export function specifySubstitutionType(id, type, substitution) {
-    let lesson = {};
+    let lesson = { ...substitution };
     substitution = { ...substitution, id: Number(id), type };
 
     if (substitution.TEXT === 'Methodenkompetenz') {
@@ -52,6 +52,7 @@ export function specifySubstitutionType(id, type, substitution) {
     lesson.isOld = substitution.isOld;
     lesson.substitutionInfo = substitution.substitutionInfo;
     lesson.TIMETABLE_ID = substitution.TIMETABLE_ID;
+    lesson.STUDENT_COUNT = substitution.STUDENT_COUNT;
     return lesson;
 }
 export function getSpecificSubstitutionType(substitution) {
