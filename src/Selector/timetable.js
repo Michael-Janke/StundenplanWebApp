@@ -116,6 +116,7 @@ function joinSubstitutions(day, subOnDay, type, id) {
             const index = lessons.findIndex((lesson) => lesson.TIMETABLE_ID === substitution.TIMETABLE_ID);
             if (index !== -1) {
                 lessons[index] = lesson ? { ...lessons[index], ...lesson } : null;
+                debugger;
                 period.lessons = lessons.filter((c) => c);
             } else if (lesson) {
                 lessons.push(lesson);
@@ -457,7 +458,6 @@ export function translateLesson(masterdata, lesson, teams = [], assignmentsMatch
         },
         teams: matchedTeams,
         assignments: validAssignments,
-        studentList: lesson.STUDENT_LIST,
     };
 }
 

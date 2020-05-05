@@ -6,16 +6,18 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { useDispatch } from 'react-redux';
 import { loadStudentList } from '../actions';
 
-const ShowStudentList = ({ list = [], reference = {} }) => {
+const ShowStudentList = ({ reference = {} }) => {
     const dispatch = useDispatch();
     const open = () => dispatch(loadStudentList(reference));
+
+    if (!reference.TIMETABLE_ID) return null;
 
     return (
         <MenuItem onClick={open}>
             <ListItemIcon>
                 <ListIcon />
             </ListItemIcon>
-            <ListItemText primary={`Kursliste (${list.length})`} />
+            <ListItemText primary={'Kursliste ' + (reference.STUDENT_COUNT ? `(${reference.STUDENT_COUNT})` : '')} />
         </MenuItem>
     );
 };

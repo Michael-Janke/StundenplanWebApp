@@ -21,7 +21,7 @@ import ShowStudentList from './components/showStudentList';
 const Field = (field, props, customProps) => React.createElement(field, { ...props, ...customProps });
 const BindField = (props) => (field) => Field.bind(null, field, props);
 
-const SubstitutionText = ({ left, children }) => <SubstitutionTextContainer>({children})</SubstitutionTextContainer>;
+const SubstitutionText = ({ children }) => <SubstitutionTextContainer>({children})</SubstitutionTextContainer>;
 
 const AbstractLesson = (props) => {
     let { theme, small, fields, setTimeTable, isTeacher, date, lesson, classes } = props;
@@ -127,7 +127,8 @@ const AbstractLesson = (props) => {
                     color={allDoneAssignments ? 'default' : 'secondary'}
                     badgeContent={badgeContent}
                     invisible={assignments.length === 0}
-                    style={{ display: 'flex', flex: 'auto', backgroundColor: allDoneAssignments ? 'green' : null }}
+                    style={{ display: 'flex', flex: 'auto' }}
+                    classes={{ colorPrimary: classes.badgeColor }}
                 >
                     <Lesson type={theme.palette.type} color={styles.backgroundColor} {...props} onClick={handleOpen}>
                         <ColorBar lineColor={styles.color} />
