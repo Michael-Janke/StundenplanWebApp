@@ -22,7 +22,7 @@ import { setTimeTable } from '../../Main/actions';
 import { closeStudentList } from '../actions';
 import Page from '../Print/page';
 
-export default function ListDialog() {
+export default function ListDialog({ tv = false }) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const ref = useRef(null);
@@ -146,16 +146,16 @@ export default function ListDialog() {
                 </Page>
             </DialogContent>
             <DialogActions>
-                {!fullScreen && (
-                    <Button onClick={() => setPrint(true)} color="primary">
-                        Drucken
-                    </Button>
+                {!fullScreen && !tv && (
+                    <>
+                        <Button onClick={() => setPrint(true)} color="primary">
+                            Drucken
+                        </Button>
+                        <Button onClick={exportExcel} color="primary">
+                            Excel exportieren
+                        </Button>
+                    </>
                 )}
-
-                <Button onClick={exportExcel} color="primary">
-                    Excel exportieren
-                </Button>
-
                 <Button autoFocus onClick={handleClose} color="secondary">
                     Schließen
                 </Button>

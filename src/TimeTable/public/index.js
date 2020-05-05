@@ -13,9 +13,10 @@ import ClearTimetable from './ClearTimetable';
 import InformationView from './Information';
 import { useIntervalCheck } from '../../Common/intervalCheck';
 import FastSelect from './FastSelect';
+import StudentList from '../components/StudentList';
 
 const useStyles = makeStyles(
-    theme => ({
+    (theme) => ({
         root: {
             flexGrow: 1,
             display: 'flex',
@@ -92,7 +93,7 @@ const useStyles = makeStyles(
 function PublicDisplay({ open }) {
     const classes = useStyles();
 
-    const isAdmin = useSelector(state => state.user.scope === 'admin');
+    const isAdmin = useSelector((state) => state.user.scope === 'admin');
     useIntervalCheck();
 
     useEffect(() => {
@@ -111,7 +112,7 @@ function PublicDisplay({ open }) {
     return (
         <div className={classes.root}>
             <ClearTimetable />
-
+            <StudentList tv={true} />
             <div className={classes.extendedAppBar} />
             <div className={classes.panel}>
                 <Grid container className={classes.grid} spacing={1}>
@@ -160,9 +161,9 @@ function PublicDisplay({ open }) {
     );
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
-        open: state.timetable.currentTimeTableId,
+        open: !!state.timetable.currentTimeTableId,
     };
 };
 
