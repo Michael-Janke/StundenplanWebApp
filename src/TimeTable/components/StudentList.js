@@ -61,7 +61,9 @@ export default function ListDialog({ tv = false }) {
             .map((o) => students[o.STUDENT_ID])
             .sort((a, b) => a.LASTNAME.localeCompare(b.LASTNAME));
 
-    const className = reference.CLASS_IDS.map((classId) => (classes[classId] || {}).NAME).join(', ');
+    console.log(reference);
+    const className =
+        reference.CLASS_IDS && reference.CLASS_IDS.map((classId) => (classes[classId] || {}).NAME).join(', ');
     const subjectName = (subjects[reference.SUBJECT_ID] || {}).NAME;
 
     const exportExcel = () => {

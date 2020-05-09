@@ -30,6 +30,7 @@ export function specifySubstitutionType(id, type, substitution) {
     if (!substitution) {
         return null;
     }
+
     lesson.SUBJECT_ID_OLD = normalize(substitution.SUBJECT_ID);
     lesson.ROOM_ID_OLD = normalize(substitution.ROOM_ID);
     lesson.TEACHER_IDS_OLD = substitution.TEACHER_ID ? [substitution.TEACHER_ID] : [];

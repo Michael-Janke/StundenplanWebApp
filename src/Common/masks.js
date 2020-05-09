@@ -1,13 +1,13 @@
 export function createMask(...masks) {
-    return substitution =>
+    return (substitution) =>
         masks.reduce((prev, current) => {
             return current(prev);
         }, substitution);
 }
 
-export const transform = variant => (variant === 'old' ? transformOld : variant === 'new' ? transformNew : null);
+export const transform = (variant) => (variant === 'old' ? transformOld : variant === 'new' ? transformNew : null);
 
-export const fromViewer = substitution => {
+export const fromViewer = (substitution) => {
     const { id, type } = substitution;
     if (type === 'student' || type === 'class') {
         return transform('new')(substitution);
@@ -18,7 +18,7 @@ export const fromViewer = substitution => {
     return transform(isNew ? 'new' : isOld ? 'old' : 'new')(substitution);
 };
 
-export const removeIf = ifType => substitution => {
+export const removeIf = (ifType) => (substitution) => {
     const { type } = substitution;
     if (ifType === type && substitution.isOld) {
         return null;
@@ -26,7 +26,7 @@ export const removeIf = ifType => substitution => {
     return substitution;
 };
 
-export const addSubstitutionInformation = substitution => {
+export const addSubstitutionInformation = (substitution) => {
     const { type } = substitution;
     return {
         ...substitution,
@@ -50,8 +50,9 @@ function transformOld(substitution) {
         TEACHER_ID: substitution.TEACHER_ID || substitution.TEACHER_ID_NEW,
         ROOM_ID: substitution.ROOM_ID || substitution.ROOM_ID_NEW,
         CLASS_IDS:
-            (substitution.CLASS_IDS && substitution.CLASS_IDS.length && substitution.CLASS_IDS) ||
-            substitution.CLASS_IDS_NEW,
+            substitution.CLASS_IDS && substitution.CLASS_IDS.length
+                ? substitution.CLASS_IDS
+                : substitution.CLASS_IDS_NEW,
         SUBJECT_ID_NEW: substitution.SUBJECT_ID_NEW !== substitution.SUBJECT_ID ? 0 : null,
         CLASS_IDS_NEW: substitution.CLASS_IDS_NEW ? 0 : null,
         TEACHER_ID_NEW: substitution.TEACHER_ID_NEW ? 0 : null,
