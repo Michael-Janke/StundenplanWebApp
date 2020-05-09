@@ -61,9 +61,9 @@ const useStyle = makeStyles((theme) => ({
 const Event = ({ event }) => {
     const classes = useStyle();
     const time =
-        moment.utc(event.start.dateTime).local().format('hh:mm') +
+        moment.utc(event.start.dateTime).local().format('HH:mm') +
         ' - ' +
-        moment.utc(event.end.dateTime).local().format('hh:mm');
+        moment.utc(event.end.dateTime).local().format('HH:mm');
 
     const now = moment().isBetween(moment.utc(event.start.dateTime), moment.utc(event.end.dateTime));
 

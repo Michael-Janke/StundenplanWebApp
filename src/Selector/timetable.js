@@ -466,7 +466,7 @@ const makeGetCurrentTimetable = () => {
     const getTimetables = createSelector(getTimetableState, (state) => state.timetables);
     const getTeams = (state) => state.teams.joinedTeams;
     const getAssignments = (state) => state.teams.assignments;
-    const getEvents = (state) => state.teams.events;
+    const getEvents = (state) => state.teams.events.sort((a, b) => a.start.dateTime.localeCompare(b.start.dateTime));
     const getSubstitutions = createSelector(getTimetableState, (state) => state.substitutions);
 
     const getDate = (state, props) => props.date || state.timetable.timetableDate;
