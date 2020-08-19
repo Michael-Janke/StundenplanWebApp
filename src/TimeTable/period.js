@@ -46,7 +46,7 @@ class Period extends React.Component {
                             <AbstractLesson
                                 lesson={lesson}
                                 date={date}
-                                key={lesson.reference.TIMETABLE_ID || -i}
+                                key={lesson.reference.TIMETABLE_ID + '' + lesson.reference.SUBSTITUTION_ID}
                                 last={lessons.length - 1 === i}
                                 first={i === 0}
                                 multiple={lessons.length > 1}
