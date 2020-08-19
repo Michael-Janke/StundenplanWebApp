@@ -113,7 +113,9 @@ function joinSubstitutions(day, subOnDay, type, id) {
             if (!lessons) {
                 period.lessons = lessons = [];
             }
-            const index = lessons.findIndex((lesson) => lesson.TIMETABLE_ID === substitution.TIMETABLE_ID);
+            const index = lessons.findIndex(
+                (lesson) => lesson.TIMETABLE_ID === substitution.TIMETABLE_ID && lesson.SUBSTITUTION_ID === undefined
+            );
             if (index !== -1) {
                 lessons[index] = lesson ? { ...lessons[index], ...lesson } : null;
                 period.lessons = lessons.filter((c) => c);
