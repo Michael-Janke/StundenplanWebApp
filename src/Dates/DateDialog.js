@@ -23,19 +23,20 @@ import { DatePicker, DateTimePicker } from '@material-ui/pickers';
 
 import PeriodRangePicker from './PeriodRangePicker';
 import { Typography } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 
 const DateTimeMask = {
     format: 'DD.MM.YYYY HH:mm',
-    mask: value =>
+    mask: (value) =>
         value ? [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/] : [],
 };
 
 const DateMask = {
     format: 'DD.MM.YYYY',
-    mask: value => (value ? [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/] : []),
+    mask: (value) => (value ? [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/] : []),
 };
 
-const styles = theme => ({
+const styles = (theme) => ({
     row: {
         display: 'flex',
         flexDirection: 'row',
@@ -66,38 +67,30 @@ export class AddDialog extends Component {
                 TYPE: date.TYPE || 'NORMAL',
                 HOMEPAGE: date.HOMEPAGE ? 1 : (date.HOMEPAGE === undefined) + 0,
                 HOMEPAGE_BOX: date.HOMEPAGE_BOX ? 1 : 0,
-                DATE_FROM: date.DATE_FROM
-                    ? parseISOLocal(date.DATE_FROM.date)
-                    : moment()
-                          .startOf('day')
-                          .toDate(),
-                DATE_TO: date.DATE_TO
-                    ? parseISOLocal(date.DATE_TO.date)
-                    : moment()
-                          .startOf('day')
-                          .toDate(),
+                DATE_FROM: date.DATE_FROM ? parseISOLocal(date.DATE_FROM.date) : moment().startOf('day').toDate(),
+                DATE_TO: date.DATE_TO ? parseISOLocal(date.DATE_TO.date) : moment().startOf('day').toDate(),
                 timeEdit: date.DATE_FROM && parseISOLocal(date.DATE_FROM.date).getHours() !== 0,
             };
         }
         return state;
     }
 
-    handleChange = key => event => {
+    handleChange = (key) => (event) => {
         this.setState({ [key]: event.target.value });
     };
 
-    handleChangeBox = key => event => {
+    handleChangeBox = (key) => (event) => {
         this.setState({ [key]: event.target.checked ? 1 : 0 });
     };
 
-    handleFromDateChange = date => {
+    handleFromDateChange = (date) => {
         this.setState({
             DATE_FROM: date,
             DATE_TO: date,
         });
     };
 
-    handleToDateChange = date => {
+    handleToDateChange = (date) => {
         this.setState({
             DATE_TO: date,
         });
@@ -127,15 +120,11 @@ export class AddDialog extends Component {
         this.props.handleClose(abort ? undefined : this.extractDate());
     };
 
-    editTime = timeEdit => {
+    editTime = (timeEdit) => {
         let resetTime = {};
         if (!timeEdit) {
-            let DATE_FROM = moment(this.state.DATE_FROM)
-                .startOf('day')
-                .toDate();
-            let DATE_TO = moment(this.state.DATE_TO)
-                .startOf('day')
-                .toDate();
+            let DATE_FROM = moment(this.state.DATE_FROM).startOf('day').toDate();
+            let DATE_TO = moment(this.state.DATE_TO).startOf('day').toDate();
             resetTime = { DATE_FROM, DATE_TO };
         }
         this.setState({
@@ -161,13 +150,14 @@ export class AddDialog extends Component {
                             <Typography variant="h6">Von</Typography>
                             <Picker
                                 value={this.state.DATE_FROM}
-                                onChange={date => this.handleFromDateChange(date)}
+                                onChange={(date) => this.handleFromDateChange(date)}
                                 {...mask}
                                 keyboard
                                 ampm={false}
                                 variant="inline"
                                 cancelLabel="Abbrechen"
                                 invalidDateMessage="Ungültiges Datumsformat"
+                                renderInput={(props) => <TextField variant="outlined" {...props} />}
                             />
                             {!timeEdit && <Button onClick={() => this.editTime(true)}>Zeit hinzufügen</Button>}
 
@@ -178,7 +168,8 @@ export class AddDialog extends Component {
                             <Typography variant="h6">Bis</Typography>
                             <Picker
                                 value={this.state.DATE_TO}
-                                onChange={date => this.handleToDateChange(date)}
+                                onChange={(date) => this.handleToDateChange(date)}
+                                renderInput={(props) => <TextField variant="outlined" {...props} />}
                                 {...mask}
                                 keyboard
                                 ampm={false}
@@ -288,18 +279,13 @@ const PreviewContainer = styled.div`
     width: 100%;
 `;
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     small: state.browser.lessThan.medium,
 });
 
-const mapDispatchToProps = dispatch => ({
-    addDate: date => dispatch(addDate(date)),
-    editDate: date => dispatch(editDate(date)),
+const mapDispatchToProps = (dispatch) => ({
+    addDate: (date) => dispatch(addDate(date)),
+    editDate: (date) => dispatch(editDate(date)),
 });
 
-export default withStyles(styles)(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(AddDialog)
-);
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(AddDialog));

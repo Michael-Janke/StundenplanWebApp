@@ -8,11 +8,12 @@ import TimeIcon from '@material-ui/icons/AccessTime';
 import TvIcon from '@material-ui/icons/Tv';
 import TitleIcon from '@material-ui/icons/Title';
 import { Typography, Input } from '@material-ui/core';
-import { useStaticState, Calendar } from '@material-ui/pickers';
+import { StaticDateRangePicker, DateRangeDelimiter } from '@material-ui/pickers';
+import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 
 const useStyles = makeStyles(
-    theme => ({
+    (theme) => ({
         root: {
             display: 'flex',
             alignItems: 'center',
@@ -62,15 +63,6 @@ const Meta = ({
     handleCheckBox,
 }) => {
     const classes = useStyles();
-    // you can past mostly all available props, like minDate, maxDate, autoOk and so on
-    const { pickerProps: dateFromProps } = useStaticState({
-        value: dateFrom,
-        onChange: setDateFrom,
-    });
-    const { pickerProps: dateToProps } = useStaticState({
-        value: dateTo,
-        onChange: setDateTo,
-    });
 
     return (
         <div className={classes.root}>
@@ -84,7 +76,7 @@ const Meta = ({
                                 &nbsp;Titel
                             </Typography>
                             <Paper className={classNames(classes.paper, classes.list)}>
-                                <Input value={title} onChange={e => onUpdateTitle(e.target.value)} autoFocus />
+                                <Input value={title} onChange={(e) => onUpdateTitle(e.target.value)} autoFocus />
                             </Paper>
                         </div>
                     </>
@@ -115,17 +107,22 @@ const Meta = ({
                 </Typography>
                 <div className={classes.flex}>
                     <Paper className={classNames(classes.paper, classes.calendar)}>
-                        <Typography variant="subtitle2" gutterBottom>
-                            Von
-                        </Typography>
-                        <Calendar {...dateFromProps} />
-                    </Paper>
-
-                    <Paper className={classNames(classes.paper, classes.calendar)}>
-                        <Typography variant="subtitle2" gutterBottom>
-                            Bis
-                        </Typography>
-                        <Calendar {...dateToProps} />
+                        <StaticDateRangePicker
+                            value={[dateFrom, dateTo]}
+                            onChange={([from, to]) => {
+                                setDateFrom(from);
+                                setDateTo(to);
+                            }}
+                            calendars={1}
+                            displayStaticWrapperAs="desktop"
+                            renderInput={(startProps, endProps) => (
+                                <React.Fragment>
+                                    <TextField {...startProps} />
+                                    <DateRangeDelimiter> bis </DateRangeDelimiter>
+                                    <TextField {...endProps} />
+                                </React.Fragment>
+                            )}
+                        />
                     </Paper>
                 </div>
             </div>
@@ -133,7 +130,7 @@ const Meta = ({
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     dateFrom: state.postcreation.dateFrom,
     dateTo: state.postcreation.dateTo,
     title: state.postcreation.title,
@@ -143,16 +140,13 @@ const mapStateToProps = state => ({
     viewTeacher: state.postcreation.viewTeacher,
 });
 
-const mapDispatchToProps = dispatch => ({
-    setDateFrom: date => dispatch({ type: 'SET_FROM_DATE', payload: date }),
-    setDateTo: date => dispatch({ type: 'SET_TO_DATE', payload: date }),
-    onUpdateTitle: title => dispatch({ type: 'SET_TITLE', payload: title }),
-    handleCheckBox: name => event => {
+const mapDispatchToProps = (dispatch) => ({
+    setDateFrom: (date) => dispatch({ type: 'SET_FROM_DATE', payload: date }),
+    setDateTo: (date) => dispatch({ type: 'SET_TO_DATE', payload: date }),
+    onUpdateTitle: (title) => dispatch({ type: 'SET_TITLE', payload: title }),
+    handleCheckBox: (name) => (event) => {
         dispatch({ type: 'TOGGLE_VIEW_FIELD', payload: { key: name, value: event.target.checked } });
     },
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Meta);
+export default connect(mapStateToProps, mapDispatchToProps)(Meta);

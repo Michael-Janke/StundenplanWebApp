@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setNotification, sendLoginStatistic, changeTheme, setSortBy } from '../Main/actions';
 import createTheme from '../Common/theme';
-import MomentUtils from '@date-io/moment';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import MomentUtils from '@material-ui/pickers/adapter/moment';
+import { LocalizationProvider } from '@material-ui/pickers';
 import { HashRouter as Router } from 'react-router-dom';
 import Routes from './routes';
 import Notifier from './Notifier';
@@ -39,43 +39,40 @@ class AppRouter extends Component {
         return (
             <Router>
                 <MuiThemeProvider theme={this.state.theme}>
-                    <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <LocalizationProvider dateAdapter={MomentUtils}>
                         <SnackbarProvider maxSnack={1} autoHideDuration={2000}>
                             <Notifier />
                         </SnackbarProvider>
                         <Routes />
-                    </MuiPickersUtilsProvider>
+                    </LocalizationProvider>
                 </MuiThemeProvider>
             </Router>
         );
     }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
-        sendLoginStatistic: data => {
+        sendLoginStatistic: (data) => {
             dispatch(sendLoginStatistic(data));
         },
-        setNotification: token => {
+        setNotification: (token) => {
             dispatch(setNotification(token));
         },
-        changeTheme: type => {
+        changeTheme: (type) => {
             dispatch(changeTheme(type));
         },
-        setSortBy: sortBy => {
+        setSortBy: (sortBy) => {
             dispatch(setSortBy(sortBy));
         },
     };
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
         notificationToken: state.user.notificationToken,
         themeType: state.user.themeType,
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(AppRouter);
+export default connect(mapStateToProps, mapDispatchToProps)(AppRouter);

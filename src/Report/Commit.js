@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@material-ui/pickers';
 import { commitReport } from './actions';
 import { IconButton } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import moment from 'moment';
+import TextField from '@material-ui/core/TextField';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
         flexDirection: 'row',
@@ -20,8 +21,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Commit = () => {
-    const isAdmin = useSelector(state => state.user.scope === 'admin');
-    const commit = useSelector(state => state.report.commit);
+    const isAdmin = useSelector((state) => state.user.scope === 'admin');
+    const commit = useSelector((state) => state.report.commit);
     const [open, setOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const classes = useStyles();
@@ -57,17 +58,14 @@ const Commit = () => {
 
     return (
         <div className={classes.root}>
-            <KeyboardDatePicker
+            <DatePicker
                 disableToolbar
                 variant="inline"
                 format="DD.MM.YYYY"
                 margin="normal"
-                id="date-picker-inline"
                 value={selectedDate}
                 onChange={setSelectedDate}
-                KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                }}
+                renderInput={(props) => <TextField {...props} helperText="" />}
             />
 
             <Button variant="contained" color="primary" onClick={onCommit} disabled={commit && commit.loading}>
