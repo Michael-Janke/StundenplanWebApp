@@ -113,8 +113,8 @@ export class ReminderSettings extends Component {
                             />
                         </Row>
                         <Row>
-                            <span>Uhrzeit:</span>
                             <TimePicker
+                                renderInput={(props) => <TextField {...props} />}
                                 ampm={false}
                                 value={remindTime}
                                 onChange={(time) => {
