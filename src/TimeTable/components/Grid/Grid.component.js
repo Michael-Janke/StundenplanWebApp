@@ -148,7 +148,7 @@ class TimeTableGrid extends React.Component {
                 return (
                     <TableRow style={{ height: '100%' }} key={period.PERIOD_TIME_ID}>
                         <PeriodCell small={small} now={isCurrentPriod}>
-                            <div style={{ display: 'flex', alignContent: 'space-between', height: '100%' }}>
+                            <div style={{ display: 'flex', alignContent: 'space-between' }}>
                                 {small || this.renderPeriodTimes(period)}
                                 {this.renderPeriodHeader(period)}
                             </div>
