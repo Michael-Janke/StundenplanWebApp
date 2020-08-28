@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import useInterval from 'react-useinterval';
 import { quotes } from './quotes';
 import makeStyles from '@material-ui/styles/makeStyles';
 import Card from '@material-ui/core/Card';
@@ -24,8 +25,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const QuoteOfTheDay = () => {
-    const { quote, author, authorSub } = quotes[Math.floor(Date.now() / 1000 / 60 / 60 / 24) % quotes.length];
     const classes = useStyles();
+    const [i, setI] = useState(Math.floor(Date.now() / 1000 / 60 / 60) % quotes.length);
+
+    useInterval(() => setI(Math.floor(Date.now() / 1000 / 60 / 60) % quotes.length), 60 * 1000);
+    const { quote, author, authorSub } = quotes[i];
     return (
         <Card className={classes.card}>
             <CardHeader title={author} subheader={authorSub} />
