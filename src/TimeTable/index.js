@@ -15,6 +15,7 @@ import { usePosts } from '../Posts/hooks';
 import { setMyTimetable } from './actions';
 import StudentList from './components/StudentList';
 import { QuoteOfTheDay } from './components/QuoteOfTheDay';
+import { PostEmpty } from './components/PostEmpty';
 
 const smallBreakpoint = 800;
 
@@ -116,6 +117,7 @@ function TimeTableView({ small }) {
                                 className={classes.post}
                             ></ComponentWrapper>
                         ))}
+                        {posts.length === 0 && <PostEmpty />}
                         <QuoteOfTheDay />
                     </div>
                 </div>
