@@ -1,0 +1,1 @@
+export { QuoteOfTheDay } from './QuoteOfTheDay';

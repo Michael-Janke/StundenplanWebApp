@@ -4,8 +4,8 @@ import { withRouter, matchPath } from 'react-router';
 import NotFoundPage from './NotFoundPage';
 import { asynchronize } from './asynchronize';
 
-const AppBar = asynchronize(() => import(/* webpackChunkName: "AppBar" */ './AppBar'), { hideSplash: false });
-const AppDrawer = asynchronize(() => import(/* webpackChunkName: "AppDrawer" */ './AppDrawer'), { hideSplash: false });
+import AppBar from './AppBar';
+const AppDrawer = asynchronize(() => import(/* webpackChunkName: "AppDrawer" */ './AppDrawer'));
 
 const Posts = asynchronize(() => import(/* webpackChunkName: "Posts" */ '../Posts'));
 const PostEditor = asynchronize(() => import(/* webpackChunkName: "Posts-editIndex" */ '../Posts/editIndex'));

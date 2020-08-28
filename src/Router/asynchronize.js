@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import NotFoundPage from './NotFoundPage';
 import Loadable from 'react-loadable';
-import { hideSplash as hideSplash2 } from './SplashScreen';
+import { hideSplash } from './SplashScreen';
 import { withRouter } from 'react-router';
 
+var loadingCount = 0;
+
 const Loading = ({ isLoading, error, retry }) => {
+    useEffect(() => {
+        loadingCount++;
+        return () => {
+            loadingCount--;
+            if (loadingCount === 0) hideSplash();
+        };
+    }, []);
     // Handle the loading state
     if (isLoading) {
         return null;
     }
-    hideSplash2();
     // Handle the error state
     console.error(error);
     if (error) {
@@ -21,14 +29,14 @@ const Loading = ({ isLoading, error, retry }) => {
     }
 };
 
-export const asynchronize = (importFunc, { hideSplash = true } = {}) =>
+export const asynchronize = (importFunc) =>
     Loadable({
         loader: importFunc,
         loading: Loading,
 
         render(loaded, props) {
             const Component = loaded.default;
-            hideSplash && hideSplash2();
+
             return <Component {...props} />;
         },
     });

@@ -17,7 +17,7 @@ import classNames from 'classnames';
 
 const moment = extendMoment(Moment);
 
-const styles = theme => ({
+const styles = (theme) => ({
     tableToolbar: {
         borderBottom: `1px solid ${theme.palette.divider}`,
         flex: '1 0 48px',
@@ -29,6 +29,7 @@ const styles = theme => ({
     tableHeader: {
         tableLayout: 'fixed',
         fontSize: '100%',
+        borderCollapse: 'separate',
     },
     tableHeaderCell: {
         fontSize: '85%',
@@ -115,16 +116,8 @@ const Dates = ({ dates, date, classes, small }) => {
                         </div>
                     </PeriodCell>
                     {WEEKDAY_NAMES.map((day, i) => {
-                        const mDate = date
-                            .clone()
-                            .startOf('day')
-                            .weekday(0)
-                            .add(i, 'days');
-                        const isToday =
-                            date &&
-                            moment()
-                                .startOf('day')
-                                .diff(mDate, 'days') === 0;
+                        const mDate = date.clone().startOf('day').weekday(0).add(i, 'days');
+                        const isToday = date && moment().startOf('day').diff(mDate, 'days') === 0;
                         return (
                             <TableCell
                                 key={i}
@@ -142,7 +135,7 @@ const Dates = ({ dates, date, classes, small }) => {
                     <PeriodCell small={small} />
                     <td colSpan={5}>
                         <div className={classes.dates}>
-                            {dates.map(date => (
+                            {dates.map((date) => (
                                 <React.Fragment key={date.DATE_ID}>
                                     <div style={{ width: date.leftSpan * 20 + '%' }} />
                                     <div style={{ width: date.duration * 20 + '%' }} className={classes.dateWrapper}>

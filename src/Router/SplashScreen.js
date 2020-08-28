@@ -1,5 +1,4 @@
-export function hideSplash(now = false) {
+export function hideSplash() {
     const splashScreen = document.getElementById('splash-screen');
-    setTimeout(() => requestAnimationFrame(() => (splashScreen.className = 'ended')), now ? 0 : 150);
-    setTimeout(() => document.getElementById('preloader') && document.getElementById('preloader').remove(), 1500);
+    requestAnimationFrame(() => (splashScreen.className = 'ended'));
 }

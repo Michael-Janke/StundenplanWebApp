@@ -14,6 +14,7 @@ import ErrorBoundary from '../Common/ErrorBoundary';
 import { usePosts } from '../Posts/hooks';
 import { setMyTimetable } from './actions';
 import StudentList from './components/StudentList';
+import { QuoteOfTheDay } from './components/QuoteOfTheDay';
 
 const smallBreakpoint = 800;
 
@@ -115,6 +116,7 @@ function TimeTableView({ small }) {
                                 className={classes.post}
                             ></ComponentWrapper>
                         ))}
+                        <QuoteOfTheDay />
                     </div>
                 </div>
             </div>
