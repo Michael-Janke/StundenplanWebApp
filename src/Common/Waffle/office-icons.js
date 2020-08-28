@@ -94,13 +94,13 @@ export default {
     weBBschule: {
         color: 'black',
         icon: Icon(require('../icons/webbschule.jpg')),
-        link: 'https://schulen.brandenburg.de/webbschule/anmeldung?schulnr=120571',
+        link: 'https://schulportal.brandenburg.de/login',
         scope: ['teacher', 'admin'],
     },
 };
 
 function Icon(source, style) {
-    return props => {
+    return (props) => {
         return (
             <img
                 alt="wolkenberg"
