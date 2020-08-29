@@ -9,6 +9,7 @@ import ExcelIcon from '../icons/Excel';
 import PowerPointIcon from '../icons/PowerPoint';
 import WordIcon from '../icons/Word';
 import FormsIcon from '../icons/Forms';
+import SchulPortalIcon from '../icons/SchulPortal';
 
 export default {
     Stundenplan: {
@@ -91,9 +92,9 @@ export default {
         }),
         link: 'https://www.wolkenberg-gymnasium.de/',
     },
-    weBBschule: {
+    SchulPortal: {
         color: 'black',
-        icon: Icon(require('../icons/webbschule.jpg')),
+        icon: SchulPortalIcon,
         link: 'https://schulportal.brandenburg.de/login',
         scope: ['teacher', 'admin'],
     },
