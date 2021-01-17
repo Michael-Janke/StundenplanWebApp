@@ -1,7 +1,7 @@
 import { requestApiGenerator, GRAPH_URL } from './generator';
 import moment from 'moment';
 
-const teamsService = store => next => action => {
+const teamsService = (store) => (next) => (action) => {
     next(action);
     switch (action.type) {
         case 'GET_JOINED_TEAMS':
@@ -11,10 +11,7 @@ const teamsService = store => next => action => {
         case 'CREATE_ASSIGNMENT_RECEIVED':
         case 'PUBLISH_ASSIGNMENT_RECEIVED':
         case 'GET_ASSIGNMENTS': {
-            let date = moment()
-                .subtract(1, 'weeks')
-                .startOf('isoWeek')
-                .format('YYYY-MM-DD');
+            let date = moment().subtract(1, 'weeks').startOf('isoWeek').format('YYYY-MM-DD');
             return requestApiGenerator(next)(
                 GRAPH_URL,
                 `beta/education/me/assignments?${[
@@ -37,13 +34,15 @@ const teamsService = store => next => action => {
                 id: action.id,
             });
         case 'GET_EVENTS':
-            let date = moment()
-                .subtract(1, 'weeks')
-                .startOf('isoWeek')
-                .format('YYYY-MM-DD');
+            let dateStart = moment().subtract(1, 'weeks').startOf('isoWeek');
+            let dateEnd = dateStart.clone().add(6, 'months');
             return requestApiGenerator(next)(
                 GRAPH_URL,
-                `beta/me/events?$select=start, end, organizer, subject, onlineMeeting&$filter=start/dateTime ge '${date}T00:00:00Z' `,
+                `beta/me/calendarView?startDateTime=${dateStart.format(
+                    'YYYY-MM-DD'
+                )}T00:00:00Z&endDateTime=${dateEnd.format(
+                    'YYYY-MM-DD'
+                )}T00:00:00Z&$select=start, end, organizer, subject, onlineMeeting`,
                 {
                     type: 'GET_EVENTS',
                 }
