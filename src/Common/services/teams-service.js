@@ -42,7 +42,7 @@ const teamsService = (store) => (next) => (action) => {
                     'YYYY-MM-DD'
                 )}T00:00:00Z&endDateTime=${dateEnd.format(
                     'YYYY-MM-DD'
-                )}T00:00:00Z&$select=start, end, organizer, subject, onlineMeeting`,
+                )}T00:00:00Z&$top=1000&$select=start, end, organizer, subject, onlineMeeting`,
                 {
                     type: 'GET_EVENTS',
                 }
