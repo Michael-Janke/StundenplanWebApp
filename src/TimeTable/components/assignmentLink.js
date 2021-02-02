@@ -6,7 +6,7 @@ import OpenOfficeButton from './openOfficeLink';
 
 export function getAssignmentLink(assignment, link) {
     // from Assignment notification bot
-    const reg = /team\/(\d+:.*%40thread\..*)\//;
+    const reg = /team\/(\d+.*%40thread\..*)\//;
     const match = reg.exec(link);
 
     const subEntityId = JSON.stringify({
@@ -25,7 +25,7 @@ export function getAssignmentLink(assignment, link) {
 
     return `${link.substring(
         0,
-        match.index
+        match && match.index
     )}entity/66aeee93-507d-479a-a3ef-8f494af43945/classroom?context=${encodeURIComponent(
         JSON.stringify({
             subEntityId,
