@@ -18,7 +18,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import { withRouter } from 'react-router';
 
 import { purge } from '../../store';
-import { unregister } from '../../serviceWorker';
+import { unregister } from '../../serviceWorkerRegistration';
 import { setNotification, showError, loadMe, logOut } from '../actions';
 import UserAvatar from './UserAvatar';
 import withTheme from '@material-ui/core/styles/withTheme';

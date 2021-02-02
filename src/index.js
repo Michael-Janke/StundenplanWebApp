@@ -1,7 +1,7 @@
 import { runApplication, runApplicationToken } from './Common/Authentication';
 import 'react-app-polyfill/stable';
 import localForage from 'localforage';
-import { unregister } from './serviceWorker';
+import { unregister } from './serviceWorkerRegistration';
 
 let deparam = function (querystring) {
     // remove any preceding url and split

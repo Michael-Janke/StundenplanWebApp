@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { register } from './serviceWorker';
+import { register } from './serviceWorkerRegistration';
 import moment from 'moment';
 import 'moment/locale/de';
 import { dispatch } from './store';
@@ -14,14 +14,14 @@ const renderApp = () => {
 };
 
 register({
-    onSuccess: registration => {
+    onSuccess: (registration) => {
         dispatch({ type: 'SERVICE_WORKER_AVAILABLE' });
     },
-    onUpdate: registration => {
+    onUpdate: (registration) => {
         const waitingServiceWorker = registration.waiting;
 
         if (waitingServiceWorker) {
-            waitingServiceWorker.addEventListener('statechange', event => {
+            waitingServiceWorker.addEventListener('statechange', (event) => {
                 if (event.target.state === 'activated') {
                     dispatch({ type: 'UPDATE_AVAILABLE' });
                 }
