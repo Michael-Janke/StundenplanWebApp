@@ -510,7 +510,8 @@ const makeGetCurrentTimetable = () => {
             .filter(
                 (event) =>
                     (type === 'student' && (event.STUDENTS || '').split(',').includes(id + '')) ||
-                    (type === 'class' && (event.CLASS_IDS || '').split(',').includes(id + ''))
+                    (type === 'class' && (event.CLASS_IDS || '').split(',').includes(id + '')) ||
+                    (type === 'teacher' && (event.TEACHER || '').split(',').includes(id + ''))
             )
     );
 
