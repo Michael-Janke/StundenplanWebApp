@@ -19,6 +19,7 @@ import postcreation from './postcreation';
 import report from './report';
 import update from './update';
 import studentList from './studentlist';
+import events from './events';
 
 export default combineReducers({
     browser: createResponsiveStateReducer({
@@ -46,4 +47,5 @@ export default combineReducers({
     report,
     update,
     studentList,
+    events,
 });

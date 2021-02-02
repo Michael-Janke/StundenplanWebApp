@@ -48,7 +48,8 @@ export function translateDay(
     date,
     teams,
     assignments,
-    events
+    events,
+    globalEvents
 ) {
     let day = readTimetable(timetable, x, periods, date);
     if (substitutions) {
@@ -71,11 +72,26 @@ export function translateDay(
     day.unmatchedAssignments = assignmentsMatching.toMatch;
 
     day.events = events.filter((event) => moment(event.start.dateTime).isSame(moment(date).weekday(x), 'day'));
+    day.globalEvents = globalEvents.filter((event) =>
+        moment(event.DATE_FROM.date).isSame(moment(date).weekday(x), 'day')
+    );
 
     return day;
 }
 
-function translateTimetable(masterdata, timetable, substitutions, periods, type, id, date, teams, assignments, events) {
+function translateTimetable(
+    masterdata,
+    timetable,
+    substitutions,
+    periods,
+    type,
+    id,
+    date,
+    teams,
+    assignments,
+    events,
+    globalEvents
+) {
     if (!timetable || !masterdata || !substitutions) return null;
     periods = Object.values(periods);
     let data = [];
@@ -91,7 +107,8 @@ function translateTimetable(masterdata, timetable, substitutions, periods, type,
             date,
             teams,
             assignments,
-            events
+            events,
+            globalEvents
         );
     }
     return data;
@@ -469,6 +486,7 @@ const makeGetCurrentTimetable = () => {
     const getTeams = (state) => state.teams.joinedTeams;
     const getAssignments = (state) => state.teams.assignments;
     const getEvents = (state) => state.teams.events.sort((a, b) => a.start.dateTime.localeCompare(b.start.dateTime));
+    const getGlobalEvents = (state) => state.events.events;
     const getSubstitutions = createSelector(getTimetableState, (state) => state.substitutions);
 
     const getDate = (state, props) => props.date || state.timetable.timetableDate;
@@ -485,6 +503,16 @@ const makeGetCurrentTimetable = () => {
 
     const getType = (state, props) => props.type || state.timetable.currentTimeTableType;
     const getId = (state, props) => props.id || state.timetable.currentTimeTableId;
+
+    const getGlobalEventsSelector = createSelector(getDate, getGlobalEvents, getType, getId, (date, events, type, id) =>
+        events
+            .filter((event) => moment(date).isSame(moment(event.DATE_FROM.date), 'week'))
+            .filter(
+                (event) =>
+                    (type === 'student' && (event.STUDENTS || '').split(',').includes(id + '')) ||
+                    (type === 'class' && (event.CLASS_IDS || '').split(',').includes(id + ''))
+            )
+    );
 
     const getPeriods = createSelector(getTimetableState, (state) => state.masterdata.Period_Time);
 
@@ -527,6 +555,7 @@ const makeGetCurrentTimetable = () => {
         getTeams,
         getAssignmentsSelector,
         getEventsSelector,
+        getGlobalEventsSelector,
         translateTimetable
     );
 };

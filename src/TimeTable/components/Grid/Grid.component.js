@@ -187,7 +187,15 @@ class TimeTableGrid extends React.Component {
 
     renderEvents() {
         const { currentTimetable: timetable, small, me } = this.props;
-        if (!timetable || !me || !timetable.some((day) => !!day.events.length)) {
+
+        if (!timetable) {
+            return null;
+        }
+
+        const showMyEvents = me && timetable.some((day) => !!day.events.length);
+        const showGlobalEvents = !showMyEvents && timetable.some((day) => !!day.globalEvents.length);
+
+        if (!showMyEvents && !showGlobalEvents) {
             return null;
         }
         return (
@@ -198,8 +206,20 @@ class TimeTableGrid extends React.Component {
                 {WEEKDAY_NAMES.map((name, i) => {
                     const day = timetable[i];
                     return (
-                        <TableCell key={name} style={{ ...padding(small), fontSize: '100%' }}>
-                            {day.events && day.events.map((event) => <Event key={event.id} event={event} />)}
+                        <TableCell key={name} style={{ ...padding(small), fontSize: '100%', verticalAlign: 'top' }}>
+                            {showMyEvents && day.events.map((event) => <Event key={event.id} event={event} />)}
+                            {showGlobalEvents &&
+                                day.globalEvents.map((event) => (
+                                    <Event
+                                        key={event.EVENT_ID}
+                                        event={{
+                                            start: { dateTime: event.DATE_FROM.date },
+                                            end: { dateTime: event.DATE_TO.date },
+                                            name: event.ORGANIZER,
+                                            subject: event.SUBJECT,
+                                        }}
+                                    />
+                                ))}
                         </TableCell>
                     );
                 })}

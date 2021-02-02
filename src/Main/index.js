@@ -20,6 +20,9 @@ function Main() {
             dispatch({
                 type: 'GET_JOINED_TEAMS',
             });
+            dispatch({
+                type: 'GET_GLOBAL_EVENTS',
+            });
         }
         return (intervalCount + 1) % (6 * 60 * 24); // at least once a day;
     }, []);

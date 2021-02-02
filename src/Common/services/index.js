@@ -9,6 +9,7 @@ import tvService from './tv-service';
 import assignmentsService from './assignments-service';
 import reportService from './report-service';
 import studentListService from './studentListService';
+import eventService from './events-service';
 
 export default [
     authenticationService,
@@ -22,4 +23,5 @@ export default [
     assignmentsService,
     reportService,
     studentListService,
+    eventService,
 ];

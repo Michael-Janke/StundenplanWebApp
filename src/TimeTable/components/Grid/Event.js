@@ -12,6 +12,8 @@ const useStyle = makeStyles((theme) => ({
         display: 'flex',
         flex: 1,
         height: 'auto',
+    },
+    clickable: {
         cursor: 'pointer',
     },
     text: {
@@ -69,12 +71,16 @@ const Event = ({ event }) => {
 
     return (
         <div
-            className={classnames({ [classes.event]: true, [classes.active]: now })}
+            className={classnames({
+                [classes.event]: true,
+                [classes.active]: now,
+                [classes.clickable]: event.onlineMeeting,
+            })}
             onClick={() => event.onlineMeeting && window.open(event.onlineMeeting.joinUrl, '_blank')}
         >
             <div className={classes.colorBar} />
             <div className={classes.text}>
-                <div className={classes.name}>{event.organizer.emailAddress.name}</div>
+                <div className={classes.name}>{event.organizer ? event.organizer.emailAddress.name : event.name}</div>
                 <div className={classes.time}>{time}</div>
                 <div className={classes.subject}>{event.subject}</div>
             </div>
