@@ -34,7 +34,7 @@ function FastSelect({ open }) {
         () =>
             Object.values(rooms).reduce((acc, room) => {
                 const match = room.NAME.match(/([A-Z]+)([\d]+)/);
-                const level = match[1];
+                const level = (match && match[1]) || 'Sonstige';
                 acc[level] = acc[level] ? acc[level] : [];
                 acc[level].push(room);
                 return acc;
