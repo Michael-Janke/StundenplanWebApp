@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { ButtonBase } from '@material-ui/core';
 import { setTimeTable } from '../../../Main/actions';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         padding: 4,
         flexGrow: 1,
@@ -23,12 +23,12 @@ const useStyles = makeStyles(theme => ({
 export default function StructureFragment({ children, className, room }) {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const rooms = useSelector(state => state.timetable.masterdata.Room);
+    const rooms = useSelector((state) => state.timetable.masterdata.Room);
     return (
         <ButtonBase
             className={classNames(classes.root, className)}
             onClick={() =>
-                room && dispatch(setTimeTable('room', Object.values(rooms).find(r => r.NAME === room).ROOM_ID))
+                room && dispatch(setTimeTable('room', Object.values(rooms).find((r) => r.NAME === room).ROOM_ID))
             }
         >
             {children}

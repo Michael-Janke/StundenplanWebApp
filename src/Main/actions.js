@@ -102,7 +102,7 @@ export function clearErrors() {
     return { type: 'CLEAR_ERROR', payload: null };
 }
 
-export const enqueueSnackbar = notification => ({
+export const enqueueSnackbar = (notification) => ({
     type: 'ENQUEUE_SNACKBAR',
     notification: {
         key: new Date().getTime() + Math.random(),
@@ -110,7 +110,7 @@ export const enqueueSnackbar = notification => ({
     },
 });
 
-export const removeSnackbar = key => ({
+export const removeSnackbar = (key) => ({
     type: 'REMOVE_SNACKBAR',
     key,
 });
@@ -126,8 +126,8 @@ export function changeTheme(type) {
 export function logOut() {
     return (dispatch) => {
         dispatch({ type: 'LOGOUT' });
-        getAuthContext().then(authContext => authContext.logOut());
-    }
+        getAuthContext().then((authContext) => authContext.logOut());
+    };
 }
 
 export function setNotification({ newToken, oldToken }) {

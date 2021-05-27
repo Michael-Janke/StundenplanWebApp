@@ -20,7 +20,7 @@ import { closeCreateAssignment, createAssignment, publishAssignment } from '../a
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" {...props} ref={ref} />);
 
-const styles = theme => ({
+const styles = (theme) => ({
     actionButtons: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(4),
@@ -45,7 +45,7 @@ export class AssignmentCreation extends Component {
         this.props.closeCreateAssignment();
     };
 
-    handleChange = name => event => {
+    handleChange = (name) => (event) => {
         this.setState({
             [name]: event.target.checked === undefined ? event.target.value : event.target.checked,
         });
@@ -172,7 +172,7 @@ const Title = styled.div`
 `;
 
 const noop = {};
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     open: !!state.assignments.createAssignmentFor,
     team: state.assignments.createAssignmentFor || noop,
     sending: state.assignments.sending,
@@ -182,13 +182,10 @@ const mapStateToProps = state => ({
     createdAssignment: state.assignments.createdAssignment,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     closeCreateAssignment: () => dispatch(closeCreateAssignment()),
-    createAssignment: data => dispatch(createAssignment(data)),
-    publishAssignment: data => dispatch(publishAssignment(data)),
+    createAssignment: (data) => dispatch(createAssignment(data)),
+    publishAssignment: (data) => dispatch(publishAssignment(data)),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(withMobileDialog()(withStyles(styles)(AssignmentCreation)));
+export default connect(mapStateToProps, mapDispatchToProps)(withMobileDialog()(withStyles(styles)(AssignmentCreation)));

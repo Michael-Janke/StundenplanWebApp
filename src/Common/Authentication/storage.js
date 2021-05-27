@@ -5,12 +5,11 @@ import localforage from 'localforage';
 let LAST_TYPE = 'user';
 
 const classMap = {
-    'user': UserAuthContext,
-    'token': TokenAuthContext,
+    user: UserAuthContext,
+    token: TokenAuthContext,
 };
 
-
-const getKey = type => "authentication_" + type;
+const getKey = (type) => 'authentication_' + type;
 
 export const getAuthContext = async (type) => {
     type = type ? (LAST_TYPE = type) : LAST_TYPE;

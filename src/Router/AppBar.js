@@ -27,7 +27,7 @@ const styles = {
     },
 };
 
-const ColoredAppBar = withStyles(theme => ({
+const ColoredAppBar = withStyles((theme) => ({
     root: {
         paddingLeft: 10,
         paddingRight: 10,
@@ -47,7 +47,7 @@ class AppBar extends React.Component {
         this.props.toggleDrawer();
     };
 
-    handleRootRef = ref => {
+    handleRootRef = (ref) => {
         if (this.body) {
             this.body.removeEventListener('scroll', this.handleScroll);
         }
@@ -57,7 +57,7 @@ class AppBar extends React.Component {
         }
     };
 
-    handleScroll = e => {
+    handleScroll = (e) => {
         const boxShadow = this.state.boxShadow;
         const scrollTop = Boolean(e.target.scrollTop !== 0);
         if (boxShadow !== scrollTop) {
@@ -117,20 +117,17 @@ AppBar.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
         small: state.browser.lessThan.medium,
         large: state.browser.greaterThan.medium,
     };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     toggleDrawer: () => dispatch(toggleDrawer()),
 });
 
 export default withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(withStyles(styles, { withTheme: true })(AppBar))
+    connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { withTheme: true })(AppBar))
 );

@@ -2,7 +2,7 @@ import React from 'react';
 import { withStyles, ButtonBase, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
-const styles = theme => ({
+const styles = (theme) => ({
     root: {},
     button: {
         display: 'flex',

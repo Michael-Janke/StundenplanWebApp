@@ -11,7 +11,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import PhotoUpload from './PhotoUpload';
 
-const styles = theme => ({
+const styles = (theme) => ({
     root: {
         height: '100%',
         display: 'flex',
@@ -29,29 +29,19 @@ const styles = theme => ({
 });
 
 function PostCreation({ step, classes, handleNext, handleBack }) {
-
-    const steps = [
-        PostMeta,
-        PhotoUpload,
-        PreviewAndSave,
-    ].filter(step => step);
+    const steps = [PostMeta, PhotoUpload, PreviewAndSave].filter((step) => step);
     // filter non existing steps
-
 
     function renderStep() {
         const Component = steps[step];
         if (!Component) {
             return null;
         }
-        return (
-            <Component></Component>
-        )
+        return <Component></Component>;
     }
     return (
         <div className={classes.root}>
-            <div className={classes.fullHeight}>
-                {renderStep()}
-            </div>
+            <div className={classes.fullHeight}>{renderStep()}</div>
 
             <MobileStepper
                 steps={steps.length}
@@ -75,15 +65,14 @@ function PostCreation({ step, classes, handleNext, handleBack }) {
     );
 }
 
-
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     step: state.postcreation.step,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     handleNext: () => dispatch({ type: 'NEXT' }),
     handleBack: () => dispatch({ type: 'PREV' }),
-    setStep: step => dispatch({ type: 'SET_STEP', payload: step }),
+    setStep: (step) => dispatch({ type: 'SET_STEP', payload: step }),
 });
 
 export default connect(

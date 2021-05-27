@@ -28,7 +28,7 @@ function errorDescription(type) {
 }
 
 export default (state = defaultState, action) => {
-    const addNotification = notification => ({
+    const addNotification = (notification) => ({
         ...state,
         notifications: [
             ...state.notifications,
@@ -80,7 +80,7 @@ export default (state = defaultState, action) => {
         case 'REMOVE_SNACKBAR':
             return {
                 ...state,
-                notifications: state.notifications.filter(notification => notification.key !== action.key),
+                notifications: state.notifications.filter((notification) => notification.key !== action.key),
             };
 
         default:

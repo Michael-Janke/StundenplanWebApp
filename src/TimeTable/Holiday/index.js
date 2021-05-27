@@ -57,7 +57,7 @@ const Container = styled.div`
     background-color: ${green[100]};
     display: flex;
     height: 100%;
-    background: url(${props => props.img}) no-repeat center center;
+    background: url(${(props) => props.img}) no-repeat center center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

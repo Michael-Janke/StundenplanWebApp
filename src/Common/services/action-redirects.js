@@ -1,5 +1,4 @@
-
-const actionRedirector = store => next => action => {
+const actionRedirector = (store) => (next) => (action) => {
     next(action);
     switch (action.type) {
         case 'RETRY_TIMETABLE':
@@ -20,7 +19,7 @@ const actionRedirector = store => next => action => {
                 next({ type: 'GET_TIMETABLE', payload: { id, type } });
                 next({
                     type: 'GET_SUBSTITUTIONS',
-                    payload: { id, type, },
+                    payload: { id, type },
                 });
             }
             break;

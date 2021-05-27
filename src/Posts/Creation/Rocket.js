@@ -5,19 +5,19 @@ import { ReactComponent as RocketIcon } from './Icons/rocket.svg';
 const useStyles = makeStyles(() => ({
     '@keyframes wiggle': {
         '10%, 90%': {
-            transform: 'translate3d(-1px, 0, 0)'
+            transform: 'translate3d(-1px, 0, 0)',
         },
 
         '20%, 80%, 100%': {
-            transform: 'translate3d(2px, 0, 0)'
+            transform: 'translate3d(2px, 0, 0)',
         },
 
         '30%, 50%, 70%': {
-            transform: 'translate3d(-1px, 0, 0)'
+            transform: 'translate3d(-1px, 0, 0)',
         },
 
         '40%, 60%': {
-            transform: 'translate3d(2px, 0, 0)'
+            transform: 'translate3d(2px, 0, 0)',
         },
     },
     '@keyframes launch': {
@@ -26,21 +26,20 @@ const useStyles = makeStyles(() => ({
         },
         '100%': {
             transform: 'translate(0px, -150vh)',
-        }
+        },
     },
     root: {
         position: 'absolute',
         width: '100px',
         height: '100px',
         zIndex: 100,
-        top: -100
+        top: -100,
     },
     launch: {
         animationName: '$launch',
         animationDuration: '2s',
         animationTimingFunction: 'cubic-bezier(0.27, 0.38, 1, -0.19)',
         animationFillMode: 'forwards',
-
     },
     crash: {
         animationName: '$launch',
@@ -49,26 +48,21 @@ const useStyles = makeStyles(() => ({
         animationFillMode: 'forwards',
         animationDirection: 'reverse',
         opacity: 1,
-
     },
     wiggle: {
         animationName: '$wiggle',
         animationDuration: '0.87s',
         animationIterationCount: 2,
-    }
-
-
+    },
 }));
 
-
 function Rocket({ launched, crash, onEnd }) {
-
     const classes = useStyles();
     useEffect(() => {
         if (launched) {
             setTimeout(onEnd, 2000);
         }
-    }, [launched, onEnd])
+    }, [launched, onEnd]);
 
     return (
         <div className={classes.root}>
@@ -79,8 +73,8 @@ function Rocket({ launched, crash, onEnd }) {
                     </div>
                 </div>
             )}
-        </div >
-    )
-};
+        </div>
+    );
+}
 
 export default Rocket;

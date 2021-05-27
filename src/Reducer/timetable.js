@@ -13,12 +13,7 @@ const initialState = {
     },
     timetables: {},
     substitutions: {},
-    timetableDate:
-        moment().isoWeekday() >= 5
-            ? moment()
-                  .add(1, 'week')
-                  .startOf('week')
-            : moment().startOf('week'),
+    timetableDate: moment().isoWeekday() >= 5 ? moment().add(1, 'week').startOf('week') : moment().startOf('week'),
 };
 
 export default function timetableReducer(state = initialState, action = {}) {
@@ -67,9 +62,7 @@ export default function timetableReducer(state = initialState, action = {}) {
         case 'SET_MY_TIMETABLE':
             let { id, type } = action.payload;
             const min = moment.max(
-                moment()
-                    .weekYear(state.masterdata.minMaxDates.min.year)
-                    .week(state.masterdata.minMaxDates.min.week),
+                moment().weekYear(state.masterdata.minMaxDates.min.year).week(state.masterdata.minMaxDates.min.week),
                 moment().add(-1, 'week')
             );
             const max = moment()

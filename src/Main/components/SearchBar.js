@@ -7,7 +7,7 @@ import makeStyles from '@material-ui/styles/makeStyles';
 import indigo from '@material-ui/core/colors/indigo';
 import classNames from 'classnames';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     icon: {
         transition: theme.transitions.create(['transform']),
         WebkitTransition: theme.transitions.create(['transform']),
@@ -72,7 +72,7 @@ const useStyles = makeStyles(theme => ({
 const SearchBar = ({ open, preOpen, onOpen, value, onChange, onClose }) => {
     const classes = useStyles();
     const inputRef = useRef(null);
-    const handleKeyUp = e => {
+    const handleKeyUp = (e) => {
         if (e.keyCode === 27 || e.key === 'ESC') {
             onClose(false);
         }
@@ -99,7 +99,7 @@ const SearchBar = ({ open, preOpen, onOpen, value, onChange, onClose }) => {
                     disableUnderline
                     onFocus={onOpen}
                     onClick={onOpen}
-                    onChange={e => onChange(e.target.value)}
+                    onChange={(e) => onChange(e.target.value)}
                     value={value}
                     inputProps={{
                         className: classes.nativeInput,

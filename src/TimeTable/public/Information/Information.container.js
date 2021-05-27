@@ -11,7 +11,7 @@ if (date.isoWeekday() > 5) {
 }
 const mapStateToProps = () => {
     const getInformation = makeGetInformation();
-    return state => ({
+    return (state) => ({
         substitutions: getInformation(state, { date }),
         currentPeriod: state.period.currentPeriod,
         date: date,
@@ -22,12 +22,9 @@ const mapStateToProps = () => {
         counter: state.user.counter,
     });
 };
-const mapDispatchToProps = dispatch => ({
-    getAllTimetable: date => dispatch(getTimetable(-1, 'all', date)),
+const mapDispatchToProps = (dispatch) => ({
+    getAllTimetable: (date) => dispatch(getTimetable(-1, 'all', date)),
     loadSupervisions: () => dispatch(loadSupervisions()),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(InformationComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(InformationComponent);

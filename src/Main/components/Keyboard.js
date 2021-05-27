@@ -3,7 +3,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import BackSpace from '@material-ui/icons/Backspace';
 
-const styles = theme => ({
+const styles = (theme) => ({
     row: {
         display: 'flex',
         width: '100%',
@@ -18,7 +18,7 @@ const styles = theme => ({
     },
 });
 
-const Key = props => (
+const Key = (props) => (
     <Button className={props.className} onClick={props.onPress}>
         {props.name}
     </Button>
@@ -26,11 +26,11 @@ const Key = props => (
 
 class Keyboard extends React.PureComponent {
     onKeyPress(key) {
-        this.props.onInput(name => name + key);
+        this.props.onInput((name) => name + key);
     }
 
     onBackPress = () => {
-        this.props.onInput(name => name.slice(0, -1));
+        this.props.onInput((name) => name.slice(0, -1));
     };
 
     render() {

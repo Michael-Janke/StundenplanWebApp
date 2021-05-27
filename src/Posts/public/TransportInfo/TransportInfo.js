@@ -9,7 +9,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import moment from 'moment';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         flex: 1,
         height: '100%',
@@ -30,7 +30,7 @@ function TransportInfo({ transportInfo, getTransportInfo }) {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setSeconds(seconds => seconds + 1);
+            setSeconds((seconds) => seconds + 1);
         }, 1000);
         return () => clearInterval(interval);
     }, []);
@@ -38,7 +38,7 @@ function TransportInfo({ transportInfo, getTransportInfo }) {
     if (!transportInfo) return null;
     let wolkenberg = transportInfo.CONNECTIONS['Am Wolkenberg'];
     const michendorf = transportInfo.CONNECTIONS['Michendorf']
-        .filter(m => !wolkenberg.some(w => m.name + m.direction === w.name + w.direction))
+        .filter((m) => !wolkenberg.some((w) => m.name + m.direction === w.name + w.direction))
         .slice(0, 7);
     wolkenberg = wolkenberg.slice(0, 4);
 
@@ -54,7 +54,7 @@ function TransportInfo({ transportInfo, getTransportInfo }) {
             </CardContent>
             <CardHeader avatar={<DepartureBoard />} title={'Michendorf ~10 Minuten 🚶'} />
             <CardContent>
-                {michendorf.map(arrival => (
+                {michendorf.map((arrival) => (
                     <Connection connection={arrival} key={arrival.time + arrival.name} />
                 ))}
             </CardContent>
@@ -68,15 +68,12 @@ function TransportInfo({ transportInfo, getTransportInfo }) {
     );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     transportInfo: state.tv.transportInfo,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     getTransportInfo: () => dispatch(getTransportInfo()),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(TransportInfo);
+export default connect(mapStateToProps, mapDispatchToProps)(TransportInfo);

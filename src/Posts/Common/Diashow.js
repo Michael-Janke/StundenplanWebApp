@@ -16,7 +16,7 @@ import classNames from 'classnames';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     card: ({ fixedHeight }) => ({
         maxWidth: 500,
         height: fixedHeight || 'unset',
@@ -70,14 +70,14 @@ const Diashow = ({ images, title, upn, noButtons, interval = 5000, buttons, clas
             <AutoPlaySwipeableViews
                 axis={'x'}
                 index={activeStep}
-                onChangeIndex={step => setActiveStep(step)}
+                onChangeIndex={(step) => setActiveStep(step)}
                 enableMouseEvents
                 interval={interval}
                 className={classes.mediaWrapper}
                 containerStyle={{ height: '100%' }}
                 slideStyle={{ overflow: 'hidden' }}
             >
-                {images.map(image => (
+                {images.map((image) => (
                     <APIImage key={image} src={image} className={classes.media} />
                 ))}
             </AutoPlaySwipeableViews>

@@ -8,10 +8,10 @@ import AssignmentLink from './assignmentLink';
 export default function Assignments(props) {
     return (
         <React.Fragment>
-            {props.assignments.map(assignment => {
+            {props.assignments.map((assignment) => {
                 const turnedIn =
                     assignment.submissions &&
-                    assignment.submissions.some(submission => submission.status === 'submitted');
+                    assignment.submissions.some((submission) => submission.status === 'submitted');
                 const draft = assignment.status === 'draft';
                 const reg = /(?:<p>)(.*?)(?:<\/p>)/gi;
                 let match;

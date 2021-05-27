@@ -9,7 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import useKeyPress from '../../Common/hooks/useKeyDown';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     filter: {
         top: 0,
         position: 'sticky',
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 const FilterBar = ({ small, filter, onChange }) => {
     const classes = useStyles();
     const filterOptions = ['Lehrer', 'Schüler', 'Raum', 'Klasse'];
-    useKeyPress(e => {
+    useKeyPress((e) => {
         if (e.keyCode === 37 || e.key === 'ArrowLeft') {
             const i = Math.max(filterOptions.indexOf(filter) - 1, -1);
             onChange(filterOptions[i] || '');
@@ -48,7 +48,7 @@ const FilterBar = ({ small, filter, onChange }) => {
                     <ToggleButton key={''} value={''}>
                         <StarIcon></StarIcon>
                     </ToggleButton>
-                    {filterOptions.map(type => (
+                    {filterOptions.map((type) => (
                         <ToggleButton key={type} value={type}>
                             {type}
                         </ToggleButton>

@@ -25,7 +25,6 @@ const styles = {
     },
 };
 const PhotoUpload = ({ classes, images: initalImage, onUpload }) => {
-
     const [file, setFile] = useState(null);
     const [finished, setFinished] = useState(!!initalImage[0]);
     const image = finished && (file ? file.serverId : initalImage[0]);
@@ -36,7 +35,7 @@ const PhotoUpload = ({ classes, images: initalImage, onUpload }) => {
                 <div className={classes.uploader}>
                     <Upload
                         allowMultiple={false}
-                        onUpdate={files => setFile(files[0])}
+                        onUpdate={(files) => setFile(files[0])}
                         onFinished={() => setFinished(true)}
                         acceptedFileTypes={['image/*']}
                     />
@@ -55,12 +54,12 @@ const PhotoUpload = ({ classes, images: initalImage, onUpload }) => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     images: state.postcreation.images,
-})
+});
 
-const mapDispatchToProps = dispatch => ({
-    onUpload: imgSrc => dispatch({ type: 'SET_IMAGE', payload: imgSrc })
-})
+const mapDispatchToProps = (dispatch) => ({
+    onUpload: (imgSrc) => dispatch({ type: 'SET_IMAGE', payload: imgSrc }),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(PhotoUpload));

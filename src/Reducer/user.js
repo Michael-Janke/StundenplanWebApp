@@ -80,7 +80,7 @@ export default function userReducer(state = initialState, action = {}) {
         case 'REMOVE_FAVORITE':
             return {
                 ...state,
-                favorites: [...state.favorites.filter(fav => fav !== action.payload)],
+                favorites: [...state.favorites.filter((fav) => fav !== action.payload)],
             };
 
         default:

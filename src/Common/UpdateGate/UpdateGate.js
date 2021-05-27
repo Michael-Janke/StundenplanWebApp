@@ -4,7 +4,7 @@ import { Button, Typography } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { ignoreUpdate } from './actions';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
@@ -16,8 +16,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function UpdateGate({ children }) {
-    const updateAvailable = useSelector(state => state.update.updateAvailable);
-    const fromServiceWorker = useSelector(state => state.update.fromServiceWorker);
+    const updateAvailable = useSelector((state) => state.update.updateAvailable);
+    const fromServiceWorker = useSelector((state) => state.update.fromServiceWorker);
     const classes = useStyles();
     const dispatch = useDispatch();
 

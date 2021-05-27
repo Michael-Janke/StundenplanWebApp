@@ -2,7 +2,7 @@ import React from 'react';
 import grey from '@material-ui/core/colors/grey';
 import withStyles from '@material-ui/core/styles/withStyles';
 
-const styles = theme => ({
+const styles = (theme) => ({
     container: {
         fontSize: '60%',
         color: theme.palette.type === 'dark' ? grey[400] : grey[600],

@@ -11,7 +11,7 @@ import Tooltip from 'recharts/lib/component/Tooltip';
 import Legend from 'recharts/lib/component/Legend';
 import moment from 'moment';
 
-const styles = theme => ({
+const styles = (theme) => ({
     root: {
         padding: theme.spacing(1),
     },
@@ -30,7 +30,7 @@ class Statistics extends React.Component {
     render() {
         const { classes, logIns } = this.props;
         const data = logIns
-            ? logIns.map(entry => ({ date: moment(entry.DATE).format('DD.MM'), count: entry.COUNT }))
+            ? logIns.map((entry) => ({ date: moment(entry.DATE).format('DD.MM'), count: entry.COUNT }))
             : [];
         return (
             <div className={classes.root}>
@@ -50,14 +50,11 @@ class Statistics extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     logIns: state.admin.LogIn,
 });
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     loadLogIns: (week, year) => dispatch({ type: 'GET_LOGIN_STATISTICS', payload: { action: 'LogIn', week, year } }),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(withStyles(styles)(Statistics));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Statistics));

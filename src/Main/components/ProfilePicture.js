@@ -7,7 +7,7 @@ import EditIcon from '@material-ui/icons/Create';
 import computeUser from '../../Selector/user';
 import { Typography, withStyles } from '@material-ui/core';
 
-const styles = theme => ({
+const styles = (theme) => ({
     name: {
         bottom: 0,
         left: 0,
@@ -74,7 +74,7 @@ const ProfileImg = styled.img`
 const Type = styled.div`
     font-size: 80%;
 `;
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
         loadProfilePicture: () => {
             dispatch(loadProfilePicture());
@@ -83,7 +83,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const makeMapStateToProps = () => {
-    return state => {
+    return (state) => {
         return {
             user: computeUser(state),
             userProfilePicture: state.user.profilePicture,
@@ -91,9 +91,4 @@ const makeMapStateToProps = () => {
     };
 };
 
-export default withStyles(styles)(
-    connect(
-        makeMapStateToProps,
-        mapDispatchToProps
-    )(ProfilePicture)
-);
+export default withStyles(styles)(connect(makeMapStateToProps, mapDispatchToProps)(ProfilePicture));

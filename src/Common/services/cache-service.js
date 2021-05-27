@@ -1,6 +1,6 @@
 import { getTimetableCacheKey, getSubstitutionsCacheKey } from '../const';
 
-const cacheService = store => next => action => {
+const cacheService = (store) => (next) => (action) => {
     let state = store.getState();
     if (state.timetable.counterChanged) {
         return next(action);

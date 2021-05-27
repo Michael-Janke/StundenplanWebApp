@@ -16,7 +16,7 @@ import makeGetCurrentTimetable from '../Selector/timetable';
 import moment from 'moment';
 import { useIntervalCheck } from '../Common/intervalCheck';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
         boxSizing: 'border-box',
@@ -45,10 +45,10 @@ const useStyles = makeStyles(theme => ({
 
 function NotebookSelector() {
     const classes = useStyles();
-    const teams = useSelector(state => state.teams.joinedTeams);
-    const urls = useSelector(state => state.teams.notebookUrls);
-    const schoolyear = useSelector(state => state.user.schoolyear);
-    const masterdata = useSelector(state => state.timetable.masterdata);
+    const teams = useSelector((state) => state.teams.joinedTeams);
+    const urls = useSelector((state) => state.teams.notebookUrls);
+    const schoolyear = useSelector((state) => state.user.schoolyear);
+    const masterdata = useSelector((state) => state.timetable.masterdata);
     const dispatch = useDispatch();
     const [loading, setLoading] = useState({});
 
@@ -63,19 +63,19 @@ function NotebookSelector() {
     }, [schoolyear, dispatch]);
     useEffect(() => {
         teams
-            .filter(team => !urls[team.id])
+            .filter((team) => !urls[team.id])
             .slice(0, 2)
-            .filter(team => !loading[team.id])
-            .forEach(team => {
+            .filter((team) => !loading[team.id])
+            .forEach((team) => {
                 dispatch(getTeamsNotebook(team.id));
-                setLoading(loading => ({ ...loading, [team.id]: true }));
+                setLoading((loading) => ({ ...loading, [team.id]: true }));
             });
     }, [teams, dispatch, urls, loading]);
 
     const link = useRef();
 
     const open = useCallback(
-        id => {
+        (id) => {
             link.current.href = urls[id].client + '/_Inhaltsbibliothek/';
             link.current.click();
         },
@@ -83,20 +83,22 @@ function NotebookSelector() {
     );
 
     const getCurrentTimetable = useMemo(makeGetCurrentTimetable, []);
-    const user = useSelector(state => state.user);
+    const user = useSelector((state) => state.user);
     const weekday = moment().weekday();
-    const period = useSelector(state => state.period.currentPeriod) || {};
+    const period = useSelector((state) => state.period.currentPeriod) || {};
     const periodNumber = period.PERIOD_TIME_ID - 1;
     const props = useMemo(() => ({ type: user.type, id: user.id, date: moment().startOf('week') }), [user]);
-    const timetable = useSelector(state => getCurrentTimetable(state, props));
+    const timetable = useSelector((state) => getCurrentTimetable(state, props));
     const period0 =
         timetable && timetable[weekday] && timetable[weekday].periods && timetable[weekday].periods[periodNumber];
     const currentTeams0 =
-        (period0 && period0.lessons.reduce((acc, lesson) => [...acc, ...lesson.teams], []).map(team => team.id)) || [];
+        (period0 && period0.lessons.reduce((acc, lesson) => [...acc, ...lesson.teams], []).map((team) => team.id)) ||
+        [];
     const period1 =
         timetable && timetable[weekday] && timetable[weekday].periods && timetable[weekday].periods[periodNumber + 1];
     const currentTeams1 =
-        (period1 && period1.lessons.reduce((acc, lesson) => [...acc, ...lesson.teams], []).map(team => team.id)) || [];
+        (period1 && period1.lessons.reduce((acc, lesson) => [...acc, ...lesson.teams], []).map((team) => team.id)) ||
+        [];
 
     const params = useParams();
     const openTeam = params.directOpen && (currentTeams0[0] || currentTeams1[0]);
@@ -128,7 +130,7 @@ function NotebookSelector() {
                 <List className={classes.list}>
                     {teams
                         .sort((a, b) => (a.displayName < b.displayName ? -1 : a.displayName > b.displayName ? 1 : 0))
-                        .map(team => (
+                        .map((team) => (
                             <ListItem key={team.id} button disabled={!urls[team.id]} onClick={() => open(team.id)}>
                                 <ListItemAvatar>
                                     <OneNoteIcon />

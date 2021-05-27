@@ -63,15 +63,13 @@ const PreviewAndSave = ({
     }, [endPostCreation, history, saved]);
 
     const Component = {
-        'diashow': Diashow,
-        'post': Post,
-    }[type]
+        diashow: Diashow,
+        post: Post,
+    }[type];
 
     return (
         <div className={classes.root}>
-            {Component &&
-                <Component images={images} upn={upn} title={title} content={content} edit={false} />
-            }
+            {Component && <Component images={images} upn={upn} title={title} content={content} edit={false} />}
             <Button onClick={onClick} variant="contained" size="large" color="primary">
                 <Rocket launched={launched} onEnd={onEnd}></Rocket>
                 Speichern
@@ -80,7 +78,7 @@ const PreviewAndSave = ({
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     images: state.postcreation.images,
     title: state.postcreation.title,
     content: state.postcreation.content,
@@ -95,8 +93,8 @@ const mapStateToProps = state => ({
     viewTeacher: state.postcreation.viewTeacher,
 });
 
-const mapDispatchToProps = dispatch => ({
-    savePost: post =>
+const mapDispatchToProps = (dispatch) => ({
+    savePost: (post) =>
         dispatch({
             type: post.POST_ID ? 'EDIT_POST' : 'ADD_POST',
             payload: post,
@@ -104,9 +102,4 @@ const mapDispatchToProps = dispatch => ({
     endPostCreation: () => dispatch({ type: 'END_POST_CREATION' }),
 });
 
-export default withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(PreviewAndSave)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PreviewAndSave));

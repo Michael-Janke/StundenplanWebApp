@@ -11,7 +11,7 @@ import { loadReport } from './actions';
 import TeacherDropdown from './TeacherDropdown';
 import Commit from './Commit';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
         boxSizing: 'border-box',
@@ -44,11 +44,11 @@ const useStyles = makeStyles(theme => ({
 
 function Report() {
     const classes = useStyles();
-    const myId = useSelector(state => state.user.id);
-    const isAdmin = useSelector(state => state.user.scope === 'admin');
+    const myId = useSelector((state) => state.user.id);
+    const isAdmin = useSelector((state) => state.user.scope === 'admin');
     const id = useParams().id || myId;
     const [showNeutral, setShowNeutral] = useState(false);
-    const report = useSelector(state => state.report[id]);
+    const report = useSelector((state) => state.report[id]);
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -63,7 +63,7 @@ function Report() {
                         Bericht von{' '}
                         <TeacherDropdown
                             value={id}
-                            onChange={e => history.replace('/report/' + e.target.value)}
+                            onChange={(e) => history.replace('/report/' + e.target.value)}
                             disabled={!isAdmin}
                         />
                     </Typography>
@@ -73,7 +73,7 @@ function Report() {
                     control={
                         <Checkbox
                             checked={showNeutral}
-                            onChange={e => setShowNeutral(e.target.checked)}
+                            onChange={(e) => setShowNeutral(e.target.checked)}
                             color="primary"
                         />
                     }

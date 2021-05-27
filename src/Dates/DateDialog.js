@@ -113,12 +113,14 @@ export class AddDialog extends Component {
         };
     }
 
-    handleClose = (abort = false) => () => {
-        this.setState({
-            open: false,
-        });
-        this.props.handleClose(abort ? undefined : this.extractDate());
-    };
+    handleClose =
+        (abort = false) =>
+        () => {
+            this.setState({
+                open: false,
+            });
+            this.props.handleClose(abort ? undefined : this.extractDate());
+        };
 
     editTime = (timeEdit) => {
         let resetTime = {};

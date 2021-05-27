@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import { withStyles } from '@material-ui/core';
 import classNames from 'classnames';
 
-const styles = theme => ({
+const styles = (theme) => ({
     root: {
         transition: theme.transitions.create(['opacity', 'max-width']),
         maxWidth: 0,

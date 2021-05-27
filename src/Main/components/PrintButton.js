@@ -17,7 +17,7 @@ const UnreadMessages = () => {
     const classes = useStyles();
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    const handleKeyDown = useCallback(event => {
+    const handleKeyDown = useCallback((event) => {
         if (event.ctrlKey && event.keyCode === 80) {
             event.preventDefault();
             setDialogOpen(true);

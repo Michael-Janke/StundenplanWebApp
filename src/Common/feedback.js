@@ -1,6 +1,6 @@
 import version from '../version.json';
 
-export const createFeedbackMail = feedback => {
+export const createFeedbackMail = (feedback) => {
     const subject = feedback.subject + ' (' + version.build + ')';
     return {
         message: {

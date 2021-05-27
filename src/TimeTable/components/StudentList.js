@@ -32,9 +32,11 @@ export default function ListDialog({ tv = false }) {
     const [print, setPrint] = useState(false);
 
     const { list = [], timetableId, loading, reference } = useSelector(({ studentList }) => studentList);
-    const { Student: students, Class: classes, Subject: subjects } = useSelector(
-        ({ timetable }) => timetable.masterdata
-    );
+    const {
+        Student: students,
+        Class: classes,
+        Subject: subjects,
+    } = useSelector(({ timetable }) => timetable.masterdata);
 
     if (!reference) return null;
 

@@ -2,7 +2,7 @@ import React from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Chip from '@material-ui/core/Chip';
 
-const styles = theme => ({
+const styles = (theme) => ({
     root: {
         height: 0,
         width: '100%',

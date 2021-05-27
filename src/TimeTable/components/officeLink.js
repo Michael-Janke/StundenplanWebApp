@@ -7,7 +7,7 @@ import { getTeamsWebUrl, getTeamsNotebook } from '../../Main/actions';
 import Icons from '../../Common/Waffle/office-icons';
 import OpenOfficeButton from './openOfficeLink';
 
-const styles = theme => ({
+const styles = (theme) => ({
     button: {
         justifyContent: 'space-between',
         margin: theme.spacing(1),
@@ -50,8 +50,8 @@ export default connect(
             notebook: teams.notebookUrls && teams.notebookUrls[id],
         }[type],
     }),
-    dispatch => ({
-        getTeamsWebUrl: id => dispatch(getTeamsWebUrl(id)),
-        getTeamsNotebook: id => dispatch(getTeamsNotebook(id)),
+    (dispatch) => ({
+        getTeamsWebUrl: (id) => dispatch(getTeamsWebUrl(id)),
+        getTeamsNotebook: (id) => dispatch(getTeamsNotebook(id)),
     })
 )(withStyles(styles)(OfficeLink));

@@ -9,7 +9,7 @@ class PeriodRangePicker extends React.Component {
         period: {},
     };
 
-    handleChange = period => () => {
+    handleChange = (period) => () => {
         const periods = this.state.period;
         const selectedType = periods.to === period ? 'to' : periods.from === period ? 'from' : false;
         let type = periods.from && (periods.from.PERIOD_TIME_ID < period.PERIOD_TIME_ID || !periods.to) ? 'to' : 'from';
@@ -23,9 +23,9 @@ class PeriodRangePicker extends React.Component {
         });
     };
 
-    handleClick = event => {
+    handleClick = (event) => {
         const { currentTarget } = event;
-        this.setState(state => ({
+        this.setState((state) => ({
             anchorEl: currentTarget,
             open: !state.open,
         }));
@@ -89,7 +89,7 @@ class PeriodRangePicker extends React.Component {
     }
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
     checkbox: {
         padding: 0,
         height: 'unset',
@@ -105,7 +105,7 @@ const styles = theme => ({
     },
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     periods: state.timetable.masterdata.Period_Time,
 });
 

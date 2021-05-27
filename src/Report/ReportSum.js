@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { green, red } from '@material-ui/core/colors';
 import { loadReport } from './actions';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
         boxSizing: 'border-box',
@@ -53,11 +53,11 @@ const useStyles = makeStyles(theme => ({
 function Report() {
     const classes = useStyles();
 
-    const report = useSelector(state => state.report.all);
+    const report = useSelector((state) => state.report.all);
 
     const dispatch = useDispatch();
 
-    const valueClass = v => [classes.minus, null, classes.plus][v > 0 ? 2 : v < 0 ? 0 : -1];
+    const valueClass = (v) => [classes.minus, null, classes.plus][v > 0 ? 2 : v < 0 ? 0 : -1];
 
     const needLoad = report === undefined;
     useEffect(() => {
@@ -83,7 +83,7 @@ function Report() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {((report && report.report) || []).map(row => (
+                        {((report && report.report) || []).map((row) => (
                             <TableRow key={row.NAME + row.SUM}>
                                 <TableCell>
                                     <Link

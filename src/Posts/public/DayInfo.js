@@ -11,7 +11,7 @@ import { green } from '@material-ui/core/colors';
 import moment from 'moment';
 
 const useStyles = makeStyles(
-    theme => ({
+    (theme) => ({
         root: {
             flexGrow: 1,
             height: '100%',
@@ -76,15 +76,12 @@ function DayInfo({ dayInfo = [], getDayInfo }) {
     );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     dayInfo: state.tv.dayInfo,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     getDayInfo: () => dispatch(getDayInfo()),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(DayInfo);
+export default connect(mapStateToProps, mapDispatchToProps)(DayInfo);

@@ -3,7 +3,7 @@ import React from 'react';
 import Popper from '@material-ui/core/Popper';
 import { Paper, withStyles, RootRef, Grow, ClickAwayListener } from '@material-ui/core';
 
-const styles = theme => ({
+const styles = (theme) => ({
     popper: {
         zIndex: theme.zIndex.modal - 1,
         top: 64,
@@ -21,7 +21,7 @@ const styles = theme => ({
 class Popover extends React.PureComponent {
     state = { open: false };
 
-    onRootRef = ref => {
+    onRootRef = (ref) => {
         this.childrenRef = ref;
     };
 
@@ -40,7 +40,7 @@ class Popover extends React.PureComponent {
 
     handleToggle = () => {
         clearTimeout(this.leaveTimer);
-        this.setState(state => ({ open: !state.open }));
+        this.setState((state) => ({ open: !state.open }));
     };
 
     handleOpen = () => {
@@ -55,7 +55,7 @@ class Popover extends React.PureComponent {
         });
     };
 
-    handleClickAway = e => {
+    handleClickAway = (e) => {
         if (!this.childrenRef.contains(e.target)) {
             // workaround for toggling
             this.handleClose();

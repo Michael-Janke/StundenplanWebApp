@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Typography } from '@material-ui/core';
 import classNames from 'classnames';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
         justifyContent: 'center',

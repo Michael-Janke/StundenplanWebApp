@@ -3,7 +3,7 @@ import SubjectContainer, { subjectStyles } from './subject';
 import TeachersContainer, { teacherStyles } from './teachers';
 import ClassesContainer, { classStyles } from './classes';
 
-export const styles = theme => ({
+export const styles = (theme) => ({
     ...subjectStyles(theme),
     ...roomStyles(theme),
     ...teacherStyles(theme),

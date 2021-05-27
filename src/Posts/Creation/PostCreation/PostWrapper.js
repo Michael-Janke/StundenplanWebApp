@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import makeStyles from '@material-ui/styles/makeStyles';
 import Post from '../../Common/Post';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
         alignItems: 'center',
@@ -33,19 +33,16 @@ const PostWrapper = ({ upn, images, title, content, onUpdateContent, onUpdateTit
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     images: state.postcreation.images,
     title: state.postcreation.title,
     content: state.postcreation.content,
     user: state.user.upn,
 });
 
-const mapDispatchToProps = dispatch => ({
-    onUpdateTitle: title => dispatch({ type: 'SET_TITLE', payload: title }),
-    onUpdateContent: content => dispatch({ type: 'SET_CONTENT', payload: content }),
+const mapDispatchToProps = (dispatch) => ({
+    onUpdateTitle: (title) => dispatch({ type: 'SET_TITLE', payload: title }),
+    onUpdateContent: (content) => dispatch({ type: 'SET_CONTENT', payload: content }),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(PostWrapper);
+export default connect(mapStateToProps, mapDispatchToProps)(PostWrapper);

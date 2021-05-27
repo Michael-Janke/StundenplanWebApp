@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Description from './description';
 
-const extractClasses = classes => {
-    classes = classes.map(_class => {
+const extractClasses = (classes) => {
+    classes = classes.map((_class) => {
         let split = _class.NAME.match(/[a-zA-Z]+|[0-9]+/g);
         return {
             grade: parseInt(split[0], 10),
@@ -22,7 +22,7 @@ const extractClasses = classes => {
 };
 function Container({ className, description, type, children, setTimeTable, classes }) {
     if (description) {
-        return classes.map(klass => (
+        return classes.map((klass) => (
             <Description
                 key={klass.CLASS_ID}
                 onClick={() => setTimeTable('class', klass.CLASS_ID)}
@@ -37,7 +37,7 @@ function Container({ className, description, type, children, setTimeTable, class
     return (
         <div className={className}>
             <CContainer className={className}>
-                {Object.keys(extracted).map(key => {
+                {Object.keys(extracted).map((key) => {
                     let classes = extracted[key];
                     return (
                         <ClassContainer key={key}>
@@ -53,28 +53,31 @@ function Container({ className, description, type, children, setTimeTable, class
     );
 }
 
-const ClassesContainer = type => classes => ({ small, left, themeClasses, description, setTimeTable }) => {
-    let field;
-    if (type === 'new') {
-        field = classes.new;
-    }
-    if (type === 'old') {
-        field = classes.old;
-    }
-    if (type === 'instead-of' || type === 'instead-by') {
-        field = classes.substitution;
-    }
-    return (
-        <Container
-            setTimeTable={setTimeTable}
-            description={description}
-            classes={field}
-            className={themeClasses['classes']}
-        />
-    );
-};
+const ClassesContainer =
+    (type) =>
+    (classes) =>
+    ({ small, left, themeClasses, description, setTimeTable }) => {
+        let field;
+        if (type === 'new') {
+            field = classes.new;
+        }
+        if (type === 'old') {
+            field = classes.old;
+        }
+        if (type === 'instead-of' || type === 'instead-by') {
+            field = classes.substitution;
+        }
+        return (
+            <Container
+                setTimeTable={setTimeTable}
+                description={description}
+                classes={field}
+                className={themeClasses['classes']}
+            />
+        );
+    };
 
-export const classStyles = theme => ({
+export const classStyles = (theme) => ({
     classes: {},
 });
 
@@ -86,7 +89,7 @@ ClassesContainer.propTypes = {
 const CContainer = styled.div`
     flex-direction: column;
     display: flex;
-    // ${props => !props.left && `align-items: flex-end`};
+    // ${(props) => !props.left && `align-items: flex-end`};
 `;
 const ClassContainer = styled.div`
     display: flex;

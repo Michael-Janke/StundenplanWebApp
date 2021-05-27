@@ -16,7 +16,7 @@ import Title from './Title';
 import Tooltip from '@material-ui/core/Tooltip';
 import classNames from 'classnames';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     card: ({ fixedHeight }) => ({
         maxWidth: 500,
         width: '100%',
@@ -93,7 +93,7 @@ const Post = ({
                         className={classes.input}
                         value={title}
                         readOnly={!edit}
-                        onChange={e => onUpdateTitle(e.target.value)}
+                        onChange={(e) => onUpdateTitle(e.target.value)}
                         fullWidth
                     />
                 </div>

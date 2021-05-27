@@ -20,7 +20,7 @@ import { Typography, ListItem, ListItemIcon } from '@material-ui/core';
 import CollapseVertical from '../CollapseVertical';
 import classNames from 'classnames';
 
-const styles = theme => ({
+const styles = (theme) => ({
     tableToolbar: {
         borderBottom: `1px solid ${theme.palette.divider}`,
         flex: '1 0 48px',
@@ -74,14 +74,7 @@ const styles = theme => ({
 });
 
 const TimeTableHeader = ({ classes, offline, lastCheck, small, date, id, type, print, isMin, isMax, ...other }) => {
-    const dateIterator = date
-        ? date
-              .clone()
-              .startOf('day')
-              .weekday(0)
-        : moment()
-              .startOf('day')
-              .weekday(0);
+    const dateIterator = date ? date.clone().startOf('day').weekday(0) : moment().startOf('day').weekday(0);
     return (
         <React.Fragment>
             <div className={classNames(classes.tableToolbar, classes.tableHeader)}>
@@ -125,11 +118,7 @@ const TimeTableHeader = ({ classes, offline, lastCheck, small, date, id, type, p
                         <PeriodCell small={small} />
                         {WEEKDAY_NAMES.map((day, i) => {
                             const mDate = dateIterator.clone().add(i, 'days');
-                            const isToday =
-                                date &&
-                                moment()
-                                    .startOf('day')
-                                    .diff(mDate, 'days') === 0;
+                            const isToday = date && moment().startOf('day').diff(mDate, 'days') === 0;
                             return (
                                 <TableCell
                                     key={i}

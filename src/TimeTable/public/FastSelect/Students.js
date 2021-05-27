@@ -8,7 +8,7 @@ import { ObjectIcon } from '../../../Main/components/Avatars';
 import { changeWeek } from '../../../Main/actions';
 import { Paper, Grow, Avatar } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.background.paper,
         display: 'flex',
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 
 function FastSelect({ open }) {
     const classes = useStyles();
-    const students = useSelector(state => state.timetable.masterdata.Student);
+    const students = useSelector((state) => state.timetable.masterdata.Student);
     const dispatch = useDispatch();
     const [filter, setFilter] = useState('');
 
@@ -53,7 +53,7 @@ function FastSelect({ open }) {
                 <Paper className={classes.root} square style={{ flex: open ? 1 : 'none' }}>
                     {Object.keys(initials)
                         .sort()
-                        .map(initial => (
+                        .map((initial) => (
                             <ButtonBase
                                 focusRipple
                                 key={initial}
@@ -73,7 +73,7 @@ function FastSelect({ open }) {
                     {initials[filter] &&
                         initials[filter]
                             .sort((a, b) => (a.LASTNAME < b.LASTNAME ? -1 : 1))
-                            .map(student => (
+                            .map((student) => (
                                 <ButtonBase
                                     focusRipple
                                     key={student.STUDENT_ID}

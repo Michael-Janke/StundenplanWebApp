@@ -9,19 +9,16 @@ function ClearTimetable({ id, clearTimetable }) {
     return null;
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
         clearTimetable: () => dispatch({ type: 'SET_TIMETABLE', payload: { type: null, id: 0 } }),
     };
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
         id: state.timetable.currentTimeTableId + state.timetable.currentTimeTableType + state.timetable.timetableDate,
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ClearTimetable);
+export default connect(mapStateToProps, mapDispatchToProps)(ClearTimetable);

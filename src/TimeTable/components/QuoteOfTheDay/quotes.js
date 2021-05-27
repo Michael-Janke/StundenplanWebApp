@@ -36,8 +36,7 @@ export const quotes = [
     },
 
     {
-        quote:
-            'Menschen, die verrückt genug sind zu denken, sie könnten die Welt verändern, sind diejenigen, die es auch tun',
+        quote: 'Menschen, die verrückt genug sind zu denken, sie könnten die Welt verändern, sind diejenigen, die es auch tun',
         author: 'Steve Jobs',
         authorSub: 'amerikanischer Unternehmer (1955-2011)',
     },
@@ -49,22 +48,19 @@ export const quotes = [
     },
 
     {
-        quote:
-            'Wir sind das, was wir wiederholt tun. Vorzüglichkeit ist daher keine Handlung, sondern eine Gewohnheit.',
+        quote: 'Wir sind das, was wir wiederholt tun. Vorzüglichkeit ist daher keine Handlung, sondern eine Gewohnheit.',
         author: 'Aristoteles',
         authorSub: 'griechischer Philosoph und Naturforscher (384 v. Chr.-322 v. Chr.)',
     },
 
     {
-        quote:
-            'Der Erfolg ist nicht danach zu beurteilen, was ein Mensch im Leben erreicht, sondern nach den Hindernissen, die er auf dem Weg zum Erfolg überwunden hat.',
+        quote: 'Der Erfolg ist nicht danach zu beurteilen, was ein Mensch im Leben erreicht, sondern nach den Hindernissen, die er auf dem Weg zum Erfolg überwunden hat.',
         author: 'Booker T. Washington',
         authorSub: 'amerikanischer Sozialreformer und Bürgerrechtler',
     },
 
     {
-        quote:
-            'Unsere größte Schwäche liegt im Aufgeben. Der sichere Weg zum Erfolg ist immer, es doch noch einmal zu versuchen.',
+        quote: 'Unsere größte Schwäche liegt im Aufgeben. Der sichere Weg zum Erfolg ist immer, es doch noch einmal zu versuchen.',
         author: 'Thomas Alva Edison (1847-1931)',
         authorSub: 'amerikanischer Erfinder und Unternehmer',
     },
@@ -100,15 +96,13 @@ export const quotes = [
     },
 
     {
-        quote:
-            'Ich habe gelernt, dass Mut nicht die Abwesenheit von Furcht ist, sondern der Triumph darüber. Der mutige Mann ist keiner, der keine Angst hat, sondern der, der die Furcht besiegt.',
+        quote: 'Ich habe gelernt, dass Mut nicht die Abwesenheit von Furcht ist, sondern der Triumph darüber. Der mutige Mann ist keiner, der keine Angst hat, sondern der, der die Furcht besiegt.',
         author: 'Nelson Mandela',
         authorSub: 'südafrikanischer Aktivist und Politiker (1918-2013)',
     },
 
     {
-        quote:
-            'Hindernisse sind diese furchterregenden Sachen, die du dann siehst, wenn du dein Ziel aus den Augen verlierst.',
+        quote: 'Hindernisse sind diese furchterregenden Sachen, die du dann siehst, wenn du dein Ziel aus den Augen verlierst.',
         author: 'Henry Ford',
         authorSub: 'amerikanischer Unternehmer und Pionier des Automobilbaus (1863-1947)',
     },
@@ -126,8 +120,7 @@ export const quotes = [
     },
 
     {
-        quote:
-            'Ich kenne keinen sicheren Weg zum Erfolg, aber einen sicheren Weg zum Misserfolg: es jedem recht machen zu wollen.',
+        quote: 'Ich kenne keinen sicheren Weg zum Erfolg, aber einen sicheren Weg zum Misserfolg: es jedem recht machen zu wollen.',
         author: 'Platon',
         authorSub: 'griechischer Philosoph und Gelehrter (427 v. Chr.-347 v. Chr.)',
     },
@@ -169,8 +162,7 @@ export const quotes = [
     },
 
     {
-        quote:
-            'Du kannst den Ozean nicht überqueren, wenn du nicht den Mut hast, die Küste aus den Augen zu verlieren.',
+        quote: 'Du kannst den Ozean nicht überqueren, wenn du nicht den Mut hast, die Küste aus den Augen zu verlieren.',
         author: 'Christoph Kolumbus',
         authorSub: 'genuesischer Seefahrer (1451-1506)',
     },
@@ -206,8 +198,7 @@ export const quotes = [
     },
 
     {
-        quote:
-            'Perfektion ist nicht dann erreicht, wenn es nichts mehr hinzuzufügen gibt, sondern wenn man nichts mehr weglassen kann.',
+        quote: 'Perfektion ist nicht dann erreicht, wenn es nichts mehr hinzuzufügen gibt, sondern wenn man nichts mehr weglassen kann.',
         author: 'Antoine de Saint-Exupéry',
         authorSub: 'französischer Schriftsteller und Flieger (1900-1944)',
     },
@@ -219,8 +210,7 @@ export const quotes = [
     },
 
     {
-        quote:
-            'In 20 Jahren wirst Du dich mehr ärgern über die Dinge, die du nicht getan hast, als über die, die du getan hast. Also wirf die Leinen und segle fort aus deinem sicheren Hafen. Fange den Wind in deinen Segeln. Forsche. Träume. Entdecke.',
+        quote: 'In 20 Jahren wirst Du dich mehr ärgern über die Dinge, die du nicht getan hast, als über die, die du getan hast. Also wirf die Leinen und segle fort aus deinem sicheren Hafen. Fange den Wind in deinen Segeln. Forsche. Träume. Entdecke.',
         author: 'Mark Twain',
         authorSub: 'amerikanischer Schriftsteller (1835-1910)',
     },
@@ -232,8 +222,7 @@ export const quotes = [
     },
 
     {
-        quote:
-            'Der Langsamste, der sein Ziel nicht aus den Augen verliert, geht immer noch schneller als der, der ohne Ziel herumirrt.',
+        quote: 'Der Langsamste, der sein Ziel nicht aus den Augen verliert, geht immer noch schneller als der, der ohne Ziel herumirrt.',
         author: 'Gotthold Ephraim Lessing',
         authorSub: 'deutscher Dichter',
     },

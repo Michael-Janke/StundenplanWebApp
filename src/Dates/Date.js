@@ -7,7 +7,7 @@ import Linkify from 'react-linkify';
 import classNames from 'classnames';
 import { DATE_COLORS } from '../Common/const';
 
-const styles = theme => ({
+const styles = (theme) => ({
     ...DATE_COLORS(theme),
     root: {
         display: 'flex',

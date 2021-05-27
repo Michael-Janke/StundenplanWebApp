@@ -1,7 +1,7 @@
 import { getAuthContext } from '../Authentication/storage';
 import TokenAuthContext from '../Authentication/contexts/TokenAuthContext';
 
-export default store => next => action => {
+export default (store) => (next) => (action) => {
     switch (action.type) {
         case 'GET_ME':
         case 'ADD_DATE':
@@ -17,7 +17,7 @@ export default store => next => action => {
         case 'GET_ASSIGNMENTS':
         case 'GET_JOINED_TEAMS':
         case 'SEND_LOGIN_STATISTIC':
-            getAuthContext().then(authContext => {
+            getAuthContext().then((authContext) => {
                 if (!(authContext instanceof TokenAuthContext)) {
                     next(action);
                 }

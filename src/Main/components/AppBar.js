@@ -17,8 +17,8 @@ const useStyles = makeStyles({
 
 const AppBar = ({ children }) => {
     const classes = useStyles();
-    const small = useSelector(state => state.browser.lessThan.medium);
-    const large = useSelector(state => state.browser.greaterThan.medium);
+    const small = useSelector((state) => state.browser.lessThan.medium);
+    const large = useSelector((state) => state.browser.greaterThan.medium);
     return (
         <div className={classes.root} style={{ marginLeft: large ? 'calc(50% - 494px)' : undefined }}>
             <Search shrinkChildren={small} alwaysOpen={!small}>

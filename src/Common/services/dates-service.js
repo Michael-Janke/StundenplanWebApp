@@ -1,6 +1,6 @@
 import { requestApiGenerator, API_URL } from './generator';
 
-export default store => next => action => {
+export default (store) => (next) => (action) => {
     next(action);
     switch (action.type) {
         case 'ADD_DATE':
@@ -26,7 +26,7 @@ export default store => next => action => {
                 'PATCH',
                 JSON.stringify(action.payload)
             );
-        
+
         case 'GET_DATES':
         case 'ADD_DATE_RECEIVED':
         case 'DELETE_DATE_RECEIVED':

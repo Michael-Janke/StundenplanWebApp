@@ -50,13 +50,13 @@ const useStyles = makeStyles({
 const PhotoUpload = ({ images: uploadedImages, setImagesDispatch, deleteImage }) => {
     const [images, setImages] = useState(() => uploadedImages);
     const classes = useStyles();
-    
-    const handleDeleteImage = image => {
+
+    const handleDeleteImage = (image) => {
         deleteImage(image);
     };
-    const handleOnFinished = (images)=> {
+    const handleOnFinished = (images) => {
         setImagesDispatch(images);
-    }
+    };
 
     return (
         <div className={classes.root}>
@@ -65,12 +65,12 @@ const PhotoUpload = ({ images: uploadedImages, setImagesDispatch, deleteImage })
                     allowMultiple={true}
                     onUpdate={setImages}
                     files={[]}
-                    onFinished={() => handleOnFinished(images.map(file => file.serverId))}
+                    onFinished={() => handleOnFinished(images.map((file) => file.serverId))}
                     acceptedFileTypes={['image/*']}
                 />
             </div>
             <div className={classes.images}>
-                {uploadedImages.map(image => (
+                {uploadedImages.map((image) => (
                     <div className={classes.imageWrapper} key={image}>
                         <APIImage src={image} className={classes.image} />
                         <Fab className={classes.button} size="small" onClick={() => handleDeleteImage(image)}>
@@ -83,13 +83,13 @@ const PhotoUpload = ({ images: uploadedImages, setImagesDispatch, deleteImage })
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     images: state.postcreation.images,
-})
+});
 
-const mapDispatchToProps = dispatch => ({
-    setImagesDispatch: images => dispatch({ type: 'SET_IMAGES', payload: images }),
-    deleteImage: image => dispatch({type: 'DELETE_IMAGE', payload: image}),
-})
+const mapDispatchToProps = (dispatch) => ({
+    setImagesDispatch: (images) => dispatch({ type: 'SET_IMAGES', payload: images }),
+    deleteImage: (image) => dispatch({ type: 'DELETE_IMAGE', payload: image }),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(PhotoUpload);

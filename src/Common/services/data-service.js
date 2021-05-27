@@ -1,7 +1,7 @@
 import { createFeedbackMail } from '../feedback';
 import { requestApiGenerator, API_URL, GRAPH_URL, getImageGenerator } from './generator';
 
-const dataService = store => next => action => {
+const dataService = (store) => (next) => (action) => {
     next(action);
     switch (action.type) {
         case 'GET_ME':

@@ -18,7 +18,7 @@ function PostWrapper({ onEdit, onDelete, post, noButtons, className, titleAdd = 
                     </IconButton>
                 </Tooltip>
                 <Tooltip title="Beitrag löschen">
-                    <IconButton onClick={event => onDelete(post, event.target)}>
+                    <IconButton onClick={(event) => onDelete(post, event.target)}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>

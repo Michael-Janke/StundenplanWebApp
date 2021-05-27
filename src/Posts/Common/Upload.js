@@ -28,7 +28,7 @@ export default function Upload(props) {
             files={props.files}
             allowMultiple={props.allowMultiple}
             acceptedFileTypes={props.acceptedFileTypes}
-            onupdatefiles={files => props.onUpdate(files)}
+            onupdatefiles={(files) => props.onUpdate(files)}
             onprocessfiles={() => workaround()}
             labelIdle={'Bild hier reinziehen oder hier klicken für Dateidialog'}
             labelFileProcessing="Upload läuft"
@@ -40,7 +40,7 @@ export default function Upload(props) {
                 url: API_URL + 'upload',
                 revert: (filename, load, error) => {
                     getToken(API_URL)
-                        .then(token => {
+                        .then((token) => {
                             return fetch(API_URL + 'upload/' + filename, {
                                 headers: {
                                     Authorization: 'Bearer ' + token,
@@ -63,14 +63,14 @@ export default function Upload(props) {
 
                     // Should call the progress method to update the progress to 100% before calling load
                     // Setting computable to false switches the loading indicator to infinite mode
-                    request.upload.onprogress = e => {
+                    request.upload.onprogress = (e) => {
                         progress(e.lengthComputable, e.loaded, e.total);
                     };
 
                     // Should call the load method when done and pass the returned server file id
                     // this server file id is then used later on when reverting or restoring a file
                     // so your server knows which file to return without exposing that info to the client
-                    request.onload = function() {
+                    request.onload = function () {
                         if (request.status >= 200 && request.status < 300) {
                             // the load method accepts either a string (id) or an object
                             load(API_URL + 'upload/' + JSON.parse(request.responseText).FILENAME);
@@ -80,7 +80,7 @@ export default function Upload(props) {
                         }
                     };
 
-                    getToken(API_URL).then(token => {
+                    getToken(API_URL).then((token) => {
                         request.setRequestHeader('Authorization', 'Bearer ' + token);
                         request.send(formData);
                     });

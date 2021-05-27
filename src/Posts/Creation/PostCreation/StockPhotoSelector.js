@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 
 const UNSPLASH_KEY = '89cf4875441cd2ff854a44fce573499a7e8ec2977ebcb2026623d0290e6f47a4';
 
-const styles = theme => ({
+const styles = (theme) => ({
     suggestions: { flex: 1, whiteSpace: 'nowrap', overflow: 'auto' },
     searchInput: { width: '100%' },
     root: {},
@@ -53,12 +53,12 @@ class TopicSelection extends React.Component {
         topic: 'cake',
     };
 
-    queryPictures = query => {
+    queryPictures = (query) => {
         fetch(
             `https://api.unsplash.com/search/photos?query=${query}&per_page=24&orientation=landscape&client_id=${UNSPLASH_KEY}`
         )
-            .then(data => data.json())
-            .then(data => this.setState({ results: data.results, error: false }))
+            .then((data) => data.json())
+            .then((data) => this.setState({ results: data.results, error: false }))
             .catch(() => this.setState({ error: true }));
     };
 
@@ -67,17 +67,17 @@ class TopicSelection extends React.Component {
     }
 
     handleChangeDebounced = debounce(this.queryPictures, 500);
-    handleChange = event => {
+    handleChange = (event) => {
         this.setState({ topic: event.target.value });
         this.handleChangeDebounced(event.target.value);
     };
 
-    setSuggestion = query => () => {
+    setSuggestion = (query) => () => {
         this.queryPictures(query);
         this.setState({ topic: query });
     };
 
-    handleClick = imageUrl => () => {
+    handleClick = (imageUrl) => () => {
         this.props.onUpload(imageUrl);
     };
 
@@ -100,7 +100,7 @@ class TopicSelection extends React.Component {
                     variant="outlined"
                 />
                 <div className={classes.suggestions}>
-                    {suggestions.map(pair => (
+                    {suggestions.map((pair) => (
                         <Button key={pair.english} onClick={this.setSuggestion(pair.english)}>
                             {pair.german}
                         </Button>
@@ -108,7 +108,7 @@ class TopicSelection extends React.Component {
                 </div>
 
                 <div className={classes.pictures}>
-                    {results.map(picture => (
+                    {results.map((picture) => (
                         <Image
                             src={picture.urls.small}
                             className={classes.picture}
@@ -130,8 +130,8 @@ TopicSelection.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-    onUpload: (imageUrl) => dispatch({ type: 'SET_IMAGE', payload: imageUrl })
-})
+const mapDispatchToProps = (dispatch) => ({
+    onUpload: (imageUrl) => dispatch({ type: 'SET_IMAGE', payload: imageUrl }),
+});
 
 export default connect(undefined, mapDispatchToProps)(withStyles(styles, { withTheme: true })(TopicSelection));

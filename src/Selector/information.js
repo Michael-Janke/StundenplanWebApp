@@ -25,7 +25,7 @@ function getInformation(timetable, periods, date) {
 
         acc[periodNumber - 1] = {
             lessons: period && period.lessons,
-            absentClasses: (weekdayData.absences || []).filter(absence => absence.class),
+            absentClasses: (weekdayData.absences || []).filter((absence) => absence.class),
             teachersInSchool,
             studentsInSchool,
         };
@@ -36,13 +36,8 @@ function getInformation(timetable, periods, date) {
 export function makeGetInformation() {
     const getTimetable = makeGetCurrentTimetable();
     const getCurrentTimetable = (state, props) => getTimetable(state, { id: -1, type: 'all', date: props.date });
-    const getPeriods = state => state.timetable.masterdata.Period_Time;
+    const getPeriods = (state) => state.timetable.masterdata.Period_Time;
     const getDate = (state, props) => props.date;
 
-    return createSelector(
-        getCurrentTimetable,
-        getPeriods,
-        getDate,
-        getInformation
-    );
+    return createSelector(getCurrentTimetable, getPeriods, getDate, getInformation);
 }

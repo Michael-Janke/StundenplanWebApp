@@ -13,7 +13,6 @@ function EditPage({ post, match, startPostCreation }) {
         startPostCreation(post || type);
     }, [post, startPostCreation, type]);
 
-
     const Component = {
         post: PostCreation,
         diashow: DiashowCreation,
@@ -30,7 +29,7 @@ function EditPage({ post, match, startPostCreation }) {
 
 const findPost = (posts, match) => {
     const id = match.params.id;
-    return posts.find(post => post.POST_ID === Number(id));
+    return posts.find((post) => post.POST_ID === Number(id));
 };
 
 const mapStateToProps = (state, props) => ({
@@ -39,13 +38,8 @@ const mapStateToProps = (state, props) => ({
     type: state.postcreation.type,
 });
 
-const mapDispatchToProps = dispatch => ({
-    startPostCreation: post => dispatch({ type: 'START_POST_CREATION', payload: post }),
+const mapDispatchToProps = (dispatch) => ({
+    startPostCreation: (post) => dispatch({ type: 'START_POST_CREATION', payload: post }),
 });
 
-export default withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(EditPage)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditPage));

@@ -20,7 +20,7 @@ export default function useDialogPopper(options) {
         callback.current = cb;
     };
 
-    const handleClose = status => {
+    const handleClose = (status) => {
         setAnchorRef(null);
         callback.current && callback.current(status);
     };

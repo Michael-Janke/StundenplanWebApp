@@ -70,7 +70,7 @@ function NotFoundPage(props) {
     );
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
     root: {
         height: '100%',
         width: '100%',

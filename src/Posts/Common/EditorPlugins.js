@@ -10,11 +10,8 @@ export const toolbarPlugin = createToolbarPlugin();
 export const linkifyPlugin = createLinkifyPlugin();
 export const emojiPlugin = createEmojiPlugin();
 
-
-
-
 const Workaround = emojiPlugin.decorators[1].component;
-emojiPlugin.decorators[1].component = props => (
+emojiPlugin.decorators[1].component = (props) => (
     <Workaround getEditorState={() => {}} setEditorState={() => {}} {...props} />
 );
 const decorators = [...emojiPlugin.decorators, ...linkifyPlugin.decorators];
@@ -23,4 +20,4 @@ export const decorator = new MultiDecorator([new CompositeDecorator(decorators)]
 
 export const createWithContent = (content) => {
     return EditorState.createWithContent(content, decorator);
-}
+};

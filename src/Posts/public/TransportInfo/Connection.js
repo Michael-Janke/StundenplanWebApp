@@ -15,7 +15,7 @@ const ICON_MAP = {
 };
 
 const useStyles = makeStyles(
-    theme => ({
+    (theme) => ({
         root: {
             display: 'flex',
             flexDirection: 'row',
@@ -82,7 +82,7 @@ export default function Connection({ connection }) {
             </div>
 
             <div className={classes.direction}>
-                {connection.direction.split(',').map(line => (
+                {connection.direction.split(',').map((line) => (
                     <div key={line}>{line}</div>
                 ))}
             </div>

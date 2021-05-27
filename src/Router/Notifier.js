@@ -7,7 +7,7 @@ import { removeSnackbar } from '../Main/actions';
 class Notifier extends Component {
     displayed = [];
 
-    storeDisplayed = id => {
+    storeDisplayed = (id) => {
         this.displayed = [...this.displayed, id];
     };
 
@@ -24,7 +24,7 @@ class Notifier extends Component {
     componentDidUpdate() {
         const { notifications = [] } = this.props;
 
-        notifications.forEach(notification => {
+        notifications.forEach((notification) => {
             // Do nothing if snackbar is already displayed
             if (this.displayed.includes(notification.key)) return;
             // Display snackbar using notistack
@@ -40,13 +40,10 @@ class Notifier extends Component {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     notifications: state.notifications.notifications,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ removeSnackbar }, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ removeSnackbar }, dispatch);
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(withSnackbar(Notifier));
+export default connect(mapStateToProps, mapDispatchToProps)(withSnackbar(Notifier));

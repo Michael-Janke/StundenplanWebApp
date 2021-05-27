@@ -13,7 +13,6 @@ const BorderLinearProgress = withStyles({
     },
 })(LinearProgress);
 
-
 export default function ReadProgress({ time = 20 * 1000, onFinished }) {
     const [completed, setCompleted] = React.useState(0);
 
@@ -34,7 +33,5 @@ export default function ReadProgress({ time = 20 * 1000, onFinished }) {
         };
     }, [onFinished, time]);
 
-    return (
-        <BorderLinearProgress variant="determinate" value={completed} />
-    );
+    return <BorderLinearProgress variant="determinate" value={completed} />;
 }

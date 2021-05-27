@@ -10,7 +10,7 @@ import moment from 'moment';
 import { SUBSTITUTION_MAP } from '../Common/const';
 import { green, red } from '@material-ui/core/colors';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     kw: {
         backgroundColor: theme.palette.background.paper,
         fontWeight: 'bold',
@@ -30,18 +30,16 @@ const numberFormat = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }
 
 function ReportList({ report, showNeutral }) {
     const classes = useStyles();
-    const isAdmin = useSelector(state => state.user.scope === 'admin');
-    const maxWeek = moment()
-        .add(1, 'week')
-        .format('GGGG-WW');
+    const isAdmin = useSelector((state) => state.user.scope === 'admin');
+    const maxWeek = moment().add(1, 'week').format('GGGG-WW');
 
     const weeks = report;
     const neutralWeeks = showNeutral
         ? () => true
-        : week => Object.keys(weeks[week]).some(type => weeks[week][type].some(row => row.VALUE !== 0));
+        : (week) => Object.keys(weeks[week]).some((type) => weeks[week][type].some((row) => row.VALUE !== 0));
 
     let windowSum = 0;
-    const valueClass = v => [classes.minus, null, classes.plus][v > 0 ? 2 : v < 0 ? 0 : -1];
+    const valueClass = (v) => [classes.minus, null, classes.plus][v > 0 ? 2 : v < 0 ? 0 : -1];
 
     return (
         <Table className={classes.table}>
@@ -56,10 +54,10 @@ function ReportList({ report, showNeutral }) {
             </TableHead>
             <TableBody>
                 {Object.keys(weeks)
-                    .filter(week => week <= maxWeek)
+                    .filter((week) => week <= maxWeek)
                     .filter(neutralWeeks)
                     .sort()
-                    .map(week => {
+                    .map((week) => {
                         const sum = (weeks[week].RESERVE || []).reduce((sum, row) => sum + row.VALUE, 0);
                         const commited = (weeks[week].RESERVE || []).reduce((sum, row) => sum + row.COMMITED, 0);
                         windowSum += sum;
@@ -83,7 +81,7 @@ function ReportList({ report, showNeutral }) {
                                     </TableRow>
                                 )}
                                 {weeks[week].CORRECTION &&
-                                    weeks[week].CORRECTION.map(row => {
+                                    weeks[week].CORRECTION.map((row) => {
                                         if (row.VALUE === 0 && !showNeutral) return null;
                                         windowSum += row.VALUE;
                                         return (
@@ -105,7 +103,7 @@ function ReportList({ report, showNeutral }) {
                                         );
                                     })}
                                 {weeks[week].SUBSTITUTION &&
-                                    weeks[week].SUBSTITUTION.map(row => {
+                                    weeks[week].SUBSTITUTION.map((row) => {
                                         if (row.VALUE === 0 && !showNeutral) return null;
                                         windowSum += row.VALUE;
                                         return (

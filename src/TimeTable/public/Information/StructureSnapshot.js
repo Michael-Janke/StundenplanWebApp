@@ -28,7 +28,7 @@ const buildingStructure = [
     },
 ];
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         display: 'flex',
@@ -71,7 +71,7 @@ export default function StructureSnapshot({ lessons }) {
                             if (room === 'stairs' || !room) {
                                 return <StructureFragment key={i} />;
                             }
-                            let lesson = lessons.find(lesson =>
+                            let lesson = lessons.find((lesson) =>
                                 lesson.room
                                     ? lesson.room.new
                                         ? lesson.room.new.NAME === room

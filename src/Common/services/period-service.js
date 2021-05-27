@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 const noPeriod = { END_TIME: null, noPeriod: true };
-const periodService = store => next => action => {
+const periodService = (store) => (next) => (action) => {
     next(action);
     switch (action.type) {
         case 'CHECK_CURRENT_PERIOD': {

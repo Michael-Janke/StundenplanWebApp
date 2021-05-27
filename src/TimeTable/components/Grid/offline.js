@@ -14,8 +14,7 @@ import purple from '@material-ui/core/colors/purple';
 import { Transition } from 'react-transition-group';
 import { useTheme } from '@material-ui/styles';
 
-const styles = theme => ({
-
+const styles = (theme) => ({
     appear: { opacity: 1, maxWidth: '100%' },
     appearActive: { opacity: 1, maxWidth: '100%' },
     enter: { opacity: 1, maxWidth: '100%' },
@@ -51,59 +50,59 @@ const childrenStyles = {
     entered: { filter: 'blur(1px)' },
     exiting: { filter: 'blur(0px)' },
     exited: { filter: 'blur(0px)' },
-}
+};
 
 const cardStyles = {
     entering: { opacity: 1 },
     entered: { opacity: 1 },
     exiting: { opacity: 0 },
     exited: { opacity: 0 },
-}
+};
 
 function OfflinePaper({ classes, retry, children, in: inProp, component, className }) {
     const theme = useTheme();
     return (
-        <Transition
-            appear
-            in={inProp}
-            timeout={300}
-            
-        >
-            {state => {
+        <Transition appear in={inProp} timeout={300}>
+            {(state) => {
                 return (
                     <div className={className}>
                         {React.cloneElement(children, {
                             style: {
                                 ...childrenStyles[state],
-                                transition: theme.transitions.create('filter')
-                            }
+                                transition: theme.transitions.create('filter'),
+                            },
                         })}
-                        {state !== 'exited' && <div className={classes.root}
-                            style={{
-                                ...cardStyles[state],
-                                transition: theme.transitions.create('opacity')
-                            }}>
-                            <Card elevation={10}>
-                                <CardContent>
-                                    <ListItem dense className={classes.content}>
-                                        <ListItemIcon>
-                                            <CloudOff fontSize="large" className={classes.icon} />
-                                        </ListItemIcon>
-                                        <div>
-                                            <Typography variant="h6">Offline</Typography>
-                                            <Typography>
-                                                Du bist offline. Bitte überprüfe deine Interneteinstellungen und versuche es erneut.
-                                            </Typography>
-                                        </div>
-                                    </ListItem>
-                                </CardContent>
-                                <CardActions className={classes.cardActions}>
-                                    <Button size="small" color="primary" onClick={retry}>
-                                        Erneut versuchen
-                                     </Button>
-                                </CardActions>
-                            </Card>
-                        </div>}
+                        {state !== 'exited' && (
+                            <div
+                                className={classes.root}
+                                style={{
+                                    ...cardStyles[state],
+                                    transition: theme.transitions.create('opacity'),
+                                }}
+                            >
+                                <Card elevation={10}>
+                                    <CardContent>
+                                        <ListItem dense className={classes.content}>
+                                            <ListItemIcon>
+                                                <CloudOff fontSize="large" className={classes.icon} />
+                                            </ListItemIcon>
+                                            <div>
+                                                <Typography variant="h6">Offline</Typography>
+                                                <Typography>
+                                                    Du bist offline. Bitte überprüfe deine Interneteinstellungen und
+                                                    versuche es erneut.
+                                                </Typography>
+                                            </div>
+                                        </ListItem>
+                                    </CardContent>
+                                    <CardActions className={classes.cardActions}>
+                                        <Button size="small" color="primary" onClick={retry}>
+                                            Erneut versuchen
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                            </div>
+                        )}
                     </div>
                 );
             }}

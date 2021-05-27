@@ -10,15 +10,15 @@ const APIImage = ({ src, ...other }) => {
         if (!(src + '').startsWith(API_URL)) return setImage(src);
         if (blobCache[src]) return setImage(blobCache[src]);
         getToken(API_URL)
-            .then(token =>
+            .then((token) =>
                 fetch(src, {
                     headers: {
                         Authorization: 'Bearer ' + token,
                     },
                 })
             )
-            .then(response => response.blob())
-            .then(image => {
+            .then((response) => response.blob())
+            .then((image) => {
                 let outside = URL.createObjectURL(image);
                 blobCache[src] = outside;
                 setImage(outside);

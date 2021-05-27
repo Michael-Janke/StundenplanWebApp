@@ -16,7 +16,7 @@ import { useIntervalCheck } from '../../Common/intervalCheck';
 import useInterval from 'react-useinterval';
 import { usePosts } from '../hooks';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: 1920,
         boxSizing: 'border-box',

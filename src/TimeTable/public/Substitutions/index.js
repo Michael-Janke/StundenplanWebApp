@@ -11,7 +11,7 @@ import SubstitutionEntry from './substitution';
 import styled from 'styled-components';
 import { ReactInterval } from 'react-interval/lib/Component';
 
-const styles = theme => ({
+const styles = (theme) => ({
     root: {
         width: '100%',
         color: theme.palette.text.primary,
@@ -75,11 +75,7 @@ class Header extends React.Component {
         const { addDays, lastUpdate, className } = this.props;
         return (
             <div className={className}>
-                <div>
-                    {moment()
-                        .add(addDays, 'days')
-                        .format('dddd[, der ]DD.MM.')}
-                </div>
+                <div>{moment().add(addDays, 'days').format('dddd[, der ]DD.MM.')}</div>
                 {!addDays && <LastUpdate>Letzte Änderung {moment(lastUpdate).fromNow()}</LastUpdate>}
                 {!addDays && <ReactInterval timeout={60 * 1000} enabled={true} callback={this.callback} />}
             </div>
@@ -87,18 +83,12 @@ class Header extends React.Component {
     }
 }
 
-const getAddDays = props => {
-    let date = moment()
-        .startOf('day')
-        .add(props.addDays, 'days');
+const getAddDays = (props) => {
+    let date = moment().startOf('day').add(props.addDays, 'days');
     while (date.isoWeekday() > 5) {
         date.add(1, 'day');
     }
-    return Math.abs(
-        moment()
-            .startOf('day')
-            .diff(date, 'days')
-    );
+    return Math.abs(moment().startOf('day').diff(date, 'days'));
 };
 
 class Substitutions extends React.Component {
@@ -117,7 +107,7 @@ class Substitutions extends React.Component {
         return field ? (field.LASTNAME ? field.FIRSTNAME[0] + '. ' + field.LASTNAME : field.NAME) : '';
     }
 
-    handleSelectTimetable = entry => {
+    handleSelectTimetable = (entry) => {
         let object = entry.name[0];
         if (!object) {
             return;
@@ -221,16 +211,11 @@ const makeStateToProps = () => {
         lastUpdate: state.user.lastUpdate,
     });
 };
-const mapDispatchToProps = dispatch => ({
-    getTimetableAll: date => {
+const mapDispatchToProps = (dispatch) => ({
+    getTimetableAll: (date) => {
         dispatch(getTimetable(-1, 'all', date));
     },
     setTimetable: (type, id) => dispatch(setTimeTable(type, id)),
 });
 
-export default withStyles(styles)(
-    connect(
-        makeStateToProps,
-        mapDispatchToProps
-    )(Substitutions)
-);
+export default withStyles(styles)(connect(makeStateToProps, mapDispatchToProps)(Substitutions));

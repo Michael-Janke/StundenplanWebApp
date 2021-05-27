@@ -11,7 +11,7 @@ import { usePosts } from './hooks';
 import useDialog from '../Common/useDialog';
 import { useIntervalCheck } from '../Common/intervalCheck';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
         boxSizing: 'border-box',
@@ -63,21 +63,21 @@ function Posts() {
     const classes = useStyles();
     const history = useHistory();
     const [showMyPosts, setShowMyPosts] = useState(false);
-    const posts = usePosts({ filter: showMyPosts && (post => post.USER_CREATED) });
-    const isAdmin = useSelector(state => state.user.scope === 'admin');
+    const posts = usePosts({ filter: showMyPosts && ((post) => post.USER_CREATED) });
+    const isAdmin = useSelector((state) => state.user.scope === 'admin');
     const dispatch = useDispatch();
-    const deletePost = post => dispatch(deletePostAction(post));
+    const deletePost = (post) => dispatch(deletePostAction(post));
 
-    const handleCreate = type => () => {
+    const handleCreate = (type) => () => {
         history.push('/posts/new/' + type);
     };
 
-    const handleOnEdit = post => {
+    const handleOnEdit = (post) => {
         history.push('/posts/edit/' + post.POST_ID);
     };
 
     const handleOnDelete = (post, target) => {
-        setDialog(target, status => {
+        setDialog(target, (status) => {
             if (status) {
                 deletePost(post);
             }
@@ -113,7 +113,7 @@ function Posts() {
                         <Button
                             variant={['outlined', 'contained'][showMyPosts * 1]}
                             color="primary"
-                            onClick={() => setShowMyPosts(s => !s)}
+                            onClick={() => setShowMyPosts((s) => !s)}
                         >
                             {['Meine', 'Alle aktuellen'][showMyPosts * 1]} Beiträge anzeigen
                         </Button>
@@ -128,7 +128,7 @@ function Posts() {
                     </Typography>
                 )}
                 <div className={classes.postGrid}>
-                    {posts.map(post => {
+                    {posts.map((post) => {
                         const canEdit = isAdmin || post.USER_CREATED;
                         return (
                             <Fade key={post.POST_ID}>

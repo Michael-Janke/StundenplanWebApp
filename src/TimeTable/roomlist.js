@@ -9,7 +9,7 @@ import classNames from 'classnames';
 class RoomList extends React.Component {
     extractRooms(rooms) {
         let e = {};
-        rooms.forEach(r => {
+        rooms.forEach((r) => {
             const array = r.NAME.match(/[a-zA-Z]+|[0-9]+/g);
             const floor = array[0];
             const number = array[1];
@@ -28,7 +28,7 @@ class RoomList extends React.Component {
                     <div key={key} className={classes.wrapper}>
                         <div className={classes.floor}>{key}</div>
                         <div className={classes.numbers}>
-                            {entry.map(room => (
+                            {entry.map((room) => (
                                 <div
                                     key={room.number}
                                     className={classNames(
@@ -47,7 +47,7 @@ class RoomList extends React.Component {
     }
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
     root: {
         fontSize: '70%',
         backgroundColor: darken(indigo[50], theme.palette.type === 'dark' ? 0.6 : 0),

@@ -5,33 +5,35 @@ import { fetchData } from '../utils';
 export const API_URL = 'https://www.wolkenberg-gymnasium.de/wolkenberg-app/api/';
 export const GRAPH_URL = 'https://graph.microsoft.com/';
 
-export const requestApiGenerator = (next) => async (endpoint, route, action, METHOD = 'GET', body) => {
-    let token;
-    let data;
-    try {
-        token = await getToken(endpoint);
-        data = await fetchData(endpoint + route, {
-            method: METHOD,
-            body,
-            headers: {
-                Authorization: 'Bearer ' + token,
-                'Content-Type': 'Application/Json',
-            },
-        });
-        next({
-            ...action,
-            type: action.type + '_RECEIVED',
-            payload: data,
-        });
-    } catch (err) {
-        var error = err && (err.error || err);
-        next({
-            ...action,
-            type: action.type + '_ERROR',
-            payload: error.message ? { text: error.message } : error,
-        });
-    }
-};
+export const requestApiGenerator =
+    (next) =>
+    async (endpoint, route, action, METHOD = 'GET', body) => {
+        let token;
+        let data;
+        try {
+            token = await getToken(endpoint);
+            data = await fetchData(endpoint + route, {
+                method: METHOD,
+                body,
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                    'Content-Type': 'Application/Json',
+                },
+            });
+            next({
+                ...action,
+                type: action.type + '_RECEIVED',
+                payload: data,
+            });
+        } catch (err) {
+            var error = err && (err.error || err);
+            next({
+                ...action,
+                type: action.type + '_ERROR',
+                payload: error.message ? { text: error.message } : error,
+            });
+        }
+    };
 
 export const getImageGenerator = (next) => (endpoint, route, action) => {
     getToken(endpoint)

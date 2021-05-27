@@ -44,7 +44,7 @@ export default class CustomEditor extends Component {
         this.forceUpdate();
     }
 
-    onChange = editorState => {
+    onChange = (editorState) => {
         this.setState({
             editorState,
         });
@@ -63,31 +63,33 @@ export default class CustomEditor extends Component {
                         editorState={this.state.editorState}
                         onChange={this.onChange}
                         plugins={plugins}
-                        ref={element => {
+                        ref={(element) => {
                             this.editor = element;
                         }}
                         readOnly={this.props.readOnly}
                     />
                     <EmojiSuggestions />
                     <Toolbar>
-                        {// may be use React.Fragment instead of div to improve perfomance after React 16
-                        externalProps => (
-                            <div>
-                                <BoldButton {...externalProps} />
-                                <ItalicButton {...externalProps} />
-                                <UnderlineButton {...externalProps} />
-                                <CodeButton {...externalProps} />
-                                <Separator {...externalProps} />
-                                <HeadlineOneButton {...externalProps} />
-                                <HeadlineTwoButton {...externalProps} />
-                                <HeadlineThreeButton {...externalProps} />
-                                <UnorderedListButton {...externalProps} />
-                                <OrderedListButton {...externalProps} />
-                                <BlockquoteButton {...externalProps} />
-                                <CodeBlockButton {...externalProps} />
-                                <EmojiSelect {...externalProps} />
-                            </div>
-                        )}
+                        {
+                            // may be use React.Fragment instead of div to improve perfomance after React 16
+                            (externalProps) => (
+                                <div>
+                                    <BoldButton {...externalProps} />
+                                    <ItalicButton {...externalProps} />
+                                    <UnderlineButton {...externalProps} />
+                                    <CodeButton {...externalProps} />
+                                    <Separator {...externalProps} />
+                                    <HeadlineOneButton {...externalProps} />
+                                    <HeadlineTwoButton {...externalProps} />
+                                    <HeadlineThreeButton {...externalProps} />
+                                    <UnorderedListButton {...externalProps} />
+                                    <OrderedListButton {...externalProps} />
+                                    <BlockquoteButton {...externalProps} />
+                                    <CodeBlockButton {...externalProps} />
+                                    <EmojiSelect {...externalProps} />
+                                </div>
+                            )
+                        }
                     </Toolbar>
                 </div>
             </div>

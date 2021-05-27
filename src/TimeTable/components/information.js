@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { withStyles } from '@material-ui/core';
 
-const styles = theme => ({
+const styles = (theme) => ({
     text: {
         transition: theme.transitions.create('padding'),
         [theme.breakpoints.down('xs')]: {

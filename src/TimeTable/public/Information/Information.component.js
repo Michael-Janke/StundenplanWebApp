@@ -15,7 +15,7 @@ import ApartmentIcon from '@material-ui/icons/Apartment';
 import grey from '@material-ui/core/colors/grey';
 
 import StructureSnapshot from './StructureSnapshot';
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.background.default,
         flexGrow: 1,
@@ -35,12 +35,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const breakMap = {
-    '2': 'Frühaufsicht',
-    '4': 'Frühstückspause',
-    '6': '1. Mittagspause',
-    '7': '2. Mittagspause',
-    '8': '1. Busaufsicht',
-    '10': '2. Busaufsicht',
+    2: 'Frühaufsicht',
+    4: 'Frühstückspause',
+    6: '1. Mittagspause',
+    7: '2. Mittagspause',
+    8: '1. Busaufsicht',
+    10: '2. Busaufsicht',
 };
 
 function InformationComponent({
@@ -80,7 +80,7 @@ function InformationComponent({
                 </ListItemIcon>
                 <ListItemText>Raumübersicht {period}. Stunde</ListItemText>
                 <ListItemSecondaryAction>
-                    <IconButton disabled={period <= 0} onClick={() => setPeriod(period => period - 1)}>
+                    <IconButton disabled={period <= 0} onClick={() => setPeriod((period) => period - 1)}>
                         <BackIcon />
                     </IconButton>
                     <IconButton
@@ -91,7 +91,7 @@ function InformationComponent({
                     </IconButton>
                     <IconButton
                         disabled={period >= Math.max(...Object.keys(substitutions))}
-                        onClick={() => setPeriod(period => period + 1)}
+                        onClick={() => setPeriod((period) => period + 1)}
                     >
                         <NextIcon />
                     </IconButton>
@@ -104,13 +104,13 @@ function InformationComponent({
                 {absentClasses && !!absentClasses.length && (
                     <Typography variant="body2" component="div">
                         Absente Klassen:{' '}
-                        <b>{Array.from(new Set(absentClasses.map(absence => absence.class.NAME))).join(', ')}</b>
+                        <b>{Array.from(new Set(absentClasses.map((absence) => absence.class.NAME))).join(', ')}</b>
                     </Typography>
                 )}
                 {Object.values(supervisions).length > 0 && (
                     <Typography variant="body2" component="div">
                         Fehlende Aufsichten heute:{' '}
-                        {Object.keys(supervisions).map(period => (
+                        {Object.keys(supervisions).map((period) => (
                             <>
                                 <b>{(breakMap[period] || period) + ': '}</b>
                                 {supervisions[period].join(', ')}{' '}

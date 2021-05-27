@@ -1,4 +1,4 @@
-const enhanceStore = createStore => (reducer, preloadedState, enhancer) => {
+const enhanceStore = (createStore) => (reducer, preloadedState, enhancer) => {
     const store = createStore(reducer, preloadedState, enhancer);
 
     window.addEventListener('online', store.dispatch.bind(null, { type: 'NETWORK_ONLINE' }));

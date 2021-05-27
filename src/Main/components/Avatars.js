@@ -29,14 +29,14 @@ const dispatchLoad = debounce(() => {
     loadUpns = [];
 }, 200);
 
-const loadAvatar = upn => {
+const loadAvatar = (upn) => {
     loadUpns.push(upn);
     dispatchLoad();
 };
 
 export const UserIcon = ({ upn, size = 24, profilePicSize, outline, ...other }) => {
     upn && loadAvatar(upn);
-    const avatar = useSelector(state => state.avatars[upn]);
+    const avatar = useSelector((state) => state.avatars[upn]);
     if (avatar && avatar.img) {
         return (
             <Avatar

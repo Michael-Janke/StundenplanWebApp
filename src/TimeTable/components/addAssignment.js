@@ -15,11 +15,8 @@ const AddAssignment = ({ date, team, openCreateAssignment }) => (
     </MenuItem>
 );
 
-const mapDispatchToProps = dispatch => ({
-    openCreateAssignment: data => dispatch(openCreateAssignment(data)),
+const mapDispatchToProps = (dispatch) => ({
+    openCreateAssignment: (data) => dispatch(openCreateAssignment(data)),
 });
 
-export default connect(
-    null,
-    mapDispatchToProps
-)(AddAssignment);
+export default connect(null, mapDispatchToProps)(AddAssignment);

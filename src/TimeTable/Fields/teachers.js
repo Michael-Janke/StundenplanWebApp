@@ -20,39 +20,42 @@ function Container({ className, description, type, children, setTimeTable, teach
     return <div className={className}>{children}</div>;
 }
 
-const TeachersContainer = type => teachers => ({ small, left, themeClasses, description, setTimeTable }) => {
-    const className = {
-        new: themeClasses.teacher,
-        old: themeClasses['teacher-old'],
-        'instead-of': themeClasses.teacher,
-        'instead-by': themeClasses.teacher,
-    }[type];
-    const field = {
-        new: teachers.new,
-        old: teachers.old,
-        'instead-by': teachers.substitution,
-        'instead-of': teachers.substitution,
-    }[type];
-    return field.map(teacher =>
-        teacher ? (
-            <Container
-                left={left}
-                teacher={teacher}
-                description={description}
-                setTimeTable={setTimeTable}
-                type={type}
-                className={className}
-                key={teacher.TEACHER_ID}
-            >
-                {teacherToName(teacher, small)}
-            </Container>
-        ) : (
-            '???'
-        )
-    );
-};
+const TeachersContainer =
+    (type) =>
+    (teachers) =>
+    ({ small, left, themeClasses, description, setTimeTable }) => {
+        const className = {
+            new: themeClasses.teacher,
+            old: themeClasses['teacher-old'],
+            'instead-of': themeClasses.teacher,
+            'instead-by': themeClasses.teacher,
+        }[type];
+        const field = {
+            new: teachers.new,
+            old: teachers.old,
+            'instead-by': teachers.substitution,
+            'instead-of': teachers.substitution,
+        }[type];
+        return field.map((teacher) =>
+            teacher ? (
+                <Container
+                    left={left}
+                    teacher={teacher}
+                    description={description}
+                    setTimeTable={setTimeTable}
+                    type={type}
+                    className={className}
+                    key={teacher.TEACHER_ID}
+                >
+                    {teacherToName(teacher, small)}
+                </Container>
+            ) : (
+                '???'
+            )
+        );
+    };
 
-export const teacherStyles = theme => ({
+export const teacherStyles = (theme) => ({
     teacher: {
         fontSize: '70%',
         textOverflow: 'ellipsis',

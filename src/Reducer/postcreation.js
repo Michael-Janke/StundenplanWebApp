@@ -70,7 +70,7 @@ function postCreationReducer(state = initialState, action) {
         case 'ADD_IMAGE':
             return { ...state, images: [...state.images, action.payload] };
         case 'DELETE_IMAGE':
-            return { ...state, images: state.images.filter(image => image !== action.payload) };
+            return { ...state, images: state.images.filter((image) => image !== action.payload) };
         case 'TOGGLE_VIEW_FIELD': {
             return { ...state, [action.payload.key]: action.payload.value };
         }

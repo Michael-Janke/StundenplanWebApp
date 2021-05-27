@@ -3,7 +3,7 @@ import React from 'react';
 import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
 
-const SubjectContainer = type => subject => props => {
+const SubjectContainer = (type) => (subject) => (props) => {
     const { themeClasses, description } = props;
     const field = description ? 'DESCRIPTION' : 'NAME';
 
@@ -33,7 +33,7 @@ const SubjectContainer = type => subject => props => {
     return description ? null : output;
 };
 
-export const subjectStyles = theme => ({
+export const subjectStyles = (theme) => ({
     'subject-normal': {
         fontSize: '72%',
         fontWeight: 600,

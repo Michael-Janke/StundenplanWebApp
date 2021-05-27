@@ -31,7 +31,7 @@ export class Feedback extends Component {
         this.props.onClose();
     };
 
-    handleChange = name => event => {
+    handleChange = (name) => (event) => {
         this.setState({
             [name]: event.target.value,
         });
@@ -104,15 +104,12 @@ const FeedbackTitle = styled.div`
     align-items: center;
 `;
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     small: state.browser.lessThan.medium,
 });
 
-const mapDispatchToProps = dispatch => ({
-    sendFeedback: feedback => dispatch(sendFeedback(feedback)),
+const mapDispatchToProps = (dispatch) => ({
+    sendFeedback: (feedback) => dispatch(sendFeedback(feedback)),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Feedback);
+export default connect(mapStateToProps, mapDispatchToProps)(Feedback);
