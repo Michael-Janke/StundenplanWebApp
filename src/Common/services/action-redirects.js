@@ -6,6 +6,7 @@ const actionRedirector = (store) => (next) => (action) => {
         case 'GET_TIMETABLE':
         case 'SET_TIMETABLE':
         case 'SET_MY_TIMETABLE':
+        case 'ITERATE_TIMETABLE':
         case 'GET_ME_RECEIVED':
         case 'COUNTER_CHANGED':
         case 'COUNTER_RECEIVED':

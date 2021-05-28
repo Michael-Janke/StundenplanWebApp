@@ -138,6 +138,10 @@ export function changeWeek(direction, id, type) {
     return { type: 'CHANGE_WEEK', payload: { direction, id, type } };
 }
 
+export function iterateTimetable(direction) {
+    return { type: 'ITERATE_TIMETABLE', payload: { direction } };
+}
+
 export function retryTimetable() {
     return { type: 'RETRY_TIMETABLE', payload: {} };
 }

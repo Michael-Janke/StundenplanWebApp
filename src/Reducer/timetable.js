@@ -57,6 +57,20 @@ export default function timetableReducer(state = initialState, action = {}) {
                 currentTimeTableType: action.payload.type,
                 currentTimeTableId: action.payload.id,
             };
+        case 'ITERATE_TIMETABLE':
+            const currentList =
+                Object.keys(
+                    state.masterdata[
+                        state.currentTimeTableType[0].toUpperCase() + state.currentTimeTableType.slice(1)
+                    ] || {}
+                ) || [];
+            const currentIndex = currentList.indexOf(state.currentTimeTableId + '');
+            const nextId = currentList[(currentIndex + 1) % currentList.length] * 1;
+            const previousId = currentList[(currentIndex - 1 + currentList.length) % currentList.length] * 1;
+            return {
+                ...state,
+                currentTimeTableId: action.payload.direction === -1 ? previousId : nextId,
+            };
         case 'CHANGE_WEEK':
         case 'SET_DATE':
         case 'SET_MY_TIMETABLE':
