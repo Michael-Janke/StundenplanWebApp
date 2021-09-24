@@ -1,6 +1,6 @@
 import { requestApiGenerator, API_URL } from './generator';
 
-export default (store) => (next) => (action) => {
+const StudentListService = (store) => (next) => (action) => {
     next(action);
     switch (action.type) {
         case 'GET_STUDENTLIST': {
@@ -9,3 +9,5 @@ export default (store) => (next) => (action) => {
         default:
     }
 };
+
+export default StudentListService;

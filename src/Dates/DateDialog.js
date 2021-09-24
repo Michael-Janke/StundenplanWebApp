@@ -18,23 +18,8 @@ import SelectField from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
-
-import { DatePicker, DateTimePicker } from '@material-ui/pickers';
-
 import PeriodRangePicker from './PeriodRangePicker';
-import { Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
-
-const DateTimeMask = {
-    format: 'DD.MM.YYYY HH:mm',
-    mask: (value) =>
-        value ? [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/] : [],
-};
-
-const DateMask = {
-    format: 'DD.MM.YYYY',
-    mask: (value) => (value ? [/\d/, /\d/, '.', /\d/, /\d/, '.', /\d/, /\d/, /\d/, /\d/] : []),
-};
 
 const styles = (theme) => ({
     row: {
@@ -47,11 +32,6 @@ const styles = (theme) => ({
         width: '100%',
     },
 });
-
-function parseISOLocal(s) {
-    var b = s.split(/\D/);
-    return new Date(b[0], b[1] - 1, b[2], b[3], b[4], b[5]);
-}
 
 export class AddDialog extends Component {
     state = {};
@@ -67,9 +47,9 @@ export class AddDialog extends Component {
                 TYPE: date.TYPE || 'NORMAL',
                 HOMEPAGE: date.HOMEPAGE ? 1 : (date.HOMEPAGE === undefined) + 0,
                 HOMEPAGE_BOX: date.HOMEPAGE_BOX ? 1 : 0,
-                DATE_FROM: date.DATE_FROM ? parseISOLocal(date.DATE_FROM.date) : moment().startOf('day').toDate(),
-                DATE_TO: date.DATE_TO ? parseISOLocal(date.DATE_TO.date) : moment().startOf('day').toDate(),
-                timeEdit: date.DATE_FROM && parseISOLocal(date.DATE_FROM.date).getHours() !== 0,
+                DATE_FROM: date.DATE_FROM ? moment(date.DATE_FROM.date).format() : moment().startOf('day').format(),
+                DATE_TO: date.DATE_TO ? moment(date.DATE_TO.date).format() : moment().startOf('day').format(),
+                timeEdit: date.DATE_FROM && moment(date.DATE_FROM.date).hour() !== 0,
             };
         }
         return state;
@@ -110,6 +90,8 @@ export class AddDialog extends Component {
             TYPE: this.state.TYPE,
             TEXT: this.state.TEXT,
             SUBTEXT: this.state.SUBTEXT,
+            HOMEPAGE: this.state.HOMEPAGE,
+            HOMEPAGE_BOX: this.state.HOMEPAGE_BOX,
         };
     }
 
@@ -138,8 +120,7 @@ export class AddDialog extends Component {
     render() {
         const { edit, classes, small } = this.props;
         const { timeEdit } = this.state;
-        const Picker = timeEdit ? DateTimePicker : DatePicker;
-        const mask = timeEdit ? DateTimeMask : DateMask;
+
         return (
             <Dialog open={this.props.open} onClose={this.handleClose(true)} fullScreen={small}>
                 <DialogTitle>
@@ -149,35 +130,31 @@ export class AddDialog extends Component {
                 <DialogContent>
                     <div className={classes.row}>
                         <FormControl className={classes.formControl} error={!this.state.DATE_FROM}>
-                            <Typography variant="h6">Von</Typography>
-                            <Picker
-                                value={this.state.DATE_FROM}
-                                onChange={(date) => this.handleFromDateChange(date)}
-                                {...mask}
-                                keyboard
-                                ampm={false}
-                                variant="inline"
-                                cancelLabel="Abbrechen"
-                                invalidDateMessage="Ungültiges Datumsformat"
-                                renderInput={(props) => <TextField variant="outlined" {...props} />}
+                            <TextField
+                                label="Von"
+                                value={moment(this.state.DATE_FROM).format(
+                                    timeEdit ? 'YYYY-MM-DDTHH:mm' : 'YYYY-MM-DD'
+                                )}
+                                onChange={(event) => this.handleFromDateChange(event.target.value)}
+                                type={timeEdit ? 'datetime-local' : 'date'}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
-                            {!timeEdit && <Button onClick={() => this.editTime(true)}>Zeit hinzufügen</Button>}
-
-                            {timeEdit && <Button onClick={() => this.editTime(false)}>Zeit entfernen</Button>}
+                            <Button onClick={() => this.editTime(!timeEdit)}>
+                                Zeit {timeEdit ? 'entfernen' : 'hinzufügen'}
+                            </Button>
                         </FormControl>
 
                         <FormControl className={classes.formControl} error={!this.state.DATE_TO}>
-                            <Typography variant="h6">Bis</Typography>
-                            <Picker
-                                value={this.state.DATE_TO}
-                                onChange={(date) => this.handleToDateChange(date)}
-                                renderInput={(props) => <TextField variant="outlined" {...props} />}
-                                {...mask}
-                                keyboard
-                                ampm={false}
-                                variant="inline"
-                                cancelLabel="Abbrechen"
-                                invalidDateMessage="Ungültiges Datumsformat"
+                            <TextField
+                                label="Bis"
+                                value={moment(this.state.DATE_TO).format(timeEdit ? 'YYYY-MM-DDTHH:mm' : 'YYYY-MM-DD')}
+                                onChange={(event) => this.handleToDateChange(event.target.value)}
+                                type={timeEdit ? 'datetime-local' : 'date'}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
 
                             {timeEdit && (

@@ -46,9 +46,11 @@ const store = createStore(
 
 const persistor = persistStore(store);
 
-export default () => {
+const getStore = () => {
     return { store, persistor };
 };
+
+export default getStore;
 
 export const dispatch = (...args) => store.dispatch(...args);
 

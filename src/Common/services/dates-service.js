@@ -1,6 +1,6 @@
 import { requestApiGenerator, API_URL } from './generator';
 
-export default (store) => (next) => (action) => {
+const DatesService = (store) => (next) => (action) => {
     next(action);
     switch (action.type) {
         case 'ADD_DATE':
@@ -35,3 +35,5 @@ export default (store) => (next) => (action) => {
         default:
     }
 };
+
+export default DatesService;

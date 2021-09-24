@@ -11,7 +11,7 @@ import WordIcon from '../icons/Word';
 import FormsIcon from '../icons/Forms';
 import SchulPortalIcon from '../icons/SchulPortal';
 
-export default {
+const icons = {
     Stundenplan: {
         color: '#00593b',
         icon: Icon(require('../icons/icon.png')),
@@ -114,3 +114,5 @@ function Icon(source, style) {
         );
     };
 }
+
+export default icons;

@@ -1,6 +1,6 @@
 import { requestApiGenerator, API_URL } from './generator';
 
-export default (store) => (next) => (action) => {
+const PostsService = (store) => (next) => (action) => {
     next(action);
     switch (action.type) {
         case 'GET_POSTS': {
@@ -37,3 +37,5 @@ export default (store) => (next) => (action) => {
         default:
     }
 };
+
+export default PostsService;

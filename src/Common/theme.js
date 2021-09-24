@@ -1,7 +1,7 @@
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import createTheme from '@material-ui/core/styles/createTheme';
 import blue from '@material-ui/core/colors/blue';
-export default (themeType) =>
-    createMuiTheme({
+const theme = (themeType) =>
+    createTheme({
         typography: {
             fontFamily: `Roboto, system, -apple-system, system-ui, BlinkMacSystemFont, "Helvetica Neue", "Lucida Grande", "Segoe UI", "Ubuntu", "Cantarell", "Fira Sans", sans-serif`,
             useNextVariants: true,
@@ -28,3 +28,4 @@ export default (themeType) =>
             },
         },
     });
+export default theme;

@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core';
 import Date from './Date';
 
-export default ({ date, open, handleClose, handleDelete }) => (
+const DateDeletionDialog = ({ date, open, handleClose, handleDelete }) => (
     <Dialog
         open={open}
         onClose={handleClose}
@@ -24,3 +24,5 @@ export default ({ date, open, handleClose, handleDelete }) => (
         </DialogActions>
     </Dialog>
 );
+
+export default DateDeletionDialog;

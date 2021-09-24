@@ -18,6 +18,7 @@ const transformDates = (dates) => {
 };
 
 const DatesList = ({ onDelete, onEdit }) => {
+    // eslint-disable-next-line
     const dates = useSelector((state) => state.dates.dates) || [];
     const monthKeyedDates = useMemo(() => transformDates(dates), [dates]);
 

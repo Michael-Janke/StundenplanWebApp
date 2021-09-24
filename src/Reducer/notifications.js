@@ -27,7 +27,7 @@ function errorDescription(type) {
     return 'Unbekannter Fehler';
 }
 
-export default (state = defaultState, action) => {
+const reducer = (state = defaultState, action) => {
     const addNotification = (notification) => ({
         ...state,
         notifications: [
@@ -87,3 +87,5 @@ export default (state = defaultState, action) => {
             return state;
     }
 };
+
+export default reducer;

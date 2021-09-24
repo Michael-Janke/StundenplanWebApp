@@ -1,7 +1,7 @@
 import { getAuthContext } from '../Authentication/storage';
 import TokenAuthContext from '../Authentication/contexts/TokenAuthContext';
 
-export default (store) => (next) => (action) => {
+const AuthenticationService = (store) => (next) => (action) => {
     switch (action.type) {
         case 'GET_ME':
         case 'ADD_DATE':
@@ -28,3 +28,5 @@ export default (store) => (next) => (action) => {
 
     next(action);
 };
+
+export default AuthenticationService;

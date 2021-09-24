@@ -30,13 +30,13 @@ class OfficeLink extends React.Component {
         const Icon = {
             teams: Icons.Teams,
             notebook: Icons.OneNote,
-        }[this.props.type];
+        }[this.props.type].icon;
         const text = {
             teams: 'Team öffnen',
             notebook: 'Notizbuch öffnen',
         }[this.props.type];
         return (
-            <OpenOfficeButton url={url} icon={<Icon.icon />}>
+            <OpenOfficeButton url={url} icon={<Icon />}>
                 <ListItemText primary={text} secondary={subtitle} />
             </OpenOfficeButton>
         );

@@ -10,7 +10,7 @@ import ClockDigital from './ClockDigital';
 import CurrentDate from './CurrentDate';
 import DayInfo from './DayInfo';
 import TransportInfo from './TransportInfo/TransportInfo';
-import { fade } from '@material-ui/core/styles';
+import { alpha } from '@material-ui/core/styles';
 import { indigo } from '@material-ui/core/colors';
 import { useIntervalCheck } from '../../Common/intervalCheck';
 import useInterval from 'react-useinterval';
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     },
     main: {
         padding: theme.spacing(1),
-        backgroundColor: fade(theme.palette.background.paper, 0.8),
+        backgroundColor: alpha(theme.palette.background.paper, 0.8),
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -90,8 +90,7 @@ const useStyles = makeStyles((theme) => ({
 const Posts = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const getPosts = () => dispatch(getPostsAction());
-    useEffect(getPosts, []);
+    useEffect(() => dispatch(getPostsAction()), [dispatch]);
     useIntervalCheck();
     const [zoom, setZoom] = useState(document.body.offsetWidth / 1920);
     useEffect(() => {

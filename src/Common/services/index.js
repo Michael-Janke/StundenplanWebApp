@@ -11,7 +11,7 @@ import reportService from './report-service';
 import studentListService from './studentListService';
 import eventService from './events-service';
 
-export default [
+const services = [
     authenticationService,
     dataService,
     profilePictureService,
@@ -25,3 +25,5 @@ export default [
     studentListService,
     eventService,
 ];
+
+export default services;

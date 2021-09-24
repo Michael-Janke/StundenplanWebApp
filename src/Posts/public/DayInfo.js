@@ -49,6 +49,7 @@ function DayInfo({ dayInfo = [], getDayInfo }) {
     useInterval(() => setCurrentId((currentId + 1) % dayInfo.length), 15000);
 
     // fetch dayInfo once component was mounted
+    // eslint-disable-next-line
     useEffect(getDayInfo, [moment().format('Ymd')]);
 
     return (
