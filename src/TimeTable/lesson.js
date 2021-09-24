@@ -218,6 +218,7 @@ const LessonContainer = styled.div`
 `;
 
 const LessonWrapper = styled.div`
+    cursor: pointer;
     display: flex;
     width: 100%;
     flex-direction: column;
