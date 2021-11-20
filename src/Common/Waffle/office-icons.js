@@ -1,6 +1,7 @@
 import React from 'react';
 import TextSmsIcon from '@material-ui/icons/Textsms';
 import ReportIcon from '@material-ui/icons/FormatListNumberedRtl';
+import VersionsIcon from '@material-ui/icons/Group';
 import OneNoteIcon from '../icons/OneNote';
 import OutlookIcon from '../icons/Outlook';
 import TeamsIcon from '../icons/Teams';
@@ -35,6 +36,13 @@ const icons = {
         color: '#00233a',
         icon: ReportIcon,
         link: '/reportsum',
+        router: true,
+        scope: ['admin'],
+    },
+    Versionen: {
+        color: '#00233a',
+        icon: VersionsIcon,
+        link: '/access',
         router: true,
         scope: ['admin'],
     },

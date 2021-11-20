@@ -18,6 +18,7 @@ const PublicTimetable = asynchronize(() => import(/* webpackChunkName: "TimeTabl
 const Report = asynchronize(() => import(/* webpackChunkName: "Report" */ '../Report'));
 const ReportSum = asynchronize(() => import(/* webpackChunkName: "Report-ReportSum" */ '../Report/ReportSum'));
 const NotebookSelector = asynchronize(() => import(/* webpackChunkName: "OneNote" */ '../OneNote'));
+const Access = asynchronize(() => import(/* webpackChunkName: "Access" */ '../Access'));
 
 const Route = (props) => {
     const renderComponent = React.useCallback(
@@ -42,6 +43,7 @@ const routeConfig = (location) => (
         <Route exact path="/onenote/:directOpen?" component={NotebookSelector} title="Notizbücher" back withApp />
         <Route exact path="/report/:id?" component={Report} title="Bericht" withApp />
         <Route exact path="/reportsum" component={ReportSum} title="Berichtsübersicht" withApp />
+        <Route exact path="/access" component={Access} title="Versionsverwaltung" withApp />
 
         <Route exact path="/error" component={NotFoundPage} />
         <Redirect

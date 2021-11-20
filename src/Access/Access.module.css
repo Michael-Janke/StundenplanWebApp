@@ -1,0 +1,17 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 16px;
+    margin: 16px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    width: 200px;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
