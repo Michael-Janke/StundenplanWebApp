@@ -12,9 +12,6 @@ import {
     DialogContent,
     useMediaQuery,
     useTheme,
-    AppBar,
-    Tabs,
-    Tab,
     CircularProgress,
 } from '@material-ui/core';
 import { UserIcon } from '../../Main/components/Avatars';
@@ -28,7 +25,6 @@ export default function ListDialog({ tv = false }) {
     const ref = useRef(null);
 
     const dispatch = useDispatch();
-    const [viewState, setView] = useState(null);
     const [print, setPrint] = useState(false);
 
     const { list = [], timetableId, loading, reference } = useSelector(({ studentList }) => studentList);
@@ -47,23 +43,9 @@ export default function ListDialog({ tv = false }) {
     };
     const printClose = () => setPrint(false);
 
-    const groups = list ? [...new Set(list.map((o) => o.GROUP))].filter((group) => group !== null).sort() : [];
-    const groupCounts = groups.reduce(
-        (acc, group) => ({ ...acc, [group]: list.filter((o) => o.GROUP === group).length }),
-        {}
-    );
-
-    const view = groups.indexOf(viewState) === -1 ? null : viewState;
-
     const studentList =
-        list &&
-        list
-            .filter((o) => students[o.STUDENT_ID])
-            .filter((o) => view === null || o.GROUP === view)
-            .map((o) => students[o.STUDENT_ID])
-            .sort((a, b) => a.LASTNAME.localeCompare(b.LASTNAME));
+        list && list.map((o) => students[o.STUDENT_ID]).sort((a, b) => a.LASTNAME.localeCompare(b.LASTNAME));
 
-    console.log(reference);
     const className =
         reference.CLASS_IDS && reference.CLASS_IDS.map((classId) => (classes[classId] || {}).NAME).join(', ');
     const subjectName = (subjects[reference.SUBJECT_ID] || {}).NAME;
@@ -94,43 +76,22 @@ export default function ListDialog({ tv = false }) {
             <DialogTitle id="course-list-dialog">
                 Kursliste {className} {subjectName}
             </DialogTitle>
-            <AppBar position="static" color="default">
-                <Tabs
-                    value={view}
-                    onChange={(e, view) => setView(view)}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    variant="fullWidth"
-                >
-                    <Tab label={`Alle (${list && list.length})`} value={null} />
-                    {groups.map((group) => (
-                        <Tab key={group || 'null'} label={`Gruppe ${group} (${groupCounts[group]})`} value={group} />
-                    ))}
-                </Tabs>
-            </AppBar>
             <DialogContent dividers={true}>
                 {loading && <CircularProgress />}
                 {!loading && (
-                    <StudentList
-                        students={students}
-                        list={studentList}
-                        view={view}
-                        fullScreen={fullScreen}
-                        onClick={onClick}
-                    />
+                    <StudentList students={students} list={studentList} fullScreen={fullScreen} onClick={onClick} />
                 )}
                 <Page open={'hidden'} openPrint={print} onPrintClose={printClose} exact={true} horizontal={false}>
                     <table ref={ref}>
                         <tbody>
                             <tr>
                                 <th colSpan={4}>
-                                    Kursliste {view && 'Gruppe'} {view} {className} {subjectName}
+                                    Kursliste {className} {subjectName}
                                 </th>
                             </tr>
                             <tr>
                                 <th>Nachname</th>
                                 <th>Vorname</th>
-                                <th>Gruppe</th>
                                 <th>Klasse</th>
                             </tr>
                             {list &&
@@ -141,7 +102,6 @@ export default function ListDialog({ tv = false }) {
                                         <tr key={student.STUDENT_ID}>
                                             <td>{student.LASTNAME}</td>
                                             <td>{student.FIRSTNAME}</td>
-                                            <td>{student.GROUP}</td>
                                             <td>{classes[student.CLASS_ID].NAME}</td>
                                         </tr>
                                     ))}

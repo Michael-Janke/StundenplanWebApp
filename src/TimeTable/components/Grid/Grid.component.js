@@ -52,7 +52,7 @@ class TimeTableGrid extends React.Component {
                     placement="right"
                     title={this.periodTime(period.START_TIME) + ' - ' + this.periodTime(period.END_TIME)}
                 >
-                    <Period>{period.PERIOD_TIME_ID - 1}.</Period>
+                    <Period>{period.PERIOD_TIME_ID}.</Period>
                 </Tooltip>
             </Periods>
         );

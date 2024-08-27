@@ -35,12 +35,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const breakMap = {
-    2: 'Frühaufsicht',
-    4: 'Frühstückspause',
-    6: '1. Mittagspause',
-    7: '2. Mittagspause',
-    8: '1. Busaufsicht',
-    10: '2. Busaufsicht',
+    1: 'Frühaufsicht',
+    3: 'Frühstückspause',
+    5: '1. Mittagspause',
+    6: '2. Mittagspause',
+    7: '1. Busaufsicht',
+    9: '2. Busaufsicht',
 };
 
 function InformationComponent({
@@ -53,9 +53,9 @@ function InformationComponent({
     counter,
 }) {
     const classes = useStyles();
-    const [period, setPeriod] = useState((currentPeriod || {}).PERIOD_TIME_ID - 1 || 0);
+    const [period, setPeriod] = useState((currentPeriod || {}).PERIOD_TIME_ID || 0);
     const { lessons, absentClasses, studentsInSchool, teachersInSchool } = substitutions[period] || {};
-    const currentPeriodNumber = ((currentPeriod || {}).PERIOD_TIME_ID || 1) - 1;
+    const currentPeriodNumber = (currentPeriod || {}).PERIOD_TIME_ID - 1 || 1;
 
     useEffect(() => {
         getAllTimetable(date);
@@ -78,7 +78,7 @@ function InformationComponent({
                 <ListItemIcon>
                     <ApartmentIcon />
                 </ListItemIcon>
-                <ListItemText>Raumübersicht {period}. Stunde</ListItemText>
+                <ListItemText>Raumübersicht {period + 1}. Stunde</ListItemText>
                 <ListItemSecondaryAction>
                     <IconButton disabled={period <= 0} onClick={() => setPeriod((period) => period - 1)}>
                         <BackIcon />

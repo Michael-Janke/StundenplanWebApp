@@ -8,23 +8,23 @@ import { getRoomFields, styles } from '../../Fields';
 const buildingStructure = [
     {
         name: 'E',
-        rooms: ['E01', 'E02', 'E03', null, null, null, 'E06', 'E07', 'E08'],
+        rooms: ['E01', 'E02', 'E03', null, null, null, 'E06', 'E07', 'E08', 'E13', 'E14', 'E15'],
     },
     {
         name: 'D',
-        rooms: ['D01', 'D02', 'D03', 'D12', 'D09', 'D10', 'D06', 'D07', 'D08'],
+        rooms: ['D01', 'D02', 'D03', 'D12', 'D09', 'D10', 'D06', 'D07', 'D08', 'D13', 'D14', 'D15'],
     },
     {
         name: 'C',
-        rooms: ['C01', null, null, 'C11', null, 'C10', null, null, 'C08'],
+        rooms: ['C01', null, null, 'C11', null, 'C10', null, null, 'C08', null, null, null],
     },
     {
         name: 'B',
-        rooms: ['B01', 'B02', 'B03', 'B11', null, 'B10', 'B06', 'B07', 'B08'],
+        rooms: ['B01', 'B02', 'B03', 'B11', null, 'B10', 'B06', 'B07', 'B08', null, null, null],
     },
     {
         name: 'A',
-        rooms: ['TH1', 'TH2', null, 'A07', 'A09', null, null, null, null],
+        rooms: ['TH1', 'TH2', null, 'A07', 'A09', null, null, null, null, null, null, null],
     },
 ];
 

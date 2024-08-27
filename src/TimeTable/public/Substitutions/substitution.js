@@ -95,7 +95,7 @@ const SubstitutionEntry = (props) => {
     return (
         <SubstitutionRow>
             <ColorBar lineColor={colorBar} />
-            <Period>{period}</Period>
+            <Period>{period + 1}</Period>
             {substitutionType}
             {InsteadOf}
             {Old && Old()}

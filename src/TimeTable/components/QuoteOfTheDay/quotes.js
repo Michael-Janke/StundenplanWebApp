@@ -1,247 +1,235 @@
 export const quotes = [
     {
-        quote: 'Phantasie ist wichtiger als Wissen, denn Wissen ist begrenzt.',
-        author: 'Albert Einstein',
-        authorSub: 'deutscher theoretischer Physiker (1879-1955)',
-    },
-
-    {
-        quote: 'Es ist nicht von Bedeutung, wie langsam du gehst, solange du nicht stehenbleibst.',
-        author: 'Konfuzius',
-        authorSub: 'chinesischer Philosoph, Politiker und Staatsmann (551 v. Chr.-479 v. Chr.)',
-    },
-
-    {
-        quote: 'Alle Träume können wahr werden, wenn wir den Mut haben, ihnen zu folgen.',
-        author: 'Walt Disney',
-        authorSub: 'amerikanischer Trickfilmzeichner und Filmproduzent (1901-1966)',
-    },
-
-    {
-        quote: 'Ich habe niemals an Erfolg geglaubt. Ich habe dafür gearbeitet.',
-        author: 'Estée Lauder',
-        authorSub: 'amerikanische Kosmetik-Unternehmerin (1908-2004)',
-    },
-
-    {
-        quote: 'Wege entstehen dadurch, dass man sie geht.',
-        author: 'Franz Kafka',
-        authorSub: 'deutschsprachiger Schriftsteller (1883-1924)',
-    },
-
-    {
-        quote: 'Nichts auf der Welt ist so mächtig wie eine Idee, deren Zeit gekommen ist.',
-        author: 'Victor Hugo',
-        authorSub: 'französischer Schriftsteller (1802-1885)',
-    },
-
-    {
-        quote: 'Menschen, die verrückt genug sind zu denken, sie könnten die Welt verändern, sind diejenigen, die es auch tun',
-        author: 'Steve Jobs',
-        authorSub: 'amerikanischer Unternehmer (1955-2011)',
-    },
-
-    {
-        quote: 'Auf dem Weg zum Erfolg herrscht viel Stoß- und Gegenverkehr.',
-        author: 'Emil Baschnonga',
-        authorSub: 'Schweizer Schriftsteller (geb. 1941)',
-    },
-
-    {
-        quote: 'Wir sind das, was wir wiederholt tun. Vorzüglichkeit ist daher keine Handlung, sondern eine Gewohnheit.',
-        author: 'Aristoteles',
-        authorSub: 'griechischer Philosoph und Naturforscher (384 v. Chr.-322 v. Chr.)',
-    },
-
-    {
-        quote: 'Der Erfolg ist nicht danach zu beurteilen, was ein Mensch im Leben erreicht, sondern nach den Hindernissen, die er auf dem Weg zum Erfolg überwunden hat.',
-        author: 'Booker T. Washington',
-        authorSub: 'amerikanischer Sozialreformer und Bürgerrechtler',
-    },
-
-    {
-        quote: 'Unsere größte Schwäche liegt im Aufgeben. Der sichere Weg zum Erfolg ist immer, es doch noch einmal zu versuchen.',
-        author: 'Thomas Alva Edison (1847-1931)',
-        authorSub: 'amerikanischer Erfinder und Unternehmer',
-    },
-
-    {
-        quote: 'Hindernisse können mich nicht aufhalten; Entschlossenheit bringt jedes Hindernis zu Fall.',
-        author: 'Leonardo da Vinci',
-        authorSub: 'italienischer Maler und Naturforscher (1452-1519)',
-    },
-
-    {
-        quote: 'Hindernisse können mich nicht aufhalten; Entschlossenheit bringt jedes Hindernis zu Fall.',
-        author: 'Leonardo da Vinci',
-        authorSub: 'italienischer Maler und Naturforscher (1452-1519)',
-    },
-
-    {
-        quote: 'Das Bestreben, Träume zu verwirklichen, verträgt sich nur sehr schwer mit Inkonsequenz.',
-        author: 'Oliver Mally',
-        authorSub: 'österreichischer Musiker (geb. 1966)',
-    },
-
-    {
-        quote: 'Alles, was du dir vorstellen kannst, ist real.',
-        author: 'Pablo Picasso',
-        authorSub: 'spanischer Maler und Bildhauer (1881-1973)',
-    },
-
-    {
-        quote: 'Wenn du etwas ganz fest willst, dann wird das Universum darauf hinwirken, dass du es erreichen kannst.',
-        author: 'Paulo Coelho',
-        authorSub: 'brasilianischer Schriftsteller (geb. 1947)',
-    },
-
-    {
-        quote: 'Ich habe gelernt, dass Mut nicht die Abwesenheit von Furcht ist, sondern der Triumph darüber. Der mutige Mann ist keiner, der keine Angst hat, sondern der, der die Furcht besiegt.',
+        quote: 'Bildung ist die mächtigste Waffe, die du verwenden kannst, um die Welt zu verändern.',
         author: 'Nelson Mandela',
         authorSub: 'südafrikanischer Aktivist und Politiker (1918-2013)',
     },
 
     {
-        quote: 'Hindernisse sind diese furchterregenden Sachen, die du dann siehst, wenn du dein Ziel aus den Augen verlierst.',
+        quote: 'Die einzige Grenze zu unserer Verwirklichung von morgen wird unser Zweifel von heute sein.',
+        author: 'Franklin D. Roosevelt',
+        authorSub: '32. Präsident der Vereinigten Staaten (1882-1945)',
+    },
+
+    {
+        quote: 'Der mittelmäßige Lehrer erzählt. Der gute Lehrer erklärt. Der überlegene Lehrer demonstriert. Der großartige Lehrer inspiriert.',
+        author: 'William Arthur Ward',
+        authorSub: 'amerikanischer Schriftsteller (1921-1994)',
+    },
+
+    {
+        quote: 'Lernen ist wie Rudern gegen den Strom: Sobald man aufhört, treibt man zurück.',
+        author: 'Benjamin Britten',
+        authorSub: 'britischer Komponist (1913-1976)',
+    },
+
+    {
+        quote: 'Wissen ist nicht genug, wir müssen es anwenden. Wollen ist nicht genug, wir müssen es tun.',
+        author: 'Johann Wolfgang von Goethe',
+        authorSub: 'deutscher Dichter (1749-1832)',
+    },
+
+    {
+        quote: 'Erfolg ist die Summe kleiner Anstrengungen, die jeden Tag wiederholt werden.',
+        author: 'Robert Collier',
+        authorSub: 'amerikanischer Autor (1885-1950)',
+    },
+
+    {
+        quote: 'Die Kunst des Lehrens besteht darin, die Freude am Lernen zu wecken.',
+        author: 'Albert Einstein',
+        authorSub: 'deutscher theoretischer Physiker (1879-1955)',
+    },
+
+    {
+        quote: 'Wer immer tut, was er schon kann, bleibt immer das, was er schon ist.',
         author: 'Henry Ford',
-        authorSub: 'amerikanischer Unternehmer und Pionier des Automobilbaus (1863-1947)',
+        authorSub: 'amerikanischer Unternehmer (1863-1947)',
     },
 
     {
-        quote: 'Es gibt keinen bequemen Weg, der von der Erde zu den Sternen führt.',
-        author: 'Seneca',
-        authorSub: 'römischer Philosoph, Dramatiker und Stoiker (um 4 v. Chr.-65 n. Chr.)',
+        quote: 'Das Geheimnis des Erfolges ist, den Standpunkt des anderen zu verstehen.',
+        author: 'Henry Ford',
+        authorSub: 'amerikanischer Unternehmer (1863-1947)',
     },
 
     {
-        quote: 'Die Hartnäckigen gewinnen die Schlachten.',
-        author: 'Napoleon Bonaparte',
-        authorSub: 'französischer General, Staatsmann und Kaiser (1769-1821)',
+        quote: 'Der einzige Weg, das Unmögliche zu erreichen, ist zu glauben, dass es möglich ist.',
+        author: 'Charles Kingsleigh',
+        authorSub: 'fiktive Figur aus „Alice im Wunderland“',
     },
 
     {
-        quote: 'Ich kenne keinen sicheren Weg zum Erfolg, aber einen sicheren Weg zum Misserfolg: es jedem recht machen zu wollen.',
-        author: 'Platon',
-        authorSub: 'griechischer Philosoph und Gelehrter (427 v. Chr.-347 v. Chr.)',
+        quote: 'Nicht das Beginnen wird belohnt, sondern einzig und allein das Durchhalten.',
+        author: 'Katharina von Siena',
+        authorSub: 'italienische Mystikerin (1347-1380)',
     },
 
     {
-        quote: 'Das gute Gelingen ist zwar nichts Kleines, fängt aber mit Kleinigkeiten an.',
-        author: 'Sokrates',
-        authorSub: 'griechischer Philosoph (469 v. Chr.-399 v.Chr.)',
+        quote: 'Die einzige Konstante im Leben ist die Veränderung.',
+        author: 'Heraklit',
+        authorSub: 'griechischer Philosoph (etwa 540 v. Chr.-480 v. Chr.)',
     },
 
     {
-        quote: 'Beklage nicht, was nicht zu ändern ist, aber ändere, was zu beklagen ist.',
-        author: 'William Shakespeare',
-        authorSub: 'englischer Dramatiker, Lyriker und Schauspieler (1564-1616)',
+        quote: 'Der beste Weg, die Zukunft vorherzusagen, ist, sie zu gestalten.',
+        author: 'Peter Drucker',
+        authorSub: 'US-amerikanischer Managementberater (1909-2005)',
     },
 
     {
-        quote: 'Ich bereue nichts, was ich getan habe, nur das, was ich nicht getan habe.',
-        author: 'Ingrid Bergman',
-        authorSub: 'schwedische Schauspielerin (1915-1982)',
+        quote: 'Glaube, dass du es kannst, und du bist schon halb dort.',
+        author: 'Theodore Roosevelt',
+        authorSub: '26. Präsident der Vereinigten Staaten (1858-1919)',
     },
 
     {
-        quote: 'Überwundene Schwierigkeiten beglücken mehr als leichte Siege.',
-        author: 'Erich Limpach',
-        authorSub: 'deutscher Dichter (1899-1965)',
+        quote: 'Es ist nicht die stärkste Spezies, die überlebt, auch nicht die intelligenteste, sondern die, die am ehesten bereit ist, sich zu verändern.',
+        author: 'Charles Darwin',
+        authorSub: 'britischer Naturforscher (1809-1882)',
     },
 
     {
-        quote: 'Ist unsere Motivation stark und heilsam, können wir alles vollbringen.',
-        author: 'Dalai Lama',
-        authorSub: 'Oberhaupt der Tibeter (geb. 1935)',
+        quote: 'Wenn du schnell gehen willst, geh alleine. Wenn du weit gehen willst, geh gemeinsam.',
+        author: 'Afrikanisches Sprichwort',
+        authorSub: '',
     },
 
     {
-        quote: 'Auch eine Reise von tausend Meilen beginnt mit einem Schritt.',
-        author: 'Laotse',
-        authorSub: 'chinesischer Philosoph (604 v. Chr.-531 v.Chr.)',
-    },
-
-    {
-        quote: 'Du kannst den Ozean nicht überqueren, wenn du nicht den Mut hast, die Küste aus den Augen zu verlieren.',
-        author: 'Christoph Kolumbus',
-        authorSub: 'genuesischer Seefahrer (1451-1506)',
-    },
-
-    {
-        quote: 'Viel mehr als unsere Fähigkeiten sind es unsere Entscheidungen, die zeigen, wer wir wirklich sind.',
-        author: 'J.K. Rowling',
-        authorSub: 'britische Schriftstellerin (geb. 1965)',
-    },
-
-    {
-        quote: 'Ich glaube, dass es mein größter Ehrgeiz im Leben ist, anderen weiterzugeben, was ich weiß.',
-        author: 'Frank Sinatra',
-        authorSub: 'amerikanischer Sänger, Schauspieler und Entertainer (1915-1998)',
-    },
-
-    {
-        quote: 'Alle wollen die Welt verändern, aber keiner sich selbst.',
-        author: 'Lew Nikolajewitsch Tolstoi',
-        authorSub: 'russischer Schriftsteller (1828-1910)',
-    },
-
-    {
-        quote: 'Mut ist der Preis, den das Leben verlangt, wenn es Frieden mit dir schließen soll.',
-        author: 'Amelia Earhart',
-        authorSub: 'amerikanische Flugpionierin und Frauenrechtlerin (1897-1937)',
-    },
-
-    {
-        quote: 'Menschen mit Zielen sind deshalb so erfolgreich, weil sie wissen, wohin sie gehen.',
-        author: 'Earl Nightingale',
-        authorSub: 'amerikanischer Radiokommentator und Motivationstrainer (1921-1989)',
-    },
-
-    {
-        quote: 'Perfektion ist nicht dann erreicht, wenn es nichts mehr hinzuzufügen gibt, sondern wenn man nichts mehr weglassen kann.',
-        author: 'Antoine de Saint-Exupéry',
-        authorSub: 'französischer Schriftsteller und Flieger (1900-1944)',
-    },
-
-    {
-        quote: 'Wenn man ohne Flügel geboren wurde, darf man sie nicht am Wachsen hindern.',
-        author: 'Coco Chanel',
-        authorSub: 'französische Mode-Designerin (1883-1971)',
-    },
-
-    {
-        quote: 'In 20 Jahren wirst Du dich mehr ärgern über die Dinge, die du nicht getan hast, als über die, die du getan hast. Also wirf die Leinen und segle fort aus deinem sicheren Hafen. Fange den Wind in deinen Segeln. Forsche. Träume. Entdecke.',
+        quote: 'Mut ist Widerstand gegen die Angst, Sieg über die Angst – nicht Abwesenheit der Angst.',
         author: 'Mark Twain',
         authorSub: 'amerikanischer Schriftsteller (1835-1910)',
     },
 
     {
-        quote: 'Der Zweifel am Siege entschuldigt nicht das Aufgeben des Kampfes.',
-        author: 'Marie Freifrau von Ebner-Eschenbach',
-        authorSub: 'österreichische Schriftstellerin (1830-1916)',
+        quote: 'Erfolg ist, einmal mehr aufzustehen, als man hingefallen ist.',
+        author: 'Winston Churchill',
+        authorSub: 'britischer Premierminister (1874-1965)',
     },
 
     {
         quote: 'Der Langsamste, der sein Ziel nicht aus den Augen verliert, geht immer noch schneller als der, der ohne Ziel herumirrt.',
         author: 'Gotthold Ephraim Lessing',
-        authorSub: 'deutscher Dichter',
+        authorSub: 'deutscher Dichter (1729-1781)',
     },
 
     {
-        quote: 'Man muss das Unmögliche versuchen, um das Mögliche zu erreichen.',
-        author: 'Hermann Hesse',
-        authorSub: 'deutscher Schriftsteller (1877-1962)',
+        quote: 'Gute Entscheidungen kommen von Erfahrung, und Erfahrung kommt von schlechten Entscheidungen.',
+        author: 'Rita Mae Brown',
+        authorSub: 'US-amerikanische Schriftstellerin (geb. 1944)',
     },
 
     {
-        quote: 'Richte dein Gesicht immer zur Sonne und die Schatten werden hinter dich fallen.',
-        author: 'Walt Whitman',
-        authorSub: 'amerikanischer Dichter (1819-1892)',
+        quote: 'Nicht weil es schwer ist, wagen wir es nicht, sondern weil wir es nicht wagen, ist es schwer.',
+        author: 'Seneca',
+        authorSub: 'römischer Philosoph (4 v. Chr. – 65 n. Chr.)',
     },
 
     {
-        quote: 'Der Erfolg eines Menschen setzt sich aus seinen Fehlschlägen zusammen.',
-        author: 'Ralph Waldo Emerson',
-        authorSub: 'amerikanischer Philosoph und Schriftsteller (1803-1882)',
+        quote: 'Ziele sind Träume mit einer Deadline.',
+        author: 'Napoleon Hill',
+        authorSub: 'amerikanischer Autor (1883-1970)',
+    },
+
+    {
+        quote: 'Die Zukunft gehört denen, die an die Wahrhaftigkeit ihrer Träume glauben.',
+        author: 'Eleanor Roosevelt',
+        authorSub: 'US-amerikanische Menschenrechtsaktivistin (1884-1962)',
+    },
+
+    {
+        quote: 'Die größte Ehre im Leben liegt nicht darin, niemals zu fallen, sondern jedes Mal wieder aufzustehen.',
+        author: 'Nelson Mandela',
+        authorSub: 'südafrikanischer Aktivist und Politiker (1918-2013)',
+    },
+
+    {
+        quote: 'In dir muss brennen, was du in anderen entzünden willst.',
+        author: 'Augustinus von Hippo',
+        authorSub: 'römischer Philosoph und Theologe (354-430)',
+    },
+
+    {
+        quote: 'Wer kämpft, kann verlieren. Wer nicht kämpft, hat schon verloren.',
+        author: 'Bertolt Brecht',
+        authorSub: 'deutscher Dramatiker und Dichter (1898-1956)',
+    },
+
+    {
+        quote: 'Der Weg zum Erfolg und der Weg zum Scheitern sind fast identisch.',
+        author: 'Colin R. Davis',
+        authorSub: 'britischer Dirigent (1927-2013)',
+    },
+
+    {
+        quote: 'Nur wer sein Ziel kennt, findet den Weg.',
+        author: 'Laozi',
+        authorSub: 'chinesischer Philosoph (604 v. Chr.-531 v. Chr.)',
+    },
+
+    {
+        quote: 'Kreativität erfordert den Mut, sich von Sicherheiten zu lösen.',
+        author: 'Erich Fromm',
+        authorSub: 'deutsch-amerikanischer Psychoanalytiker und Philosoph (1900-1980)',
+    },
+
+    {
+        quote: 'Erfolg ist das Ergebnis von Disziplin, Fleiß und harter Arbeit.',
+        author: 'Napoleon Hill',
+        authorSub: 'amerikanischer Autor (1883-1970)',
+    },
+
+    {
+        quote: 'Kleine Taten, die man ausführt, sind besser als große, die man plant.',
+        author: 'George C. Marshall',
+        authorSub: 'amerikanischer General und Staatsmann (1880-1959)',
+    },
+
+    {
+        quote: 'Wissen ist die einzige Ressource, die sich vermehrt, wenn man sie teilt.',
+        author: 'Marie von Ebner-Eschenbach',
+        authorSub: 'österreichische Schriftstellerin (1830-1916)',
+    },
+
+    {
+        quote: 'Was immer du tun kannst, oder träumst es zu können, fang damit an.',
+        author: 'Johann Wolfgang von Goethe',
+        authorSub: 'deutscher Dichter (1749-1832)',
+    },
+
+    {
+        quote: 'Veränderung ist die einzige Konstante im Leben.',
+        author: 'Heraklit',
+        authorSub: 'griechischer Philosoph (etwa 540 v. Chr.-480 v. Chr.)',
+    },
+
+    {
+        quote: 'Ohne Fleiß kein Preis.',
+        author: 'Benjamin Franklin',
+        authorSub: 'amerikanischer Staatsmann und Wissenschaftler (1706-1790)',
+    },
+
+    {
+        quote: 'Wahre Größe besteht darin, seinen eigenen Weg zu finden und ihm zu folgen.',
+        author: 'Unbekannt',
+        authorSub: '',
+    },
+
+    {
+        quote: 'Der einzige Weg, das Unmögliche zu erreichen, ist zu glauben, dass es möglich ist.',
+        author: 'Charles Kingsleigh',
+        authorSub: 'fiktive Figur aus „Alice im Wunderland“',
+    },
+
+    {
+        quote: 'Nicht das Beginnen wird belohnt, sondern einzig und allein das Durchhalten.',
+        author: 'Katharina von Siena',
+        authorSub: 'italienische Mystikerin (1347-1380)',
+    },
+
+    {
+        quote: 'Der Erfolg besteht darin, dass man genau die Fähigkeiten hat, die im Moment gefragt sind.',
+        author: 'Henry Ford',
+        authorSub: 'amerikanischer Unternehmer (1863-1947)',
     },
 ];
