@@ -16,11 +16,11 @@ if [[ $(git status --porcelain) ]]; then
 fi
 
 # Increment the build number
-BUILD=$(jq '.build' "$FILE")
+BUILD=$(npx node-jq '.build' "$FILE")
 NEW_BUILD=$((BUILD + 1))
 
 # Update the build number in version.json
-jq --argjson new_build "$NEW_BUILD" '.build = $new_build' "$FILE" > tmp.$$.json && mv tmp.$$.json "$FILE"
+npx node-jq --argjson new_build "$NEW_BUILD" '.build = $new_build' "$FILE" > tmp.$$.json && mv tmp.$$.json "$FILE"
 echo "Incremented build number to $NEW_BUILD"
 
 # Add the updated version.json to Git

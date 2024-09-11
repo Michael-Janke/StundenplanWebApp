@@ -69,6 +69,7 @@
         "prettier": "prettier --write ./src/**/*.js"
     },
     "devDependencies": {
+        "node-jq": "^6.0.1",
         "prettier": "^2.3.0",
         "redux-devtools-extension": "^2.13.8"
     },
