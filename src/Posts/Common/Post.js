@@ -23,35 +23,25 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         //fontSize: 17.5, //fix for all screensizes
-        height: fixedHeight ? 480 : 'unset',
         borderRadius: 0,
     }),
-    mediaWrapper: ({ fixedHeight }) => ({
+    mediaWrapper: {
+        overflow: 'hidden',
         minHeight: 52,
         flex: 1,
         position: 'relative',
-        [theme.breakpoints.up('sm')]: {
-            height: fixedHeight ? 0 : 'unset',
-        },
-    }),
+    },
     media: {
-        objectFit: 'cover',
-        height: '100%',
+        objectFit: 'contain',
         display: 'block',
         width: '100%',
     },
     title: {
-        position: 'absolute',
         maxHeight: 64,
-        boxSizing: 'border-box',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        background: 'rgba(0,0,0,0.6)',
         padding: theme.spacing(1.5),
+        paddingBottom: 0
     },
     input: {
-        color: 'white',
         fontSize: '1em',
         fontWeight: 'bolder',
         padding: 0,
@@ -100,7 +90,7 @@ const Post = ({
             </div>
 
             <CardHeader
-                avatar={<ObjectIcon upn={upn} profilePicSize={40} />}
+                avatar={<ObjectIcon upn={upn} profilePicSize={20} />}
                 action={
                     !noButtons && (
                         <>
@@ -113,8 +103,7 @@ const Post = ({
                         </>
                     )
                 }
-                title={<Name upn={upn} />}
-                subheader={<Title upn={upn} />}
+                title={<><Name upn={upn} /> - <Title upn={upn} /></>}
             />
             <CardContent className={classes.content}>
                 {!edit ? <ReadOnlyEditor content={content} /> : <Editor onChange={onUpdateContent} content={content} />}

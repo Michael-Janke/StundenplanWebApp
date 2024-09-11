@@ -4,7 +4,7 @@ import { getToken } from '../Common/Authentication';
 import { API_URL } from '../Common/services/generator';
 import { fetchData } from '../Common/utils';
 
-const get = async (url, endpoint = API_URL) => {
+const get = async (url: string, endpoint = API_URL) => {
     const token = await getToken(endpoint);
     const response = await fetchData(endpoint + url, {
         method: 'GET',
@@ -16,7 +16,7 @@ const get = async (url, endpoint = API_URL) => {
     return response;
 };
 
-const fetchWrapper = (METHOD: 'POST' | 'PATCH') => async (url, data) => {
+const fetchWrapper = (METHOD: 'POST' | 'PATCH') => async (url: string, data: any) => {
     const token = await getToken(API_URL);
     const response = await fetchData(API_URL + url, {
         method: METHOD,

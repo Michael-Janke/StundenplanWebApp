@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'unset',
     },
     post: {
-        height: '100%',
+        maxHeight: '100%',
     },
 }));
 
@@ -125,7 +125,7 @@ const Posts = () => {
                             {posts
                                 .filter((v, i) => i < 4 || i === 4 + postOverflow)
                                 .map((post, i) => (
-                                    <GridListTile key={post.POST_ID} rows={1} cols={1} classes={{ tile: classes.tile }}>
+                                    <GridListTile key={post.POST_ID} rows={posts.length <=2 ? 2 : 1} cols={1} classes={{ tile: classes.tile }}>
                                         <CSSTransition
                                             classNames={{
                                                 enter: classes.postEnter,

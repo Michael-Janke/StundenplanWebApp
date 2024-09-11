@@ -65,15 +65,23 @@ const useStyles = makeStyles(
 
 export default function Connection({ connection }) {
     const classes = useStyles();
-    let [, type, line] = connection.name.match(/(\w+)\s+(\w+)/);
+    let [, type, line] = connection.name.match(/(\w+)\s+(\w+)/) || [];
+    if (!type || !line) {
+        return null;
+    }
     let Icon = ICON_MAP[type.toLowerCase()] || ICON_MAP.bus;
-    const rt_info = connection.rt_info;
+
+    const rt_info = connection["rt_info"];
     const time = moment(connection.time, 'HH:mm');
     const rtTime = moment(rt_info.time || connection.time, 'HH:mm');
     const fromNow = Math.max(0, Math.floor(time.diff(moment()) / 1000 / 60)); //minutes
     const rtFromNow = Math.max(0, Math.floor(rtTime.diff(moment()) / 1000 / 60)); //minutes
     const rtDiff = rtFromNow - fromNow;
     const rtDiffText = rtDiff > 3 ? `(+${rtDiff})` : '';
+
+    const realTimeText = ['jetzt ' + rtDiffText, 'in einer Minute ' + rtDiffText][fromNow] ||
+        `in ${fromNow} ${rtDiffText} Minuten`;
+
     return (
         <Box className={classes.root}>
             <div className={classNames(classes.type, classes[type.toLowerCase()])}>
@@ -89,13 +97,12 @@ export default function Connection({ connection }) {
 
             <div className={classes.time}>
                 <Typography variant="body1">
-                    {['jetzt ' + rtDiffText, 'in einer Minute ' + rtDiffText][fromNow] ||
-                        `in ${fromNow} ${rtDiffText} Minuten`}
+                    {realTimeText}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                     {time.format('HH:mm')}
                     {rt_info.time && rt_info.time !== connection.time && (
-                        <span className={classes.realtime}> > {rt_info.time}</span>
+                        <span className={classes.realtime}> {'>'} {rt_info.time}</span>
                     )}
                 </Typography>
             </div>
