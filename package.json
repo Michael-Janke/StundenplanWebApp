@@ -60,19 +60,15 @@
     "scripts": {
         "start": "react-scripts start",
         "start:tv": "react-scripts start",
-        "build": "node ./increment_build.js &&  react-scripts build",
-        "build:tv": "node ./increment_build.js && react-scripts build",
-        "deploy": " scp -r build/* u45065@www.wolkenberg-gymnasium.de:~/wolkenberg-app/stundenplan-web-app",
-        "deploy:tv": " scp -r build/* u45065@www.wolkenberg-gymnasium.de:~/wolkenberg-app/stundenplan-web-app-tv",
+        "build": "sh ./increment_build.sh && react-scripts build",
+        "deploy": "scp -r build/* u45065@www.wolkenberg-gymnasium.de:~/wolkenberg-app/stundenplan-web-app",
         "push": "npm run build && npm run deploy",
-        "push:tv": "npm run build:tv && npm run deploy:tv",
         "test": "react-scripts test --env=jsdom",
         "eject": "react-scripts eject",
         "lint": "eslint src/ --cache --fix && echo \"eslint: no lint errors\"",
         "prettier": "prettier --write ./src/**/*.js"
     },
     "devDependencies": {
-        "nodegit": "^0.27.0",
         "prettier": "^2.3.0",
         "redux-devtools-extension": "^2.13.8"
     },
