@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { withStyles } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import Button from '@material-ui/core/Button';
@@ -31,7 +31,8 @@ const styles = (theme) => ({
     },
 });
 
-function PostCreation({ photoMode, step, classes, handleNext, handleBack }) {
+function PostCreation({ photoMode, step, classes, handleNext, handleBack, startPostCreation }) {
+
     const steps = [
         PhotoModeSelector,
         photoMode === 'stock' && StockPhotoSelector,

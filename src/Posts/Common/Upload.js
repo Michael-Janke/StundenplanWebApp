@@ -1,4 +1,3 @@
-import React from 'react';
 import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
@@ -16,9 +15,7 @@ registerPlugin(
     FilePondPluginImageTransform
 );
 
-var workaround = () => {};
 export default function Upload(props) {
-    workaround = props.onFinished;
     return (
         <FilePond
             imageResizeUpscale={false}
@@ -28,8 +25,8 @@ export default function Upload(props) {
             files={props.files}
             allowMultiple={props.allowMultiple}
             acceptedFileTypes={props.acceptedFileTypes}
-            onupdatefiles={(files) => props.onUpdate(files)}
-            onprocessfiles={() => workaround()}
+            onupdatefiles={props.onUpdate}
+            onprocessfiles={props.onFinished}
             labelIdle={'Bild hier reinziehen oder hier klicken für Dateidialog'}
             labelFileProcessing="Upload läuft"
             labelFileProcessingComplete="Upload abgeschlossen"

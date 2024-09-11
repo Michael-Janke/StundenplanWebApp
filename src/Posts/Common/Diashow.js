@@ -36,15 +36,10 @@ const useStyles = makeStyles((theme) => ({
         display: 'block',
     },
     title: {
-        position: 'absolute',
         maxHeight: 64,
         boxSizing: 'border-box',
-        top: 0,
-        left: 0,
-        right: 0,
-        background: 'rgba(0,0,0,0.6)',
         padding: theme.spacing(2),
-        color: 'white',
+        paddingBottom: 0,
     },
     input: {
         color: 'white',
@@ -97,8 +92,7 @@ const Diashow = ({ images, title, upn, noButtons, interval = 5000, buttons, clas
                         </>
                     )
                 }
-                title={<Name upn={upn} />}
-                subheader={<Title upn={upn} />}
+                title={<><Name upn={upn} /> - <Title upn={upn} /></>}
             />
         </Card>
     );

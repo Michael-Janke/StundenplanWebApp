@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import withStyles from '@material-ui/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import Upload from '../../Common/Upload';
@@ -19,15 +19,21 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'space-evenly',
         minHeight: '100%',
+        gap: '1rem',
     },
     uploader: {
         width: '100%',
     },
 };
+
 const PhotoUpload = ({ classes, images: initalImage, onUpload }) => {
     const [file, setFile] = useState(null);
     const [finished, setFinished] = useState(!!initalImage[0]);
     const image = finished && (file ? file.serverId : initalImage[0]);
+
+    useEffect(() => {
+        finished && file && onUpload(image)
+    }, [finished, file]);
 
     return (
         <div className={classes.root}>
@@ -44,9 +50,6 @@ const PhotoUpload = ({ classes, images: initalImage, onUpload }) => {
             {image && (
                 <>
                     <APIImage src={image} className={classes.preview} />
-                    <Button onClick={() => onUpload(image)} size={'large'} variant={'contained'}>
-                        Verwenden
-                    </Button>
                     <Button onClick={() => setFinished(false)}>Anderes Bild hochladen</Button>
                 </>
             )}

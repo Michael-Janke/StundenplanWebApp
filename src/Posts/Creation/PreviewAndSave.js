@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
         alignItems: 'center',
         justifyContent: 'space-evenly',
         minHeight: '100%',
+        gap: '1rem',
     },
 }));
 

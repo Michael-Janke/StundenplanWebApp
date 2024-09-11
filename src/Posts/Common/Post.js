@@ -22,12 +22,10 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        //fontSize: 17.5, //fix for all screensizes
         borderRadius: 0,
     }),
     mediaWrapper: {
         overflow: 'hidden',
-        minHeight: 52,
         flex: 1,
         position: 'relative',
     },

@@ -17,30 +17,24 @@ function postCreationReducer(state = initialState, action) {
         case 'START_POST_CREATION': {
             const post = action.payload;
             if (post && post.POST_ID) {
-                if (post.POST_ID !== state.POST_ID) {
-                    return {
-                        ...initialState,
-                        type: post.TYPE,
-                        POST_ID: post.POST_ID,
-                        content: JSON.parse(post.TEXT),
-                        dateTo: post.DATE_TO.date,
-                        dateFrom: post.DATE_FROM.date,
-                        title: post.TITLE,
-                        images: post.IMAGES,
-                        viewPublic: post.VIEW_PUBLIC,
-                        viewStudent: post.VIEW_STUDENT,
-                        viewTeacher: post.VIEW_TEACHER,
-                    };
+                return {
+                    ...initialState,
+                    type: post.TYPE,
+                    POST_ID: post.POST_ID,
+                    content: JSON.parse(post.TEXT),
+                    dateTo: post.DATE_TO.date,
+                    dateFrom: post.DATE_FROM.date,
+                    title: post.TITLE,
+                    images: post.IMAGES,
+                    viewPublic: post.VIEW_PUBLIC,
+                    viewStudent: post.VIEW_STUDENT,
+                    viewTeacher: post.VIEW_TEACHER,
+                    photoMode: (post.IMAGES[0] || "").includes("/upload/") ? "upload" : post.IMAGES[0] ? "stock" : "no",
+                    step: 2,
                 }
             } else {
-                const newType = action.payload;
-                const type = state.type;
-                if (newType !== type || state.POST_ID) {
-                    // new draft
-                    return { ...initialState, type: newType };
-                }
+                return { ...initialState, type: action.payload };
             }
-            return state;
         }
         case 'END_POST_CREATION':
             return { ...initialState, step: state.step };
@@ -62,11 +56,11 @@ function postCreationReducer(state = initialState, action) {
         case 'SET_CONTENT':
             return { ...state, content: action.payload };
         case 'SET_PHOTO_MODE':
-            return { ...state, photoMode: action.payload, step: nextStep(state.step, 1) };
+            return { ...state, photoMode: action.payload, images: action.payload === "no" ? [] : state.images, step: nextStep(state.step, 1) };
         case 'SET_IMAGE':
             return { ...state, images: [action.payload], step: nextStep(state.step, 1) };
         case 'SET_IMAGES':
-            return { ...state, images: action.payload };
+            return { ...state, images: [...state.images, ...action.payload] };
         case 'ADD_IMAGE':
             return { ...state, images: [...state.images, action.payload] };
         case 'DELETE_IMAGE':

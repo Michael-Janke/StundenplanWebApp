@@ -79,6 +79,7 @@ const useStyles = makeStyles(
             [theme.breakpoints.down(smallBreakpoint)]: {
                 marginLeft: 0,
             },
+            fontSize: '80%',
         },
         post: {
             marginBottom: theme.spacing(1),

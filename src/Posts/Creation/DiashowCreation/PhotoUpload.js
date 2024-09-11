@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Fab from '@material-ui/core/Fab';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -49,23 +49,25 @@ const useStyles = makeStyles({
 
 const PhotoUpload = ({ images: uploadedImages, setImagesDispatch, deleteImage }) => {
     const [images, setImages] = useState(() => uploadedImages);
+    const [finished, setFinished] = useState(false);
     const classes = useStyles();
 
     const handleDeleteImage = (image) => {
         deleteImage(image);
     };
-    const handleOnFinished = (images) => {
-        setImagesDispatch(images);
-    };
+
+    useEffect(() => {
+        finished && setImagesDispatch(images.map((file) => file.serverId))
+    }, [finished])
 
     return (
         <div className={classes.root}>
             <div className={classes.uploader}>
                 <Upload
                     allowMultiple={true}
-                    onUpdate={setImages}
+                    onUpdate={(images) => { setImages(images); setFinished(false) }}
                     files={[]}
-                    onFinished={() => handleOnFinished(images.map((file) => file.serverId))}
+                    onFinished={() => setFinished(true)}
                     acceptedFileTypes={['image/*']}
                 />
             </div>

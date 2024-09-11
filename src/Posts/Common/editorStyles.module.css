@@ -7,7 +7,6 @@
 }
 
 .editor :global(.public-DraftEditor-content) {
-    min-height: 140px;
 }
 
 :global(.draftJsEmojiPlugin__emojiSelectButton__3sPol),
