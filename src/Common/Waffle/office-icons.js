@@ -15,7 +15,7 @@ import SchulPortalIcon from '../icons/SchulPortal';
 const icons = {
     Stundenplan: {
         color: '#00593b',
-        icon: Icon(require('../icons/icon.png')),
+        icon: Icon(require('../icons/icon.png').default),
         link: '/',
         router: true,
     },
@@ -94,7 +94,7 @@ const icons = {
     },
     Homepage: {
         color: 'black',
-        icon: Icon(require('../icons/logoicon.png'), {
+        icon: Icon(require('../icons/logoicon.png').default, {
             filter: 'invert(100%)',
             WebkitFilter: 'invert(100%)',
         }),
