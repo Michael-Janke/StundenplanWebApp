@@ -20,8 +20,6 @@ import OfflineLesson from './OfflineLesson';
 import { grey } from '@material-ui/core/colors';
 import Event from './Event';
 import Assignment from './Assignment';
-import Computer from '@material-ui/icons/Computer';
-import Business from '@material-ui/icons/Business';
 
 const padding = (small) => ({
     paddingLeft: small ? 2 : 4,
@@ -139,7 +137,6 @@ class TimeTableGrid extends React.Component {
     renderRows() {
         const { small, periods, currentPeriod } = this.props;
         return [
-            this.renderCorona(),
             this.renderAbsences(),
             this.renderUnmatchedAssignments(),
             this.renderEvents(),
@@ -249,47 +246,6 @@ class TimeTableGrid extends React.Component {
                         <TableCell key={i} style={{ padding: 0, fontSize: '100%' }}>
                             {day.absences &&
                                 day.absences.map((absence) => <Absence key={absence.ABSENCE_ID} absence={absence} />)}
-                        </TableCell>
-                    );
-                })}
-            </TableRow>
-        );
-    }
-
-    renderCorona() {
-        const { type, id, small, currentTimetable: timetable, offline } = this.props;
-        if (!type || !id || offline) {
-            return null;
-        }
-        if (!timetable) {
-            return;
-        }
-        const days = WEEKDAY_NAMES.map((name, i) => timetable[i]);
-        if (days.every((day) => day.corona === undefined)) {
-            return null;
-        }
-
-        return (
-            <TableRow style={{ height: 'unset' }} key="CoronaGroup">
-                <PeriodCell small={small}></PeriodCell>
-                {WEEKDAY_NAMES.map((name, i) => {
-                    const day = timetable[i];
-                    return (
-                        <TableCell key={i} style={{ padding: 4, fontSize: '80%', textAlign: 'center' }}>
-                            {day.corona && <div>{day.corona.currentGroup} Woche</div>}
-                            {day.corona && day.corona.group && (
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        flexWrap: 'wrap',
-                                    }}
-                                >
-                                    {day.corona.group === day.corona.currentGroup ? <Business /> : <Computer />}
-                                    {day.corona.group === day.corona.currentGroup ? 'Präsenz' : 'Online'}
-                                </div>
-                            )}
                         </TableCell>
                     );
                 })}

@@ -9,7 +9,7 @@ const initialState = {
         Teacher: [],
         Room: [],
         Student: [],
-        minMaxDates: {},
+        minMaxDates: undefined,
     },
     timetables: {},
     substitutions: {},
@@ -75,6 +75,9 @@ export default function timetableReducer(state = initialState, action = {}) {
         case 'SET_DATE':
         case 'SET_MY_TIMETABLE':
             let { id, type } = action.payload;
+            if(!state.masterdata.minMaxDates) {
+                return state;
+            }
             const min = moment.max(
                 moment().weekYear(state.masterdata.minMaxDates.min.year).week(state.masterdata.minMaxDates.min.week),
                 moment().add(-1, 'week')
