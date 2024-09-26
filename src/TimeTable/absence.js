@@ -15,12 +15,12 @@ const styles = (theme) => ({
 });
 
 const Absence = ({ absence, classes, table }) => {
-    let from = absence.PERIOD_FROM - 1;
-    let to = absence.PERIOD_TO - 1;
+    let from = absence.PERIOD_FROM;
+    let to = absence.PERIOD_TO;
     return (
         <div className={classes.container}>
             {absence.TEXT}
-            {table || from === -1 || ` (${from === to ? `${from}.` : `${from}. - ${to}.`})`}
+            {table || from === 0 || ` (${from === to ? `${from}.` : `${from}. - ${to}.`})`}
         </div>
     );
 };

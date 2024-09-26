@@ -39,7 +39,6 @@ export const runApplication = async (app) => {
             await authContext.handleCallback(code);
         } catch (error) {
             document.getElementById('loading-heart').innerHTML = '';
-            document.getElementById('splash-screen-quote').innerText = 'Schade, frag mal nach, was das hier soll.';
             document.getElementById('text-on-splash-screen').innerHTML =
                 'Fehler bei der Anmeldung<BR>' + JSON.stringify(error);
 

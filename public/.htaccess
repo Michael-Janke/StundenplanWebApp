@@ -1,4 +1,10 @@
 Options -MultiViews
 RewriteEngine On
+
+RewriteCond %{HTTP_HOST} ^wolkenberg-gymnasium.de [NC]
+RewriteRule ^(.*)$ https://www.wolkenberg-gymnasium.de%{REQUEST_URI} [L,R=301]
+
+# Redirect to index.html if the requested path does not exist (fallback)
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ index.html [QSA,L]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /wolkenberg-app/stundenplan-web-app/ [L,R=301]
