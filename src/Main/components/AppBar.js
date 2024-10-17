@@ -20,7 +20,7 @@ const AppBar = ({ children }) => {
     const small = useSelector((state) => state.browser.lessThan.medium);
     const large = useSelector((state) => state.browser.greaterThan.medium);
     return (
-        <div className={classes.root} style={{ marginLeft: large ? 'calc(50% - 494px)' : undefined }}>
+        <div className={classes.root} style={{ marginLeft: large ? 'calc(50% - 490px)' : undefined }}>
             <Search shrinkChildren={small} alwaysOpen={!small}>
                 {!small && <PrintButton />}
                 <UnreadMessages />

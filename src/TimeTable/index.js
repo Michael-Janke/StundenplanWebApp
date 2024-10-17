@@ -26,6 +26,7 @@ const useStyles = makeStyles(
             overflowY: 'auto',
             backgroundColor: grey[100],
             flex: 1,
+            overscrollBehavior: 'none'
         },
         extendedAppBar: {
             display: 'flex',
