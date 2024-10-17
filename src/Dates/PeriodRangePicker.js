@@ -65,7 +65,7 @@ class PeriodRangePicker extends React.Component {
                         {Object.values(periods).map((period, i) => {
                             return (
                                 <div key={period.PERIOD_TIME_ID} className={classes.checkboxContainer}>
-                                    {i}.
+                                    {i+1}.
                                     <Checkbox
                                         className={classes.checkbox}
                                         checked={Object.values(this.state.period).indexOf(period) !== -1}
